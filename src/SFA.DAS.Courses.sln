@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Courses.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Courses.Domain", "SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj", "{16D4270A-3F84-4EE7-802D-C7F346A2BE0F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Courses.Data", "SFA.DAS.Courses.Data\SFA.DAS.Courses.Data.csproj", "{B08BAF2F-8EAE-4B14-A67E-18AF53AE7E11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{16D4270A-3F84-4EE7-802D-C7F346A2BE0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16D4270A-3F84-4EE7-802D-C7F346A2BE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16D4270A-3F84-4EE7-802D-C7F346A2BE0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B08BAF2F-8EAE-4B14-A67E-18AF53AE7E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08BAF2F-8EAE-4B14-A67E-18AF53AE7E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08BAF2F-8EAE-4B14-A67E-18AF53AE7E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08BAF2F-8EAE-4B14-A67E-18AF53AE7E11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
