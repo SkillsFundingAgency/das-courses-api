@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Standard]
 (
-	[Id] INT CONSTRAINT [PK_Id] PRIMARY KEY,
+	[Id] INT PRIMARY KEY,
 	[TypicalDuration] INT NOT NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
