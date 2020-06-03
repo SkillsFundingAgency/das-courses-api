@@ -3,18 +3,16 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Courses.Data.Repository;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Courses.Domain.Entities;
-using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Courses.Data.UnitTests.Repository
+namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 {
-    public class WhenGettingStandard
+    public class WhenGettingStandards
     {
         private Mock<ICoursesDataContext> _coursesDataContext;
         private List<Standard> _standards;
-        private StandardRepository _standardRepository;
+        private Data.Repository.StandardRepository _standardRepository;
 
         [SetUp]
         public void Arrange()
@@ -35,7 +33,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(_standards);
             
 
-            _standardRepository = new StandardRepository(_coursesDataContext.Object);
+            _standardRepository = new Data.Repository.StandardRepository(_coursesDataContext.Object);
         }
 
         [Test]

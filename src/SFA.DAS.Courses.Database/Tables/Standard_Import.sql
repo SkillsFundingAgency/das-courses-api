@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Standard]
+﻿CREATE TABLE [dbo].[Standard_Import]
 (
 	[Id] INT CONSTRAINT [PK_Id] PRIMARY KEY,
 	[TypicalDuration] INT NOT NULL,
@@ -13,6 +13,6 @@
 	[CoreSkillsCount] VARCHAR(MAX) NULL,
 	[StandardPageUrl] VARCHAR(500) NOT NULL,
 	[Version] DECIMAL NULL,
-	CONSTRAINT [AK_Standard_Column] UNIQUE ([Id])
+    CONSTRAINT [AK_Standard_Column] UNIQUE ([Id])
 )
 GO
