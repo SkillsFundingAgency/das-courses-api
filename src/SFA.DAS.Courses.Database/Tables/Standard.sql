@@ -1,13 +1,13 @@
 ﻿CREATE TABLE [dbo].[Standard]
 (
 	[Id] INT CONSTRAINT [PK_Id] PRIMARY KEY,
-	[TypicalDuration] INT NULL,
+	[TypicalDuration] INT NOT NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
 	[MaxFunding] BIGINT NOT NULL,
 	[OverviewOfRole] VARCHAR(MAX) NOT NULL,
-	[Route] VARCHAR(500) NULL,
+	[Route] VARCHAR(500) NOT NULL,
 	[Keywords] VARCHAR(MAX) NULL,
 	[TypicalJobTitles] VARCHAR(MAX) NULL,
 	[CoreSkillsCount] VARCHAR(MAX) NULL,
