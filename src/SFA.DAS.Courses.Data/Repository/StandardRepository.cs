@@ -27,5 +27,12 @@ namespace SFA.DAS.Courses.Data.Repository
 
             _coursesDataContext.SaveChanges();
         }
+
+        public async Task InsertMany(IEnumerable<Standard> standards)
+        {
+            await _coursesDataContext.Standards.AddRangeAsync(standards);
+
+            _coursesDataContext.SaveChanges();
+        }
     }
 }
