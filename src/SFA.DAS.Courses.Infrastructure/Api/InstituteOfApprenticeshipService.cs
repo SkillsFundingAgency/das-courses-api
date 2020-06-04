@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.ImportTypes;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Infrastructure.Api
 {
-    public class InstituteOfApprenticeshipService
+    public class InstituteOfApprenticeshipService : IInstituteOfApprenticeshipService
     {
         private readonly HttpClient _client;
 
