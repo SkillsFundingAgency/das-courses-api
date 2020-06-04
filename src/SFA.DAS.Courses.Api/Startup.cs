@@ -12,8 +12,10 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Application.StandardsImport.Services;
 using SFA.DAS.Courses.Data;
+using SFA.DAS.Courses.Data.Repository;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Infrastructure.Api;
 
 namespace SFA.DAS.Courses.Api
 {
@@ -62,8 +64,11 @@ namespace SFA.DAS.Courses.Api
             
             services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
 
+            services.AddTransient<IInstituteOfApprenticeshipService, InstituteOfApprenticeshipService>();
             services.AddTransient<IStandardsImportService, StandardsImportService>();
-            
+            //services.AddTransient<IStandardsService, StandardsService>();
+            services.AddTransient<IStandardImportRepository, StandardImportRepository>();
+            services.AddTransient<IStandardRepository, StandardRepository>();
             
             if (_configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
