@@ -6,7 +6,7 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.StandardsImport.Services
 {
-    public class StandardsImportService
+    public class StandardsImportService : IStandardsImportService
     {
         private readonly IInstituteOfApprenticeshipService _instituteOfApprenticeshipService;
         private readonly IStandardImportRepository _standardImportRepository;
