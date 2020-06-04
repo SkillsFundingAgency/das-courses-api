@@ -267,3 +267,4 @@ src/ReleaseTemplate.sql
 desktop.ini
 App.Debug.config
 
+src/SFA.DAS.Courses.Api/appsettings.Development.json
