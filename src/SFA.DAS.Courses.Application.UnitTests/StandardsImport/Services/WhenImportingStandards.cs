@@ -44,6 +44,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
             StandardsImportService standardsImportService)
         {
             //Arrange
+            standardsImport.ForEach(c=>
+            {
+                c.Status = "Approved for Delivery";
+                c.LarsCode = 10;
+            });
             service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
             
             //Act
