@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
-        [Route("standards")]
+        [Route("")]
         public async Task<IActionResult> GetList()
         {
             try

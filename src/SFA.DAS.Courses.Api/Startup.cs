@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Courses.Application.Courses.Services;
 using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Application.StandardsImport.Services;
 using SFA.DAS.Courses.Data;
@@ -67,7 +68,7 @@ namespace SFA.DAS.Courses.Api
 
             services.AddTransient<IInstituteOfApprenticeshipService, InstituteOfApprenticeshipService>();
             services.AddTransient<IStandardsImportService, StandardsImportService>();
-            //services.AddTransient<IStandardsService, StandardsService>();
+            services.AddTransient<IStandardsService, StandardsService>();
             services.AddTransient<IStandardImportRepository, StandardImportRepository>();
             services.AddTransient<IStandardRepository, StandardRepository>();
             
