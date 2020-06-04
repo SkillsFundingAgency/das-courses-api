@@ -25,5 +25,12 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext.StandardsImport.RemoveRange(_coursesDataContext.StandardsImport);
             _coursesDataContext.SaveChanges();
         }
+
+        public async Task<IEnumerable<StandardImport>> GetAll()
+        {
+            var standardImportItems = await _coursesDataContext.StandardsImport.ToListAsync();
+
+            return standardImportItems;
+        }
     }
 }
