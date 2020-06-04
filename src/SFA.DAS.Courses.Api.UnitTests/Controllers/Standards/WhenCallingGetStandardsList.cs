@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -28,11 +29,27 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            var controllerResult = await controller.GetList() as OkObjectResult;
+            var controllerResult = await controller.GetList() as ObjectResult;
 
             var model = controllerResult.Value as GetStandardsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             model.Standards.Should().BeEquivalentTo(queryResult.Standards);
+        }
+
+        [Test, MoqAutoData]
+        public async Task And_Exception_Then_Returns_Bad_Request(
+            [Frozen] Mock<IMediator> mockMediator,
+            StandardsController controller)
+        {
+            mockMediator
+                .Setup(mediator => mediator.Send(
+                    It.IsAny<GetStandardsListQuery>(),
+                    It.IsAny<CancellationToken>()))
+                .Throws<InvalidOperationException>();
+
+            var controllerResult = await controller.GetList() as StatusCodeResult;
+
+            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         }
     }
 }

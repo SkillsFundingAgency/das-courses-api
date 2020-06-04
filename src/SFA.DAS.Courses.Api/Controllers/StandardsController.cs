@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,22 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         public async Task<IActionResult> GetList()
         {
-            var queryResult = await _mediator.Send(new GetStandardsListQuery());
-
-            var response = new GetStandardsListResponse
+            try
             {
-                Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard)
-            };
+                var queryResult = await _mediator.Send(new GetStandardsListQuery());
 
-            return Ok(response);
+                var response = new GetStandardsListResponse
+                {
+                    Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                //todo: log e
+                return BadRequest();
+            }
         }
     }
 }
