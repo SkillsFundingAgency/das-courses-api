@@ -1,32 +1,41 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Courses.Api.ApiResponses;
-using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {
     [ApiController]
     public class StandardsController : ControllerBase
     {
-        private readonly IStandardsService _standardsService;
+        private readonly IMediator _mediator;
 
-        public StandardsController(IStandardsService standardsService)
+        public StandardsController(IMediator mediator)
         {
-            _standardsService = standardsService;
+            _mediator = mediator;
         }
 
         public async Task<IActionResult> GetList()
         {
-            var standards = await _standardsService.GetStandardsList();
-
-            var response = new GetStandardsListResponse
+            try
             {
-                Standards = standards.Select(standard => (GetStandardResponse)standard)
-            };
+                var queryResult = await _mediator.Send(new GetStandardsListQuery());
 
-            return Ok(response);
+                var response = new GetStandardsListResponse
+                {
+                    Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                //todo: log e
+                return BadRequest();
+            }
         }
     }
 }
