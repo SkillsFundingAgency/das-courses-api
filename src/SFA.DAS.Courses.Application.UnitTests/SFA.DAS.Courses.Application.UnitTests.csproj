@@ -14,4 +14,9 @@
     <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.106" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Courses.Application\SFA.DAS.Courses.Application.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

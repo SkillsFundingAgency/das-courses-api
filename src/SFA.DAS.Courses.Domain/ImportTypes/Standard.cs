@@ -53,6 +53,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("standardPageUrl")]
         public Uri StandardPageUrl { get; set; }
+        
+        [JsonProperty("duties")]
+        public List<Duty> Duties { get; set; }
 
     }
     
@@ -62,5 +65,32 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public string SkillId { get; set; }
         [JsonProperty("detail")]
         public string Detail { get; set; }
+    }
+    
+    public class Duty
+    {
+        [JsonProperty("dutyID")]
+        public Guid DutyId { get; set; }
+
+        [JsonProperty("dutyDetail")]
+        public string DutyDetail { get; set; }
+
+        [JsonProperty("isThisACoreDuty")]
+        public long IsThisACoreDuty { get; set; }
+
+        [JsonProperty("mappedBehaviour")]
+        public List<Guid> MappedBehaviour { get; set; }
+
+        [JsonProperty("mappedKnowledge")]
+        public List<Guid> MappedKnowledge { get; set; }
+
+        [JsonProperty("mappedOptions")]
+        public object MappedOptions { get; set; }
+
+        [JsonProperty("mappedSkills")]
+        public List<Guid> MappedSkills { get; set; }
+
+        [JsonProperty("criteriaForMeasuringPerformance")]
+        public string CriteriaForMeasuringPerformance { get; set; }
     }
 }

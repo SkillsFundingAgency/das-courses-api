@@ -7,4 +7,8 @@
   <ItemGroup>
     <PackageReference Include="MediatR" Version="6.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
+  </ItemGroup>
 </Project>
