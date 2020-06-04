@@ -4,9 +4,16 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
+using SFA.DAS.Courses.Application.StandardsImport.Services;
+using SFA.DAS.Courses.Data;
+using SFA.DAS.Courses.Domain.Configuration;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Api
 {
@@ -45,7 +52,31 @@ namespace SFA.DAS.Courses.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMediatR(typeof(dummy).Assembly);
+            
+            services.AddOptions();
+            services.Configure<CoursesConfiguration>(_configuration.GetSection("Courses"));
+            services.AddSingleton(cfg => cfg.GetService<IOptions<CoursesConfiguration>>().Value);
+            
+            var serviceProvider = services.BuildServiceProvider();
+            var config = serviceProvider.GetService<IOptions<CoursesConfiguration>>().Value;
+            
+            services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
+
+            services.AddTransient<IStandardsImportService, StandardsImportService>();
+            
+            
+            if (_configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            {
+                services.AddDbContext<CoursesDataContext>(options => options.UseInMemoryDatabase("SFA.DAS.Courses"));
+            }
+            else
+            {
+                services.AddDbContext<CoursesDataContext>(options => options.UseSqlServer(config.ConnectionString));
+            }
+
+            services.AddScoped<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
+            services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
+
             
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
@@ -60,6 +91,13 @@ namespace SFA.DAS.Courses.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "api/{controller=Standards}/{action=Index}/{id?}");
+            });
+            
             app.Run(async (context) => { await context.Response.WriteAsync("Hello World!"); });
         }
     }

@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\SFA.DAS.Courses.Application\SFA.DAS.Courses.Application.csproj" />
+      <ProjectReference Include="..\SFA.DAS.Courses.Data\SFA.DAS.Courses.Data.csproj" />
       <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
     </ItemGroup>
 
