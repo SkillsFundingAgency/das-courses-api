@@ -9,6 +9,7 @@ using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 namespace SFA.DAS.Courses.Api.Controllers
 {
     [ApiController]
+    [Route("api/courses/[controller]/")]
     public class StandardsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -18,6 +19,8 @@ namespace SFA.DAS.Courses.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        [Route("standards")]
         public async Task<IActionResult> GetList()
         {
             try
