@@ -3,7 +3,8 @@ using System.IO;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -82,6 +83,14 @@ namespace SFA.DAS.Courses.Api
             services.AddScoped<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
             services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
 
+            services
+                .AddMvc(o =>
+                {
+                    if (!ConfigurationIsLocalOrDev())
+                    {
+                        o.Filters.Add(new AuthorizeFilter("default"));
+                    }
+                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
@@ -103,7 +112,12 @@ namespace SFA.DAS.Courses.Api
                     template: "api/{controller=Standards}/{action=Index}/{id?}");
             });
             
-            app.Run(async (context) => { await context.Response.WriteAsync("Hello World!"); });
+        }
+        
+        private bool ConfigurationIsLocalOrDev()
+        {
+            return _configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase) ||
+                   _configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

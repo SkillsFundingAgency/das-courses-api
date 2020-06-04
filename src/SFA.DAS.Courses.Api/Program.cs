@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using NLog.Web;
 
 namespace SFA.DAS.Courses.Api
 {
@@ -12,6 +13,8 @@ namespace SFA.DAS.Courses.Api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseApplicationInsights()
+                .UseStartup<Startup>()
+                .UseNLog();
     }
 }
