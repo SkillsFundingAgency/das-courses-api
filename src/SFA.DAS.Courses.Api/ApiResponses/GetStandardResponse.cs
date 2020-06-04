@@ -9,15 +9,14 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public int Level { get; set; }
         public decimal Version { get; set; }
         public long MaxFunding { get; set; }
-        public string OverViewOfRole { get; set; }
+        public string OverviewOfRole { get; set; }
+        public string Keywords { get; set; }
         public int TypicalDuration { get; set; }
         public string Route { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
-        public string Location { get ; set ; }
-        public int ProvidersAtLocation { get ; set ; }
 
         public static implicit operator GetStandardResponse(Standard source)
         {
@@ -28,7 +27,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Level = source.Level,
                 Version = source.Version,
                 MaxFunding = source.MaxFunding,
-                OverViewOfRole = source.OverViewOfRole,
+                OverviewOfRole = source.OverviewOfRole,
+                Keywords = source.Keywords,
                 TypicalDuration = source.TypicalDuration,
                 Route = source.Route,
                 TypicalJobTitles = source.TypicalJobTitles,
