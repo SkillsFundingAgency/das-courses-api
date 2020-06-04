@@ -14,9 +14,6 @@ variables:
   - name: buildConfiguration
     value: 'release'
 
-pool:
-  name: 'DAS - Continuous Integration'
-
 resources:
   repositories:
   - repository: das-platform-building-blocks
@@ -25,81 +22,87 @@ resources:
     ref: refs/heads/master
     endpoint: "GitHub (SFA)"
 
-steps:
-- task: gittools.gitversion-preview.gitversion-task.GitVersion@5
-  displayName: GitVersion
-  inputs:
-    configFilePath: GitVersion.yml
-    updateAssemblyInfo: true
-
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: 'src/**/*.csproj'
-    noCache: true
-
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    projects: 'src/**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore'
-    
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: test
-    projects: '**/*.UnitTests.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-build'
-     
-- task: DotNetCoreCLI@2
-  displayName: 'Acceptance Tests'
-  inputs:
-    command: test
-    projects: '**/*.AcceptanceTests.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-build'
-
-- template: azure-pipelines-templates/dependency-check.yml@das-platform-building-blocks
-
-- task: DotNetCoreCLI@2
-  displayName: 'Publish Website'
-  inputs:
-    command: publish
-    publishWebProjects: false
-    projects: 'src/SFA.DAS.Courses.Api/SFA.DAS.Courses.Api.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
-    
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-  inputs:
-    Contents: |
-     azure/**
-    TargetFolder: '$(build.artifactstagingdirectory)/publish'
-    OverWrite: true
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)/publish'
-
-- job: 'DACPACBuild'
+jobs:
+  -job: 'CouldBuild'
   pool:
     name: 'DAS - Continuous Integration'
-    demands: Agent.OS -equals Windows_NT
   workspace:
-    clean: all
+    clean: all  
   steps:
-  - task: VSBuild@1
-    displayName: 'Build DACPAC'
+  - task: gittools.gitversion-preview.gitversion-task.GitVersion@5
+    displayName: GitVersion
     inputs:
-      solution: 'src/SFA.DAS.Courses.Database/SFA.DAS.Courses.Database.sqlproj'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-      msbuildArgs: '/p:PackageLocation="$(build.artifactstagingdirectory)/publish"'
+      configFilePath: GitVersion.yml
+      updateAssemblyInfo: true
+
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: restore
+      projects: 'src/**/*.csproj'
+      noCache: true
+
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      projects: 'src/**/*.csproj'
+      arguments: '--configuration $(buildConfiguration) --no-restore'
+      
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: '**/*.UnitTests.csproj'
+      arguments: '--configuration $(buildConfiguration) --no-build'
+      
+  - task: DotNetCoreCLI@2
+    displayName: 'Acceptance Tests'
+    inputs:
+      command: test
+      projects: '**/*.AcceptanceTests.csproj'
+      arguments: '--configuration $(buildConfiguration) --no-build'
+
+  - template: azure-pipelines-templates/dependency-check.yml@das-platform-building-blocks
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish Website'
+    inputs:
+      command: publish
+      publishWebProjects: false
+      projects: 'src/SFA.DAS.Courses.Api/SFA.DAS.Courses.Api.csproj'
+      arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
+
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
     inputs:
-      contents: |
-        src/**/*.dacpac
-      targetFolder: '$(build.artifactstagingdirectory)/publish'
+      Contents: |
+        azure/**
+      TargetFolder: '$(build.artifactstagingdirectory)/publish'
+      OverWrite: true
+
   - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)/publish'
+
+  - job: 'DACPACBuild'
+    pool:
+      name: 'DAS - Continuous Integration'
+      demands: Agent.OS -equals Windows_NT
+    workspace:
+      clean: all
+    steps:
+    - task: VSBuild@1
+      displayName: 'Build DACPAC'
+      inputs:
+        solution: 'src/SFA.DAS.Courses.Database/SFA.DAS.Courses.Database.sqlproj'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        msbuildArgs: '/p:PackageLocation="$(build.artifactstagingdirectory)/publish"'
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        contents: |
+          src/**/*.dacpac
+        targetFolder: '$(build.artifactstagingdirectory)/publish'
+    - task: PublishBuildArtifacts@1
