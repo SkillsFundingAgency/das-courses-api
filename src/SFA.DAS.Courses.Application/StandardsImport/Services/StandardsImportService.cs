@@ -30,7 +30,7 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             }
             
             _standardRepository.DeleteAll();
-            await _standardRepository.InsertMany(standardsToInsert);
+            await _standardRepository.InsertMany(standardsToInsert.Select(c=>(Standard)c).ToList());
         }
 
         private async Task GetStandardsFromApiAndInsertIntoStagingTable()
