@@ -74,7 +74,11 @@ namespace SFA.DAS.Courses.Api
                 var azureActiveDirectoryConfiguration = serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value;
                 services.AddAuthorization(o =>
                 {
-                    o.AddPolicy("default", policy => { policy.RequireAuthenticatedUser(); });
+                    o.AddPolicy("default", policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                        policy.RequireRole("APIM.Request");
+                    });
                 });
                 services.AddAuthentication(auth => { auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
                     .AddJwtBearer(auth =>
