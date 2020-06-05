@@ -15,9 +15,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("status")]
         public string Status { get; set; }
 
-        [JsonProperty("url")]
-        public Uri Url { get; set; }
-
         [JsonProperty("overviewOfRole")]
         public string OverviewOfRole { get; set; }
 

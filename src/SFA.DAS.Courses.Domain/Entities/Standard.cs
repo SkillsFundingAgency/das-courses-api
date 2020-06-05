@@ -17,7 +17,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Title = standard.Title,
                 TypicalDuration = standard.TypicalDuration,
                 TypicalJobTitles = standard.TypicalJobTitles,
-                Version = standard.Version
+                Version = standard.Version,
+                Keywords = standard.Keywords
             };
         }
     }
