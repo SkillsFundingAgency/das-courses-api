@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +21,7 @@ using SFA.DAS.Courses.Data.Repository;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Infrastructure.Api;
+using SFA.DAS.Courses.Infrastructure.Configuration;
 
 namespace SFA.DAS.Courses.Api
 {
@@ -60,9 +64,36 @@ namespace SFA.DAS.Courses.Api
             services.AddOptions();
             services.Configure<CoursesConfiguration>(_configuration.GetSection("Courses"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<CoursesConfiguration>>().Value);
+            services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
+            services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
             
             var serviceProvider = services.BuildServiceProvider();
             var config = serviceProvider.GetService<IOptions<CoursesConfiguration>>().Value;
+            
+            if (!ConfigurationIsLocalOrDev())
+            {
+                var azureActiveDirectoryConfiguration = serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value;
+                services.AddAuthorization(o =>
+                {
+                    o.AddPolicy("default", policy => { policy.RequireAuthenticatedUser(); });
+                });
+                services.AddAuthentication(auth => { auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
+                    .AddJwtBearer(auth =>
+                    {
+                        auth.Authority =
+                            $"https://login.microsoftonline.com/{azureActiveDirectoryConfiguration.Tenant}";
+                        auth.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                        {
+                            ValidAudiences = new List<string>
+                            {
+                                azureActiveDirectoryConfiguration.Identifier,
+                                azureActiveDirectoryConfiguration.Id
+                            }
+                        };
+                    });
+                services.AddSingleton<IClaimsTransformation, AzureAdScopeClaimTransformation>();
+            }
+            
             
             services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
 
