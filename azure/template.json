@@ -161,7 +161,7 @@
                         ]
                     },
                     "customHostName": {
-                        "value": "[parameters('customHostname')]"
+                        "value": "[parameters('apiCustomHostname')]"
                     },
                     "certificateThumbprint": {
                         "value": "[reference('api-app-service-certificate').outputs.certificateThumbprint.value]"
