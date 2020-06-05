@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
@@ -95,7 +96,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
             await standardsImportService.ImportStandards();
             
             //Assert
-            repository.Verify(x=>x.InsertMany(standardImportsEntity), Times.Once);
+            repository.Verify(x=>x.InsertMany(It.Is<List<Standard>>(c=>c.Count.Equals(standardImportsEntity.Count))), Times.Once);
 
         }
 

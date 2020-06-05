@@ -66,7 +66,7 @@ namespace SFA.DAS.Courses.Api
             
             services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
 
-            services.AddTransient<IInstituteOfApprenticeshipService, InstituteOfApprenticeshipService>();
+            services.AddHttpClient<IInstituteOfApprenticeshipService, InstituteOfApprenticeshipService>();
             services.AddTransient<IStandardsImportService, StandardsImportService>();
             services.AddTransient<IStandardsService, StandardsService>();
             services.AddTransient<IStandardImportRepository, StandardImportRepository>();

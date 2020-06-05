@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
-    public class StandardImport : Standard
+    public class StandardImport : StandardBase
     {
         public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
         {
