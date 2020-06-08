@@ -22,6 +22,10 @@ namespace SFA.DAS.Courses.Functions.Importer
         private readonly IHostingEnvironment _environment;
         private IConfiguration _configuration;
 
+        public Startup ()
+        {
+            
+        }
         public Startup (IConfiguration configuration, IHostingEnvironment environment)
         {
             _environment = environment;
