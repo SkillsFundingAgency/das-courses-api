@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.StandardsImport.Services;
@@ -154,10 +156,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
 
         }
         
-        [Test, MoqAutoData]
-        public async Task Then_If_The_Data_Is_Not_Loaded_From_The_Staging_Table_Into_The_Standards_Table_An_Error_Is_Logged()
-        {
-            
-        }
+        
     }
 }
