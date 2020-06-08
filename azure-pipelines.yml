@@ -68,6 +68,14 @@ jobs:
       publishWebProjects: false
       projects: 'src/SFA.DAS.Courses.Api/SFA.DAS.Courses.Api.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish Function App Courses'
+    inputs:
+      command: publish
+      publishWebProjects: false
+      projects: 'src/SFA.DAS.Courses.Functions.Importer/SFA.DAS.Courses.Functions.Importer.csproj'
+      arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
 
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
