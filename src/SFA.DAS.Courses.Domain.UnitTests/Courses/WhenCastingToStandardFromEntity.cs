@@ -1,6 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.Courses.Domain;
 using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Courses
@@ -9,7 +10,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
     {
         [Test, AutoData]
         public void Then_Maps_Fields_Appropriately(
-            Entities.Standard source)
+            Domain.Entities.Standard source)
         {
             var response = (Standard)source;
 
