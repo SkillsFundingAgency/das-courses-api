@@ -31,7 +31,7 @@ namespace SFA.DAS.Courses.Functions.Importer.UnitTests.Application.ImportService
                 Content = new StringContent(""),
                 StatusCode = HttpStatusCode.Accepted
             };
-            var httpMessageHandler = SetupMessageHandlerMock(response, $"{config.Url}/ops/dataload");
+            var httpMessageHandler = SetupMessageHandlerMock(response, $"{config.Url}ops/dataload");
             var client = new HttpClient(httpMessageHandler.Object);
             var service = new ImportDataService(client, configuration.Object, azureClientCredentialHelper.Object);
             
@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Functions.Importer.UnitTests.Application.ImportService
                     "SendAsync", Times.Once(),
                     ItExpr.Is<HttpRequestMessage>(c =>
                         c.Method.Equals(HttpMethod.Post)
-                        && c.RequestUri.AbsoluteUri.Equals($"{config.Url}/ops/dataload")
+                        && c.RequestUri.AbsoluteUri.Equals($"{config.Url}ops/dataload")
                         && c.Headers.Authorization.Scheme.Equals("Bearer")
                         && c.Headers.Authorization.Parameter.Equals(authToken)),
                     ItExpr.IsAny<CancellationToken>()
