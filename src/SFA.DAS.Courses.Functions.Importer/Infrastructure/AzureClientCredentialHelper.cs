@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using SFA.DAS.Courses.Functions.Importer.Domain.Configuration;
@@ -17,12 +18,10 @@ namespace SFA.DAS.Courses.Functions.Importer.Infrastructure
         
         public async Task<string> GetAccessTokenAsync()
         {
-            var clientCredential = new ClientCredential(_configuration.Id, _configuration.Secret);
-            var context = new AuthenticationContext($"https://login.microsoftonline.com/{_configuration.Tenant}", true);
-
-            var result = await context.AcquireTokenAsync(_configuration.Identifier, clientCredential).ConfigureAwait(false);
-
-            return result.AccessToken;
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
+            var accessToken = await azureServiceTokenProvider.GetAccessTokenAsync(_configuration.Identifier);
+         
+            return accessToken;
         }
     }
 }
