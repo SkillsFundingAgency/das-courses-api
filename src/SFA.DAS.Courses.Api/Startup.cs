@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -71,26 +70,24 @@ namespace SFA.DAS.Courses.Api
             var serviceProvider = services.BuildServiceProvider();
             var config = serviceProvider.GetService<IOptions<CoursesConfiguration>>().Value;
             
-            
-            var azureActiveDirectoryConfiguration = serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value;
-            services.AddAuthorization(o =>
+            if (!ConfigurationIsLocalOrDev())
             {
-                if (!ConfigurationIsLocalOrDev())
+                var azureActiveDirectoryConfiguration = serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value;
+                services.AddAuthorization(o =>
                 {
+                    
                     o.AddPolicy(PolicyNames.Default, policy =>
                     {
                         policy.RequireAuthenticatedUser();
                         policy.RequireRole(RoleNames.ApimRequest);
                     });
-                }
-                o.AddPolicy(PolicyNames.HasDataLoadPolicy, policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireRole(RoleNames.DataLoad);
+                    o.AddPolicy(PolicyNames.HasDataLoadPolicy, policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                        policy.RequireRole(RoleNames.DataLoad);
+                    });
                 });
-            });
-            if (!ConfigurationIsLocalOrDev())
-            {
+                
                 services.AddAuthentication(auth => { auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
                 .AddJwtBearer(auth =>
                 {
@@ -141,7 +138,7 @@ namespace SFA.DAS.Courses.Api
                 {
                     if (!ConfigurationIsLocalOrDev())
                     {
-                        o.Filters.Add(new AuthorizeFilter(PolicyNames.Default));
+                        o.Conventions.Add(new AuthorizeControllerModelConvention());
                     }
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             

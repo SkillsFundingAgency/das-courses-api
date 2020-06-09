@@ -1,14 +1,10 @@
-using System;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {
-    [Authorize(Policy = nameof(PolicyNames.HasDataLoadPolicy))]
     [ApiController]
     [Route("/ops/dataload/")]
     public class ImportController : ControllerBase
