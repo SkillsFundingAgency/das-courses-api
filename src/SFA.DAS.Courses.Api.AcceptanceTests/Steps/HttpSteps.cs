@@ -1,7 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using TechTalk.SpecFlow;

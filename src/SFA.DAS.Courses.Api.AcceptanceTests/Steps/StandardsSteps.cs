@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using SFA.DAS.Courses.Api.ApiResponses;
@@ -21,8 +18,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             _context = context;
         }
 
-        [Then("the standards are returned")]
-        public async Task ThenAnHttpStatusCodeIsReturned(int httpStatusCode)
+        [Then("all standards are returned")]
+        public async Task ThenAllStandardsReturned()
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -32,16 +29,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
             model.Standards.Should().BeEquivalentTo(DbUtilities.GetTestStandards());
-        }
-    }
-
-    public static class HttpUtilities
-    {
-        public static async Task<T> ReadContent<T>(HttpContent httpContent)
-        {
-            var json = await httpContent.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<T>(json);
-            return model;
         }
     }
 }

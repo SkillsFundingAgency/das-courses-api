@@ -8,3 +8,4 @@ Scenario: Get list of standards
 	Given I have an http client
     When I GET the following url: /api/courses/standards
     Then an http status code of 200 is returned
+    Then all standards are returned

@@ -2,17 +2,25 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NUnit.Framework;
 using SFA.DAS.Courses.Data;
-using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 {
     public class AcceptanceTestingWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
+        protected override IWebHostBuilder CreateWebHostBuilder()
+        {
+            return base.CreateWebHostBuilder().ConfigureAppConfiguration(builder =>
+            {
+                
+            });
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             base.ConfigureWebHost(builder);
@@ -25,7 +33,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 
                 services.AddDbContext<CoursesDataContext>(options =>
                 {
-                    options.UseInMemoryDatabase("testDbName");
+                    options.UseInMemoryDatabase("SFA.DAS.Courses");
                     options.UseInternalServiceProvider(serviceProvider);
                 });
 
@@ -47,34 +55,26 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     catch (Exception ex)
                     {
                         logger.LogError(ex, "An error occurred seeding the database. Error: {Message}", ex.Message);
+                        throw;
                     }
                 }
             });
-        }
-    }
 
-    public static class DbUtilities
-    {
-        public static void LoadTestData(CoursesDataContext context)
-        {
-            context.Standards.AddRange(GetTestStandards());
-            context.SaveChanges();
-        }
-
-        public static void ClearTestData(CoursesDataContext context)
-        {
-            context.Standards.RemoveRange(GetTestStandards());
-            context.SaveChanges();
-        }
-
-        public static IEnumerable<Standard> GetTestStandards()
-        {
-            return new List<Standard>
+            builder.ConfigureTestServices(services =>
             {
-                new Standard{Id = 1, Title = "Head Brewer", Keywords = "Head, Brewer, Beer", OverviewOfRole = "Overseer of brewery operations", Level = 6, Route = "Engineering and manufacturing"},
-                new Standard{Id = 2, Title = "Brewer", Keywords = "Brewer, Beer", OverviewOfRole = "Brewery operations", Level = 4, Route = "Engineering and manufacturing"},
-                new Standard{Id = 3, Title = "Senior / head of facilities management (degree)", Keywords = "Head", OverviewOfRole = "Overseer of brewery operations", Level = 6, Route = "Construction"},
-            };
+
+            });
+
+            builder.ConfigureAppConfiguration(configurationBuilder =>
+            {
+                configurationBuilder.AddInMemoryCollection(new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("ConfigurationStorageConnectionString", "UseDevelopmentStorage=true;"),
+                    new KeyValuePair<string, string>("ConfigNames", "SFA.DAS.Courses.Api"),
+                    new KeyValuePair<string, string>("Environment", "DEV"),
+                    new KeyValuePair<string, string>("Version", "1.0")
+                });
+            });
         }
     }
 }
