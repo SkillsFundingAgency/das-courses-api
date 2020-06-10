@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 
@@ -12,10 +13,13 @@ namespace SFA.DAS.Courses.Api.Controllers
     [Route("api/courses/[controller]/")]
     public class StandardsController : ControllerBase
     {
+        private readonly ILogger<StandardsController> _logger;
         private readonly IMediator _mediator;
 
-        public StandardsController(IMediator mediator)
+        public StandardsController(ILogger<StandardsController> logger,
+            IMediator mediator)
         {
+            _logger = logger;
             _mediator = mediator;
         }
 
@@ -36,7 +40,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             }
             catch (Exception e)
             {
-                //todo: log e
+                _logger.LogError(e, "Error attempting to get list of standards");
                 return BadRequest();
             }
         }
