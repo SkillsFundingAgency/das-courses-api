@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.Courses.Services;
 using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Application.StandardsImport.Services;
@@ -75,27 +75,41 @@ namespace SFA.DAS.Courses.Api
                 var azureActiveDirectoryConfiguration = serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value;
                 services.AddAuthorization(o =>
                 {
-                    o.AddPolicy("default", policy =>
+                    
+                    o.AddPolicy(PolicyNames.Default, policy =>
                     {
                         policy.RequireAuthenticatedUser();
-                        policy.RequireRole("APIM.Request");
+                        policy.RequireRole(RoleNames.ApimRequest);
+                    });
+                    o.AddPolicy(PolicyNames.HasDataLoadPolicy, policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                        policy.RequireRole(RoleNames.DataLoad);
                     });
                 });
+                
                 services.AddAuthentication(auth => { auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
-                    .AddJwtBearer(auth =>
+                .AddJwtBearer(auth =>
+                {
+                    auth.Authority =
+                        $"https://login.microsoftonline.com/{azureActiveDirectoryConfiguration.Tenant}";
+                    auth.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
-                        auth.Authority =
-                            $"https://login.microsoftonline.com/{azureActiveDirectoryConfiguration.Tenant}";
-                        auth.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                        ValidAudiences = new List<string>
                         {
-                            ValidAudiences = new List<string>
-                            {
-                                azureActiveDirectoryConfiguration.Identifier,
-                                azureActiveDirectoryConfiguration.Id
-                            }
-                        };
-                    });
+                            azureActiveDirectoryConfiguration.Identifier,
+                            azureActiveDirectoryConfiguration.Id
+                        }
+                    };
+                });
                 services.AddSingleton<IClaimsTransformation, AzureAdScopeClaimTransformation>();
+            } 
+            else
+            {
+                services.AddAuthentication("Local")
+                    .AddScheme<LocalDataLoadAuthenticationSchemeOptions, LocalDataLoadAuthenticationHandler>(
+                        "Local", options => { });
+
             }
             
             
@@ -124,7 +138,7 @@ namespace SFA.DAS.Courses.Api
                 {
                     if (!ConfigurationIsLocalOrDev())
                     {
-                        o.Filters.Add(new AuthorizeFilter("default"));
+                        o.Conventions.Add(new AuthorizeControllerModelConvention());
                     }
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
@@ -140,7 +154,9 @@ namespace SFA.DAS.Courses.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseAuthentication();
+            
+            app.UseAuthentication();    
+        
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

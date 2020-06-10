@@ -5,6 +5,6 @@
         "FUNCTIONS_WORKER_RUNTIME": "dotnet",
         "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;",
         "ConfigNames": "SFA.DAS.Courses.Function",
-        "Environment": "LOCAL"
+        "EnvironmentName": "LOCAL"
     }
 }

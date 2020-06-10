@@ -22,33 +22,6 @@ namespace SFA.DAS.Courses.Functions.Importer
         private readonly IHostingEnvironment _environment;
         private IConfiguration _configuration;
 
-        public Startup (IConfiguration configuration, IHostingEnvironment environment)
-        {
-            _environment = environment;
-            var config = new ConfigurationBuilder()
-                .AddConfiguration(configuration)
-                .SetBasePath(Directory.GetCurrentDirectory())
-#if DEBUG
-                .AddJsonFile("local.settings.json", true)
-                .AddJsonFile("local.settings.Development.json", true)
-#endif
-                .AddEnvironmentVariables();
-
-            if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
-            {
-                config.AddAzureTableStorage(options =>
-                    {
-                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["Environment"];
-                        options.PreFixConfigurationKeys = false;
-                    }
-                );
-            }
-            
-            _configuration = config.Build();
-        }
-        
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services.AddHttpClient();
@@ -65,13 +38,13 @@ namespace SFA.DAS.Courses.Functions.Importer
 #endif
                 .AddEnvironmentVariables();
 
-            if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            if (!configuration["EnvironmentName"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
                 config.AddAzureTableStorage(options =>
                     {
                         options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
                         options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["Environment"];
+                        options.EnvironmentName = configuration["EnvironmentName"];
                         options.PreFixConfigurationKeys = false;
                     }
                 );
