@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
@@ -33,7 +34,7 @@ namespace SFA.DAS.Courses.Functions.Importer.UnitTests.Application.ImportService
             };
             var httpMessageHandler = SetupMessageHandlerMock(response, $"{config.Url}ops/dataload");
             var client = new HttpClient(httpMessageHandler.Object);
-            var service = new ImportDataService(client, configuration.Object, azureClientCredentialHelper.Object);
+            var service = new ImportDataService(client, configuration.Object, azureClientCredentialHelper.Object, new ImporterEnvironment("TEST"));
             
             //Act
             service.Import();
@@ -47,6 +48,38 @@ namespace SFA.DAS.Courses.Functions.Importer.UnitTests.Application.ImportService
                         && c.RequestUri.AbsoluteUri.Equals($"{config.Url}ops/dataload")
                         && c.Headers.Authorization.Scheme.Equals("Bearer")
                         && c.Headers.Authorization.Parameter.Equals(authToken)),
+                    ItExpr.IsAny<CancellationToken>()
+                );
+        }
+
+        [Test, AutoData]
+        public void Then_The_Bearer_Token_Is_Not_Added_If_Local(
+            ImporterConfiguration config)
+        {
+            //Arrange
+            var configuration = new Mock<IOptions<ImporterConfiguration>>();
+            config.Url = "https://test.local/";
+            configuration.Setup(x => x.Value).Returns(config);
+            var response = new HttpResponseMessage
+            {
+                Content = new StringContent(""),
+                StatusCode = HttpStatusCode.Accepted
+            };
+            var httpMessageHandler = SetupMessageHandlerMock(response, $"{config.Url}ops/dataload");
+            var client = new HttpClient(httpMessageHandler.Object);
+            var service = new ImportDataService(client, configuration.Object, Mock.Of<IAzureClientCredentialHelper>(), new ImporterEnvironment("LOCAL"));
+            
+            //Act
+            service.Import();
+            
+            //Assert
+            httpMessageHandler.Protected()
+                .Verify<Task<HttpResponseMessage>>(
+                    "SendAsync", Times.Once(),
+                    ItExpr.Is<HttpRequestMessage>(c =>
+                        c.Method.Equals(HttpMethod.Post)
+                        && c.RequestUri.AbsoluteUri.Equals($"{config.Url}ops/dataload")
+                        && c.Headers.Authorization == null),
                     ItExpr.IsAny<CancellationToken>()
                 );
         }

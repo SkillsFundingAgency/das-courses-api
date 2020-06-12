@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using SFA.DAS.Courses.Functions.Importer.Domain.Configuration;
 using SFA.DAS.Courses.Functions.Importer.Domain.Interfaces;
 
