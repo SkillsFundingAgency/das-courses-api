@@ -52,15 +52,11 @@ namespace SFA.DAS.Courses.Functions.Importer
             builder.Services.Configure<ImporterConfiguration>(_configuration.GetSection("Importer"));
             builder.Services.AddSingleton(cfg => cfg.GetService<IOptions<ImporterConfiguration>>().Value);
 
+            builder.Services.AddSingleton(new ImporterEnvironment(configuration["EnvironmentName"]));
 
             builder.Services.AddHttpClient<IImportDataService, ImportDataService>();
             builder.Services.AddTransient<IAzureClientCredentialHelper, AzureClientCredentialHelper>();
             
-            
-            //builder.Services.AddSingleton((s) => { return new MyService(); });
-
-            //builder.Services.AddSingleton<ILoggerProvider, MyLoggerProvider>();
-
             builder.Services.BuildServiceProvider();
         }
     }
