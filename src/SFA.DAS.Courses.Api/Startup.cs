@@ -104,13 +104,6 @@ namespace SFA.DAS.Courses.Api
                 });
                 services.AddSingleton<IClaimsTransformation, AzureAdScopeClaimTransformation>();
             } 
-            else
-            {
-                services.AddAuthentication("Local")
-                    .AddScheme<LocalDataLoadAuthenticationSchemeOptions, LocalDataLoadAuthenticationHandler>(
-                        "Local", options => { });
-
-            }
             
             
             services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
