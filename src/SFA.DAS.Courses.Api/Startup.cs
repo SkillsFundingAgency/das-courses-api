@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Courses.Api.AppStart;
 using SFA.DAS.Courses.Api.Infrastructure;
@@ -60,13 +61,18 @@ namespace SFA.DAS.Courses.Api
             {
                 services.AddAuthentication(serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 
-            } 
+            }
+
+            var coursesConfiguration = serviceProvider.GetService<IOptions<CoursesConfiguration>>().Value;
+            services.AddHealthChecks()
+                .AddSqlServer(coursesConfiguration.ConnectionString);
             
+
             services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
 
             services.AddServiceRegistration();
-            
-            services.AddDatabaseRegistration(serviceProvider.GetService<IOptions<CoursesConfiguration>>().Value, _configuration["Environment"]);
+
+            services.AddDatabaseRegistration(coursesConfiguration, _configuration["Environment"]);
             
             services
                 .AddMvc(o =>
@@ -79,6 +85,11 @@ namespace SFA.DAS.Courses.Api
             
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
+            });
+            
             services.BuildServiceProvider();
         }
 
@@ -91,11 +102,20 @@ namespace SFA.DAS.Courses.Api
             
             app.UseAuthentication();    
         
+            app.UseHealthChecks();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "api/{controller=Standards}/{action=Index}/{id?}");
+            });
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoursesAPI");
+                c.RoutePrefix = string.Empty;
             });
             
         }
