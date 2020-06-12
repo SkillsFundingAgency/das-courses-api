@@ -19,8 +19,8 @@ namespace SFA.DAS.Courses.Functions.Importer.Endpoints
         [FunctionName("ImportData")]
         public async Task RunAsync([TimerTrigger("0 0 0 */1 * *")] TimerInfo myTimer, ILogger log)
         {
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
-            _service.Import();
+            log.LogInformation($"ImportData Timer trigger function executed at: {DateTime.UtcNow}");
+            await Task.Run(() => _service.Import());
         }
     }
 }

@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Functions.Importer.Endpoints
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
             
-            _service.Import();
+            await Task.Run(() => _service.Import());
 
             return new NoContentResult();
             
