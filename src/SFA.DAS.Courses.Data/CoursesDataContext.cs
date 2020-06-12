@@ -7,7 +7,7 @@ namespace SFA.DAS.Courses.Data
     {
         DbSet<Domain.Entities.Standard> Standards { get; set; }
         DbSet<Domain.Entities.StandardImport> StandardsImport { get; set; }
-
+        DbSet<Domain.Entities.ImportAudit> ImportAudit { get; set; }
         int SaveChanges();
     }
     
@@ -15,6 +15,7 @@ namespace SFA.DAS.Courses.Data
     {
         public DbSet<Domain.Entities.Standard> Standards { get; set; }
         public DbSet<Domain.Entities.StandardImport> StandardsImport { get; set; }
+        public DbSet<Domain.Entities.ImportAudit> ImportAudit { get; set; }
 
         public CoursesDataContext()
         {
@@ -32,6 +33,7 @@ namespace SFA.DAS.Courses.Data
         {
             modelBuilder.ApplyConfiguration(new Standard());
             modelBuilder.ApplyConfiguration(new StandardImport());
+            modelBuilder.ApplyConfiguration(new ImportAudit());
             
             base.OnModelCreating(modelBuilder);
         }
