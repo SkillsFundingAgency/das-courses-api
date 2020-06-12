@@ -105,6 +105,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
         [Test, MoqAutoData]
         public async Task Then_If_There_Is_No_Data_In_The_Staging_Table_It_Is_Not_Loaded_Into_Standards_Table_And_Nothing_Is_Deleted(
             List<StandardImport> standardImportsEntity,
+            [Frozen] Mock<IImportAuditRepository> auditRepository,
             [Frozen] Mock<IStandardRepository> repository,
             [Frozen] Mock<IStandardImportRepository> importRepository,
             [Frozen] Mock<IInstituteOfApprenticeshipService> service,
@@ -119,6 +120,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
             //Assert
             repository.Verify(x=>x.DeleteAll(), Times.Never);
             repository.Verify(x=>x.InsertMany(It.IsAny<List<Standard>>()), Times.Never);
+            auditRepository.Verify(x=>
+                x.Insert(It.Is<ImportAudit>(c=>c.RowsImported.Equals(0))), Times.Once);
         }
 
         [Test, MoqAutoData]
@@ -155,7 +158,28 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
                     c.Count.Equals(apiImportStandards.Count-2))), Times.Once);
 
         }
-        
-        
+
+        [Test, MoqAutoData]
+        public async Task Then_It_Is_Audited_After_The_Run(
+            List<StandardImport> standardImportsEntity,
+            [Frozen] Mock<IImportAuditRepository> auditRepository,
+            [Frozen] Mock<IStandardRepository> repository,
+            [Frozen] Mock<IStandardImportRepository> importRepository,
+            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> apiImportStandards,
+            StandardsImportService standardsImportService)
+        {
+            //Arrange
+            service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
+            importRepository.Setup(x => x.GetHashCode());
+            importRepository.Setup(x => x.GetAll()).ReturnsAsync(standardImportsEntity);
+            
+            //Act
+            await standardsImportService.ImportStandards();
+            
+            //Assert
+            auditRepository.Verify(x=>
+                x.Insert(It.Is<ImportAudit>(c=>c.RowsImported.Equals(standardImportsEntity.Count))), Times.Once);
+        }
     }
 }
