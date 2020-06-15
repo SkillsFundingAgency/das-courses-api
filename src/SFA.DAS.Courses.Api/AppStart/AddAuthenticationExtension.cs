@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Api.AppStart
                     policy.RequireAuthenticatedUser();
                     policy.RequireRole(RoleNames.ApimRequest);
                 });
-                o.AddPolicy(PolicyNames.HasDataLoadPolicy, policy =>
+                o.AddPolicy(PolicyNames.DataLoad, policy =>
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireRole(RoleNames.DataLoad);

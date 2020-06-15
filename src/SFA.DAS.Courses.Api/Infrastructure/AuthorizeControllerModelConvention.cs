@@ -1,6 +1,6 @@
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using SFA.DAS.Courses.Api.Controllers;
 
 namespace SFA.DAS.Courses.Api.Infrastructure
 {
@@ -8,8 +8,8 @@ namespace SFA.DAS.Courses.Api.Infrastructure
     {
         public void Apply(ControllerModel controller)
         {
-            controller.Filters.Add(controller.ControllerType.Name.Equals(nameof(ImportController))
-                ? new AuthorizeFilter(PolicyNames.HasDataLoadPolicy)
+            controller.Filters.Add(PolicyNames.PolicyNameList.FirstOrDefault(c=>c.Equals(controller.ControllerName)) != null
+                ? new AuthorizeFilter(controller.ControllerName)
                 : new AuthorizeFilter(PolicyNames.Default));
         }
     }

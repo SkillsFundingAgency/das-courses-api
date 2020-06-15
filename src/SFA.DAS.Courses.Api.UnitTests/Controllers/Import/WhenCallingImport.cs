@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
         [Test, MoqAutoData]
         public async Task Then_Sends_ImportStandardsCommand_And_Returns_NoContent_Result(
             [Frozen] Mock<IMediator> mockMediator,
-            ImportController controller)
+            DataLoadController controller)
         {
             var controllerResult = await controller.Index() as NoContentResult;
 

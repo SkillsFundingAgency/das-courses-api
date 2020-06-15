@@ -7,11 +7,11 @@ namespace SFA.DAS.Courses.Api.Controllers
 {
     [ApiController]
     [Route("/ops/dataload/")]
-    public class ImportController : ControllerBase
+    public class DataLoadController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ImportController (IMediator mediator)
+        public DataLoadController (IMediator mediator)
         {
             _mediator = mediator;
         }
