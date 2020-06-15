@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.8.0" />
+        <PackageReference Include="AutoFixture.AutoMoq" Version="4.8.0" />
+        <PackageReference Include="AutoFixture.NUnit3" Version="4.8.0" />
+        <PackageReference Include="FluentAssertions" Version="5.10.3" />
+        <PackageReference Include="nunit" Version="3.12.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+        <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.84" />
+        <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
+      <ProjectReference Include="..\SFA.DAS.Courses.Infrastructure\SFA.DAS.Courses.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>
