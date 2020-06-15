@@ -88,6 +88,7 @@ namespace SFA.DAS.Courses.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "CoursesAPI", Version = "v2" });
             });
             
             services.BuildServiceProvider();
@@ -115,6 +116,7 @@ namespace SFA.DAS.Courses.Api
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoursesAPI");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "CoursesAPI");
                 c.RoutePrefix = string.Empty;
             });
             
