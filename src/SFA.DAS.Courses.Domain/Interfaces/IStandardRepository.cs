@@ -9,5 +9,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<IEnumerable<Standard>> GetAll();
         void DeleteAll();
         Task InsertMany(IEnumerable<Standard> standards);
+        Task<Standard> Get(int id);
     }
 }

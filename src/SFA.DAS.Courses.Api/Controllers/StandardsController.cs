@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 
 namespace SFA.DAS.Courses.Api.Controllers
@@ -42,6 +43,25 @@ namespace SFA.DAS.Courses.Api.Controllers
             {
                 _logger.LogError(e, "Error attempting to get list of standards");
                 return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetStandardQuery {StandardId = id});
+
+                var response = (GetStandardResponse)result.Standard;
+
+                return Ok(response);
+            }
+            catch (InvalidOperationException e)
+            {
+                _logger.LogError(e, $"Standard not found {id}");
+                return NotFound();
             }
         }
     }

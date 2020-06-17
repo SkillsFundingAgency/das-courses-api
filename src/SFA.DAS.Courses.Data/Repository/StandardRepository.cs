@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,18 @@ namespace SFA.DAS.Courses.Data.Repository
             await _coursesDataContext.Standards.AddRangeAsync(standards);
 
             _coursesDataContext.SaveChanges();
+        }
+
+        public async Task<Standard> Get(int id)
+        {
+            var standard = await _coursesDataContext.Standards.FindAsync(id);
+
+            if (standard == null)
+            {
+                throw new InvalidOperationException($"Course with id {id} not found in repository");
+            }
+            
+            return standard;
         }
     }
 }
