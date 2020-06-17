@@ -21,5 +21,12 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 
             return standards.Select(standard => (Standard)standard).ToList();
         }
+
+        public async Task<Standard> GetStandard(int standardId)
+        {
+            var standard = await _standardsRepository.Get(standardId);
+
+            return standard;
+        }
     }
 }

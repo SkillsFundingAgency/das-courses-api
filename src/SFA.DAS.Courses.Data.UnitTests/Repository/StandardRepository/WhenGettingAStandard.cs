@@ -48,7 +48,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             
             //Assert
             Assert.IsNotNull(standards);
-            standards.Should().BeEquivalentTo(_standards);
+            standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c=>c.Id.Equals(ExpectedStandardId)));
         }
         
         [Test]
