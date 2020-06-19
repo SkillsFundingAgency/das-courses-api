@@ -13,6 +13,8 @@ namespace SFA.DAS.Courses.Api.AppStart
         public static void AddServiceRegistration(this IServiceCollection services)
         {
             services.AddSingleton<IDirectoryFactory>(new DirectoryFactory());
+            services.AddTransient<IIndexBuilder, CoursesIndexBuilder>();
+            //services.AddTransient<ISearchManager, LuceneSearchManager>();
             services.AddHttpClient<IInstituteOfApprenticeshipService, InstituteOfApprenticeshipService>();
             services.AddTransient<IStandardsImportService, StandardsImportService>();
             services.AddTransient<IStandardsService, StandardsService>();

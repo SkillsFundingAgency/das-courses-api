@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +13,7 @@ using SFA.DAS.Courses.Api.AppStart;
 using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Domain.Configuration;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Api
 {
@@ -90,7 +91,9 @@ namespace SFA.DAS.Courses.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
             });
             
-            services.BuildServiceProvider();
+            serviceProvider = services.BuildServiceProvider();
+            var indexBuilder = serviceProvider.GetService<IIndexBuilder>();
+            indexBuilder.Build();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

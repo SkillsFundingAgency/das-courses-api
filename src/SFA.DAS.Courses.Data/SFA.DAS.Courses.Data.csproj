@@ -5,6 +5,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Lucene.Net" Version="4.8.0-beta00008" />
+        <PackageReference Include="Lucene.Net.Analysis.Phonetic" Version="4.8.0-beta00008" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
     </ItemGroup>
     <ItemGroup>
