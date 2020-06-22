@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
@@ -18,7 +19,9 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<IEnumerable<Standard>> GetAll()
         {
-            var result = await _coursesDataContext.Standards.ToListAsync();
+            var result = await _coursesDataContext.Standards
+                .OrderBy(c=>c.Title)
+                .ToListAsync();
             
             return result;
         }
