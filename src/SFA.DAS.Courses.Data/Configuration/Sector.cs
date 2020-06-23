@@ -13,6 +13,11 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.Id).HasColumnName("Id").HasColumnType("uniqueidentifier").IsRequired();
             builder.Property(x => x.Route).HasColumnName("Route").HasColumnType("varchar").IsRequired();
 
+            builder.HasMany(c => c.Standards)
+                .WithOne(c => c.Sector)
+                .HasForeignKey(c => c.Route)
+                .HasPrincipalKey(c => c.Id);
+            
             builder.HasIndex(x => x.Id).IsUnique();
         }
     }

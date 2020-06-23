@@ -28,7 +28,7 @@
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 TypicalDuration = source.TypicalDuration,
-                Route = source.Route,
+                //Route = source.Route,
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
                 StandardPageUrl = source.StandardPageUrl,

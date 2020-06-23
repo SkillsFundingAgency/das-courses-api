@@ -1,3 +1,5 @@
+using System;
+
 namespace SFA.DAS.Courses.Domain.Entities
 {
     public class StandardBase
@@ -9,7 +11,8 @@ namespace SFA.DAS.Courses.Domain.Entities
         public long MaxFunding { get; set; }
         public string OverviewOfRole { get; set; }
         public int TypicalDuration { get; set; }
-        public string Route { get; set; }
+        public virtual Sector Sector {get; set; }
+        public Guid Route { get; set; }
         public string Keywords { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }

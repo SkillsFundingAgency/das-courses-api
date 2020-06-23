@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 MaxFunding = standard.MaxFunding,
                 OverviewOfRole = standard.OverviewOfRole,
                 StandardPageUrl = standard.StandardPageUrl.AbsoluteUri,
-                Route = standard.Route,
+                //Route = standard.Route,
                 Title = standard.Title,
                 TypicalDuration = standard.TypicalDuration,
                 TypicalJobTitles = standard.TypicalJobTitles.Join("|"),
