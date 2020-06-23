@@ -1,7 +1,12 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
 namespace SFA.DAS.Courses.Domain.Entities
 {
     public class Standard : StandardBase
     {
+        [NotMapped]
+        public float? SearchScore { get; set; }
+
         public static implicit operator Standard(StandardImport standard)
         {
             return new Standard

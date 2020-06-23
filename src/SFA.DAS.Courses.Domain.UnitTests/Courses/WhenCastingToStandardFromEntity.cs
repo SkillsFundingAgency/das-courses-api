@@ -1,7 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Courses.Domain;
 using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Courses
@@ -14,7 +13,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
         {
             var response = (Standard)source;
 
-            response.Should().BeEquivalentTo(source);
+            response.Should().BeEquivalentTo(source, config => config.Excluding(standard => standard.SearchScore));
         }
     }
 }

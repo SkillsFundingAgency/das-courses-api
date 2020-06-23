@@ -5,6 +5,11 @@ namespace SFA.DAS.Courses.Domain.Search
 {
     public class StandardSearchResult
     {
+        public StandardSearchResult()
+        {
+            
+        }
+
         public StandardSearchResult(Document document,
             float score)
         {

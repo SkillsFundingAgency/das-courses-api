@@ -14,7 +14,7 @@ namespace SFA.DAS.Courses.Api.AppStart
         {
             services.AddSingleton<IDirectoryFactory>(new DirectoryFactory());
             services.AddTransient<IIndexBuilder, CoursesIndexBuilder>();
-            //services.AddTransient<ISearchManager, LuceneSearchManager>();
+            services.AddTransient<ISearchManager, CoursesSearchManager>();
             services.AddHttpClient<IInstituteOfApprenticeshipService, InstituteOfApprenticeshipService>();
             services.AddTransient<IStandardsImportService, StandardsImportService>();
             services.AddTransient<IStandardsService, StandardsService>();
