@@ -25,6 +25,7 @@ namespace SFA.DAS.Courses.Data
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseLazyLoadingProxies();
         }
 
         public CoursesDataContext(DbContextOptions options) :base(options)
