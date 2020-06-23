@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Data.Repository
@@ -17,6 +19,13 @@ namespace SFA.DAS.Courses.Data.Repository
             await _coursesDataContext.Sectors.AddAsync(sector);
             
             _coursesDataContext.SaveChanges();
+        }
+
+        public async Task<IEnumerable<Sector>> GetAll()
+        {
+            var sectors = await _coursesDataContext.Sectors.ToListAsync();
+
+            return sectors;
         }
     }
 }
