@@ -15,7 +15,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             _standardsRepository = standardsRepository;
         }
 
-        public async Task<IEnumerable<Standard>> GetStandardsList()
+        public async Task<IEnumerable<Standard>> GetStandardsList(string keyword)
         {
             var standards = await _standardsRepository.GetAll();
 

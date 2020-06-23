@@ -19,17 +19,18 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_Standards_List_From_Mediator(
+            string keyword,
             GetStandardsListResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             StandardsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
-                    It.IsAny<GetStandardsListQuery>(), 
+                    It.Is<GetStandardsListQuery>(query => query.Keyword == keyword), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            var controllerResult = await controller.GetList() as ObjectResult;
+            var controllerResult = await controller.GetList(keyword) as ObjectResult;
 
             var model = controllerResult.Value as GetStandardsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -38,6 +39,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 
         [Test, MoqAutoData]
         public async Task And_Exception_Then_Returns_Bad_Request(
+            string keyword,
             [Frozen] Mock<IMediator> mockMediator,
             StandardsController controller)
         {
@@ -47,7 +49,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                     It.IsAny<CancellationToken>()))
                 .Throws<InvalidOperationException>();
 
-            var controllerResult = await controller.GetList() as StatusCodeResult;
+            var controllerResult = await controller.GetList(keyword) as StatusCodeResult;
 
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         }
