@@ -1,4 +1,5 @@
-﻿using Lucene.Net.Analysis;
+﻿using System.Linq;
+using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Phonetic;
 using Lucene.Net.Analysis.Phonetic.Language;
 using Lucene.Net.Analysis.Standard;
@@ -35,7 +36,7 @@ namespace SFA.DAS.Courses.Data.Search
             var directory = _directoryFactory.GetDirectory();
             using (var writer = new IndexWriter(directory, new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer)))
             {
-                foreach (var standard in _coursesDataContext.Standards)
+                foreach (var standard in _coursesDataContext.Standards.OrderBy(standard => standard.Title))
                 {
                 
                     var doc = new Document();
