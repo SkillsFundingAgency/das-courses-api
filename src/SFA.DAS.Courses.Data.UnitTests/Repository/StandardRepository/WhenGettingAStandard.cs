@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
@@ -34,8 +36,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             
             _coursesDataContext = new Mock<ICoursesDataContext>();
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(_standards);
-            _coursesDataContext.Setup(x => x.Standards.FindAsync(ExpectedStandardId))
-                .ReturnsAsync(_standards.SingleOrDefault(c => c.Id.Equals(ExpectedStandardId)));
 
             _standardRepository = new Data.Repository.StandardRepository(_coursesDataContext.Object);
         }
@@ -55,8 +55,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         public void Then_An_Entity_Not_Found_Exception_Is_Thrown()
         {
             //Arrange
-            _coursesDataContext.Setup(x => 
-                x.Standards.FindAsync(ExpectedStandardId)).ReturnsAsync((Standard) null);
+            _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(new List<Standard>());
             
             //Act Assert
             Assert.ThrowsAsync<InvalidOperationException>(() => _standardRepository.Get(ExpectedStandardId));
