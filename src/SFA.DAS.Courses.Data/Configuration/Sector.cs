@@ -15,7 +15,7 @@ namespace SFA.DAS.Courses.Data.Configuration
 
             builder.HasMany(c => c.Standards)
                 .WithOne(c => c.Sector)
-                .HasForeignKey(c => c.Route)
+                .HasForeignKey(c => c.RouteId)
                 .HasPrincipalKey(c => c.Id);
             
             builder.HasIndex(x => x.Id).IsUnique();

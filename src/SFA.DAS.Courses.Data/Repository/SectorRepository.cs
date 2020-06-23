@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Data.Repository
 {
-    public class SectorRepository
+    public class SectorRepository : ISectorRepository
     {
         private readonly ICoursesDataContext _coursesDataContext;
 
@@ -14,9 +15,9 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public async Task Insert(Sector sector)
+        public async Task InsertMany(IEnumerable<Sector> sector)
         {
-            await _coursesDataContext.Sectors.AddAsync(sector);
+            await _coursesDataContext.Sectors.AddRangeAsync(sector);
             
             _coursesDataContext.SaveChanges();
         }
