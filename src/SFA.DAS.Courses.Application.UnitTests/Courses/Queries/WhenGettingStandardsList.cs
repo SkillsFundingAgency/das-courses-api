@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -19,6 +20,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 
         [Test, MoqAutoData]
         public async Task Then_Gets_Standards_From_Service(
+            int count,
             GetStandardsListQuery query,
             GetStandardsListResult serviceResult,
             [Frozen] Mock<IStandardsService> mockStandardsService,
@@ -27,12 +29,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             mockStandardsService
                 .Setup(service => service.GetStandardsList(query.Keyword))
                 .ReturnsAsync(serviceResult);
+            mockStandardsService
+                .Setup(service => service.Count())
+                .ReturnsAsync(count);
 
             var result = await handler.Handle(query, CancellationToken.None);
 
             result.Standards.Should().BeEquivalentTo(serviceResult.Standards);
-            result.Total.Should().Be(serviceResult.Total);
-            result.TotalFiltered.Should().Be(serviceResult.TotalFiltered);
+            result.Total.Should().Be(count);
+            result.TotalFiltered.Should().Be(serviceResult.Standards.Count());
         }
     }
 }

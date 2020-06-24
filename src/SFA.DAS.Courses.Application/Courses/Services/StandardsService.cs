@@ -39,6 +39,12 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             };
         }
 
+        public async Task<int> Count()
+        {
+            var count = await _standardsRepository.Count();
+            return count;
+        }
+
         public async Task<Standard> GetStandard(int standardId)
         {
             var standard = await _standardsRepository.Get(standardId);
