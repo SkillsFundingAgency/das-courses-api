@@ -8,5 +8,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     {
         Task InsertMany(IEnumerable<Sector> sector);
         Task<IEnumerable<Sector>> GetAll();
+        void DeleteAll();
     }
 }

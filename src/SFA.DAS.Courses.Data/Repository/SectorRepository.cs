@@ -28,5 +28,11 @@ namespace SFA.DAS.Courses.Data.Repository
 
             return sectors;
         }
+
+        public void DeleteAll()
+        {
+            _coursesDataContext.Sectors.RemoveRange(_coursesDataContext.Sectors);
+            _coursesDataContext.SaveChanges();
+        }
     }
 }
