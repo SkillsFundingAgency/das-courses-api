@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         public async Task Then_Gets_Sectors_From_Repository(
             List<Sector> sectorEntities,
             [Frozen] Mock<ISectorRepository> sectorRepository,
-            SectorsService service)
+            SectorService service)
         {
             sectorRepository
                 .Setup(repository => repository.GetAll())

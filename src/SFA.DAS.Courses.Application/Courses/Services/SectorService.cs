@@ -6,11 +6,11 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.Courses.Services
 {
-    public class SectorsService
+    public class SectorService : ISectorService
     {
         private readonly ISectorRepository _repository;
 
-        public SectorsService (ISectorRepository repository)
+        public SectorService (ISectorRepository repository)
         {
             _repository = repository;
         }
