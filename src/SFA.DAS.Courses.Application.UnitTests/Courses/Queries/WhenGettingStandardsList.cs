@@ -25,7 +25,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             GetStandardsListQueryHandler handler)
         {
             mockStandardsService
-                .Setup(service => service.GetStandardsList(query.Keyword))
+                .Setup(service => service.GetStandardsList(query.Keyword, query.RouteIds))
                 .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count())
