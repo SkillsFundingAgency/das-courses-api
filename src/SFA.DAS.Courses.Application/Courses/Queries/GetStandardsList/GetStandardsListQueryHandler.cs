@@ -16,11 +16,13 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
 
         public async Task<GetStandardsListResult> Handle(GetStandardsListQuery request, CancellationToken cancellationToken)
         {
-            var standards = await _standardsService.GetStandardsList(request.Keyword);
+            var result = await _standardsService.GetStandardsList(request.Keyword);
 
             return new GetStandardsListResult
             {
-                Standards = standards
+                Standards = result.Standards,
+                Total = result.Total,
+                TotalFiltered = result.TotalFiltered
             };
         }
     }
