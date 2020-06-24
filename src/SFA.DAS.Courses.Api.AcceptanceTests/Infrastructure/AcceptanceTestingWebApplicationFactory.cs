@@ -20,6 +20,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 var serviceProvider = new ServiceCollection()
                     .AddEntityFrameworkInMemoryDatabase()
+                    .AddEntityFrameworkProxies()
                     .BuildServiceProvider();
 
                 services.AddDbContext<CoursesDataContext>(options =>
@@ -27,6 +28,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     options.UseInMemoryDatabase("SFA.DAS.Courses");
                     options.UseInternalServiceProvider(serviceProvider);
                 });
+                services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
 
                 var sp = services.BuildServiceProvider();
 

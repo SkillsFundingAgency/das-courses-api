@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -28,7 +29,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
-            model.Standards.Should().BeEquivalentTo(DbUtilities.GetTestStandards());
+            model.Standards.Should().BeEquivalentTo(DbUtilities.GetTestStandards(DbUtilities.GetTestSectors().ToList()), options=> options
+                    .Excluding(std=>std.Sector)
+                    .Excluding(std=>std.RouteId)
+                );
         }
     }
 }
