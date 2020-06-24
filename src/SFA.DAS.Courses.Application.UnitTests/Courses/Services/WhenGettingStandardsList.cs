@@ -37,8 +37,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(standard => standard.Sector)
                 .Excluding(standard => standard.RouteId)
                 );
-            result.Total.Should().Be(count);
-            result.TotalFiltered.Should().Be(standardsFromRepo.Count);
             
             foreach (var standard in result.Standards)
             {
@@ -73,12 +71,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(manager => manager.Query(keyword))
                 .Returns(searchResult);
 
-            var getStandardsListResult = (await service.GetStandardsList(keyword));
+            var standards = await service.GetStandardsList(keyword);
 
-            getStandardsListResult.Standards.Should().BeEquivalentTo(standardsFoundInSearch,
+            standards.Should().BeEquivalentTo(standardsFoundInSearch,
                 config => config.Excluding(standard => standard.SearchScore));
-            getStandardsListResult.Total.Should().Be(count);
-            getStandardsListResult.TotalFiltered.Should().Be(standardsFoundInSearch.Count);
         }
     }
 }

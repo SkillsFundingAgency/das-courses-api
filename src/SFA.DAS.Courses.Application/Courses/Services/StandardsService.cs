@@ -19,24 +19,22 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             _searchManager = searchManager;
         }
 
-        public async Task<Domain.Courses.GetStandardsListResult> GetStandardsList(string keyword)
+        public async Task<IEnumerable<Standard>> GetStandardsList(string keyword)
         {
             var standards = await _standardsRepository.GetAll();
-            var total = await _standardsRepository.Count();
 
             if (!string.IsNullOrEmpty(keyword))
             {
                 standards = FindByKeyword(standards, keyword);
             }
 
-            var foundStandards = standards.Select(standard => (Standard)standard).ToList();
+            return standards.Select(standard => (Standard)standard);
+        }
 
-            return new Domain.Courses.GetStandardsListResult
-            {
-                Standards = foundStandards,
-                Total = total,
-                TotalFiltered = foundStandards.Count
-            };
+        public async Task<int> Count()
+        {
+            var count = await _standardsRepository.Count();
+            return count;
         }
 
         public async Task<Standard> GetStandard(int standardId)
