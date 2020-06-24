@@ -9,6 +9,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.StandardImport> StandardsImport { get; set; }
         DbSet<Domain.Entities.ImportAudit> ImportAudit { get; set; }
         DbSet<Domain.Entities.Sector> Sectors { get; set; }
+        DbSet<Domain.Entities.SectorImport> SectorsImport { get; set; }
         int SaveChanges();
     }
     
