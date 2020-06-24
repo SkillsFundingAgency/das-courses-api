@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 {
     public class WhenGettingCount
     {
-        [Test, MoqAutoData]
+        [Test, RecursiveMoqAutoData]
         public async Task Then_Gets_Count_From_Context(
             List<Standard> standards,
             [Frozen] Mock<ICoursesDataContext> mockDataContext,

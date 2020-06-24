@@ -6,12 +6,13 @@ using NUnit.Framework;
 using SFA.DAS.Courses.Data.Search;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Search
 {
     public class WhenBuildingACoursesIndex
     {
-        [Test, AutoData]
+        [Test, RecursiveMoqAutoData]
         public void Then_Adds_Doc_For_Each_Standard(
             List<Standard> standards,
             Mock<ICoursesDataContext> mockDataContext,
