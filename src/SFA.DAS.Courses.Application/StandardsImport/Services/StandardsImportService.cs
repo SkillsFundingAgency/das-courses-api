@@ -15,14 +15,16 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
         private readonly IStandardRepository _standardRepository;
         private readonly IImportAuditRepository _auditRepository;
         private readonly ISectorRepository _sectorRepository;
+        private readonly ISectorImportRepository _sectorImportRepository;
         private readonly ILogger<StandardsImportService> _logger;
-        private List<Sector> _sectors;
+        private List<SectorImport> _sectors;
 
         public StandardsImportService (IInstituteOfApprenticeshipService instituteOfApprenticeshipService, 
                                         IStandardImportRepository standardImportRepository, 
                                         IStandardRepository standardRepository,
                                         IImportAuditRepository auditRepository,
                                         ISectorRepository sectorRepository,
+                                        ISectorImportRepository sectorImportRepository,
                                         ILogger<StandardsImportService> logger)
         {
             _instituteOfApprenticeshipService = instituteOfApprenticeshipService;
@@ -30,6 +32,7 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             _standardRepository = standardRepository;
             _auditRepository = auditRepository;
             _sectorRepository = sectorRepository;
+            _sectorImportRepository = sectorImportRepository;
             _logger = logger;
         }
         public async Task ImportStandards()
@@ -49,9 +52,12 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
                 }
             
                 _standardRepository.DeleteAll();
+                _sectorRepository.DeleteAll();
                 
                 _logger.LogInformation($"Adding {standardsToInsert.Count} to Standards table.");
 
+                await _sectorRepository.InsertMany(_sectors.Select(c => (Sector)c).ToList());
+                
                 var standards = standardsToInsert.Select(c=>(Standard)c).ToList();
                 await _standardRepository.InsertMany(standards);
                 
@@ -96,13 +102,14 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             _sectors = standards
                 .Select(c => c.Route)
                 .Distinct()
-                .Select(c => new Sector
+                .Select(c => new SectorImport
                 {
                     Id = Guid.NewGuid(),
                     Route = c
                 }).ToList();
 
-            await _sectorRepository.InsertMany(_sectors);
+            _sectorImportRepository.DeleteAll();
+            await _sectorImportRepository.InsertMany(_sectors);
         }
     }
 }
