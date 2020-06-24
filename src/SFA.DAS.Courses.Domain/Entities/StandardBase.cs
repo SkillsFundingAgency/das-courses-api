@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string OverviewOfRole { get; set; }
         public int TypicalDuration { get; set; }
         public virtual Sector Sector {get; set; }
-        public Guid Route { get; set; }
+        public Guid RouteId { get; set; }
         public string Keywords { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }

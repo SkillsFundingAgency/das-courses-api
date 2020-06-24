@@ -11,7 +11,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id).HasColumnName("Id").HasColumnType("uniqueidentifier").IsRequired();
-            builder.Property(x => x.Route).HasColumnName("Route").HasColumnType("varchar").IsRequired();
+            builder.Property(x => x.Route).HasColumnName("Route").HasColumnType("varchar").HasMaxLength(500).IsRequired();
 
             builder.HasMany(c => c.Standards)
                 .WithOne(c => c.Sector)

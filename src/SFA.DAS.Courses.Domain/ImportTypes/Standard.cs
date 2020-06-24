@@ -29,6 +29,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("route")]
         public string Route { get; set; }
+        
+        [JsonIgnore]
+        public Guid RouteId { get; set; }
 
         [JsonProperty("keywords")]
         public List<string> Keywords { get; set; }

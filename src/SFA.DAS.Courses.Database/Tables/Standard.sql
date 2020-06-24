@@ -7,7 +7,7 @@
 	[IntegratedDegree] VARCHAR(100) NULL,
 	[MaxFunding] BIGINT NOT NULL,
 	[OverviewOfRole] VARCHAR(MAX) NOT NULL,
-	[Route] UNIQUEIDENTIFIER NOT NULL,
+	[RouteId] UNIQUEIDENTIFIER NOT NULL,
 	[Keywords] VARCHAR(MAX) NULL,
 	[TypicalJobTitles] VARCHAR(MAX) NULL,
 	[CoreSkillsCount] VARCHAR(MAX) NULL,
