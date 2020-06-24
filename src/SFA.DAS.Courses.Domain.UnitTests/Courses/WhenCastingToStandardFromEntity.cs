@@ -1,7 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Courses.Domain;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -18,6 +17,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.Should().BeEquivalentTo(source,options=>options
                 .Excluding(c=>c.RouteId)
                 .Excluding(x=>x.Sector)
+                .Excluding(x=>x.SearchScore)
             );
 
             response.Route.Should().Be(source.Sector.Route);

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -30,9 +30,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             standard.Should().BeEquivalentTo(standardFromRepo, options=> options
                 .Excluding(c=>c.Sector)
                 .Excluding(c=>c.RouteId)
+                .Excluding(c=>c.SearchScore)
             );
 
             standard.Route.Should().Be(standardFromRepo.Sector.Route);
+                
         }
     }
 }
