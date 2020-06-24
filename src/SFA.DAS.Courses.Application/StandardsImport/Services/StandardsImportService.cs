@@ -14,18 +14,22 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
         private readonly IStandardImportRepository _standardImportRepository;
         private readonly IStandardRepository _standardRepository;
         private readonly IImportAuditRepository _auditRepository;
+        private readonly ISectorRepository _sectorRepository;
         private readonly ILogger<StandardsImportService> _logger;
+        private List<Sector> _sectors;
 
         public StandardsImportService (IInstituteOfApprenticeshipService instituteOfApprenticeshipService, 
                                         IStandardImportRepository standardImportRepository, 
                                         IStandardRepository standardRepository,
                                         IImportAuditRepository auditRepository,
+                                        ISectorRepository sectorRepository,
                                         ILogger<StandardsImportService> logger)
         {
             _instituteOfApprenticeshipService = instituteOfApprenticeshipService;
             _standardImportRepository = standardImportRepository;
             _standardRepository = standardRepository;
             _auditRepository = auditRepository;
+            _sectorRepository = sectorRepository;
             _logger = logger;
         }
         public async Task ImportStandards()
@@ -71,12 +75,34 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
         {
             var standards = (await _instituteOfApprenticeshipService.GetStandards()).ToList();
             _logger.LogInformation($"Retrieved {standards.Count} standards from API");
+
+            await GetAndInsertSectors(standards);
+
+            foreach (var standard in standards)
+            {
+                standard.RouteId = _sectors.Single(c => c.Route.Equals(standard.Route)).Id;
+            }
+            
             _standardImportRepository.DeleteAll();
             await _standardImportRepository.InsertMany(standards
                 .Where(c => c.LarsCode > 0
                             && c.Status.Equals("Approved for Delivery", StringComparison.CurrentCultureIgnoreCase))
                 .Select(c => (StandardImport) c)
                 .ToList());
+        }
+
+        private async Task GetAndInsertSectors(List<Domain.ImportTypes.Standard> standards)
+        {
+            _sectors = standards
+                .Select(c => c.Route)
+                .Distinct()
+                .Select(c => new Sector
+                {
+                    Id = Guid.NewGuid(),
+                    Route = c
+                }).ToList();
+
+            await _sectorRepository.InsertMany(_sectors);
         }
     }
 }
