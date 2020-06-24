@@ -60,5 +60,16 @@ namespace SFA.DAS.Courses.Data.Repository
             
             return standard;
         }
+
+        public async Task<IEnumerable<Standard>> GetFilteredStandards(List<Guid> routeIds)
+        {
+            var standards = await _coursesDataContext
+                .Standards
+                .Where(c => routeIds.Contains(c.RouteId))
+                .Include(c => c.Sector)
+                .ToListAsync();
+
+            return standards;
+        }
     }
 }
