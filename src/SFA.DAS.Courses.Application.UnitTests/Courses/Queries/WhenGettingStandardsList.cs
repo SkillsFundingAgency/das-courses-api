@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -10,7 +9,6 @@ using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
-using GetStandardsListResult = SFA.DAS.Courses.Domain.Courses.GetStandardsListResult;
 
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 {
@@ -22,22 +20,22 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
         public async Task Then_Gets_Standards_From_Service(
             int count,
             GetStandardsListQuery query,
-            GetStandardsListResult serviceResult,
+            List<Standard> standards,
             [Frozen] Mock<IStandardsService> mockStandardsService,
             GetStandardsListQueryHandler handler)
         {
             mockStandardsService
                 .Setup(service => service.GetStandardsList(query.Keyword))
-                .ReturnsAsync(serviceResult);
+                .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count())
                 .ReturnsAsync(count);
 
             var result = await handler.Handle(query, CancellationToken.None);
 
-            result.Standards.Should().BeEquivalentTo(serviceResult.Standards);
+            result.Standards.Should().BeEquivalentTo(standards);
             result.Total.Should().Be(count);
-            result.TotalFiltered.Should().Be(serviceResult.Standards.Count());
+            result.TotalFiltered.Should().Be(standards.Count);
         }
     }
 }

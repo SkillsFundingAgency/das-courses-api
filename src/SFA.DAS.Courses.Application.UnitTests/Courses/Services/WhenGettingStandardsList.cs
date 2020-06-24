@@ -31,10 +31,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var result = (await service.GetStandardsList(null));
 
-            result.Standards.Should().BeEquivalentTo(standardsFromRepo, 
+            result.Should().BeEquivalentTo(standardsFromRepo, 
                 config => config.Excluding(standard => standard.SearchScore));
-            result.Total.Should().Be(count);
-            result.TotalFiltered.Should().Be(standardsFromRepo.Count);
         }
 
         [Test, MoqAutoData]
@@ -64,12 +62,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(manager => manager.Query(keyword))
                 .Returns(searchResult);
 
-            var getStandardsListResult = (await service.GetStandardsList(keyword));
+            var standards = await service.GetStandardsList(keyword);
 
-            getStandardsListResult.Standards.Should().BeEquivalentTo(standardsFoundInSearch,
+            standards.Should().BeEquivalentTo(standardsFoundInSearch,
                 config => config.Excluding(standard => standard.SearchScore));
-            getStandardsListResult.Total.Should().Be(count);
-            getStandardsListResult.TotalFiltered.Should().Be(standardsFoundInSearch.Count);
         }
     }
 }
