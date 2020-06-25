@@ -4,9 +4,10 @@
 
 ## Requirements
 
-DotNet Core 2.2 and any supported IDE for DEV running.
-SQL Server database.
-Azure Storage Account
+- DotNet Core 2.2 and any supported IDE for DEV running.
+- *If you are not wishing to run the in memory database then*
+- SQL Server database.
+- Azure Storage Account
 
 ## About
 
@@ -14,6 +15,12 @@ das-courses-api represents the inner api definition for apprenticeship standards
 
 ## Local running
 
+### In memory database
+It is possible to run the whole of the API using the InMemory database. To do this the environment variable in appsettings.json should be set to **DEV**. 
+Once done, start the application as normal, then run the ```ops/dataload``` operation in swagger. You will then be able to query the API
+as per the operations listed in swagger.
+
+### SQL Server database
 You are able to run the API by doing the following:
 
 * Run the database deployment publish command to create the database ```SFA.DAS.Courses``` or create the database manually and run in the table creation scripts
