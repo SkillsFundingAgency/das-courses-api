@@ -16,3 +16,7 @@
 	CONSTRAINT [AK_Standard_Column] UNIQUE ([Id])
 )
 GO
+
+CREATE NONCLUSTERED INDEX [IDX_Standard_RouteId] ON [dbo].[Standard] (RouteId) 
+INCLUDE (Id,TypicalDuration,Title,[Level],  IntegratedDegree, [MaxFunding], OverviewOfRole,[Keywords],[TypicalJobTitles], CoreSkillsCount,[StandardPageUrl], [Version]) WITH (ONLINE = ON) 
+GO 
