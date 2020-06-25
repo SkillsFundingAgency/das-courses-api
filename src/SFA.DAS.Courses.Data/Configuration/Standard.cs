@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
@@ -24,6 +24,8 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.CoreSkillsCount).HasColumnName("CoreSkillsCount");
             builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
             builder.Property(x => x.Keywords).HasColumnName("Keywords");
+
+            builder.Ignore(x => x.SearchScore);
             
             builder.HasIndex(x => x.Id).IsUnique();
         }
