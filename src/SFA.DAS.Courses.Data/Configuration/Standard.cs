@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
@@ -29,6 +29,8 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .WithMany(c => c.Standards)
                 .HasPrincipalKey(c => c.Id)
                 .HasForeignKey(c => c.RouteId);
+
+            builder.Ignore(x => x.SearchScore);
             
             builder.HasIndex(x => x.Id).IsUnique();
         }
