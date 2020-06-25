@@ -61,6 +61,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             };
             var standardsFoundInSearch = standardsFromRepo
                 .Where(standard => searchResult.Standards.Select(result => result.Id).Contains(standard.Id))
+                .OrderByDescending(standard => standard.SearchScore)
                 .ToList();
             mockStandardsRepository
                 .Setup(repository => repository.GetAll())
@@ -78,7 +79,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 config => config
                     .Excluding(standard => standard.SearchScore)
                     .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId));
+                    .Excluding(standard => standard.RouteId)
+                .WithStrictOrdering());
         }
         
         [Test, RecursiveMoqAutoData]
