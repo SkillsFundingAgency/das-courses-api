@@ -14,6 +14,8 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.TimeStarted).HasColumnName("TimeStarted").HasColumnType("DateTime").IsRequired();
             builder.Property(x => x.TimeFinished).HasColumnName("TimeFinished").HasColumnType("DateTime").IsRequired();
             builder.Property(x => x.RowsImported).HasColumnName("RowsImported").HasColumnType("int").IsRequired();
+            builder.Property(x => x.ImportType).HasColumnName("ImportType").HasColumnType("tinyint").IsRequired().HasDefaultValue(0);
+            builder.Property(x => x.FileName).HasColumnName("FileName").HasColumnType("varchar").HasMaxLength(250).IsRequired(false);
 
             builder.HasIndex(x => x.Id).IsUnique();
         }
