@@ -14,11 +14,11 @@ namespace SFA.DAS.Courses.Domain.Entities
         }
 
         public int Id { get; set; }
-        public DateTime TimeStarted { get;  }
-        public DateTime TimeFinished { get;  }
-        public int RowsImported { get;  }
-        public ImportType ImportType { get ;  }
-        public string FileName { get ;  }
+        public DateTime TimeStarted { get;  set; }
+        public DateTime TimeFinished { get;  set; }
+        public int RowsImported { get;  set; }
+        public ImportType ImportType { get ;  set; }
+        public string FileName { get ;  set; }
     }
 
     public enum ImportType : byte
