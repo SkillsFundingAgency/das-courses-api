@@ -19,6 +19,8 @@ namespace SFA.DAS.Courses.Data.Search
 
         public StandardSearchResultsList Query(string searchTerm)
         {
+            searchTerm = searchTerm.ToLowerInvariant();
+
             var directory = _directoryFactory.GetDirectory();
             var reader = DirectoryReader.Open(directory);
             var searcher = new IndexSearcher(reader);
