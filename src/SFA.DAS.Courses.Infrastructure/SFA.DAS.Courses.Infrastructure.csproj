@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
-
+<ItemGroup>
+  <PackageReference Include="AngleSharp" Version="0.14.0" />
+</ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
   </ItemGroup>

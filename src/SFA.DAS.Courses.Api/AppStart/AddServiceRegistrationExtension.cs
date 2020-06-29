@@ -5,6 +5,7 @@ using SFA.DAS.Courses.Data.Repository;
 using SFA.DAS.Courses.Data.Search;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Infrastructure.Api;
+using SFA.DAS.Courses.Infrastructure.PageParsing;
 
 namespace SFA.DAS.Courses.Api.AppStart
 {
@@ -24,6 +25,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ISectorRepository, SectorRepository>();
             services.AddTransient<ISectorImportRepository, SectorImportRepository>();
             services.AddTransient<ISectorService, SectorService>();
+            services.AddTransient<ILarsPageParser, LarsPageParser>();
         }
     }
 }
