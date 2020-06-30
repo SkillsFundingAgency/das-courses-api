@@ -25,6 +25,8 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IImportAuditRepository, ImportAuditRepository>();
             services.AddTransient<ISectorRepository, SectorRepository>();
             services.AddTransient<ISectorImportRepository, SectorImportRepository>();
+            services.AddTransient<IApprenticeshipFundingImportRepository, ApprenticeshipFundingImportRepository>();
+            services.AddTransient<ILarsStandardImportRepository, LarsStandardImportRepository>();
             services.AddTransient<ISectorService, SectorService>();
             services.AddTransient<ILarsPageParser, LarsPageParser>();
             services.AddHttpClient<ILarsDataDownloadService, LarsDataDownloadService>();

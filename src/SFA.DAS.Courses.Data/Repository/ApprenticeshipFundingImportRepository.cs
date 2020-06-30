@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Data.Repository
 {
-    public class ApprenticeshipFundingImportRepository
+    public class ApprenticeshipFundingImportRepository : IApprenticeshipFundingImportRepository
     {
         private readonly ICoursesDataContext _coursesDataContext;
 
