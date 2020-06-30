@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Configuration;
@@ -10,7 +8,7 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.StandardsImport.Services
 {
-    public class LarsImportService
+    public class LarsImportService  : ILarsImportService
     {
         private readonly ILarsPageParser _larsPageParser;
         private readonly ILarsDataDownloadService _larsDataDownloadService;
