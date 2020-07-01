@@ -1,7 +1,9 @@
-namespace SFA.DAS.Courses.Domain.Entities
+﻿namespace SFA.DAS.Courses.Domain.Entities
 {
     public class Standard : StandardBase
     {
+        public float? SearchScore { get; set; }
+
         public static implicit operator Standard(StandardImport standard)
         {
             return new Standard

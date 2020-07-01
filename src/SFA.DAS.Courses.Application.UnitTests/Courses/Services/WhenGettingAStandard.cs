@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -27,7 +27,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var standard = await service.GetStandard(standardId);
 
-            standard.Should().BeEquivalentTo(standardFromRepo);
+            standard.Should().BeEquivalentTo(standardFromRepo,
+                config => config.Excluding(standard1 => standard1.SearchScore));
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +24,11 @@ namespace SFA.DAS.Courses.Data.Repository
                 .ToListAsync();
             
             return result;
+        }
+
+        public async Task<int> Count()
+        {
+            return await _coursesDataContext.Standards.CountAsync();
         }
 
         public void DeleteAll()

@@ -6,7 +6,8 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardsService
     {
-        Task<IEnumerable<Standard>> GetStandardsList();
+        Task<IEnumerable<Standard>> GetStandardsList(string keyword);
+        Task<int> Count();
         Task<Standard> GetStandard(int standardId);
     }
 }

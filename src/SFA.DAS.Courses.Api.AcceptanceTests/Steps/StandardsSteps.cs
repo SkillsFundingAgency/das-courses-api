@@ -28,7 +28,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
-            model.Standards.Should().BeEquivalentTo(DbUtilities.GetTestStandards());
+            model.Standards.Should().BeEquivalentTo(DbUtilities.GetTestStandards(),
+                config => config.Excluding(standard => standard.SearchScore));
         }
     }
 }
