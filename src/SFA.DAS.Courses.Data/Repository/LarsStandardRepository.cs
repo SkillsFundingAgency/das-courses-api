@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Data.Repository
 {
-    public class LarsStandardRepository
+    public class LarsStandardRepository : ILarsStandardRepository
     {
         private readonly ICoursesDataContext _coursesDataContext;
 
