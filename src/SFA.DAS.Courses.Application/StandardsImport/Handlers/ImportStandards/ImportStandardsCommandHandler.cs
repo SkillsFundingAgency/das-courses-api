@@ -17,10 +17,10 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards
         }
         public async Task<Unit> Handle(ImportStandardsCommand request, CancellationToken cancellationToken)
         {
-            var larsImportResult = _larsImportService.ImportData();
-            var standardsImport =  _standardsImportService.ImportStandards();
+            await _larsImportService.ImportData();
+            await _standardsImportService.ImportStandards();
 
-            await Task.WhenAll(larsImportResult, standardsImport);
+            //await Task.WhenAll(larsImportResult, standardsImport);
             
             return Unit.Value;
         }
