@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -173,10 +174,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_The_Data_Is_Loaded_Into_The_Import_Repository(
+        public async Task Then_The_Standard_Data_Is_Loaded_Into_The_Import_Repository(
             string filePath,
             string content,
             string newFilePath,
+            ApprenticeshipFundingCsv frameWorkCsv,
             List<StandardCsv> standardCsv,
             List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
             [Frozen] Mock<ILarsPageParser> pageParser,
@@ -188,6 +190,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
             LarsImportService larsImportService)
         {
             //Arrange
+            apprenticeFundingCsv = apprenticeFundingCsv.Select(c => {c.ApprenticeshipType = "STD"; return c;}).ToList();
+            frameWorkCsv.ApprenticeshipType = "FRMK"; 
+            apprenticeFundingCsv.Add(frameWorkCsv);
             service.Setup(x => x.GetFileStream(newFilePath))
                 .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
             pageParser.Setup(x => x.GetCurrentLarsDataDownloadFilePath()).ReturnsAsync(newFilePath);
@@ -210,7 +215,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
             larsStandardImportRepository.Verify(x=>
                 x.InsertMany(It.Is<List<LarsStandardImport>>(c=>c.Count.Equals(standardCsv.Count))), Times.Once);
             apprenticeshipFundingImportRepository.Verify(x=>
-                x.InsertMany(It.Is<List<ApprenticeshipFundingImport>>(c=>c.Count.Equals(apprenticeFundingCsv.Count))), Times.Once);
+                x.InsertMany(It.Is<List<ApprenticeshipFundingImport>>(c=>c.Count.Equals(apprenticeFundingCsv.Count-1))), Times.Once);
         }
         
         [Test, RecursiveMoqAutoData]

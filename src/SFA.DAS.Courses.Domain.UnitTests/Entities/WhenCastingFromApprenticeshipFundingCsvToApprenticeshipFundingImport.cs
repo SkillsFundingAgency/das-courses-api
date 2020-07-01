@@ -13,7 +13,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             var actual = (ApprenticeshipFundingImport) apprenticeshipFundingCsv;
             
-            actual.Should().BeEquivalentTo(apprenticeshipFundingCsv, options => options.Excluding(c=>c.ApprenticeshipCode));
+            actual.Should().BeEquivalentTo(apprenticeshipFundingCsv, options => 
+                options
+                    .Excluding(c=>c.ApprenticeshipCode)
+                    .Excluding(c=>c.ApprenticeshipType)
+                );
             actual.StandardId.Should().Be(apprenticeshipFundingCsv.ApprenticeshipCode);
         }
     }

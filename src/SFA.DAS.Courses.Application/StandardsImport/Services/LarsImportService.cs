@@ -87,9 +87,13 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
 
             var larsImportResult = _larsStandardImportRepository
                 .InsertMany(standardsCsv.Select(c => (LarsStandardImport) c).ToList());
+
+            var filterRecords = apprenticeshipFundingCsv
+                .Where(c => c.ApprenticeshipType.StartsWith("STD", StringComparison.CurrentCultureIgnoreCase))
+                .Select(c => (ApprenticeshipFundingImport) c).ToList();
+            
             var apprenticeFundingImportResult =
-                _apprenticeshipFundingImportRepository.InsertMany(apprenticeshipFundingCsv
-                    .Select(c => (ApprenticeshipFundingImport) c).ToList());
+                _apprenticeshipFundingImportRepository.InsertMany(filterRecords);
 
             await Task.WhenAll(larsImportResult, apprenticeFundingImportResult);
         }
