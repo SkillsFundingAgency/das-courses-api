@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Configuration;
@@ -15,6 +16,8 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
         private readonly IImportAuditRepository _importAuditRepository;
         private readonly IApprenticeshipFundingImportRepository _apprenticeshipFundingImportRepository;
         private readonly ILarsStandardImportRepository _larsStandardImportRepository;
+        private readonly IApprenticeshipFundingRepository _apprenticeshipFundingRepository;
+        private readonly ILarsStandardRepository _larsStandardRepository;
         private readonly IZipArchiveHelper _zipArchiveHelper;
 
         public LarsImportService (ILarsPageParser larsPageParser, 
@@ -22,6 +25,8 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             IImportAuditRepository importAuditRepository,
             IApprenticeshipFundingImportRepository apprenticeshipFundingImportRepository,
             ILarsStandardImportRepository larsStandardImportRepository, 
+            IApprenticeshipFundingRepository apprenticeshipFundingRepository,
+            ILarsStandardRepository larsStandardRepository,
             IZipArchiveHelper zipArchiveHelper)
         {
             _larsPageParser = larsPageParser;
@@ -29,6 +34,8 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             _importAuditRepository = importAuditRepository;
             _apprenticeshipFundingImportRepository = apprenticeshipFundingImportRepository;
             _larsStandardImportRepository = larsStandardImportRepository;
+            _apprenticeshipFundingRepository = apprenticeshipFundingRepository;
+            _larsStandardRepository = larsStandardRepository;
             _zipArchiveHelper = zipArchiveHelper;
         }
         public async Task ImportData()
@@ -45,11 +52,36 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             var importAuditStartTime = DateTime.UtcNow;
             var content = await _larsDataDownloadService.GetFileStream(filePath.Result);
 
+            await InsertDataFromZipStreamToImportTables(content);
+
+            _larsStandardRepository.DeleteAll();
+            _apprenticeshipFundingRepository.DeleteAll();
+
+            var larsStandardImports = _larsStandardImportRepository.GetAll();
+            var apprenticeshipFundingImports = _apprenticeshipFundingImportRepository.GetAll();
+
+            await Task.WhenAll(larsStandardImports, apprenticeshipFundingImports);
+
+            var importLarsStandardResult =
+                _larsStandardRepository.InsertMany(larsStandardImports.Result.Select(c => (LarsStandard) c).ToList());
+            var importApprenticeshipFundingResult =
+                _apprenticeshipFundingRepository.InsertMany(apprenticeshipFundingImports.Result.Select(c => (ApprenticeshipFunding) c).ToList());
+            
+            await Task.WhenAll(importLarsStandardResult, importApprenticeshipFundingResult);
+
+            var rowsImported = larsStandardImports.Result.Count() + apprenticeshipFundingImports.Result.Count();
+            
+            await _importAuditRepository.Insert(new ImportAudit(importAuditStartTime, rowsImported, ImportType.LarsImport, filePath.Result));
+        }
+
+        private async Task InsertDataFromZipStreamToImportTables(Stream content)
+        {
             var standardsCsv = _zipArchiveHelper
                 .ExtractModelFromCsvFileZipStream<StandardCsv>(content, Constants.LarsStandardsFileName);
             var apprenticeshipFundingCsv = _zipArchiveHelper
-                .ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(content, Constants.LarsApprenticeshipFundingFileName);
-            
+                .ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(content,
+                    Constants.LarsApprenticeshipFundingFileName);
+
             _larsStandardImportRepository.DeleteAll();
             _apprenticeshipFundingImportRepository.DeleteAll();
 
@@ -60,9 +92,6 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
                     .Select(c => (ApprenticeshipFundingImport) c).ToList());
 
             await Task.WhenAll(larsImportResult, apprenticeFundingImportResult);
-            
-            await _importAuditRepository.Insert(new ImportAudit(importAuditStartTime, 0, ImportType.LarsImport, filePath.Result));
         }
-        
     }
 }

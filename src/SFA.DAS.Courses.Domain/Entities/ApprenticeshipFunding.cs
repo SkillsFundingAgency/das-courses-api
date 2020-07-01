@@ -11,8 +11,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveTo = apprenticeshipFundingImport.EffectiveTo,
                 StandardId = apprenticeshipFundingImport.StandardId,
                 MaxEmployerLevyCap = apprenticeshipFundingImport.MaxEmployerLevyCap
-            }; 
-                
+            };
         }
     }
 }

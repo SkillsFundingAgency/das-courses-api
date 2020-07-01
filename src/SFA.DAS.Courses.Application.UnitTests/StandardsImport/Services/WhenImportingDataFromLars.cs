@@ -173,7 +173,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_The_Data_Is_Loaded_Into_The_Repository(
+        public async Task Then_The_Data_Is_Loaded_Into_The_Import_Repository(
             string filePath,
             string content,
             string newFilePath,
@@ -212,14 +212,20 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
             apprenticeshipFundingImportRepository.Verify(x=>
                 x.InsertMany(It.Is<List<ApprenticeshipFundingImport>>(c=>c.Count.Equals(apprenticeFundingCsv.Count))), Times.Once);
         }
-
+        
         [Test, RecursiveMoqAutoData]
-        public async Task Then_An_Audit_Record_Is_Created(
+        public async Task Then_The_Data_Is_Deleted_From_The_Repository(
+            string filePath,
             string content,
             string newFilePath,
+            List<StandardCsv> standardCsv,
+            List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
             [Frozen] Mock<ILarsPageParser> pageParser,
             [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
+            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
             [Frozen] Mock<IImportAuditRepository> repository,
+            [Frozen] Mock<IZipArchiveHelper> zipHelper,
             LarsImportService larsImportService)
         {
             //Arrange
@@ -228,15 +234,104 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
             pageParser.Setup(x => x.GetCurrentLarsDataDownloadFilePath()).ReturnsAsync(newFilePath);
             repository.Setup(x => x.GetLastImportByType(ImportType.LarsImport))
                 .ReturnsAsync((ImportAudit)null);
+            zipHelper.Setup(x =>
+                    x.ExtractModelFromCsvFileZipStream<StandardCsv>(It.IsAny<Stream>(),
+                        Constants.LarsStandardsFileName))
+                .Returns(standardCsv);
+            zipHelper.Setup(x =>
+                    x.ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(It.IsAny<Stream>(),
+                        Constants.LarsApprenticeshipFundingFileName))
+                .Returns(apprenticeFundingCsv);
+            
+            
+            //Act
+            await larsImportService.ImportData();
+
+            //Assert
+            larsStandardRepository.Verify(x=> x.DeleteAll(), Times.Once);
+            apprenticeshipFundingRepository.Verify(x=> x.DeleteAll(), Times.Once);
+            
+        }
+        
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_Data_Is_Added_From_The_Import_Repositories(
+            string filePath,
+            string content,
+            string newFilePath,
+            List<LarsStandardImport> larsStandardImports,
+            List<ApprenticeshipFundingImport> apprenticeshipFundingImports,
+            List<StandardCsv> standardCsv,
+            List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
+            [Frozen] Mock<ILarsPageParser> pageParser,
+            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
+            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
+            [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<IImportAuditRepository> repository,
+            [Frozen] Mock<IZipArchiveHelper> zipHelper,
+            LarsImportService larsImportService)
+        {
+            //Arrange
+            service.Setup(x => x.GetFileStream(newFilePath))
+                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
+            pageParser.Setup(x => x.GetCurrentLarsDataDownloadFilePath()).ReturnsAsync(newFilePath);
+            repository.Setup(x => x.GetLastImportByType(ImportType.LarsImport))
+                .ReturnsAsync((ImportAudit)null);
+            zipHelper.Setup(x =>
+                    x.ExtractModelFromCsvFileZipStream<StandardCsv>(It.IsAny<Stream>(),
+                        Constants.LarsStandardsFileName))
+                .Returns(standardCsv);
+            zipHelper.Setup(x =>
+                    x.ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(It.IsAny<Stream>(),
+                        Constants.LarsApprenticeshipFundingFileName))
+                .Returns(apprenticeFundingCsv);
+            larsStandardImportRepository.Setup(x => x.GetAll()).ReturnsAsync(larsStandardImports);
+            apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);
+            
+            //Act
+            await larsImportService.ImportData();
+
+            //Assert
+            larsStandardRepository.Verify(x=>
+                x.InsertMany(It.Is<List<LarsStandard>>(c=>c.Count.Equals(larsStandardImports.Count))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x=>
+                x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c=>c.Count.Equals(apprenticeshipFundingImports.Count))), Times.Once);
+            
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_An_Audit_Record_Is_Created(
+            string content,
+            string newFilePath,
+            List<LarsStandardImport> larsStandardImports,
+            List<ApprenticeshipFundingImport> apprenticeshipFundingImports,
+            [Frozen] Mock<ILarsPageParser> pageParser,
+            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IImportAuditRepository> repository,
+            [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            LarsImportService larsImportService)
+        {
+            //Arrange
+            service.Setup(x => x.GetFileStream(newFilePath))
+                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
+            pageParser.Setup(x => x.GetCurrentLarsDataDownloadFilePath()).ReturnsAsync(newFilePath);
+            repository.Setup(x => x.GetLastImportByType(ImportType.LarsImport))
+                .ReturnsAsync((ImportAudit)null);
+            larsStandardImportRepository.Setup(x => x.GetAll()).ReturnsAsync(larsStandardImports);
+            apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);
             
             //Act
             await larsImportService.ImportData();
             
             //Assert
+            var totalRecords = larsStandardImports.Count + apprenticeshipFundingImports.Count;
             repository.Verify(x=>x
                 .Insert(It.Is<ImportAudit>(c
                     =>c.ImportType.Equals(ImportType.LarsImport) 
-                      && c.FileName.Equals(newFilePath))), 
+                      && c.FileName.Equals(newFilePath)
+                      && c.RowsImported.Equals(totalRecords))), 
                 Times.Once);
         }
     }
