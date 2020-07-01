@@ -24,9 +24,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("typicalDuration")]
         public int TypicalDuration { get; set; }
 
-        [JsonProperty("maxFunding")]
-        public long MaxFunding { get; set; }
-
         [JsonProperty("route")]
         public string Route { get; set; }
         

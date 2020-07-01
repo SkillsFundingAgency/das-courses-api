@@ -5,7 +5,6 @@
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
-	[MaxFunding] BIGINT NOT NULL,
 	[OverviewOfRole] VARCHAR(MAX) NOT NULL,
     [RouteId] UNIQUEIDENTIFIER NOT NULL,
 	[Keywords] VARCHAR(MAX) NULL,

@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Courses.Domain.Courses;
+using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
@@ -8,7 +8,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string Title { get; set; }
         public int Level { get; set; }
         public decimal Version { get; set; }
-        public long MaxFunding { get; set; }
+        
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public int TypicalDuration { get; set; }
@@ -26,7 +26,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Title = source.Title,
                 Level = source.Level,
                 Version = source.Version,
-                MaxFunding = source.MaxFunding,
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 TypicalDuration = source.TypicalDuration,
