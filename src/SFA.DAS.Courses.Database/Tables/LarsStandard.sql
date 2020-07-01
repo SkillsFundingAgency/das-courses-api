@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[LarsStandard_Import]
+﻿CREATE TABLE [dbo].[LarsStandard]
 (
 	[Id] UNIQUEIDENTIFIER PRIMARY KEY,
 	[StandardId] INT NOT NULL,
