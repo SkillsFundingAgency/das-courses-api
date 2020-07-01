@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -22,11 +23,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.SectorRepository
             {
                 new Sector()
                 {
-                    Id = Guid.NewGuid()
+                    Id = Guid.NewGuid(),
+                    Route = "Second"
                 },
                 new Sector
                 {
-                    Id = Guid.NewGuid()
+                    Id = Guid.NewGuid(),
+                    Route="First"
                 }
             };
             
@@ -44,7 +47,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.SectorRepository
             
             //Assert
             Assert.IsNotNull(sectors);
-            sectors.Should().BeEquivalentTo(_sectors);
+            sectors.Should().BeEquivalentTo(_sectors.OrderBy(c=>c.Route), options=>options.WithStrictOrdering());
         }
     }
 }
