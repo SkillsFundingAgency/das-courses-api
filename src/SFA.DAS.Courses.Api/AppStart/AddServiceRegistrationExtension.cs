@@ -31,6 +31,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ILarsStandardRepository, LarsStandardRepository>();
             services.AddTransient<ISectorService, SectorService>();
             services.AddTransient<ILarsPageParser, LarsPageParser>();
+            services.AddTransient<ILevelsService, LevelsService>();
             services.AddHttpClient<ILarsDataDownloadService, LarsDataDownloadService>();
             services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
             services.AddTransient<ILarsImportService, LarsImportService>();
