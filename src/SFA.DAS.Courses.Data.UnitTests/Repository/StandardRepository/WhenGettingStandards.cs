@@ -32,7 +32,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             _coursesDataContext = new Mock<ICoursesDataContext>();
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(_standards);
             
-
             _standardRepository = new Data.Repository.StandardRepository(_coursesDataContext.Object);
         }
 

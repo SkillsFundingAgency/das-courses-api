@@ -30,6 +30,16 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .HasPrincipalKey(c => c.Id)
                 .HasForeignKey(c => c.RouteId);
 
+            builder.HasMany(c => c.LarsStandard)
+                .WithOne(c => c.Standard)
+                .HasForeignKey(c => c.StandardId)
+                .HasPrincipalKey(c => c.Id);
+
+            builder.HasMany(c => c.ApprenticeshipFunding)
+                .WithOne(c => c.Standard)
+                .HasForeignKey(c => c.StandardId)
+                .HasPrincipalKey(c => c.Id);
+            
             builder.Ignore(x => x.SearchScore);
             
             builder.HasIndex(x => x.Id).IsUnique();

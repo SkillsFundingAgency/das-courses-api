@@ -21,6 +21,8 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             var result = await _coursesDataContext.Standards
                 .Include(c=>c.Sector)
+                .Include(c=>c.ApprenticeshipFunding)
+                .Include(c=>c.LarsStandard)
                 .OrderBy(c=>c.Title)
                 .ToListAsync();
             
@@ -51,6 +53,8 @@ namespace SFA.DAS.Courses.Data.Repository
             var standard = await _coursesDataContext
                 .Standards
                 .Include(c=>c.Sector)
+                .Include(c=>c.ApprenticeshipFunding)
+                .Include(c=>c.LarsStandard)
                 .SingleOrDefaultAsync(c=>c.Id.Equals(id));
 
             if (standard == null)
@@ -67,6 +71,9 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Standards
                 .Where(c => routeIds.Contains(c.RouteId))
                 .Include(c => c.Sector)
+                .Include(c=>c.ApprenticeshipFunding)
+                .Include(c=>c.LarsStandard)
+                .OrderBy(c=>c.Title)
                 .ToListAsync();
 
             return standards;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -18,6 +19,8 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string CoreSkillsCount { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
+        public virtual ICollection<LarsStandard> LarsStandard { get; set; }
+        public virtual ICollection<ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
         
     }
 }
