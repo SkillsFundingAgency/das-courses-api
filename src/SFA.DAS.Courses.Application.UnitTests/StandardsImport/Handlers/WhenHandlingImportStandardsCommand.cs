@@ -12,16 +12,18 @@ namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Handlers
     public class WhenHandlingImportStandardsCommand
     {
         [Test, MoqAutoData]
-        public async Task Then_The_Service_Is_Called_To_Import_Data(
+        public async Task Then_The_Services_Are_Called_To_Import_Data(
             ImportStandardsCommand command,
-            [Frozen] Mock<IStandardsImportService> service,
+            [Frozen] Mock<IStandardsImportService> standardsImportService,
+            [Frozen] Mock<ILarsImportService> larsImportService,
             ImportStandardsCommandHandler handler)
         {
             // Act
             await handler.Handle(command, new CancellationToken());
             
             //Assert
-            service.Verify(x=>x.ImportStandards(), Times.Once);
+            larsImportService.Verify(x=>x.ImportData(), Times.Once);
+            standardsImportService.Verify(x=>x.ImportStandards(), Times.Once);
         }
     }
 }
