@@ -10,13 +10,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardImportRepository
     public class WhenDeletingAllItems
     {
         private Mock<ICoursesDataContext> _coursesDataContext;
-        private List<LarsStandardImport> _sectorsImport;
-        private Data.Repository.LarsStandardImportRepository _sectorImportRepository;
+        private List<LarsStandardImport> _larsStandardImports;
+        private Data.Repository.LarsStandardImportRepository _larsStandardImportRepository;
 
         [SetUp]
         public void Arrange()
         {
-            _sectorsImport = new List<LarsStandardImport>
+            _larsStandardImports = new List<LarsStandardImport>
             {
                 new LarsStandardImport
                 {
@@ -29,17 +29,17 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardImportRepository
             };
             
             _coursesDataContext = new Mock<ICoursesDataContext>();
-            _coursesDataContext.Setup(x => x.LarsStandardsImport).ReturnsDbSet(_sectorsImport);
+            _coursesDataContext.Setup(x => x.LarsStandardsImport).ReturnsDbSet(_larsStandardImports);
             
 
-            _sectorImportRepository = new Data.Repository.LarsStandardImportRepository(_coursesDataContext.Object);
+            _larsStandardImportRepository = new Data.Repository.LarsStandardImportRepository(_coursesDataContext.Object);
         }
 
         [Test]
         public void Then_The_LarsStandardImport_Items_Are_Removed()
         {
             //Act
-            _sectorImportRepository.DeleteAll();
+            _larsStandardImportRepository.DeleteAll();
             
             //Assert
             _coursesDataContext.Verify(x=>x.LarsStandardsImport.RemoveRange(_coursesDataContext.Object.LarsStandardsImport), Times.Once);

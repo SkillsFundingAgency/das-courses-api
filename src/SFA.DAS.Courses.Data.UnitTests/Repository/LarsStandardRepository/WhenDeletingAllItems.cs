@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
+using SFA.DAS.Courses.Domain.Entities;
+
+namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardRepository
+{
+    public class WhenDeletingAllItems
+    {
+        private Mock<ICoursesDataContext> _coursesDataContext;
+        private List<LarsStandard> _larsStandards;
+        private Data.Repository.LarsStandardRepository _larsStandardRepository;
+
+        [SetUp]
+        public void Arrange()
+        {
+            _larsStandards = new List<LarsStandard>
+            {
+                new LarsStandard
+                {
+                    Id = Guid.NewGuid()
+                },
+                new LarsStandard
+                {
+                    Id = Guid.NewGuid()
+                }
+            };
+            
+            _coursesDataContext = new Mock<ICoursesDataContext>();
+            _coursesDataContext.Setup(x => x.LarsStandards).ReturnsDbSet(_larsStandards);
+            
+
+            _larsStandardRepository = new Data.Repository.LarsStandardRepository(_coursesDataContext.Object);
+        }
+
+        [Test]
+        public void Then_The_LarsStandard_Items_Are_Removed()
+        {
+            //Act
+            _larsStandardRepository.DeleteAll();
+            
+            //Assert
+            _coursesDataContext.Verify(x=>x.LarsStandards.RemoveRange(_coursesDataContext.Object.LarsStandards), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+        }
+    }
+}

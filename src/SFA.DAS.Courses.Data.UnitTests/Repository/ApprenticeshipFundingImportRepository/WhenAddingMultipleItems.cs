@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingImportR
         }
 
         [Test]
-        public async Task Then_The_LarsStandardImport_Items_Are_Added()
+        public async Task Then_The_ApprenticeshipFundingImport_Items_Are_Added()
         {
             //Act
             await _apprenticeshipFundingImportRepository.InsertMany(_apprenticeshipFundingImports);

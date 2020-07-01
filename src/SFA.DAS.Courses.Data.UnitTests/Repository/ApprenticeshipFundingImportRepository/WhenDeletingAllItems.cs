@@ -10,13 +10,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingImportR
     public class WhenDeletingAllItems
     {
         private Mock<ICoursesDataContext> _coursesDataContext;
-        private List<ApprenticeshipFundingImport> _sectorsImport;
+        private List<ApprenticeshipFundingImport> _apprenticeshipFundingImports;
         private Data.Repository.ApprenticeshipFundingImportRepository _apprenticeshipFundingImportRepository;
 
         [SetUp]
         public void Arrange()
         {
-            _sectorsImport = new List<ApprenticeshipFundingImport>
+            _apprenticeshipFundingImports = new List<ApprenticeshipFundingImport>
             {
                 new ApprenticeshipFundingImport
                 {
@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingImportR
             };
             
             _coursesDataContext = new Mock<ICoursesDataContext>();
-            _coursesDataContext.Setup(x => x.ApprenticeshipFundingImport).ReturnsDbSet(_sectorsImport);
+            _coursesDataContext.Setup(x => x.ApprenticeshipFundingImport).ReturnsDbSet(_apprenticeshipFundingImports);
             
 
             _apprenticeshipFundingImportRepository = new Data.Repository.ApprenticeshipFundingImportRepository(_coursesDataContext.Object);
