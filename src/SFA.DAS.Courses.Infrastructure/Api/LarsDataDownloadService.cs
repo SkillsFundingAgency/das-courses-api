@@ -16,7 +16,9 @@ namespace SFA.DAS.Courses.Infrastructure.Api
 
         public async Task<Stream> GetFileStream(string downloadPath)
         {
-            var stream = await _client.GetStreamAsync(downloadPath);
+            var response = await _client.GetAsync(downloadPath);
+            response.EnsureSuccessStatusCode();
+            var stream = await response.Content.ReadAsStreamAsync();
             
             return stream;
         }
