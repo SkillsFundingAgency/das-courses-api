@@ -12,7 +12,8 @@ namespace SFA.DAS.Courses.Infrastructure.StreamHelper
     {
         public IEnumerable<T> ExtractModelFromCsvFileZipStream<T>(Stream stream, string filePath)
         {
-            using (var zip = new ZipArchive(stream, ZipArchiveMode.Read, false))
+            
+            using(var zip = new ZipArchive(stream, ZipArchiveMode.Read, true))
             {
                 var entry = zip.Entries.FirstOrDefault(m => m.FullName.EndsWith(filePath));
 
@@ -21,10 +22,10 @@ namespace SFA.DAS.Courses.Infrastructure.StreamHelper
                     return null;
                 }
 
-                using (var reader = new StreamReader(entry.Open()))
+                using (var reader = new StreamReader(entry.Open())) 
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    return csv.GetRecords<T>();
+                    return csv.GetRecords<T>().ToList();
                 }
             }
         }
