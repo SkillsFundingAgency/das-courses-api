@@ -25,6 +25,8 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.Keywords).HasColumnName("Keywords");
 
             builder.Ignore(x => x.Sector);
+            builder.Ignore(x => x.ApprenticeshipFunding);
+            builder.Ignore(x => x.LarsStandard);
             
             builder.HasIndex(x => x.Id).IsUnique();
         }
