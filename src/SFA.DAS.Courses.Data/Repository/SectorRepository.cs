@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
@@ -26,7 +27,7 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             var sectors = await _coursesDataContext.Sectors.ToListAsync();
 
-            return sectors;
+            return sectors.OrderBy(c=>c.Route);
         }
 
         public void DeleteAll()
