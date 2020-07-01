@@ -67,6 +67,7 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Standards
                 .Where(c => routeIds.Contains(c.RouteId))
                 .Include(c => c.Sector)
+                .OrderBy(c=>c.Title)
                 .ToListAsync();
 
             return standards;
