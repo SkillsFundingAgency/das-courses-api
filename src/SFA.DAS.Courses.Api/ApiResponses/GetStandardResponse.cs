@@ -1,3 +1,5 @@
+﻿using System.Collections.Generic;
+using System.Linq;
 using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
@@ -18,6 +20,10 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
 
+        public List<ApprenticeshipFundingResponse> ApprenticeshipFunding { get ; set ; }
+
+        public List<StandardDatesResponse> StandardDates { get ; set ; }
+
         public static implicit operator GetStandardResponse(Standard source)
         {
             return new GetStandardResponse
@@ -33,8 +39,11 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
                 StandardPageUrl = source.StandardPageUrl,
-                IntegratedDegree = source.IntegratedDegree
+                IntegratedDegree = source.IntegratedDegree,
+                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
+                StandardDates = source.StandardDates.Select(c=>(StandardDatesResponse)c).ToList()
             };
         }
     }
 }
+

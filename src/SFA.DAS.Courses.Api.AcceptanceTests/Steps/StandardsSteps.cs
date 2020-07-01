@@ -31,6 +31,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             model.Standards.Should().BeEquivalentTo(DbUtilities.GetTestStandards(DbUtilities.GetTestSectors().ToList()), options=> options
                     .Excluding(std=>std.Sector)
+                    .Excluding(std => std.ApprenticeshipFunding)
+                    .Excluding(std => std.LarsStandard)
                     .Excluding(std=>std.RouteId)
                     .Excluding(std=>std.SearchScore)
                 );
