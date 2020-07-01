@@ -53,11 +53,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             _searchManager = new CoursesSearchManager(directoryFactory);
         }
 
-        [TestCase("software", 1, DeveloperId, TestName = "Title case insensitive")]
+        [TestCase("SOFTWARE", 1, DeveloperId, TestName = "Title case insensitive")]
         [TestCase("softawre", 1, DeveloperId, TestName = "Title soundex")]
-        [TestCase("application", 1, DeveloperId, TestName = "TypicalJobTitles case insensitive")]
+        [TestCase("APPLICATION", 1, DeveloperId, TestName = "TypicalJobTitles case insensitive")]
         [TestCase("applacation", 1, DeveloperId, TestName = "TypicalJobTitles soundex")]
-        [TestCase("coding", 1, DeveloperId, TestName = "Keywords case insensitive")]
+        [TestCase("CODING", 1, DeveloperId, TestName = "Keywords case insensitive")]
         [TestCase("kodng", 1, DeveloperId, TestName = "Keywords soundex")]
         public void Then_Searches_Test_Cases(string searchTerm, int expectedCount, int expectedId)
         {

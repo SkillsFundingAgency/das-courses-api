@@ -1,7 +1,4 @@
 ﻿using System.Linq;
-using Lucene.Net.Analysis;
-using Lucene.Net.Analysis.Phonetic;
-using Lucene.Net.Analysis.Phonetic.Language;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
@@ -26,19 +23,14 @@ namespace SFA.DAS.Courses.Data.Search
 
         public void Build()
         {
-            var analyzer = Analyzer.NewAnonymous((fieldName, reader) =>
-            {
-                var source = new StandardTokenizer(LuceneVersion.LUCENE_48, reader);
-                var filter = new PhoneticFilter(source, new Soundex(), true);
-                return new TokenStreamComponents(source, filter);
-            });
-
+            var standardAnalyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
+            var config = new IndexWriterConfig(LuceneVersion.LUCENE_48, standardAnalyzer);
             var directory = _directoryFactory.GetDirectory();
-            using (var writer = new IndexWriter(directory, new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer)))
+            
+            using (var writer = new IndexWriter(directory, config))
             {
                 foreach (var standard in _coursesDataContext.Standards.OrderBy(standard => standard.Title))
                 {
-                
                     var doc = new Document();
                     var searchable = new SearchableStandard(standard);
 
