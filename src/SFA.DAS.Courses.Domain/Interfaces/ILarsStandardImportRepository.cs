@@ -8,5 +8,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     {
         Task InsertMany(IEnumerable<LarsStandardImport> larsStandardImports);
         void DeleteAll();
+        Task<IEnumerable<LarsStandardImport>> GetAll();
     }
 }

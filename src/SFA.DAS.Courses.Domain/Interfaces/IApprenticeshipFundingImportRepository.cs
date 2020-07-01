@@ -8,5 +8,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     {
         Task InsertMany(IEnumerable<ApprenticeshipFundingImport> apprenticeshipFundingImports);
         void DeleteAll();
+        Task<IEnumerable<ApprenticeshipFundingImport>> GetAll();
     }
 }
