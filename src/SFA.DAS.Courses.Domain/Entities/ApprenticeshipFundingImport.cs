@@ -13,7 +13,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = apprenticeshipFundingCsv.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingCsv.EffectiveTo,
                 StandardId = apprenticeshipFundingCsv.ApprenticeshipCode,
-                MaxEmployerLevyCap = apprenticeshipFundingCsv.MaxEmployerLevyCap
+                MaxEmployerLevyCap = Convert.ToInt32(apprenticeshipFundingCsv.MaxEmployerLevyCap)
             }; 
                 
         }
