@@ -15,12 +15,16 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             var response = (Standard)source;
 
             response.Should().BeEquivalentTo(source,options=>options
+                .Excluding(c=>c.ApprenticeshipFunding)
+                .Excluding(c=>c.LarsStandard)
                 .Excluding(c=>c.RouteId)
                 .Excluding(x=>x.Sector)
                 .Excluding(x=>x.SearchScore)
             );
 
             response.Route.Should().Be(source.Sector.Route);
+            response.ApprenticeshipFunding.Should().NotBeNull();
+            response.StandardDates.Should().NotBeNull();
         }
     }
 }

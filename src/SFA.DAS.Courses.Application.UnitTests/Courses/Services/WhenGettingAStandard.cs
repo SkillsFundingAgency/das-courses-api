@@ -28,6 +28,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var standard = await service.GetStandard(standardId);
 
             standard.Should().BeEquivalentTo(standardFromRepo, options=> options
+                .Excluding(c=>c.ApprenticeshipFunding)
+                .Excluding(c=>c.LarsStandard)
                 .Excluding(c=>c.Sector)
                 .Excluding(c=>c.RouteId)
                 .Excluding(c=>c.SearchScore)

@@ -34,9 +34,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             result.Should().BeEquivalentTo(standardsFromRepo, 
                 config => config
-                .Excluding(standard => standard.SearchScore)
-                .Excluding(standard => standard.Sector)
-                .Excluding(standard => standard.RouteId)
+                    .Excluding(standard => standard.LarsStandard)
+                    .Excluding(standard => standard.ApprenticeshipFunding)
+                    .Excluding(standard => standard.SearchScore)
+                    .Excluding(standard => standard.Sector)
+                    .Excluding(standard => standard.RouteId)
                 );
             
             foreach (var standard in result)
@@ -77,6 +79,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             standards.Should().BeEquivalentTo(standardsFoundInSearch,
                 config => config
+                    .Excluding(standard => standard.LarsStandard)
+                    .Excluding(standard => standard.ApprenticeshipFunding)
                     .Excluding(standard => standard.SearchScore)
                     .Excluding(standard => standard.Sector)
                     .Excluding(standard => standard.RouteId)
@@ -116,6 +120,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch,
                 config => config
                     .Excluding(standard => standard.SearchScore)
+                    .Excluding(standard => standard.ApprenticeshipFunding)
+                    .Excluding(standard => standard.LarsStandard)
                     .Excluding(standard => standard.Sector)
                     .Excluding(standard => standard.RouteId));
             
