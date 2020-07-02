@@ -30,7 +30,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(repository => repository.Count())
                 .ReturnsAsync(count);
 
-            var result = (await service.GetStandardsList("", null)).ToList();
+            var result = (await service.GetStandardsList("", new List<Guid>(), new List<int>())).ToList();
 
             result.Should().BeEquivalentTo(standardsFromRepo, 
                 config => config
@@ -75,7 +75,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(manager => manager.Query(keyword))
                 .Returns(searchResult);
 
-            var standards = await service.GetStandardsList(keyword, null);
+            var standards = await service.GetStandardsList(keyword, new List<Guid>(), new List<int>());
 
             standards.Should().BeEquivalentTo(standardsFoundInSearch,
                 config => config
@@ -106,7 +106,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.Id).Contains(standard.Id))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetFilteredStandards(routeIds))
+                .Setup(repository => repository.GetFilteredStandards(routeIds, new List<int>()))
                 .ReturnsAsync(standardsFromRepo);
             mockStandardsRepository
                 .Setup(repository => repository.Count())
@@ -115,13 +115,45 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(manager => manager.Query(keyword))
                 .Returns(searchResult);
 
-            var getStandardsListResult = (await service.GetStandardsList(keyword, routeIds));
+            var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>());
 
             getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch,
                 config => config
                     .Excluding(standard => standard.SearchScore)
                     .Excluding(standard => standard.ApprenticeshipFunding)
                     .Excluding(standard => standard.LarsStandard)
+                    .Excluding(standard => standard.Sector)
+                    .Excluding(standard => standard.RouteId));
+            
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task And_Has_Levels_Then_Gets_Standards_From_Filters(
+            int count,
+            List<int> levelCodes,
+            List<Standard> standardsFromRepo,
+            StandardSearchResultsList searchResult,
+            [Frozen] Mock<IStandardRepository> mockStandardsRepository,
+            StandardsService service)
+        {
+            searchResult.Standards = new List<StandardSearchResult>
+            {
+                new StandardSearchResult{Id = standardsFromRepo[0].Id}
+            };
+
+            mockStandardsRepository
+                .Setup(repository => repository.GetFilteredStandards(new List<Guid>(), levelCodes))
+                .ReturnsAsync(standardsFromRepo);
+            mockStandardsRepository
+                .Setup(repository => repository.Count())
+                .ReturnsAsync(count);
+
+
+            var getStandardsListResult = await service.GetStandardsList("", new List<Guid>(), levelCodes);
+
+            getStandardsListResult.Should().BeEquivalentTo(standardsFromRepo,
+                config => config
+                    .Excluding(standard => standard.SearchScore)
                     .Excluding(standard => standard.Sector)
                     .Excluding(standard => standard.RouteId));
             
