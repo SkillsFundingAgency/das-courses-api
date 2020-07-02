@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;
@@ -19,6 +20,7 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
         private readonly IApprenticeshipFundingRepository _apprenticeshipFundingRepository;
         private readonly ILarsStandardRepository _larsStandardRepository;
         private readonly IZipArchiveHelper _zipArchiveHelper;
+        private readonly ILogger<LarsImportService> _logger;
 
         public LarsImportService (ILarsPageParser larsPageParser, 
             ILarsDataDownloadService larsDataDownloadService, 
@@ -27,7 +29,8 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             ILarsStandardImportRepository larsStandardImportRepository, 
             IApprenticeshipFundingRepository apprenticeshipFundingRepository,
             ILarsStandardRepository larsStandardRepository,
-            IZipArchiveHelper zipArchiveHelper)
+            IZipArchiveHelper zipArchiveHelper,
+            ILogger<LarsImportService> logger)
         {
             _larsPageParser = larsPageParser;
             _larsDataDownloadService = larsDataDownloadService;
@@ -37,6 +40,7 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             _apprenticeshipFundingRepository = apprenticeshipFundingRepository;
             _larsStandardRepository = larsStandardRepository;
             _zipArchiveHelper = zipArchiveHelper;
+            _logger = logger;
         }
         public async Task ImportData()
         {
@@ -47,13 +51,16 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
 
             if (lastFilePath.Result != null && filePath.Result.Equals(lastFilePath.Result.FileName, StringComparison.CurrentCultureIgnoreCase))
             {
+                _logger.LogInformation("LARS Import - no new data to import");
                 return;
             }
+            _logger.LogInformation($"LARS import - starting import of {filePath.Result}");
             var importAuditStartTime = DateTime.UtcNow;
             var content = await _larsDataDownloadService.GetFileStream(filePath.Result);
 
             await InsertDataFromZipStreamToImportTables(content);
 
+            _logger.LogInformation("LARS Import - starting data transfer from import tables");
             _larsStandardRepository.DeleteAll();
             _apprenticeshipFundingRepository.DeleteAll();
 
@@ -72,10 +79,12 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
             var rowsImported = larsStandardImports.Result.Count() + apprenticeshipFundingImports.Result.Count();
             
             await _importAuditRepository.Insert(new ImportAudit(importAuditStartTime, rowsImported, ImportType.LarsImport, filePath.Result));
+            _logger.LogInformation("LARS Import - finished data transfer from import tables");
         }
 
         private async Task InsertDataFromZipStreamToImportTables(Stream content)
         {
+            _logger.LogInformation("LARS Import - starting extract from ZIP");
             var standardsCsv = _zipArchiveHelper
                 .ExtractModelFromCsvFileZipStream<StandardCsv>(content, Constants.LarsStandardsFileName);
             var apprenticeshipFundingCsv = _zipArchiveHelper
@@ -96,6 +105,8 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
                 _apprenticeshipFundingImportRepository.InsertMany(filterRecords);
 
             await Task.WhenAll(larsImportResult, apprenticeFundingImportResult);
+            
+            _logger.LogInformation("LARS Import - finished load into Import tables");
         }
     }
 }
