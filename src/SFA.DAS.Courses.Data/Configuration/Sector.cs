@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.HasMany(c => c.Standards)
                 .WithOne(c => c.Sector)
                 .HasForeignKey(c => c.RouteId)
-                .HasPrincipalKey(c => c.Id);
+                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
             
             builder.HasIndex(x => x.Id).IsUnique();
         }

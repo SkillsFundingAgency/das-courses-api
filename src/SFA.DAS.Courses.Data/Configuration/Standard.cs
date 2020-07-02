@@ -27,17 +27,17 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.HasOne(c => c.Sector)
                 .WithMany(c => c.Standards)
                 .HasPrincipalKey(c => c.Id)
-                .HasForeignKey(c => c.RouteId);
+                .HasForeignKey(c => c.RouteId).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.HasMany(c => c.LarsStandard)
                 .WithOne(c => c.Standard)
                 .HasForeignKey(c => c.StandardId)
-                .HasPrincipalKey(c => c.Id);
+                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.HasMany(c => c.ApprenticeshipFunding)
                 .WithOne(c => c.Standard)
                 .HasForeignKey(c => c.StandardId)
-                .HasPrincipalKey(c => c.Id);
+                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
             
             builder.Ignore(x => x.SearchScore);
             

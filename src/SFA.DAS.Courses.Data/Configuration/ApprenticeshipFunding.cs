@@ -19,7 +19,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.HasOne(c => c.Standard)
                 .WithMany(c => c.ApprenticeshipFunding)
                 .HasForeignKey(c => c.StandardId)
-                .HasPrincipalKey(c => c.Id);
+                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
         }
     }
 }
