@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_Standards_List_From_Mediator(
+            List<Guid> routeIds,
             string keyword,
             GetStandardsListResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
@@ -26,11 +28,11 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
-                    It.Is<GetStandardsListQuery>(query => query.Keyword == keyword), 
+                    It.Is<GetStandardsListQuery>(query => query.Keyword == keyword && query.RouteIds.Equals(routeIds)), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            var controllerResult = await controller.GetList(keyword) as ObjectResult;
+            var controllerResult = await controller.GetList(keyword, routeIds) as ObjectResult;
 
             var model = controllerResult.Value as GetStandardsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -41,6 +43,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 
         [Test, MoqAutoData]
         public async Task And_Exception_Then_Returns_Bad_Request(
+            List<Guid> routeIds,
             string keyword,
             [Frozen] Mock<IMediator> mockMediator,
             StandardsController controller)
@@ -51,7 +54,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                     It.IsAny<CancellationToken>()))
                 .Throws<InvalidOperationException>();
 
-            var controllerResult = await controller.GetList(keyword) as StatusCodeResult;
+            var controllerResult = await controller.GetList(keyword, routeIds) as StatusCodeResult;
 
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         }

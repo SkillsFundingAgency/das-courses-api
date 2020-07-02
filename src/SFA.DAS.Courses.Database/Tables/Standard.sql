@@ -7,7 +7,7 @@
 	[IntegratedDegree] VARCHAR(100) NULL,
 	[MaxFunding] BIGINT NOT NULL,
 	[OverviewOfRole] VARCHAR(MAX) NOT NULL,
-	[Route] VARCHAR(500) NOT NULL,
+	[RouteId] UNIQUEIDENTIFIER NOT NULL,
 	[Keywords] VARCHAR(MAX) NULL,
 	[TypicalJobTitles] VARCHAR(MAX) NULL,
 	[CoreSkillsCount] VARCHAR(MAX) NULL,
@@ -16,3 +16,7 @@
 	CONSTRAINT [AK_Standard_Column] UNIQUE ([Id])
 )
 GO
+
+CREATE NONCLUSTERED INDEX [IDX_Standard_RouteId] ON [dbo].[Standard] (RouteId) 
+INCLUDE (Id,TypicalDuration,Title,[Level],  IntegratedDegree, [MaxFunding], OverviewOfRole,[Keywords],[TypicalJobTitles], CoreSkillsCount,[StandardPageUrl], [Version]) WITH (ONLINE = ON) 
+GO 

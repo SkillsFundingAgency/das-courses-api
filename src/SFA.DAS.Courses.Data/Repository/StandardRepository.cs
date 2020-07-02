@@ -20,6 +20,7 @@ namespace SFA.DAS.Courses.Data.Repository
         public async Task<IEnumerable<Standard>> GetAll()
         {
             var result = await _coursesDataContext.Standards
+                .Include(c=>c.Sector)
                 .OrderBy(c=>c.Title)
                 .ToListAsync();
             
@@ -47,7 +48,10 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<Standard> Get(int id)
         {
-            var standard = await _coursesDataContext.Standards.FindAsync(id);
+            var standard = await _coursesDataContext
+                .Standards
+                .Include(c=>c.Sector)
+                .SingleOrDefaultAsync(c=>c.Id.Equals(id));
 
             if (standard == null)
             {
@@ -55,6 +59,18 @@ namespace SFA.DAS.Courses.Data.Repository
             }
             
             return standard;
+        }
+
+        public async Task<IEnumerable<Standard>> GetFilteredStandards(List<Guid> routeIds)
+        {
+            var standards = await _coursesDataContext
+                .Standards
+                .Where(c => routeIds.Contains(c.RouteId))
+                .Include(c => c.Sector)
+                .OrderBy(c=>c.Title)
+                .ToListAsync();
+
+            return standards;
         }
     }
 }

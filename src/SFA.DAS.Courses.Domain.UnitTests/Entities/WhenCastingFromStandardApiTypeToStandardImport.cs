@@ -15,6 +15,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport) standard;
             
             actual.Should().BeEquivalentTo(standard,options=>options
+                .Excluding(c=>c.Route)
                 .Excluding(c=>c.Duties)
                 .Excluding(c=>c.Keywords)
                 .Excluding(c=>c.Skills)

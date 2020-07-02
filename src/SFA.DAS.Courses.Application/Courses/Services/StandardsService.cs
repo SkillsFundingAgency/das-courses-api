@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 
@@ -19,9 +21,11 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             _searchManager = searchManager;
         }
 
-        public async Task<IEnumerable<Standard>> GetStandardsList(string keyword)
+        public async Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<Guid> routeIds)
         {
-            var standards = await _standardsRepository.GetAll();
+            var standards = routeIds != null && routeIds.Any()  ?
+                await _standardsRepository.GetFilteredStandards(routeIds.ToList()) :
+                await _standardsRepository.GetAll();
 
             if (!string.IsNullOrEmpty(keyword))
             {

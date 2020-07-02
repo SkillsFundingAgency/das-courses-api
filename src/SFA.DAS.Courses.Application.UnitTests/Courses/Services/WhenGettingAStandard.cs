@@ -14,7 +14,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 {
     public class WhenGettingAStandard
     {
-        [Test, MoqAutoData]
+        [Test, RecursiveMoqAutoData]
         public async Task Then_Gets_A_Standard_From_The_Repository(
             int standardId,
             Standard standardFromRepo,
@@ -27,8 +27,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var standard = await service.GetStandard(standardId);
 
-            standard.Should().BeEquivalentTo(standardFromRepo,
-                config => config.Excluding(standard1 => standard1.SearchScore));
+            standard.Should().BeEquivalentTo(standardFromRepo, options=> options
+                .Excluding(c=>c.Sector)
+                .Excluding(c=>c.RouteId)
+                .Excluding(c=>c.SearchScore)
+            );
+
+            standard.Route.Should().Be(standardFromRepo.Sector.Route);
+                
         }
     }
 }

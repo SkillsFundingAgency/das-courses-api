@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -26,11 +27,15 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetList([FromQuery]string keyword)
+        public async Task<IActionResult> GetList([FromQuery]string keyword, [FromQuery]List<Guid> routeIds = null)
         {
             try
             {
-                var queryResult = await _mediator.Send(new GetStandardsListQuery{Keyword = keyword});
+                var queryResult = await _mediator.Send(new GetStandardsListQuery
+                {
+                    Keyword = keyword, 
+                    RouteIds = routeIds
+                });
 
                 var response = new GetStandardsListResponse
                 {

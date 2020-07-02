@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\ImportAudit.sql" />
+    <Build Include="Tables\Sector.sql" />
+    <Build Include="Tables\Sector_Import.sql" />
     <Build Include="Tables\Standard.sql" />
     <Build Include="Tables\Standard_Import.sql" />
   </ItemGroup>

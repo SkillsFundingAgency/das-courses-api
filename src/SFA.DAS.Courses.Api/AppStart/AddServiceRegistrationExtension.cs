@@ -21,6 +21,9 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IStandardImportRepository, StandardImportRepository>();
             services.AddTransient<IStandardRepository, StandardRepository>();
             services.AddTransient<IImportAuditRepository, ImportAuditRepository>();
+            services.AddTransient<ISectorRepository, SectorRepository>();
+            services.AddTransient<ISectorImportRepository, SectorImportRepository>();
+            services.AddTransient<ISectorService, SectorService>();
         }
     }
 }
