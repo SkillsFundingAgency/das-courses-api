@@ -16,10 +16,10 @@ namespace SFA.DAS.Courses.Api.AppStart
             }
             else
             {
-                services.AddDbContext<CoursesDataContext>(options => options.UseSqlServer(config.ConnectionString));
+                services.AddDbContext<CoursesDataContext>(options => options.UseSqlServer(config.ConnectionString), ServiceLifetime.Transient);
             }
 
-            services.AddScoped<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
+            services.AddTransient<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
             services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
             
         }
