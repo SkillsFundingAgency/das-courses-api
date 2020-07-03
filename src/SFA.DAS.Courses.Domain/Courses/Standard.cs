@@ -1,4 +1,7 @@
-﻿namespace SFA.DAS.Courses.Domain.Courses
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace SFA.DAS.Courses.Domain.Courses
 {
     public class Standard
     {
@@ -6,7 +9,6 @@
         public string Title { get; set; }
         public int Level { get; set; }
         public decimal Version { get; set; }
-        public long MaxFunding { get; set; }
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public int TypicalDuration { get; set; }
@@ -16,6 +18,10 @@
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
 
+        public IEnumerable<ApprenticeshipFunding> ApprenticeshipFunding { get ; set ; }
+
+        public StandardDates StandardDates { get ; set ; }
+
         public static implicit operator Standard(Entities.Standard source)
         {
             return new Standard
@@ -24,7 +30,6 @@
                 Title = source.Title,
                 Level = source.Level,
                 Version = source.Version,
-                MaxFunding = source.MaxFunding,
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 TypicalDuration = source.TypicalDuration,
@@ -32,7 +37,9 @@
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
                 StandardPageUrl = source.StandardPageUrl,
-                IntegratedDegree = source.IntegratedDegree
+                IntegratedDegree = source.IntegratedDegree,
+                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFunding)c).ToList(),
+                StandardDates = source.LarsStandard
             };
         }
     }

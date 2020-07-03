@@ -17,7 +17,6 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.IntegratedDegree).HasColumnName("IntegratedDegree").HasColumnType("varchar").HasMaxLength(100).IsRequired();
             builder.Property(x => x.Level).HasColumnName("Level").HasColumnType("int").IsRequired();
             builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("decimal");
-            builder.Property(x => x.MaxFunding).HasColumnName("MaxFunding").HasColumnType("bigint").IsRequired();
             builder.Property(x => x.OverviewOfRole).HasColumnName("OverviewOfRole").IsRequired();
             builder.Property(x => x.RouteId).HasColumnName("RouteId").HasColumnType("uniqueidentifier").IsRequired();
             builder.Property(x => x.TypicalJobTitles).HasColumnName("TypicalJobTitles");
@@ -28,8 +27,18 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.HasOne(c => c.Sector)
                 .WithMany(c => c.Standards)
                 .HasPrincipalKey(c => c.Id)
-                .HasForeignKey(c => c.RouteId);
+                .HasForeignKey(c => c.RouteId).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
+            builder.HasOne(c => c.LarsStandard)
+                .WithOne(c => c.Standard)
+                .HasForeignKey<Domain.Entities.LarsStandard>(c => c.StandardId)
+                .HasPrincipalKey<Domain.Entities.Standard>(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+
+            builder.HasMany(c => c.ApprenticeshipFunding)
+                .WithOne(c => c.Standard)
+                .HasForeignKey(c => c.StandardId)
+                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+            
             builder.Ignore(x => x.SearchScore);
             
             builder.HasIndex(x => x.Id).IsUnique();

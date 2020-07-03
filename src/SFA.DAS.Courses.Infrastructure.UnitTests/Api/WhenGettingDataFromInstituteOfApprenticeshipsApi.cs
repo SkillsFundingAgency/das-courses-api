@@ -1,12 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using Moq;
-using Moq.Protected;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Configuration;
@@ -25,7 +23,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 Content = new StringContent(JsonConvert.SerializeObject(importStandards)),
                 StatusCode = HttpStatusCode.Accepted
             };
-            var httpMessageHandler = SetupMessageHandlerMock(response);
+            var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri(Constants.InstituteOfApprenticeshipsStandardsUrl));
             var client = new HttpClient(httpMessageHandler.Object);
             var apprenticeshipService = new InstituteOfApprenticeshipService(client);
             
@@ -45,28 +43,13 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 Content = new StringContent(""),
                 StatusCode = HttpStatusCode.BadRequest
             };
-            var httpMessageHandler = SetupMessageHandlerMock(response);
+            var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri(Constants.InstituteOfApprenticeshipsStandardsUrl));
             var client = new HttpClient(httpMessageHandler.Object);
             var apprenticeshipService = new InstituteOfApprenticeshipService(client);
             
             //Act Assert
             Assert.ThrowsAsync<HttpRequestException>(() => apprenticeshipService.GetStandards());
             
-        }
-        
-        private Mock<HttpMessageHandler> SetupMessageHandlerMock(HttpResponseMessage response)
-        {
-            var httpMessageHandler = new Mock<HttpMessageHandler>();
-            httpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(c =>
-                        c.Method.Equals(HttpMethod.Get)
-                        && c.RequestUri.AbsoluteUri.Equals(Constants.InstituteOfApprenticeshipsStandardsUrl)),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => response);
-            return httpMessageHandler;
         }
     }
 }

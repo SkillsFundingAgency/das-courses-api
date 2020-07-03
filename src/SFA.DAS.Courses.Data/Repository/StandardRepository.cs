@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Courses.Data.Extensions;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 
@@ -19,8 +20,12 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<IEnumerable<Standard>> GetAll()
         {
-            var result = await _coursesDataContext.Standards
+            var result = await _coursesDataContext
+                .Standards
+                .FilterAvailableToStart()
                 .Include(c=>c.Sector)
+                .Include(c=>c.ApprenticeshipFunding)
+                .Include(c=>c.LarsStandard)
                 .OrderBy(c=>c.Title)
                 .ToListAsync();
             
@@ -51,6 +56,8 @@ namespace SFA.DAS.Courses.Data.Repository
             var standard = await _coursesDataContext
                 .Standards
                 .Include(c=>c.Sector)
+                .Include(c=>c.ApprenticeshipFunding)
+                .Include(c=>c.LarsStandard)
                 .SingleOrDefaultAsync(c=>c.Id.Equals(id));
 
             if (standard == null)
@@ -66,7 +73,10 @@ namespace SFA.DAS.Courses.Data.Repository
             var standards = await _coursesDataContext
                 .Standards
                 .Where(c => routeIds.Contains(c.RouteId))
+                .FilterAvailableToStart()
                 .Include(c => c.Sector)
+                .Include(c=>c.ApprenticeshipFunding)
+                .Include(c=>c.LarsStandard)
                 .OrderBy(c=>c.Title)
                 .ToListAsync();
 

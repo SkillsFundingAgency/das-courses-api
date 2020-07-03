@@ -10,6 +10,10 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.ImportAudit> ImportAudit { get; set; }
         DbSet<Domain.Entities.Sector> Sectors { get; set; }
         DbSet<Domain.Entities.SectorImport> SectorsImport { get; set; }
+        DbSet<Domain.Entities.LarsStandardImport> LarsStandardsImport { get; set; }
+        DbSet<Domain.Entities.ApprenticeshipFundingImport> ApprenticeshipFundingImport { get; set; }
+        DbSet<Domain.Entities.LarsStandard> LarsStandards { get; set; }
+        DbSet<Domain.Entities.ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
         int SaveChanges();
     }
     
@@ -20,6 +24,10 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.ImportAudit> ImportAudit { get; set; }
         public DbSet<Domain.Entities.Sector> Sectors { get; set; }
         public DbSet<Domain.Entities.SectorImport> SectorsImport { get; set; }
+        public DbSet<Domain.Entities.LarsStandard> LarsStandards { get; set; }
+        public DbSet<Domain.Entities.LarsStandardImport> LarsStandardsImport { get; set; }
+        public DbSet<Domain.Entities.ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
+        public DbSet<Domain.Entities.ApprenticeshipFundingImport> ApprenticeshipFundingImport { get; set; }
 
         public CoursesDataContext()
         {
@@ -41,6 +49,10 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new ImportAudit());
             modelBuilder.ApplyConfiguration(new Sector());
             modelBuilder.ApplyConfiguration(new SectorImport());
+            modelBuilder.ApplyConfiguration(new ApprenticeshipFunding());
+            modelBuilder.ApplyConfiguration(new ApprenticeshipFundingImport());
+            modelBuilder.ApplyConfiguration(new LarsStandard());
+            modelBuilder.ApplyConfiguration(new LarsStandardImport());
             
             base.OnModelCreating(modelBuilder);
         }

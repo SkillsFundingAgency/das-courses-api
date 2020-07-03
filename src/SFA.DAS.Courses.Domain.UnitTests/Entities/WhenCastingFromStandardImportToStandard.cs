@@ -14,7 +14,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             var actual = (Standard) standardImport;
             
-            actual.Should().BeEquivalentTo(standardImport);
+            actual.Should().BeEquivalentTo(standardImport, options=> options
+                .Excluding(c=>c.ApprenticeshipFunding)
+                .Excluding(c=>c.LarsStandard)
+            );
         }
     }
 }

@@ -35,12 +35,26 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         
         public static IEnumerable<Standard> GetTestStandards(List<Sector> sectors)
         {
-            
             return new List<Standard>
             {
-                new Standard{Id = 1, Title = "Head Brewer", Keywords = "Head, Brewer, Beer", OverviewOfRole = "Overseer of brewery operations", Level = 6, RouteId = sectors[0].Id},
-                new Standard{Id = 2, Title = "Brewer", Keywords = "Brewer, Beer", OverviewOfRole = "Brewery operations", Level = 4, RouteId = sectors[0].Id},
-                new Standard{Id = 3, Title = "Senior / head of facilities management (degree)", Keywords = "Head", OverviewOfRole = "Overseer of brewery operations", Level = 6, RouteId = sectors[1].Id }
+                new Standard{Id = 1, Title = "Head Brewer", Keywords = "Head, Brewer, Beer", OverviewOfRole = "Overseer of brewery operations", Level = 6, RouteId = sectors[0].Id, LarsStandard = new LarsStandard
+                {
+                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                    LastDateStarts = null,
+                    StandardId = 1
+                }},
+                new Standard{Id = 2, Title = "Brewer", Keywords = "Brewer, Beer", OverviewOfRole = "Brewery operations", Level = 4, RouteId = sectors[0].Id, LarsStandard = new LarsStandard
+                {
+                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                    LastDateStarts = null,
+                    StandardId = 2
+                }},
+                new Standard{Id = 3, Title = "Senior / head of facilities management (degree)", Keywords = "Head", OverviewOfRole = "Overseer of brewery operations", Level = 6, RouteId = sectors[1].Id, LarsStandard = new LarsStandard
+                {
+                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                    LastDateStarts = null,
+                    StandardId = 3
+                }}
             };
         }
     }

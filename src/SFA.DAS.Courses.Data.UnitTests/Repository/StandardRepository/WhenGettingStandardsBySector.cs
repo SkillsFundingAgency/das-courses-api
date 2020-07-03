@@ -28,12 +28,26 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new Standard
                 {
                     Id = 1,
-                    RouteId = _filterGuid
+                    RouteId = _filterGuid,
+                    LarsStandard = 
+                        new LarsStandard
+                        {
+                            EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                            LastDateStarts = null
+                        }
+                    
                 },
                 new Standard
                 {
                     Id = 2,
-                    RouteId = Guid.NewGuid()
+                    RouteId = Guid.NewGuid(),
+                    LarsStandard = 
+                        new LarsStandard
+                        {
+                            EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                            LastDateStarts = null
+                        }
+                    
                 }
             };
             

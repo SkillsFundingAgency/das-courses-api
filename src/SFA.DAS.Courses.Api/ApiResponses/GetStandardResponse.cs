@@ -1,4 +1,6 @@
-﻿using SFA.DAS.Courses.Domain.Courses;
+﻿using System.Collections.Generic;
+using System.Linq;
+using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
@@ -8,7 +10,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string Title { get; set; }
         public int Level { get; set; }
         public decimal Version { get; set; }
-        public long MaxFunding { get; set; }
+        
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public int TypicalDuration { get; set; }
@@ -18,6 +20,10 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
 
+        public List<ApprenticeshipFundingResponse> ApprenticeshipFunding { get ; set ; }
+
+        public StandardDatesResponse StandardDates { get ; set ; }
+
         public static implicit operator GetStandardResponse(Standard source)
         {
             return new GetStandardResponse
@@ -26,7 +32,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Title = source.Title,
                 Level = source.Level,
                 Version = source.Version,
-                MaxFunding = source.MaxFunding,
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 TypicalDuration = source.TypicalDuration,
@@ -34,8 +39,11 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
                 StandardPageUrl = source.StandardPageUrl,
-                IntegratedDegree = source.IntegratedDegree
+                IntegratedDegree = source.IntegratedDegree,
+                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
+                StandardDates = source.StandardDates
             };
         }
     }
 }
+

@@ -13,7 +13,6 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreSkillsCount = standard.Duties.Any() ? standard.Duties.Where(c=>c.IsThisACoreDuty.Equals(1)).Select(c=>c.DutyDetail).Join("|") : null,
                 IntegratedDegree = standard.IntegratedDegree,
                 Level = standard.Level,
-                MaxFunding = standard.MaxFunding,
                 OverviewOfRole = standard.OverviewOfRole,
                 StandardPageUrl = standard.StandardPageUrl.AbsoluteUri,
                 Title = standard.Title,

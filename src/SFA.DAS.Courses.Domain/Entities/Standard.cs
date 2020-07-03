@@ -12,7 +12,6 @@
                 CoreSkillsCount = standard.CoreSkillsCount,
                 IntegratedDegree = standard.IntegratedDegree,
                 Level = standard.Level,
-                MaxFunding = standard.MaxFunding,
                 OverviewOfRole = standard.OverviewOfRole,
                 StandardPageUrl = standard.StandardPageUrl,
                 RouteId = standard.RouteId,
