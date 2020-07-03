@@ -25,7 +25,6 @@ namespace SFA.DAS.Courses.Data.Repository
                 .FilterAvailableToStart()
                 .Include(c=>c.Sector)
                 .Include(c=>c.ApprenticeshipFunding)
-                .OrderBy(c=>c.Title)//todo: then by level
                 .Include(c=>c.LarsStandard)
                 .ToListAsync();
             
@@ -85,8 +84,7 @@ namespace SFA.DAS.Courses.Data.Repository
                 .FilterAvailableToStart()
                 .Include(c => c.Sector)
                 .Include(c => c.ApprenticeshipFunding)
-                .Include(c => c.LarsStandard)
-                .OrderBy(c => c.Title);
+                .Include(c => c.LarsStandard);
                 
 
             return await standards.ToListAsync();

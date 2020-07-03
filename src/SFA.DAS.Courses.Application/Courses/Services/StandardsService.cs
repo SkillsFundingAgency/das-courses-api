@@ -31,7 +31,16 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                standards = FindByKeyword(standards, keyword);
+                standards = FindByKeyword(standards, keyword)
+                    .OrderByDescending(standard => standard.SearchScore)
+                    .ThenBy(standard => standard.Title)
+                    .ThenBy(standard => standard.Level);
+            }
+            else
+            {
+                standards = standards
+                    .OrderBy(standard => standard.Title)
+                    .ThenBy(standard => standard.Level);
             }
 
             return standards.Select(standard => (Standard)standard);
@@ -67,8 +76,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             }
 
             standards = tempStandards
-                .Select(arg => arg.standard)
-                .OrderByDescending(standard => standard.SearchScore);
+                .Select(arg => arg.standard);
 
             return standards;
         }

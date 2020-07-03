@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -12,7 +11,7 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 {
-    public class WhenGettingStandardsBySector
+    public class WhenGettingFilteredStandards
     {
         [Test,RecursiveMoqAutoData]
         public async Task Then_The_Standards_Are_Filtered_By_Sector(
@@ -48,7 +47,5 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             
             actual.Should().BeEquivalentTo(new List<Standard>{standardsInDb[0]});
         }
-
-        //todo: order test
     }
 }
