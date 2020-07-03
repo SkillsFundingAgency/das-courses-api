@@ -58,6 +58,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                     break;
             }
 
+            _context.Set(method, ContextKeys.HttpMethod);
+            _context.Set(url, ContextKeys.HttpUri);
             _context.Set(response, ContextKeys.HttpResponse);
         }
 

@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\Standards - Copy (2).feature.cs" />
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\Standards - Copy.feature.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
       <PackageReference Include="FluentAssertions" Version="5.10.3" />
       <PackageReference Include="Microsoft.AspNetCore.App" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
@@ -22,7 +27,28 @@
     <ProjectReference Include="..\SFA.DAS.Courses.Api\SFA.DAS.Courses.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Features\Sectors.feature.cs">
+      <DependentUpon>Sectors.feature</DependentUpon>
+    </Compile>
+    <Compile Update="Features\Levels.feature.cs">
+      <DependentUpon>Levels.feature</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
     <ItemGroup>
+        <SpecFlowFeatureFiles Update="Features\Sectors.feature">
+          <Visible>$(UsingMicrosoftNETSdk)</Visible>
+          <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+          <LastGenOutput>Standards.feature.cs</LastGenOutput>
+          <Generator>SpecFlowSingleFileGenerator</Generator>
+        </SpecFlowFeatureFiles>
+        <SpecFlowFeatureFiles Update="Features\Levels.feature">
+          <Visible>$(UsingMicrosoftNETSdk)</Visible>
+          <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+          <LastGenOutput>Standards.feature.cs</LastGenOutput>
+          <Generator>SpecFlowSingleFileGenerator</Generator>
+        </SpecFlowFeatureFiles>
         <SpecFlowFeatureFiles Update="Features\Standards.feature">
             <Generator>SpecFlowSingleFileGenerator</Generator>
             <LastGenOutput>Standards.feature.cs</LastGenOutput>
