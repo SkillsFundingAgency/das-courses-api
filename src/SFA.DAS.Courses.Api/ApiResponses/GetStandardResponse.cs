@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public List<ApprenticeshipFundingResponse> ApprenticeshipFunding { get ; set ; }
 
-        public List<StandardDatesResponse> StandardDates { get ; set ; }
+        public StandardDatesResponse StandardDates { get ; set ; }
 
         public static implicit operator GetStandardResponse(Standard source)
         {
@@ -41,7 +41,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
-                StandardDates = source.StandardDates.Select(c=>(StandardDatesResponse)c).ToList()
+                StandardDates = source.StandardDates
             };
         }
     }

@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Domain.Courses
 
         public IEnumerable<ApprenticeshipFunding> ApprenticeshipFunding { get ; set ; }
 
-        public List<StandardDates> StandardDates { get ; set ; }
+        public StandardDates StandardDates { get ; set ; }
 
         public static implicit operator Standard(Entities.Standard source)
         {
@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFunding)c).ToList(),
-                StandardDates = source.LarsStandard.Select(c=>(StandardDates)c).ToList()
+                StandardDates = source.LarsStandard
             };
         }
     }

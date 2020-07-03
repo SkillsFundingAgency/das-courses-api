@@ -29,10 +29,10 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .HasPrincipalKey(c => c.Id)
                 .HasForeignKey(c => c.RouteId).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
-            builder.HasMany(c => c.LarsStandard)
+            builder.HasOne(c => c.LarsStandard)
                 .WithOne(c => c.Standard)
-                .HasForeignKey(c => c.StandardId)
-                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .HasForeignKey<Domain.Entities.LarsStandard>(c => c.StandardId)
+                .HasPrincipalKey<Domain.Entities.Standard>(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.HasMany(c => c.ApprenticeshipFunding)
                 .WithOne(c => c.Standard)

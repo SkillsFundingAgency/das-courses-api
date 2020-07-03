@@ -18,9 +18,9 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.LastDateStarts).HasColumnName("LastDateStarts").HasColumnType("datetime").IsRequired(false);
 
             builder.HasOne(c => c.Standard)
-                .WithMany(c => c.LarsStandard)
-                .HasForeignKey(c => c.StandardId)
-                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .WithOne(c => c.LarsStandard)
+                .HasForeignKey<Domain.Entities.LarsStandard>(c => c.StandardId)
+                .HasPrincipalKey<Domain.Entities.Standard>(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
         }
     }
 }

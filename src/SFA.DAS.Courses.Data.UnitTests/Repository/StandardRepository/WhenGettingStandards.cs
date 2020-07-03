@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -21,11 +22,25 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             {
                 new Standard()
                 {
-                    Id = 1
+                    Id = 1,
+                    LarsStandard = 
+                        new LarsStandard
+                        {
+                            EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                            LastDateStarts = null
+                        }
+                    
                 },
                 new Standard
                 {
-                    Id = 2
+                    Id = 2,
+                    LarsStandard = 
+                        new LarsStandard
+                        {
+                            EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                            LastDateStarts = null
+                        }
+                    
                 }
             };
             
