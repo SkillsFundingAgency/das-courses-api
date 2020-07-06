@@ -22,8 +22,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             _context = context;
         }
 
-        [Then("all standards are returned")]
-        public async Task ThenAllStandardsReturned()
+        [Then("all valid standards are returned")]
+        public async Task ThenAllValidStandardsReturned()
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -32,7 +32,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
-            model.Standards.Should().BeEquivalentTo(DbUtilities.GetTestStandards(), options=> options
+            model.Standards.Should().BeEquivalentTo(DbUtilities.GetValidTestStandards(), options=> options
                     .Excluding(std=>std.Sector)
                     .Excluding(std=>std.ApprenticeshipFunding)
                     .Excluding(std=>std.LarsStandard)
@@ -41,8 +41,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 );
         }
 
-        [Then("the following standards are returned")]
-        public async Task ThenTheFollowingStandardsReturned(Table table)
+        [Then("the following valid standards are returned")]
+        public async Task ThenTheFollowingValidStandardsReturned(Table table)
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -66,7 +66,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var standards =  new List<Standard>();
             foreach (var row in table.Rows)
             {
-                standards.Add(DbUtilities.GetTestStandards().Single(standard => 
+                standards.Add(DbUtilities.GetValidTestStandards().Single(standard => 
                     standard.Title == row["title"] && 
                     standard.Sector.Route == row["sector"] &&
                     standard.Level == int.Parse(row["level"])));
