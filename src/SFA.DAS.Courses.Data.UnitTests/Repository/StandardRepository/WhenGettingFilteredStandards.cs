@@ -5,6 +5,7 @@ using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Courses.Data.UnitTests.Customisations;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
@@ -15,49 +16,71 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
     {
         [Test,RecursiveMoqAutoData]
         public async Task Then_The_Standards_Are_Filtered_By_Sector(
-            List<Standard> standardsInDb,
+            [StandardsAreLarsValid] List<Standard> validStandards,
+            [StandardsNotLarsValid] List<Standard> invalidStandards,
             [Frozen] Mock<ICoursesDataContext> mockCoursesDbContext,
             Data.Repository.StandardRepository repository)
         {
-            foreach (var standard in standardsInDb)
-            {
-                standard.LarsStandard.EffectiveFrom = DateTime.Today.AddDays(-1);
-                standard.LarsStandard.LastDateStarts = null;
-            }
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(validStandards);
+            allStandards.AddRange(invalidStandards);
             mockCoursesDbContext
                 .Setup(context => context.Standards)
-                .ReturnsDbSet(standardsInDb);
+                .ReturnsDbSet(allStandards);
 
             //Act
             var actual = await repository.GetFilteredStandards(
-                new List<Guid>{standardsInDb[0].RouteId}, 
+                new List<Guid>{validStandards[0].RouteId}, 
                 new List<int>());
             
             //Assert
             Assert.IsNotNull(actual);
-            actual.Should().BeEquivalentTo(new List<Standard>{standardsInDb[0]});
+            actual.Should().BeEquivalentTo(new List<Standard>{validStandards[0]});
+        }
+
+        [Test,RecursiveMoqAutoData]
+        public async Task And_Standard_Not_Valid_And_Does_Match_Route_Filter_Then_Standard_Not_Returned(
+            [StandardsAreLarsValid] List<Standard> validStandards,
+            [StandardsNotLarsValid] List<Standard> invalidStandards,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(validStandards);
+            allStandards.AddRange(invalidStandards);
+            mockCoursesDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(allStandards);
+
+            //Act
+            var actual = await repository.GetFilteredStandards(
+                new List<Guid>{invalidStandards[0].RouteId}, 
+                new List<int>());
+            
+            //Assert
+            Assert.IsNotNull(actual);
+            actual.Should().BeEquivalentTo(new List<Standard>());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Standards_Are_Filtered_By_Level(
-            List<Standard> standardsInDb,
+            [StandardsAreLarsValid] List<Standard> validStandards,
+            [StandardsNotLarsValid] List<Standard> invalidStandards,
             [Frozen] Mock<ICoursesDataContext> mockCoursesDbContext,
             Data.Repository.StandardRepository repository)
         {
-            foreach (var standard in standardsInDb)
-            {
-                standard.LarsStandard.EffectiveFrom = DateTime.Today.AddDays(-1);
-                standard.LarsStandard.LastDateStarts = null;
-            }
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(validStandards);
+            allStandards.AddRange(invalidStandards);
             mockCoursesDbContext
                 .Setup(context => context.Standards)
-                .ReturnsDbSet(standardsInDb);
+                .ReturnsDbSet(allStandards);
 
             var actual = await repository.GetFilteredStandards(
                 new List<Guid>(), 
-                new List<int> {standardsInDb[0].Level});
+                new List<int> {validStandards[0].Level});
             
-            actual.Should().BeEquivalentTo(new List<Standard>{standardsInDb[0]});
+            actual.Should().BeEquivalentTo(new List<Standard>{validStandards[0]});
         }
     }
 }
