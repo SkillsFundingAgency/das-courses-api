@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<int> Count()
         {
-            return await _coursesDataContext.Standards.CountAsync();
+            return await _coursesDataContext.Standards.FilterAvailableToStart().CountAsync();
         }
 
         public void DeleteAll()
