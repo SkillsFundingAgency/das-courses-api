@@ -8,5 +8,6 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
     {
         public string Keyword { get; set; }
         public IList<Guid> RouteIds { get ; set ; }
+        public IList<int> Levels { get; set; }
     }
 }

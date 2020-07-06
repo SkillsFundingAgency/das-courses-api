@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 
@@ -21,15 +20,27 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             _searchManager = searchManager;
         }
 
-        public async Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<Guid> routeIds)
+        public async Task<IEnumerable<Standard>> GetStandardsList(
+            string keyword, 
+            IList<Guid> routeIds, 
+            IList<int> levels)
         {
-            var standards = routeIds != null && routeIds.Any()  ?
-                await _standardsRepository.GetFilteredStandards(routeIds.ToList()) :
+            var standards = routeIds.Any() || levels.Any()  ?
+                await _standardsRepository.GetFilteredStandards(routeIds.ToList(), levels) :
                 await _standardsRepository.GetAll();
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                standards = FindByKeyword(standards, keyword);
+                standards = FindByKeyword(standards, keyword)
+                    .OrderByDescending(standard => standard.SearchScore)
+                    .ThenBy(standard => standard.Title)
+                    .ThenBy(standard => standard.Level);
+            }
+            else
+            {
+                standards = standards
+                    .OrderBy(standard => standard.Title)
+                    .ThenBy(standard => standard.Level);
             }
 
             return standards.Select(standard => (Standard)standard);
@@ -65,8 +76,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             }
 
             standards = tempStandards
-                .Select(arg => arg.standard)
-                .OrderByDescending(standard => standard.SearchScore);
+                .Select(arg => arg.standard);
 
             return standards;
         }

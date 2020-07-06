@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using SFA.DAS.Courses.Data;
-using SFA.DAS.Courses.Domain.Entities;
+using Sector = SFA.DAS.Courses.Domain.Entities.Sector;
+using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
+using LarsStandard = SFA.DAS.Courses.Domain.Entities.LarsStandard;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 {
@@ -13,7 +14,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         {
             var testSectors = GetTestSectors().ToList();
             context.Sectors.AddRange(testSectors);
-            context.Standards.AddRange(GetTestStandards(testSectors));
+            context.Standards.AddRange(GetTestStandards());
             context.SaveChanges();
         }
 
@@ -28,33 +29,88 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         {
             return new List<Sector>
             {
-                new Sector { Route = "Engineering and manufacturing" , Id = Guid.NewGuid()},
-                new Sector{ Route="Construction" , Id = Guid.NewGuid()}
+                new Sector
+                {
+                    Route = "Engineering and manufacturing",
+                    Id = Guid.Parse("54A073E7-F2BA-4C04-9868-1EC3AB3A89D4")
+                },
+                new Sector
+                {
+                    Route = "Construction",
+                    Id = Guid.Parse("B30D7750-9ADF-41BA-94BD-E4584128EC76")
+                }
             };
         }
-        
-        public static IEnumerable<Standard> GetTestStandards(List<Sector> sectors)
+
+        public static IEnumerable<Standard> GetTestStandards()
         {
+            var sectors = GetTestSectors().ToList();
             return new List<Standard>
             {
-                new Standard{Id = 1, Title = "Head Brewer", Keywords = "Head, Brewer, Beer", OverviewOfRole = "Overseer of brewery operations", Level = 6, RouteId = sectors[0].Id, LarsStandard = new LarsStandard
+                new Standard
                 {
-                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                    LastDateStarts = null,
-                    StandardId = 1
-                }},
-                new Standard{Id = 2, Title = "Brewer", Keywords = "Brewer, Beer", OverviewOfRole = "Brewery operations", Level = 4, RouteId = sectors[0].Id, LarsStandard = new LarsStandard
+                    Id = 1,
+                    Title = "Head Brewer",
+                    Keywords = "Head, Brewer, Beer",
+                    TypicalJobTitles = "Overseer of brewery operations",
+                    Level = 2,
+                    RouteId = sectors[0].Id,
+                    Sector = sectors[0], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 1
+                    }
+                },
+                new Standard
                 {
-                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                    LastDateStarts = null,
-                    StandardId = 2
-                }},
-                new Standard{Id = 3, Title = "Senior / head of facilities management (degree)", Keywords = "Head", OverviewOfRole = "Overseer of brewery operations", Level = 6, RouteId = sectors[1].Id, LarsStandard = new LarsStandard
+                    Id = 2,
+                    Title = "Brewer",
+                    Keywords = "Brewer, Beer",
+                    TypicalJobTitles = "Brewery operations",
+                    Level = 1,
+                    RouteId = sectors[0].Id,
+                    Sector = sectors[0], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 2
+                    }
+                },
+                new Standard
                 {
-                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                    LastDateStarts = null,
-                    StandardId = 3
-                }}
+                    Id = 3,
+                    Title = "Senior / head of facilities management (degree)",
+                    Keywords = "Head",
+                    TypicalJobTitles = "Overseer of brewery operations",
+                    Level = 6,
+                    RouteId = sectors[1].Id,
+                    Sector = sectors[1], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 3
+                    }
+                },
+                new Standard
+                {
+                    Id = 4,
+                    Title = "Dentist",
+                    Keywords = "Dentist|Dentistry",
+                    TypicalJobTitles = "Dentist",
+                    Level = 7,
+                    RouteId = sectors[1].Id,
+                    Sector = sectors[1], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 4
+                    }
+                }
             };
         }
     }

@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
+    <ItemGroup>
       <PackageReference Include="FluentAssertions" Version="5.10.3" />
       <PackageReference Include="Microsoft.AspNetCore.App" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
@@ -23,6 +22,14 @@
   </ItemGroup>
 
     <ItemGroup>
+        <SpecFlowFeatureFiles Update="Features\Sectors.feature">
+          <LastGenOutput>Sectors.feature.cs</LastGenOutput>
+          <Generator>SpecFlowSingleFileGenerator</Generator>
+        </SpecFlowFeatureFiles>
+        <SpecFlowFeatureFiles Update="Features\Levels.feature">
+          <LastGenOutput>Levels.feature.cs</LastGenOutput>
+          <Generator>SpecFlowSingleFileGenerator</Generator>
+        </SpecFlowFeatureFiles>
         <SpecFlowFeatureFiles Update="Features\Standards.feature">
             <Generator>SpecFlowSingleFileGenerator</Generator>
             <LastGenOutput>Standards.feature.cs</LastGenOutput>

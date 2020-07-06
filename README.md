@@ -27,7 +27,7 @@ You are able to run the API by doing the following:
 * In your Azure Storage Account, create a table called Configuration and Add the following
 ```
 ParitionKey: LOCAL
-RowKey: SFA.DAS.Courses_1.0
+RowKey: SFA.DAS.Courses.Api_1.0
 data: {"Courses":{"ConnectionString":"DBCONNECTIONSTRING"}}
 ```
 * Start the api project ```SFA.DAS.Courses.Api```

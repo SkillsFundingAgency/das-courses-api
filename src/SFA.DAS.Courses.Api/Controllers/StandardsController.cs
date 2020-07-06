@@ -27,14 +27,18 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetList([FromQuery]string keyword, [FromQuery]List<Guid> routeIds = null)
+        public async Task<IActionResult> GetList(
+            [FromQuery] string keyword,
+            [FromQuery] IList<Guid> routeIds, 
+            [FromQuery] IList<int> levels)
         {
             try
             {
                 var queryResult = await _mediator.Send(new GetStandardsListQuery
                 {
                     Keyword = keyword, 
-                    RouteIds = routeIds
+                    RouteIds = routeIds,
+                    Levels = levels
                 });
 
                 var response = new GetStandardsListResponse

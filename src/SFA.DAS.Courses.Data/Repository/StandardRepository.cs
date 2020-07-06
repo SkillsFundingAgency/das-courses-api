@@ -26,7 +26,6 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Include(c=>c.Sector)
                 .Include(c=>c.ApprenticeshipFunding)
                 .Include(c=>c.LarsStandard)
-                .OrderBy(c=>c.Title)
                 .ToListAsync();
             
             return result;
@@ -34,7 +33,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<int> Count()
         {
-            return await _coursesDataContext.Standards.CountAsync();
+            return await _coursesDataContext.Standards.FilterAvailableToStart().CountAsync();
         }
 
         public void DeleteAll()
@@ -68,19 +67,27 @@ namespace SFA.DAS.Courses.Data.Repository
             return standard;
         }
 
-        public async Task<IEnumerable<Standard>> GetFilteredStandards(List<Guid> routeIds)
+        public async Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels)
         {
-            var standards = await _coursesDataContext
-                .Standards
-                .Where(c => routeIds.Contains(c.RouteId))
+            var standards = _coursesDataContext.Standards.AsQueryable();
+
+            if (routeIds.Count > 0)
+            {
+                standards = standards.Where(standard => routeIds.Contains(standard.RouteId));
+            }
+            if (levels.Count > 0)
+            {
+                standards = standards.Where(standard => levels.Contains(standard.Level));
+            }
+
+            standards = standards
                 .FilterAvailableToStart()
                 .Include(c => c.Sector)
-                .Include(c=>c.ApprenticeshipFunding)
-                .Include(c=>c.LarsStandard)
-                .OrderBy(c=>c.Title)
-                .ToListAsync();
+                .Include(c => c.ApprenticeshipFunding)
+                .Include(c => c.LarsStandard);
+                
 
-            return standards;
+            return await standards.ToListAsync();
         }
     }
 }
