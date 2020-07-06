@@ -4,6 +4,7 @@ using System.Linq;
 using SFA.DAS.Courses.Data;
 using Sector = SFA.DAS.Courses.Domain.Entities.Sector;
 using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
+using LarsStandard = SFA.DAS.Courses.Domain.Entities.LarsStandard;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 {
@@ -54,12 +55,13 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
                     RouteId = sectors[0].Id,
-                    Sector = sectors[0], LarsStandard = new LarsStandard
-                {
-                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                    LastDateStarts = null,
-                    StandardId = 1
-                }
+                    Sector = sectors[0], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 1
+                    }
                 },
                 new Standard
                 {
@@ -69,12 +71,13 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Brewery operations",
                     Level = 1,
                     RouteId = sectors[0].Id,
-                    Sector = sectors[0], LarsStandard = new LarsStandard
-                {
-                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                    LastDateStarts = null,
-                    StandardId = 1
-                }
+                    Sector = sectors[0], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 2
+                    }
                 },
                 new Standard
                 {
@@ -84,12 +87,13 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 6,
                     RouteId = sectors[1].Id,
-                    Sector = sectors[1], LarsStandard = new LarsStandard
-                {
-                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                    LastDateStarts = null,
-                    StandardId = 1
-                }
+                    Sector = sectors[1], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 3
+                    }
                 },
                 new Standard
                 {
@@ -99,12 +103,13 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Dentist",
                     Level = 7,
                     RouteId = sectors[1].Id,
-                    Sector = sectors[1], LarsStandard = new LarsStandard
-                {
-                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                    LastDateStarts = null,
-                    StandardId = 1
-                }
+                    Sector = sectors[1], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 4
+                    }
                 }
             };
         }

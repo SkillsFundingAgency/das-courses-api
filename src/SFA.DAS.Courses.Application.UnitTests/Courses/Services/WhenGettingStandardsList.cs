@@ -137,6 +137,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             getStandardsListResult.Should().BeEquivalentTo(standardsFromRepo,
                 config => config
                     .Excluding(standard => standard.SearchScore)
+                    .Excluding(standard => standard.ApprenticeshipFunding)
+                    .Excluding(standard => standard.LarsStandard)
                     .Excluding(standard => standard.Sector)
                     .Excluding(standard => standard.RouteId));
         }
@@ -150,12 +152,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             var standardsFromRepo = new List<Standard>
             {
-                new Standard{Title = "zz top", Level = 3, Sector = new Sector()},
-                new Standard{Title = "aardvark", Level = 3, Sector = new Sector()},
-                new Standard{Title = "aardvark", Level = 2, Sector = new Sector()},
-                new Standard{Title = "in between", Level = 3, Sector = new Sector()},
-                new Standard{Title = "zz top", Level = 1, Sector = new Sector()},
-                new Standard{Title = "in between", Level = 5, Sector = new Sector()}
+                new Standard{Title = "zz top", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Title = "aardvark", Level = 2, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Title = "in between", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Title = "zz top", Level = 1, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Title = "in between", Level = 5, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()}
             };
             mockStandardsRepository
                 .Setup(repository => repository.GetFilteredStandards(new List<Guid>(), levelCodes))
@@ -185,12 +187,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             var standardsFromRepo = new List<Standard>
             {
-                new Standard{Id = 1, SearchScore = 2f, Title = "zz top", Level = 3, Sector = new Sector()},
-                new Standard{Id = 2, SearchScore = 1f, Title = "aardvark", Level = 3, Sector = new Sector()},
-                new Standard{Id = 3, SearchScore = 1f, Title = "aardvark", Level = 2, Sector = new Sector()},
-                new Standard{Id = 4, SearchScore = 4f, Title = "in between", Level = 3, Sector = new Sector()},
-                new Standard{Id = 5, SearchScore = 2f, Title = "zz top", Level = 1, Sector = new Sector()},
-                new Standard{Id = 6, SearchScore = 4f, Title = "in between", Level = 5, Sector = new Sector()}
+                new Standard{Id = 1, SearchScore = 2f, Title = "zz top", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 2, SearchScore = 1f, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 3, SearchScore = 1f, Title = "aardvark", Level = 2, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 4, SearchScore = 4f, Title = "in between", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 5, SearchScore = 2f, Title = "zz top", Level = 1, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 6, SearchScore = 4f, Title = "in between", Level = 5, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()}
             };
             searchResult.Standards = standardsFromRepo.Select(standard => new StandardSearchResult
             {

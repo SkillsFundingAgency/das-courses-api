@@ -34,8 +34,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             model.Standards.Should().BeEquivalentTo(DbUtilities.GetTestStandards(), options=> options
                     .Excluding(std=>std.Sector)
-                    .Excluding(std => std.ApprenticeshipFunding)
-                    .Excluding(std => std.LarsStandard)
+                    .Excluding(std=>std.ApprenticeshipFunding)
+                    .Excluding(std=>std.LarsStandard)
                     .Excluding(std=>std.RouteId)
                     .Excluding(std=>std.SearchScore)
                 );
@@ -53,9 +53,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             model.Standards.Should().BeEquivalentTo(
                 GetExpected(table), options=> options
-                .Excluding(std=>std.Sector)
-                .Excluding(std=>std.RouteId)
-                .Excluding(std=>std.SearchScore)
+                    .Excluding(std=>std.Sector)
+                    .Excluding(std=>std.ApprenticeshipFunding)
+                    .Excluding(std=>std.LarsStandard)
+                    .Excluding(std=>std.RouteId)
+                    .Excluding(std=>std.SearchScore)
             );
         }
 
