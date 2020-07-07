@@ -14,7 +14,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         {
             var testSectors = GetTestSectors().ToList();
             context.Sectors.AddRange(testSectors);
-            context.Standards.AddRange(GetTestStandards());
+            context.Standards.AddRange(GetValidTestStandards());
+            context.Standards.AddRange(GetInValidTestStandards());
             context.SaveChanges();
         }
 
@@ -42,7 +43,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             };
         }
 
-        public static IEnumerable<Standard> GetTestStandards()
+        public static IEnumerable<Standard> GetValidTestStandards()
         {
             var sectors = GetTestSectors().ToList();
             return new List<Standard>
@@ -109,6 +110,44 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         StandardId = 4
+                    }
+                }
+            };
+        }
+
+        public static IEnumerable<Standard> GetInValidTestStandards()
+        {
+            var sectors = GetTestSectors().ToList();
+            return new List<Standard>
+            {
+                new Standard
+                {
+                    Id = 11,
+                    Title = "Head Brewer - invalid",
+                    Keywords = "Head, Brewer, Beer",
+                    TypicalJobTitles = "Overseer of brewery operations",
+                    Level = 2,
+                    RouteId = sectors[0].Id,
+                    Sector = sectors[0], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(1),
+                        StandardId = 11
+                    }
+                },
+                new Standard
+                {
+                    Id = 14,
+                    Title = "Dentist - invalid",
+                    Keywords = "Dentist|Dentistry",
+                    TypicalJobTitles = "Dentist",
+                    Level = 7,
+                    RouteId = sectors[1].Id,
+                    Sector = sectors[1], 
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(1),
+                        StandardId = 14
                     }
                 }
             };
