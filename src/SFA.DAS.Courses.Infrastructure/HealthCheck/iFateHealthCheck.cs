@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using SFA.DAS.Courses.Data;
-using SFA.DAS.Courses.Data.Repository;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Infrastructure.HealthCheck
 {
-    public class LarsHealthCheck : IHealthCheck
+    public class iFateHealthCheck
     {
-        private const string HealthCheckResultDescription = "LARS Input Health Check";
+        private const string HealthCheckResultDescription = "iFate Input Health Check";
         private IImportAuditRepository _importData;
 
-
-        public LarsHealthCheck(IImportAuditRepository importData)
+        public iFateHealthCheck(IImportAuditRepository importData)
         {
             _importData = importData;
         }
-        
+
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
             var timer = Stopwatch.StartNew();
@@ -44,10 +40,10 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
             var timeResultIfateTwoWeeks = DateTime.Compare(iFateDataImportTimeStart, overTwoWeeks);
             var timeResultLarsTwoWeeks = DateTime.Compare(iFateDataImportTimeStart, overTwoWeeks);
 
-            // AC2 If LARS data load is over 25 hours old then the health is shown as degraded
-            if (timeResultLars < 0)
+            // AC1 If course data load is over 25 hours old or rows imported is zero then the health is shown as degraded.
+            if (timeResultIfate < 0 || latestIfateData.Result.RowsImported == 0)
             {
-                // show degraded
+                // show as degraded
             }
 
             // AC3 If course and LARS data is over 2 weeks and an hour old or rows imported is zero then the health is shown as degraded
@@ -55,6 +51,7 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
             {
                 // show as degraded
             }
+
         }
     }
 }
