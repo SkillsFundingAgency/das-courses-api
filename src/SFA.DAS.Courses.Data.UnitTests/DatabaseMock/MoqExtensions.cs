@@ -9,24 +9,61 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
 {
     public static class MoqExtensions
     {
-        public static IReturnsResult<ICoursesDataContext> ReturnsDbSet<TEntity>(this ISetup<ICoursesDataContext, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities) where TEntity : class
+        public static Mock<IQueryable<TEntity>> BuildMock<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+		{
+			var mock = new Mock<IQueryable<TEntity>>();
+			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
+			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
+			mock.ConfigureQueryableCalls(enumerable, data);
+			return mock;
+		}
+
+		public static Mock<DbSet<TEntity>> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+		{
+			var mock = new Mock<DbSet<TEntity>>();
+			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
+			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
+			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
+			mock.ConfigureDbSetCalls();
+			return mock;
+		}
+
+        public static DbSet<TEntity> BuildDbSet<TEntity>(this IEnumerable<TEntity> data) where TEntity : class
         {
-            var entitiesAsQueryable = entities.AsQueryable();
-            var dbSetMock = new Mock<DbSet<TEntity>>();
-
-            dbSetMock.As<IAsyncEnumerable<TEntity>>()
-                .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
-                .Returns(new InMemoryDbAsyncEnumerator<TEntity>(entitiesAsQueryable.GetEnumerator()));
-
-            dbSetMock.As<IQueryable<TEntity>>()
-                .Setup(m => m.Provider)
-                .Returns(new InMemoryAsyncQueryProvider<TEntity>(entitiesAsQueryable.Provider));
-
-            dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(entitiesAsQueryable.Expression);
-            dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(entitiesAsQueryable.ElementType);
-            dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(entitiesAsQueryable.GetEnumerator());
-
-            return setupResult.Returns(dbSetMock.Object);
+            return BuildMockDbSet(data.AsQueryable()).Object;
         }
+
+        public static IReturnsResult<ICoursesDataContext> ReturnsDbSet<TEntity>(
+            this ISetup<ICoursesDataContext, DbSet<TEntity>> setupResult,
+            IEnumerable<TEntity> entities) where TEntity : class
+        {
+            return setupResult.Returns(entities.BuildDbSet());
+        }
+
+		private static void ConfigureDbSetCalls<TEntity>(this Mock<DbSet<TEntity>> mock) 
+			where TEntity : class
+		{
+			mock.Setup(m => m.AsQueryable()).Returns(mock.Object);
+			mock.Setup(m => m.AsAsyncEnumerable()).Returns(mock.Object);
+		}
+
+		private static void ConfigureQueryableCalls<TEntity>(
+			this Mock<IQueryable<TEntity>> mock,
+			IQueryProvider queryProvider,
+			IQueryable<TEntity> data) where TEntity : class
+		{
+			mock.Setup(m => m.Provider).Returns(queryProvider);
+			mock.Setup(m => m.Expression).Returns(data?.Expression);
+			mock.Setup(m => m.ElementType).Returns(data?.ElementType);
+			mock.Setup(m => m.GetEnumerator()).Returns(() => data?.GetEnumerator());
+		}
+
+		private static void ConfigureAsyncEnumerableCalls<TEntity>(
+			this Mock<IAsyncEnumerable<TEntity>> mock,
+			IAsyncEnumerable<TEntity> enumerable)
+		{
+			mock.Setup(d => d.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
+				.Returns(() => enumerable.GetAsyncEnumerator());
+		}
     }
 }
