@@ -14,8 +14,8 @@ namespace SFA.DAS.Courses.Domain.Entities
         public int FrameworkCode { get; set; }
         public int PathwayCode { get; set; }
         public int Level { get; set; }
-        public DateTime TypicalLengthFrom { get; set; }
-        public DateTime TypicalLengthTo { get; set; }
+        public int TypicalLengthFrom { get; set; }
+        public int TypicalLengthTo { get; set; }
         public string TypicalLengthUnit { get; set; }
         public int Duration { get; set; }
         public int CurrentFundingCap { get; set; }
