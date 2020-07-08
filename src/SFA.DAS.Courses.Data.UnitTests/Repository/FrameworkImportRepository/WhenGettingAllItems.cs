@@ -39,11 +39,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkImportRepository
         public async Task Then_The_FrameworkImport_Items_Are_Returned()
         {
             //Act
-            var sectorsImport = await _frameworkImportRepository.GetAll();
+            var actual = await _frameworkImportRepository.GetAll();
             
             //Assert
-            Assert.IsNotNull(sectorsImport);
-            sectorsImport.Should().BeEquivalentTo(_frameworkImports);
+            Assert.IsNotNull(actual);
+            actual.Should().BeEquivalentTo(_frameworkImports);
         }
     }
 }
