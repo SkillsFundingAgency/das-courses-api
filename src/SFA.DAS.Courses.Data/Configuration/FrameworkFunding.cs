@@ -19,7 +19,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.HasOne(c => c.Framework)
                 .WithMany(c => c.FundingPeriods)
                 .HasForeignKey(c => c.FrameworkId)
-                .HasPrincipalKey(c => c.Id);
+                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
             
             builder.HasIndex(x => x.Id).IsUnique();
         }
