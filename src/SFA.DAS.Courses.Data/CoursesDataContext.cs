@@ -14,6 +14,10 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.ApprenticeshipFundingImport> ApprenticeshipFundingImport { get; set; }
         DbSet<Domain.Entities.LarsStandard> LarsStandards { get; set; }
         DbSet<Domain.Entities.ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
+        DbSet<Domain.Entities.Framework> Frameworks { get; set; }
+        DbSet<Domain.Entities.FrameworkImport> FrameworksImport { get; set; }
+        DbSet<Domain.Entities.FrameworkFunding> FrameworkFunding { get; set; }
+        DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
         int SaveChanges();
     }
     
@@ -28,6 +32,11 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.LarsStandardImport> LarsStandardsImport { get; set; }
         public DbSet<Domain.Entities.ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
         public DbSet<Domain.Entities.ApprenticeshipFundingImport> ApprenticeshipFundingImport { get; set; }
+        public DbSet<Domain.Entities.Framework> Frameworks { get; set; }
+        public DbSet<Domain.Entities.FrameworkImport> FrameworksImport { get; set; }
+        public DbSet<Domain.Entities.FrameworkFunding> FrameworkFunding { get; set; }
+        public DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
+        
 
         public CoursesDataContext()
         {
@@ -53,6 +62,10 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new ApprenticeshipFundingImport());
             modelBuilder.ApplyConfiguration(new LarsStandard());
             modelBuilder.ApplyConfiguration(new LarsStandardImport());
+            modelBuilder.ApplyConfiguration(new Framework());
+            modelBuilder.ApplyConfiguration(new FrameworkImport());
+            modelBuilder.ApplyConfiguration(new FrameworkFunding());
+            modelBuilder.ApplyConfiguration(new FrameworkFundingImport());
             
             base.OnModelCreating(modelBuilder);
         }
