@@ -27,28 +27,20 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
             var timer = Stopwatch.StartNew();
+
             var healthStatusDegraded = HealthStatus.Degraded;
-
             var latestLarsData = _importData.GetLastImportByType(ImportType.LarsImport);
-            var latestIfateData = _importData.GetLastImportByType(ImportType.IFATEImport);
-
-            var dateNow = DateTime.UtcNow;
-            // When did LARS data import start?
             var larsDataImportTimeStart = latestLarsData.Result.TimeStarted;
 
             // AC timeframes
-            var overTwentyFiveHours = dateNow.AddHours(-25);
-            var overTwoWeeks = dateNow.AddDays(-14);
-            var underTwoWeeksAndOneHour = dateNow.AddDays(-14).AddHours(1);
+            var dateNow = DateTime.UtcNow;
+            var twentyFiveHours = dateNow.AddHours(-25);
+            var twoWeeksAndOneHour = dateNow.AddDays(-14).AddHours(1);
 
             // Compare start time to now
-            var timeResultLars = DateTime.Compare(larsDataImportTimeStart, overTwentyFiveHours);
-
+            var timeResultLars = DateTime.Compare(larsDataImportTimeStart, twentyFiveHours);
             // Compare start time to two weeks ago
-            var timeResultLarsTwoWeeks = DateTime.Compare(larsDataImportTimeStart, underTwoWeeksAndOneHour);
-
-            // Compare start time to two weeks ago minus one hour
-            var timeResultLarsTwoWeeksMinusOneHour = DateTime.Compare(larsDataImportTimeStart, overTwoWeeks);
+            var timeResultLarsTwoWeeks = DateTime.Compare(larsDataImportTimeStart, twoWeeksAndOneHour);
             
             timer.Stop();
             var durationString = timer.Elapsed.ToHumanReadableString();
@@ -56,21 +48,15 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
             /***** START OF FUNCTIONALITY ******/
 
             // AC2 If LARS data load is over 25 hours old then the health is shown as degraded
-            if (timeResultLars < 0)
-            {
-                // show degraded
-                return new HealthCheckResult(healthStatusDegraded, "LARS data load is over 25 hours old", null, new Dictionary<string, object> { { "Dictionary", durationString } });
-            }
-
             // AC3 If LARS data is over 2 weeks and an hour old or rows imported is zero then the health is shown as degraded
-            if (timeResultLarsTwoWeeks > 0 || latestLarsData.Result.RowsImported == 0)
+            if (timeResultLarsTwoWeeks > 0 || latestLarsData.Result.RowsImported == 0 || timeResultLars < 0)
             {
                 // show as degraded
                 return new HealthCheckResult(healthStatusDegraded, "LARS and IFATE data is over two weeks (and an hour) old or rows imported are zero", null, new Dictionary<string, object> { { "Dictionary", durationString } });
             }
 
             // AC4 If the  LARS data is under 2 weeks and an hour old then the site is shown as healthy
-            if (timeResultLarsTwoWeeksMinusOneHour < 0)
+            if (timeResultLarsTwoWeeks < 0)
             {
                 // show as healthy
                 return HealthCheckResult.Healthy("IFATE and LARS data are both under two weeks (and an hour) old", new Dictionary<string, object> { { "Duration", durationString } });
