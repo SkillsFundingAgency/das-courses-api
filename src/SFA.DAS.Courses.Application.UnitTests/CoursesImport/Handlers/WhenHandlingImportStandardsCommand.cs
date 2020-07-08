@@ -7,7 +7,7 @@ using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Handlers
+namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
 {
     public class WhenHandlingImportStandardsCommand
     {

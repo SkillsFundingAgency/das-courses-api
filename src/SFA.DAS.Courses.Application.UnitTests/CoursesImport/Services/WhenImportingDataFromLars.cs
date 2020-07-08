@@ -14,7 +14,7 @@ using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Courses.Application.UnitTests.StandardsImport.Services
+namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 {
     public class WhenImportingDataFromLars
     {
