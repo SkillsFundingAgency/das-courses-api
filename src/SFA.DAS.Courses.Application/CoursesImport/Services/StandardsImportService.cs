@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Application.StandardsImport.Services
+namespace SFA.DAS.Courses.Application.CoursesImport.Services
 {
     public class StandardsImportService : IStandardsImportService
     {

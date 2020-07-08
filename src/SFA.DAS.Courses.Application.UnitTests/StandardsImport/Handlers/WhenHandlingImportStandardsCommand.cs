@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
+using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 

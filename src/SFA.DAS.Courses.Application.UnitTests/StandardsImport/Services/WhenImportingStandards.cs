@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Courses.Application.StandardsImport.Services;
+using SFA.DAS.Courses.Application.CoursesImport.Services;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;

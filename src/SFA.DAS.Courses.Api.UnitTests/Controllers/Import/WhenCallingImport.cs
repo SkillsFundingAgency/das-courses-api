@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.Controllers;
-using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
+using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import

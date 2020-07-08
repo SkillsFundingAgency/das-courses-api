@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards
+namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
 {
     public class ImportStandardsCommandHandler : IRequestHandler<ImportStandardsCommand, Unit>
     {

@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards
+namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
 {
     public class ImportStandardsCommand: IRequest<Unit>
     {

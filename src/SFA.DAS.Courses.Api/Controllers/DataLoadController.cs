@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
+using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {

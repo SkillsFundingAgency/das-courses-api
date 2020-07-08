@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Courses.Application.StandardsImport.Services;
+using SFA.DAS.Courses.Application.CoursesImport.Services;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;

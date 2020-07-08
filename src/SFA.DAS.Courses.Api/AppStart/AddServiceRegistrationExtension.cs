@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Courses.Application.Courses.Services;
-using SFA.DAS.Courses.Application.StandardsImport.Services;
+using SFA.DAS.Courses.Application.CoursesImport.Services;
 using SFA.DAS.Courses.Data.Repository;
 using SFA.DAS.Courses.Data.Search;
 using SFA.DAS.Courses.Domain.Interfaces;

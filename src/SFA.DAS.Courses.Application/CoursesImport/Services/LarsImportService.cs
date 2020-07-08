@@ -8,7 +8,7 @@ using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Application.StandardsImport.Services
+namespace SFA.DAS.Courses.Application.CoursesImport.Services
 {
     public class LarsImportService  : ILarsImportService
     {
