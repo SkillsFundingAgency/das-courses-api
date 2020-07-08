@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.Language.Flow;
@@ -14,7 +15,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
             var dbSetMock = new Mock<DbSet<TEntity>>();
 
             dbSetMock.As<IAsyncEnumerable<TEntity>>()
-                .Setup(m => m.GetEnumerator())
+                .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
                 .Returns(new InMemoryDbAsyncEnumerator<TEntity>(entitiesAsQueryable.GetEnumerator()));
 
             dbSetMock.As<IQueryable<TEntity>>()

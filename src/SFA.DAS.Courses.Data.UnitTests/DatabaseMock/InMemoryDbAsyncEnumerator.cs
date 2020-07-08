@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
@@ -15,15 +14,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
             _innerEnumerator = enumerator;
         }
 
-        public void Dispose()
+        public  ValueTask<bool> MoveNextAsync()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public Task<bool> MoveNext(CancellationToken cancellationToken)
-        {
-            return Task.FromResult(_innerEnumerator.MoveNext());
+            return new ValueTask<bool>(_innerEnumerator.MoveNext());
         }
 
         public T Current => _innerEnumerator.Current;
@@ -42,5 +35,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
             }
         }
 
+        public ValueTask DisposeAsync()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            return new ValueTask();
+        }
     }
 }

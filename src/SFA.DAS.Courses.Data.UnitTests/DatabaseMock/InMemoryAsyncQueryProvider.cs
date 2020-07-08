@@ -43,13 +43,12 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
 
         public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
         {
-
-            return Task.FromResult(Execute<TResult>(expression)).ToAsyncEnumerable();
+            return new InMemoryAsyncEnumerable<TResult>(expression);
         }
 
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
-            return Task.FromResult(Execute<TResult>(expression));
+            return Execute<TResult>(expression);
         }
     }
 }

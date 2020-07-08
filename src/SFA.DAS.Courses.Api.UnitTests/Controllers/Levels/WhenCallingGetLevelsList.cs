@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Levels
         public async Task Then_Gets_Standards_List_From_Mediator(
             GetLevelsListResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
-            LevelsController controller)
+            [Greedy] LevelsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Levels
         [Test, MoqAutoData]
         public async Task And_Exception_Then_Returns_Bad_Request(
             [Frozen] Mock<IMediator> mockMediator,
-            LevelsController controller)
+            [Greedy] LevelsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(

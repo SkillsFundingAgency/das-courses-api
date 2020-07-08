@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
 {
@@ -18,14 +19,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
 
         IQueryProvider IQueryable.Provider => new InMemoryAsyncQueryProvider<T>(this);
 
-        public IAsyncEnumerator<T> GetAsyncEnumerator()
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
         {
             return new InMemoryDbAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
-        }
-
-        public IAsyncEnumerator<T> GetEnumerator()
-        {
-            return GetAsyncEnumerator();
         }
     }
 }

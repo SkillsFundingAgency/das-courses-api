@@ -27,6 +27,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     options.UseInMemoryDatabase("SFA.DAS.Courses");
                     options.UseInternalServiceProvider(serviceProvider);
+                    options.EnableSensitiveDataLogging();
                 });
                 services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
 
