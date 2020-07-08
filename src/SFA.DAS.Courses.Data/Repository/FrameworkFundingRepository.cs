@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Data.Repository
 {
-    public class FrameworkFundingRepository
+    public class FrameworkFundingRepository : IFrameworkFundingRepository
     {
         private readonly ICoursesDataContext _coursesDataContext;
 
