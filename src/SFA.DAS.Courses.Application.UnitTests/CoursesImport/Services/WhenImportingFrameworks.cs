@@ -67,23 +67,28 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_The_Import_Tables_Are_Deleted_And_New_Data_Imported(
+        public async Task Then_The_Import_Tables_Are_Deleted_And_New_Data_Imported_Where_Frameworks_Have_FundingPeriods(
             List<Framework> frameworks,
+            Framework framework,
+            [Frozen] Mock<IImportAuditRepository> importAuditRepository,
             [Frozen] Mock<IJsonFileHelper> jsonFileHelper,
             [Frozen] Mock<IFrameworkImportRepository> frameworkImportRepository,
             [Frozen] Mock<IFrameworkFundingImportRepository> frameworkFundingImportRepository,
             FrameworksImportService frameworksImportService)
         {
+            framework.FundingPeriods = null;
+            frameworks.Add(framework);
+            importAuditRepository.Setup(x => x.GetLastImportByType(ImportType.FrameworkImport)).ReturnsAsync((ImportAudit)null);
             jsonFileHelper.Setup(x => x.ParseJsonFile<Framework>(It.IsAny<string>())).Returns(frameworks);
 
             await frameworksImportService.ImportData();
             
             frameworkImportRepository.Verify(x=>x.DeleteAll(), Times.Once);
             frameworkFundingImportRepository.Verify(x=>x.DeleteAll(), Times.Once);
-            frameworkImportRepository.Verify(x=>x.InsertMany(It.Is<List<FrameworkImport>>(c=>c.Count.Equals(frameworks.Count))), Times.Once);
+            frameworkImportRepository.Verify(x=>x.InsertMany(It.Is<List<FrameworkImport>>(c=>c.Count.Equals(frameworks.Count-1))), Times.Once);
             frameworkFundingImportRepository.Verify(x
                 =>x.InsertMany(It.Is<List<FrameworkFundingImport>>(
-                    c=>c.Count.Equals(frameworks.Sum(frk=>frk.FundingPeriods.Count)))), Times.Once);
+                    c=>c.Count.Equals(frameworks.Where(fp=>fp.FundingPeriods!=null).Sum(frk=>frk.FundingPeriods.Count)))), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]

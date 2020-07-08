@@ -49,7 +49,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
             var lastFrameworkImport = await _importAuditRepository.GetLastImportByType(ImportType.FrameworkImport);
 
-            if (latestFile == lastFrameworkImport.FileName)
+            if (lastFrameworkImport != null && latestFile == lastFrameworkImport.FileName)
             {
                 _logger.LogInformation($"Framework file {latestFile} has already been imported");
                 return;
@@ -67,17 +67,19 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
         private async Task InsertFrameworksIntoStagingTable(string latestFile)
         {
-            var frameworksFromFile = _jsonFileHelper.ParseJsonFile<Framework>(latestFile).ToList();
+            var frameworksFromFile = _jsonFileHelper.ParseJsonFile<Framework>(latestFile)
+                .Where(c=>c.FundingPeriods!=null)
+                .ToList();
 
             _frameworkImportRepository.DeleteAll();
             _frameworkFundingImportRepository.DeleteAll();
 
             var frameworkFundingImport = new List<FrameworkFundingImport>();
-            foreach (var framework in frameworksFromFile)
+            foreach (var framework in frameworksFromFile.ToList())
             {
                 frameworkFundingImport.AddRange(
-                    framework.FundingPeriods.Select(frameworkFundingPeriod =>
-                        new FrameworkFundingImport().Map(frameworkFundingPeriod, framework.Id)));
+                    framework.FundingPeriods.Where(c=>c != null)
+                        .Select(frameworkFundingPeriod => new FrameworkFundingImport().Map(frameworkFundingPeriod, framework.Id)));
             }
 
             var frameworkImport = frameworksFromFile.Select(c => (FrameworkImport) c).ToList();
