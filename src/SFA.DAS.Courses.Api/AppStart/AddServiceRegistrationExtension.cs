@@ -5,6 +5,7 @@ using SFA.DAS.Courses.Data.Repository;
 using SFA.DAS.Courses.Data.Search;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Infrastructure.Api;
+using SFA.DAS.Courses.Infrastructure.FileHelper;
 using SFA.DAS.Courses.Infrastructure.PageParsing;
 using SFA.DAS.Courses.Infrastructure.StreamHelper;
 
@@ -39,6 +40,8 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddHttpClient<ILarsDataDownloadService, LarsDataDownloadService>();
             services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
             services.AddTransient<ILarsImportService, LarsImportService>();
+            services.AddTransient<IFrameworksImportService, FrameworksImportService>();
+            services.AddTransient<IJsonFileHelper, JsonFileHelper>();   
         }
     }
 }
