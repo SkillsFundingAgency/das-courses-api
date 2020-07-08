@@ -6,7 +6,7 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.Courses.Services
 {
-    public class FrameworksService
+    public class FrameworksService : IFrameworksService
     {
         private readonly IFrameworkRepository _frameworkRepository;
 

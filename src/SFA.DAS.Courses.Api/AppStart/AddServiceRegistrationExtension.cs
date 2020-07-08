@@ -42,6 +42,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ILarsImportService, LarsImportService>();
             services.AddTransient<IFrameworksImportService, FrameworksImportService>();
             services.AddTransient<IJsonFileHelper, JsonFileHelper>();   
+            services.AddTransient<IFrameworksService, FrameworksService>();   
         }
     }
 }
