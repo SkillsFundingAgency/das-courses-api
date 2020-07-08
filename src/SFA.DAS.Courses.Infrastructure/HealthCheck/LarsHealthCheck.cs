@@ -16,14 +16,10 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
     {
         private const string HealthCheckResultDescription = "LARS Input Health Check";
         private IImportAuditRepository _importData;
-        private readonly ICoursesDataContext _dataContext;
 
-
-
-        public LarsHealthCheck(IImportAuditRepository importData, ICoursesDataContext dataContext)
+        public LarsHealthCheck(IImportAuditRepository importData)
         {
             _importData = importData;
-            _dataContext = dataContext;
         }
         
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
@@ -48,7 +44,6 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
 
             // Compare start time to now
             var timeResultLars = DateTime.Compare(larsDataImportTimeStart, overTwentyFiveHours);
-            var timeResultIfate = DateTime.Compare(iFateDataImportTimeStart, overTwentyFiveHours);
 
             // Compare start time to two weeks ago
             var timeResultLarsTwoWeeks = DateTime.Compare(larsDataImportTimeStart, underTwoWeeksAndOneHour);
@@ -64,27 +59,23 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
             // AC2 If LARS data load is over 25 hours old then the health is shown as degraded
             if (timeResultLars < 0)
             {
-
                 // show degraded
-                return new HealthCheckResult(healthStatusDegraded, new Dictionary <string, object> { { "Duration", durationString } });
-
-                //return new HealthCheckResult(healthStatusDegraded, "LARS data load is over 25 hours old", new Dictionary<string, object> { { "Duration", durationString } });
+                return new HealthCheckResult(healthStatusDegraded, "LARS data load is over 25 hours old", null, new Dictionary<string, object> { { "Dictionary", durationString } });
             }
 
             // AC3 If course and LARS data is over 2 weeks and an hour old or rows imported is zero then the health is shown as degraded
             if (timeResultIfateTwoWeeks > 0 || timeResultLarsTwoWeeks > 0 || latestIfateData.Result.RowsImported == 0 || latestLarsData.Result.RowsImported == 0)
             {
                 // show as degraded
-                return new HealthCheckResult(healthStatusDegraded, "LARS data load is over 25 hours old");
+                return new HealthCheckResult(healthStatusDegraded, "LARS and IFATE data is over two weeks (and an hour) old or rows imported are zero", null, new Dictionary<string, object> { { "Dictionary", durationString } });
             }
 
             // AC4 If the courses and LARS data is under 2 weeks and an hour old then the site is shown as healthy
             if (timeResultLarsTwoWeeksMinusOneHour < 0 && timeResultIfateTwoWeeksMinusOneHour < 0)
             {
                 // show as healthy
-                return HealthCheckResult.Healthy("iFATE and LARS data are both under two weeks old");
+                return HealthCheckResult.Healthy("IFATE and LARS data are both under two weeks (and an hour) old", new Dictionary<string, object> { { "Duration", durationString } });
             }
-
 
             // AC5 If the SQL database is unable to connect then it is shown as unhealthy
             // AC6 If the SQL database is able to connect then it is shown as healthy

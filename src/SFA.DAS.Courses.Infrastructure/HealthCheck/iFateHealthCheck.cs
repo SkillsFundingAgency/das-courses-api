@@ -23,6 +23,7 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
             var timer = Stopwatch.StartNew();
+            var healthStatusDegraded = HealthStatus.Degraded;
             var latestLarsData = _importData.GetLastImportByType(ImportType.LarsImport);
             var latestIfateData = _importData.GetLastImportByType(ImportType.IFATEImport);
 
@@ -41,13 +42,18 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
             var timeResultIfateTwoWeeks = DateTime.Compare(iFateDataImportTimeStart, overTwoWeeks);
             var timeResultLarsTwoWeeks = DateTime.Compare(iFateDataImportTimeStart, overTwoWeeks);
 
+            timer.Stop();
+            var durationString = timer.Elapsed.ToHumanReadableString();
+
             // AC1 If course data load is over 25 hours old or rows imported is zero then the health is shown as degraded.
             if (timeResultIfate > 0 || latestIfateData.Result.RowsImported == 0)
             {
                 // show as degraded
-                var healthStatus = HealthStatus.Degraded;
-                return new HealthCheckResult(healthStatus, "Course data load is over 25 hours old or rows imported are zero");
+                return new HealthCheckResult(healthStatusDegraded, "Course data load is over 25 hours old or rows imported are zero", null, new Dictionary<string, object> { { "Dictionary", durationString } });
             }
+
+            return HealthCheckResult.Healthy(HealthCheckResultDescription, new Dictionary<string, object> { { "Duration", durationString } });
+
         }
     }
 }
