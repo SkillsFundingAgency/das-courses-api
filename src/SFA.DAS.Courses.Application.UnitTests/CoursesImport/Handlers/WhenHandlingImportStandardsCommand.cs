@@ -16,6 +16,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
             ImportStandardsCommand command,
             [Frozen] Mock<IStandardsImportService> standardsImportService,
             [Frozen] Mock<ILarsImportService> larsImportService,
+            [Frozen] Mock<IFrameworksImportService> frameworksImportService,
             ImportStandardsCommandHandler handler)
         {
             // Act
@@ -23,6 +24,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
             
             //Assert
             larsImportService.Verify(x=>x.ImportData(), Times.Once);
+            frameworksImportService.Verify(x=>x.ImportData(), Times.Once);
             standardsImportService.Verify(x=>x.ImportStandards(), Times.Once);
         }
     }
