@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Configuration.AzureTableStorage;
@@ -14,6 +15,7 @@ using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Infrastructure.HealthCheck;
 
 namespace SFA.DAS.Courses.Api
 {
@@ -66,7 +68,13 @@ namespace SFA.DAS.Courses.Api
 
             var coursesConfiguration = serviceProvider.GetService<IOptions<CoursesConfiguration>>().Value;
             services.AddHealthChecks()
-                .AddSqlServer(coursesConfiguration.ConnectionString);
+                .AddSqlServer(coursesConfiguration.ConnectionString)
+                .AddCheck<LarsHealthCheck>("Lars Data Health Check",
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new[] {"ready"})
+                .AddCheck<InstituteOfApprenticeshipServiceHealthCheck>("IFATE Health Check",
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new[] {"ready"});
             
 
             services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
