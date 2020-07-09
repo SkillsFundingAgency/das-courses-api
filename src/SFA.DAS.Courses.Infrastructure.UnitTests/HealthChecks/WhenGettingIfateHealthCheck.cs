@@ -62,5 +62,20 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
             // Assert
             Assert.AreEqual(HealthStatus.Healthy, actual.Status);
         }
+
+        [Test, MoqAutoData]
+        public async Task Then_If_The_Data_Is_Less_Than_Two_Weeks_And_An_Hour_But_Has_No_Imported_Rows_Then_HealthCheck_Return_Degraded(
+            [Frozen] Mock<IImportAuditRepository> mock,
+            HealthCheckContext healthCheckContext,
+             InstituteOfApprenticeshipServiceHealthCheck handler)
+        {
+            //Arrange
+            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new ImportAudit(
+                DateTime.UtcNow.AddDays(10), 0));
+            //Act
+            var actual = await handler.CheckHealthAsync(healthCheckContext);
+            //Assert
+            Assert.AreEqual(HealthStatus.Degraded, actual.Status);
+        }
     }
 }
