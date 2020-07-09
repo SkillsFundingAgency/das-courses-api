@@ -57,15 +57,20 @@ namespace SFA.DAS.Courses.Api
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
             
-            var serviceProvider = services.BuildServiceProvider();
-
+            var coursesConfiguration = _configuration
+                .GetSection("Courses")
+                .Get<CoursesConfiguration>();
+            
             if (!ConfigurationIsLocalOrDev())
             {
-                services.AddAuthentication(serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
+                var azureAdConfiguration = _configuration
+                    .GetSection("AzureAd")
+                    .Get<AzureActiveDirectoryConfiguration>();
+
+                services.AddAuthentication(azureAdConfiguration);
 
             }
 
-            var coursesConfiguration = serviceProvider.GetService<IOptions<CoursesConfiguration>>().Value;
             services.AddHealthChecks()
                 .AddSqlServer(coursesConfiguration.ConnectionString);
             
@@ -92,13 +97,12 @@ namespace SFA.DAS.Courses.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
             });
             
-            serviceProvider = services.BuildServiceProvider();
-            var indexBuilder = serviceProvider.GetService<IIndexBuilder>();
-            indexBuilder.Build();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IIndexBuilder indexBuilder)
         {
+            indexBuilder.Build();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
