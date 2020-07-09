@@ -34,10 +34,9 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
             timer.Stop();
             var durationString = timer.Elapsed.ToHumanReadableString();
 
-            // AC2 If LARS data load is over 2 weeks and an hour old or rows imported is zero then the health is shown as degraded
             if (DateTime.UtcNow >= latestLarsData.TimeStarted.AddDays(14).AddHours(1) || latestLarsData.RowsImported == 0)
             {
-                return new HealthCheckResult(healthStatusDegraded, "LARS and IFATE data is over two weeks (and an hour) old or rows imported are zero", null, new Dictionary<string, object> { { "Dictionary", durationString } });
+                return new HealthCheckResult(healthStatusDegraded, "LARS data is over two weeks (and an hour) old or rows imported are zero", null, new Dictionary<string, object> { { "Dictionary", durationString } });
             }
 
             return HealthCheckResult.Healthy(HealthCheckResultDescription, new Dictionary<string, object> { {"Duration", durationString } });
