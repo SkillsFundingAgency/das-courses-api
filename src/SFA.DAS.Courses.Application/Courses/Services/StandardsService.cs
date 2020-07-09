@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Domain.Search;
 
 namespace SFA.DAS.Courses.Application.Courses.Services
 {
@@ -11,13 +12,16 @@ namespace SFA.DAS.Courses.Application.Courses.Services
     {
         private readonly IStandardRepository _standardsRepository;
         private readonly ISearchManager _searchManager;
+        private readonly IStandardsSortOrderService _sortOrderService;
 
         public StandardsService(
             IStandardRepository standardsRepository,
-            ISearchManager searchManager)
+            ISearchManager searchManager,
+            IStandardsSortOrderService sortOrderService)
         {
             _standardsRepository = standardsRepository;
             _searchManager = searchManager;
+            _sortOrderService = sortOrderService;
         }
 
         public async Task<IEnumerable<Standard>> GetStandardsList(
@@ -26,22 +30,15 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             IList<int> levels)
         {
             var standards = routeIds.Any() || levels.Any()  ?
-                await _standardsRepository.GetFilteredStandards(routeIds.ToList(), levels) :
+                await _standardsRepository.GetFilteredStandards(routeIds, levels) :
                 await _standardsRepository.GetAll();
 
             if (!string.IsNullOrEmpty(keyword))
             {
-                standards = FindByKeyword(standards, keyword)
-                    .OrderByDescending(standard => standard.SearchScore)
-                    .ThenBy(standard => standard.Title)
-                    .ThenBy(standard => standard.Level);
+                standards = FindByKeyword(standards, keyword);
             }
-            else
-            {
-                standards = standards
-                    .OrderBy(standard => standard.Title)
-                    .ThenBy(standard => standard.Level);
-            }
+
+            standards = _sortOrderService.OrderBy(standards, OrderBy.Score);//todo get orderBy from a param to this func
 
             return standards.Select(standard => (Standard)standard);
         }

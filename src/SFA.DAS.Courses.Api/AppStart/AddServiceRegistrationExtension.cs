@@ -20,6 +20,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddHttpClient<IInstituteOfApprenticeshipService, InstituteOfApprenticeshipService>();
             services.AddTransient<IStandardsImportService, StandardsImportService>();
             services.AddTransient<IStandardsService, StandardsService>();
+            services.AddTransient<IStandardsSortOrderService, StandardsSortOrderService>();
             services.AddTransient<IStandardImportRepository, StandardImportRepository>();
             services.AddTransient<IStandardRepository, StandardRepository>();
             services.AddTransient<IImportAuditRepository, ImportAuditRepository>();
