@@ -16,49 +16,51 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
     public class WhenGettingIfateHealthCheck
     {
         [Test, MoqAutoData]
-        public async Task Then_The_Latest_ImportAudit_Record_is_Read_From_IFATE([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, InstituteOfApprenticeshipServiceHealthCheckHealthCheck handler)
+        public async Task Then_The_Latest_ImportAudit_Record_is_Read_From_IFATE(
+            [Frozen] Mock<IImportAuditRepository> mock, 
+            HealthCheckContext healthCheckContext, 
+            InstituteOfApprenticeshipServiceHealthCheck handler)
         {
-            //Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new Domain.Entities.ImportAudit(
-                DateTime.UtcNow.AddHours(1), 10));
-
             //Act
-            var expect = "iFate Input Health Check";
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             //Assert
-            Assert.AreEqual(expect, actual.Description);
+            mock.Verify(x => x.GetLastImportByType(ImportType.IFATEImport), Times.Once);
         }
 
         [Test, MoqAutoData]
-        public async Task Then_If_The_Data_Is_Greater_Than_Twenty_Five_Hours_Then_HealthCheck_Return_Degraded([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, InstituteOfApprenticeshipServiceHealthCheckHealthCheck handler)
+        public async Task Then_If_The_Data_Is_Greater_Than_Twenty_Five_Hours_Then_HealthCheck_Return_Degraded(
+            [Frozen] Mock<IImportAuditRepository> mock, 
+            HealthCheckContext healthCheckContext, 
+            InstituteOfApprenticeshipServiceHealthCheck handler)
         {
             // Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new Domain.Entities.ImportAudit(
+            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new ImportAudit(
             DateTime.UtcNow.AddHours(26), 0));
 
             // Act
-            var expect = HealthStatus.Degraded;
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             // Assert
-            Assert.AreEqual(actual.Status, expect);
+            Assert.AreEqual(HealthStatus.Degraded, actual.Status);
 
         }
 
         [Test, MoqAutoData]
-        public async Task Then_If_The_Data_Is_Less_Than_Twenty_Five_Hours_Then_HealthCheck_Return_Healthy([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, InstituteOfApprenticeshipServiceHealthCheckHealthCheck handler)
+        public async Task Then_If_The_Data_Is_Less_Than_Twenty_Five_Hours_Then_HealthCheck_Return_Healthy(
+            [Frozen] Mock<IImportAuditRepository> mock, 
+            HealthCheckContext healthCheckContext, 
+            InstituteOfApprenticeshipServiceHealthCheck handler)
         {
             // Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new Domain.Entities.ImportAudit(
+            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new ImportAudit(
             DateTime.UtcNow.AddHours(10), 10));
 
             // Act
-            var expect = HealthStatus.Healthy;
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             // Assert
-            Assert.AreEqual(actual.Status, expect);
+            Assert.AreEqual(HealthStatus.Healthy, actual.Status);
         }
     }
 }

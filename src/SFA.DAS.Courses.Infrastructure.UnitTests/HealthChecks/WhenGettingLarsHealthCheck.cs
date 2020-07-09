@@ -16,48 +16,50 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
     public class WhenGettingLarsHealthCheck
     {
         [Test, MoqAutoData]
-        public async Task Then_The_Latest_ImportAudit_Record_is_Read_From_Lars([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, LarsHealthCheck handler)
+        public async Task Then_The_Latest_ImportAudit_Record_is_Read_From_Lars(
+            [Frozen] Mock<IImportAuditRepository> mock, 
+            HealthCheckContext healthCheckContext, 
+            LarsHealthCheck handler)
         {
-            //Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.LarsImport)).ReturnsAsync(new ImportAudit(
-                DateTime.UtcNow.AddDays(14), 10));
-
             //Act
-            var expect = "LARS Input Health Check";
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             //Assert
-            Assert.AreEqual(expect, actual.Description);
+            mock.Verify(x => x.GetLastImportByType(ImportType.LarsImport), Times.Once);
         }
 
         [Test, MoqAutoData]
-        public async Task Then_If_The_Data_Is_Greater_Than_Two_Weeks_And_An_Hour_Then_HealthCheck_Return_Degraded([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, LarsHealthCheck handler)
+        public async Task Then_If_The_Data_Is_Greater_Than_Two_Weeks_And_An_Hour_Then_HealthCheck_Return_Degraded(
+            [Frozen] Mock<IImportAuditRepository> mock, 
+            HealthCheckContext healthCheckContext, 
+            LarsHealthCheck handler)
         {
             //Arrange
             mock.Setup(x => x.GetLastImportByType(ImportType.LarsImport)).ReturnsAsync(new ImportAudit(
-                DateTime.UtcNow.AddDays(14).AddHours(2), 0));
+                 DateTime.UtcNow.AddDays(14).AddHours(1).AddMinutes(1), 0));
 
             //Act
-            var expect = HealthStatus.Degraded;
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             //Assert
-            Assert.AreEqual(actual.Status, expect);
+            Assert.AreEqual(HealthStatus.Degraded, actual.Status);
         }
 
         [Test, MoqAutoData]
-        public async Task Then_If_The_Data_Is_Less_Than_Two_Weeks_And_An_Hour_Then_HealthCheck_Return_Healthy([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, LarsHealthCheck handler)
+        public async Task Then_If_The_Data_Is_Less_Than_Two_Weeks_And_An_Hour_Then_HealthCheck_Return_Healthy(
+            [Frozen] Mock<IImportAuditRepository> mock, 
+            HealthCheckContext healthCheckContext, 
+            LarsHealthCheck handler)
         {
             //Arrange
             mock.Setup(x => x.GetLastImportByType(ImportType.LarsImport)).ReturnsAsync(new ImportAudit(
                 DateTime.UtcNow.AddDays(10), 6));
 
             //Act
-            var expect = HealthStatus.Healthy;
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             //Assert
-            Assert.IsTrue(actual.Status.Equals(expect));
+            Assert.AreEqual(HealthStatus.Healthy, actual.Status);
         }
     }
 }
