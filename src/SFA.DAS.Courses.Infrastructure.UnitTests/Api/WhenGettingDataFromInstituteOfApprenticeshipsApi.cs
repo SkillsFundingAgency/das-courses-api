@@ -57,51 +57,5 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             //Act Assert
             Assert.ThrowsAsync<HttpRequestException>(() => apprenticeshipService.GetStandards());
         }
-
-        [Test, MoqAutoData]
-        public async Task Then_The_Latest_ImportAudit_Record_is_Read_From_IFATE([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, iFateHealthCheck handler)
-        {
-            //Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new Domain.Entities.ImportAudit(
-                DateTime.UtcNow.AddHours(1), 10));
-
-            //Act
-            var expect = "iFate Input Health Check";
-            var actual = await handler.CheckHealthAsync(healthCheckContext);
-
-            //Assert
-            Assert.AreEqual(expect, actual.Description);
-        }
-
-        [Test, MoqAutoData]
-        public async Task Then_If_The_Data_Is_Greater_Than_Twenty_Five_Hours_Then_HealthCheck_Return_Degraded([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, iFateHealthCheck handler)
-        {
-            // Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new Domain.Entities.ImportAudit(
-            DateTime.UtcNow.AddHours(26), 0));
-
-            // Act
-            var expect = HealthStatus.Degraded;
-            var actual = await handler.CheckHealthAsync(healthCheckContext);
-
-            // Assert
-            Assert.AreEqual(actual.Status, expect);
-
-        }
-
-        [Test, MoqAutoData]
-        public async Task Then_If_The_Data_Is_Less_Than_Twenty_Five_Hours_Then_HealthCheck_Return_Healthy([Frozen] Mock<IImportAuditRepository> mock, HealthCheckContext healthCheckContext, iFateHealthCheck handler)
-        {
-            // Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new Domain.Entities.ImportAudit(
-            DateTime.UtcNow.AddHours(10), 10));
-
-            // Act
-            var expect = HealthStatus.Healthy;
-            var actual = await handler.CheckHealthAsync(healthCheckContext);
-
-            // Assert
-            Assert.AreEqual(actual.Status, expect);
-        }
     }
 }

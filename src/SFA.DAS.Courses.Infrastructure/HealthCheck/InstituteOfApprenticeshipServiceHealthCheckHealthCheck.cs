@@ -10,12 +10,12 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Infrastructure.HealthCheck
 {
-    public class iFateHealthCheck
+    public class InstituteOfApprenticeshipServiceHealthCheckHealthCheck
     {
         private const string HealthCheckResultDescription = "iFate Input Health Check";
         private IImportAuditRepository _importData;
 
-        public iFateHealthCheck(IImportAuditRepository importData)
+        public InstituteOfApprenticeshipServiceHealthCheckHealthCheck(IImportAuditRepository importData)
         {
             _importData = importData;
         }
