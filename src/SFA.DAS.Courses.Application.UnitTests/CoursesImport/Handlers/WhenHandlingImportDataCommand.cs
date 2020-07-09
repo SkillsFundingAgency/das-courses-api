@@ -9,15 +9,15 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
 {
-    public class WhenHandlingImportStandardsCommand
+    public class WhenHandlingImportDataCommand
     {
         [Test, MoqAutoData]
         public async Task Then_The_Services_Are_Called_To_Import_Data(
-            ImportStandardsCommand command,
+            ImportDataCommand command,
             [Frozen] Mock<IStandardsImportService> standardsImportService,
             [Frozen] Mock<ILarsImportService> larsImportService,
             [Frozen] Mock<IFrameworksImportService> frameworksImportService,
-            ImportStandardsCommandHandler handler)
+            ImportDataCommandHandler handler)
         {
             // Act
             await handler.Handle(command, new CancellationToken());

@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Frameworks
         public async Task Then_Gets_Frameworks_List_From_Mediator(
             GetFrameworksResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
-            FrameworksController controller)
+            [Greedy] FrameworksController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -40,7 +40,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Frameworks
         [Test, MoqAutoData]
         public async Task And_Exception_Then_Returns_Bad_Request(
             [Frozen] Mock<IMediator> mockMediator,
-            FrameworksController controller)
+            [Greedy] FrameworksController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(

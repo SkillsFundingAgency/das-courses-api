@@ -27,14 +27,18 @@ namespace SFA.DAS.Courses.Api
             var config = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory())
-#if DEBUG
-                .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("appsettings.Development.json", true)
-#endif
                 .AddEnvironmentVariables();
-
+            
+            
             if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
+                
+#if DEBUG
+                config
+                    .AddJsonFile("appsettings.json", true)
+                    .AddJsonFile("appsettings.Development.json", true);
+#endif
+                
                 config.AddAzureTableStorage(options =>
                     {
                         options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
@@ -68,14 +72,15 @@ namespace SFA.DAS.Courses.Api
                     .Get<AzureActiveDirectoryConfiguration>();
 
                 services.AddAuthentication(azureAdConfiguration);
-
             }
 
-            services.AddHealthChecks()
-                .AddSqlServer(coursesConfiguration.ConnectionString);
+            if (_configuration["Environment"] != "DEV")
+            {
+                services.AddHealthChecks()
+                    .AddSqlServer(coursesConfiguration.ConnectionString);    
+            }
             
-
-            services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
+            services.AddMediatR(typeof(ImportDataCommand).Assembly);
 
             services.AddServiceRegistration();
 
@@ -108,10 +113,13 @@ namespace SFA.DAS.Courses.Api
                 app.UseDeveloperExceptionPage();
             }
             
-            app.UseAuthentication();    
-        
-            app.UseHealthChecks();
+            app.UseAuthentication();
 
+            if (!_configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            {
+                app.UseHealthChecks();    
+            }
+            
             app.UseRouting();
             app.UseEndpoints(builder =>
             {

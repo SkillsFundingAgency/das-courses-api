@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         public async Task<IActionResult> Index()
         {
 
-            await _mediator.Send(new ImportStandardsCommand());
+            await _mediator.Send(new ImportDataCommand());
         
             return NoContent();
             

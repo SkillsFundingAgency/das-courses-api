@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Frameworks
             string frameworkId,
             GetFrameworkResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
-            FrameworksController controller)
+            [Greedy] FrameworksController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -41,7 +41,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Frameworks
         public async Task And_Exception_Then_Returns_Not_Found(
             string frameworkId,
             [Frozen] Mock<IMediator> mockMediator,
-            FrameworksController controller)
+            [Greedy] FrameworksController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
