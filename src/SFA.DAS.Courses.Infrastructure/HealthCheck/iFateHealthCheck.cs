@@ -30,7 +30,6 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
             timer.Stop();
             var durationString = timer.Elapsed.ToHumanReadableString();
 
-            // AC1 If IFATE data load is over 25 hours old or rows imported is zero then the health is shown as degraded
             if (DateTime.UtcNow >= latestIfateData.TimeStarted.AddHours(25) || latestIfateData.RowsImported == 0)
             {
                 return new HealthCheckResult(healthStatusDegraded, "Course data load is over 25 hours old or rows imported are zero", null, new Dictionary<string, object> { { "Dictionary", durationString } });
