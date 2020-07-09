@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -16,6 +17,7 @@ using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Infrastructure.HealthCheck;
 
 namespace SFA.DAS.Courses.Api
 {
@@ -29,17 +31,17 @@ namespace SFA.DAS.Courses.Api
                 .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddEnvironmentVariables();
-            
-            
+
+
             if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
-                
+
 #if DEBUG
                 config
                     .AddJsonFile("appsettings.json", true)
                     .AddJsonFile("appsettings.Development.json", true);
 #endif
-                
+
                 config.AddAzureTableStorage(options =>
                     {
                         options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
@@ -49,23 +51,23 @@ namespace SFA.DAS.Courses.Api
                     }
                 );
             }
-            
+
             _configuration = config.Build();
         }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddOptions();
             services.Configure<CoursesConfiguration>(_configuration.GetSection("Courses"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<CoursesConfiguration>>().Value);
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
-            
+
             var coursesConfiguration = _configuration
                 .GetSection("Courses")
                 .Get<CoursesConfiguration>();
-            
+
             if (!ConfigurationIsLocalOrDev())
             {
                 var azureAdConfiguration = _configuration
@@ -78,15 +80,24 @@ namespace SFA.DAS.Courses.Api
             if (_configuration["Environment"] != "DEV")
             {
                 services.AddHealthChecks()
-                    .AddDbContextCheck<CoursesDataContext>();
+                    .AddDbContextCheck<CoursesDataContext>()
+                    .AddCheck<LarsHealthCheck>("Lars Data Health Check",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] {"ready"})
+                    .AddCheck<InstituteOfApprenticeshipServiceHealthCheck>("IFATE Health Check",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] {"ready"})
+                    .AddCheck<FrameworksHealthCheck>("Frameworks Health Check",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] {"ready"});
             }
-            
+
             services.AddMediatR(typeof(ImportDataCommand).Assembly);
 
             services.AddServiceRegistration();
 
             services.AddDatabaseRegistration(coursesConfiguration, _configuration["Environment"]);
-            
+
             services
                 .AddMvc(o =>
                 {
@@ -95,32 +106,32 @@ namespace SFA.DAS.Courses.Api
                         o.Conventions.Add(new AuthorizeControllerModelConvention());
                     }
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            
+
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
             });
-            
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IIndexBuilder indexBuilder)
         {
             indexBuilder.Build();
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseAuthentication();
 
             if (!_configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
-                app.UseHealthChecks();    
+                app.UseHealthChecks();
             }
-            
+
             app.UseRouting();
             app.UseEndpoints(builder =>
             {
@@ -136,7 +147,7 @@ namespace SFA.DAS.Courses.Api
                 c.RoutePrefix = string.Empty;
             });
         }
-        
+
         private bool ConfigurationIsLocalOrDev()
         {
             return _configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase) ||
