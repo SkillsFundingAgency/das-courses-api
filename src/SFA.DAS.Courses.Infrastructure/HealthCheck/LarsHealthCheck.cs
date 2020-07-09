@@ -15,9 +15,7 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
     public class LarsHealthCheck : IHealthCheck
     {
         private const string HealthCheckResultDescription = "LARS Input Health Check";
-        private IImportAuditRepository _importData;
-
-
+        private readonly IImportAuditRepository _importData;
 
         public LarsHealthCheck(IImportAuditRepository importData)
         {
@@ -27,16 +25,19 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
             var timer = Stopwatch.StartNew();
-
-            var healthStatusDegraded = HealthStatus.Degraded;
             var latestLarsData = await _importData.GetLastImportByType(ImportType.LarsImport);
             
             timer.Stop();
             var durationString = timer.Elapsed.ToHumanReadableString();
 
-            if (DateTime.UtcNow >= latestLarsData.TimeStarted.AddDays(14).AddHours(1) || latestLarsData.RowsImported == 0)
+            if (DateTime.UtcNow >= latestLarsData.TimeStarted.AddDays(14).AddHours(1))
             {
-                return new HealthCheckResult(healthStatusDegraded, "LARS data is over two weeks (and an hour) old or rows imported are zero", null, new Dictionary<string, object> { { "Dictionary", durationString } });
+                return new HealthCheckResult(HealthStatus.Degraded, "LARS data is over two weeks (and an hour) old", null, new Dictionary<string, object> { { "Duration", durationString } });
+            }
+
+            if (latestLarsData.RowsImported == 0)
+            {
+                return new HealthCheckResult(HealthStatus.Degraded, "LARS data has imported zero rows", null, new Dictionary<string, object> { { "Duration", durationString } });
             }
 
             return HealthCheckResult.Healthy(HealthCheckResultDescription, new Dictionary<string, object> { {"Duration", durationString } });

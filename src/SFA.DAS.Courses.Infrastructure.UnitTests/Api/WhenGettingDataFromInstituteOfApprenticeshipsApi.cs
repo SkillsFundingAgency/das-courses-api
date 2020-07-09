@@ -5,17 +5,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.Courses.Data.Configuration;
 using SFA.DAS.Courses.Domain.Configuration;
-using SFA.DAS.Courses.Domain.Entities;
-using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Infrastructure.Api;
-using SFA.DAS.Courses.Infrastructure.HealthCheck;
-using SFA.DAS.Testing.AutoFixture;
+
 
 namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
 {
