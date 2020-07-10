@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Internal;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
@@ -68,9 +67,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             mockLogger.Verify(logger => logger.Log(
                     LogLevel.Information, 
                     0, 
-                    new FormattedLogValues($"Zero results for searching by keyword [{query.Keyword}]", null), 
+                    It.IsAny<It.IsAnyType>(),
                     null,
-                    It.IsAny<Func<object, Exception, string>>()));
+                    (Func<It.IsAnyType, Exception, string>) It.IsAny<object>()));
         }
     }
 }

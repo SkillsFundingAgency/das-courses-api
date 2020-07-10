@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
         [Test, MoqAutoData]
         public async Task Then_Sends_ImportStandardsCommand_And_Returns_NoContent_Result(
             [Frozen] Mock<IMediator> mockMediator,
-            DataLoadController controller)
+            [Greedy] DataLoadController controller)
         {
             var controllerResult = await controller.Index() as NoContentResult;
 

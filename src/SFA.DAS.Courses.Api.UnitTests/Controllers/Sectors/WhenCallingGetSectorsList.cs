@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Sectors
         public async Task Then_Gets_Standards_List_From_Mediator(
             GetSectorsListResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
-            SectorsController controller)
+            [Greedy] SectorsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Sectors
         [Test, MoqAutoData]
         public async Task And_Exception_Then_Returns_Bad_Request(
             [Frozen] Mock<IMediator> mockMediator,
-            SectorsController controller)
+            [Greedy] SectorsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(

@@ -63,12 +63,13 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
         private IEnumerable<Standard> GetExpected(Table table)
         {
+            var existingSectors = DbUtilities.GetTestSectors();
             var standards =  new List<Standard>();
             foreach (var row in table.Rows)
             {
                 standards.Add(DbUtilities.GetValidTestStandards().Single(standard => 
                     standard.Title == row["title"] && 
-                    standard.Sector.Route == row["sector"] &&
+                    standard.RouteId == existingSectors.Single(sector => sector.Route == row["sector"]).Id &&
                     standard.Level == int.Parse(row["level"])));
             }
 
