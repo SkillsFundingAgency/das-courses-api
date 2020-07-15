@@ -27,7 +27,8 @@ namespace SFA.DAS.Courses.Application.Courses.Services
         public async Task<IEnumerable<Standard>> GetStandardsList(
             string keyword, 
             IList<Guid> routeIds, 
-            IList<int> levels)
+            IList<int> levels,
+            OrderBy orderBy)
         {
             var standards = routeIds.Any() || levels.Any()  ?
                 await _standardsRepository.GetFilteredStandards(routeIds, levels) :
@@ -38,7 +39,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
                 standards = FindByKeyword(standards, keyword);
             }
 
-            standards = _sortOrderService.OrderBy(standards, OrderBy.Score);//todo get orderBy from a param to this func
+            standards = _sortOrderService.OrderBy(standards, orderBy, keyword);
 
             return standards.Select(standard => (Standard)standard);
         }

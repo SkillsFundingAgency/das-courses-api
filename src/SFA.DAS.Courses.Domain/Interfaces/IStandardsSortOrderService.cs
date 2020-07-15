@@ -6,7 +6,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardsSortOrderService
     {
-        IOrderedEnumerable<Entities.Standard> OrderBy(IEnumerable<Entities.Standard> standards,
-            OrderBy orderBy);
+        IOrderedEnumerable<Entities.Standard> OrderBy(IEnumerable<Entities.Standard> standards, OrderBy orderBy, string keyword);
     }
 }

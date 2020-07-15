@@ -8,9 +8,23 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 {
     public class StandardsSortOrderService : IStandardsSortOrderService
     {
-        public IOrderedEnumerable<Standard> OrderBy(IEnumerable<Standard> standards, OrderBy orderBy)
+        public IOrderedEnumerable<Standard> OrderBy(IEnumerable<Standard> standards, OrderBy orderBy, string keyword)
         {
-            return standards.OrderBy(standard => standard.Id);
+            if (string.IsNullOrEmpty(keyword) || orderBy == Domain.Search.OrderBy.Title)
+            {
+                return OrderByTitle(standards);
+            }
+            return OrderByScore(standards);
+        }
+
+        private IOrderedEnumerable<Standard> OrderByScore(IEnumerable<Standard> standards)
+        {
+            return standards.OrderByDescending(c => c.SearchScore).ThenBy(c => c.Title).ThenBy(c => c.LarsStandard.StandardId);
+        }
+
+        private IOrderedEnumerable<Standard> OrderByTitle(IEnumerable<Standard> standards)
+        {
+            return standards.OrderBy(c => c.Title).ThenByDescending(c => c.SearchScore).ThenBy(c => c.LarsStandard.StandardId);
         }
     }
 }
