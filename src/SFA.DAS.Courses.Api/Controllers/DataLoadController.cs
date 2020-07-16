@@ -1,6 +1,8 @@
+﻿using System;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
 
 namespace SFA.DAS.Courses.Api.Controllers
@@ -10,21 +12,32 @@ namespace SFA.DAS.Courses.Api.Controllers
     public class DataLoadController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<DataLoadController> _logger;
 
-        public DataLoadController (IMediator mediator)
+        public DataLoadController (
+            IMediator mediator,
+            ILogger<DataLoadController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
         
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> Index()
         {
-
-            await _mediator.Send(new ImportStandardsCommand());
-        
-            return NoContent();
-            
+            try
+            {
+                _logger.LogInformation("Data import request received");
+                await _mediator.Send(new ImportStandardsCommand());
+                _logger.LogInformation("Data import completed successfully");
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Data import failed");
+                return BadRequest();
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,42 +44,58 @@ namespace SFA.DAS.Courses.Application.StandardsImport.Services
         }
         public async Task ImportData()
         {
-            var lastFilePath = _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
-            var filePath = _larsPageParser.GetCurrentLarsDataDownloadFilePath();
-
-            await Task.WhenAll(lastFilePath, filePath);
-
-            if (lastFilePath.Result != null && filePath.Result.Equals(lastFilePath.Result.FileName, StringComparison.CurrentCultureIgnoreCase))
+            try
             {
-                _logger.LogInformation("LARS Import - no new data to import");
-                return;
+                _logger.LogInformation("LARS Import - commencing");
+                var lastFilePath =
+                    _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
+                var filePath = _larsPageParser.GetCurrentLarsDataDownloadFilePath();
+
+                await Task.WhenAll(lastFilePath, filePath);
+
+                if (lastFilePath.Result != null && filePath.Result.Equals(
+                    lastFilePath.Result.FileName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    _logger.LogInformation("LARS Import - no new data to import");
+                    return;
+                }
+
+                _logger.LogInformation($"LARS import - starting import of {filePath.Result}");
+                var importAuditStartTime = DateTime.UtcNow;
+                var content = await _larsDataDownloadService.GetFileStream(filePath.Result);
+
+                await InsertDataFromZipStreamToImportTables(content);
+
+                _logger.LogInformation("LARS Import - starting data transfer from import tables");
+                _larsStandardRepository.DeleteAll();
+                _apprenticeshipFundingRepository.DeleteAll();
+
+                var larsStandardImports = _larsStandardImportRepository.GetAll();
+                var apprenticeshipFundingImports = _apprenticeshipFundingImportRepository.GetAll();
+
+                await Task.WhenAll(larsStandardImports, apprenticeshipFundingImports);
+
+                var importLarsStandardResult =
+                    _larsStandardRepository.InsertMany(larsStandardImports.Result
+                        .Select(c => (LarsStandard)c).ToList());
+                var importApprenticeshipFundingResult =
+                    _apprenticeshipFundingRepository.InsertMany(apprenticeshipFundingImports.Result
+                        .Select(c => (ApprenticeshipFunding)c).ToList());
+
+                await Task.WhenAll(importLarsStandardResult, importApprenticeshipFundingResult);
+
+                var rowsImported = larsStandardImports.Result.Count() +
+                                   apprenticeshipFundingImports.Result.Count();
+
+                await _importAuditRepository.Insert(new ImportAudit(importAuditStartTime,
+                    rowsImported, ImportType.LarsImport, filePath.Result));
+                _logger.LogInformation("LARS Import - finished data transfer from import tables");
             }
-            _logger.LogInformation($"LARS import - starting import of {filePath.Result}");
-            var importAuditStartTime = DateTime.UtcNow;
-            var content = await _larsDataDownloadService.GetFileStream(filePath.Result);
-
-            await InsertDataFromZipStreamToImportTables(content);
-
-            _logger.LogInformation("LARS Import - starting data transfer from import tables");
-            _larsStandardRepository.DeleteAll();
-            _apprenticeshipFundingRepository.DeleteAll();
-
-            var larsStandardImports = _larsStandardImportRepository.GetAll();
-            var apprenticeshipFundingImports = _apprenticeshipFundingImportRepository.GetAll();
-
-            await Task.WhenAll(larsStandardImports, apprenticeshipFundingImports);
-
-            var importLarsStandardResult =
-                _larsStandardRepository.InsertMany(larsStandardImports.Result.Select(c => (LarsStandard) c).ToList());
-            var importApprenticeshipFundingResult =
-                _apprenticeshipFundingRepository.InsertMany(apprenticeshipFundingImports.Result.Select(c => (ApprenticeshipFunding) c).ToList());
-            
-            await Task.WhenAll(importLarsStandardResult, importApprenticeshipFundingResult);
-
-            var rowsImported = larsStandardImports.Result.Count() + apprenticeshipFundingImports.Result.Count();
-            
-            await _importAuditRepository.Insert(new ImportAudit(importAuditStartTime, rowsImported, ImportType.LarsImport, filePath.Result));
-            _logger.LogInformation("LARS Import - finished data transfer from import tables");
+            catch (Exception e)
+            {
+                _logger.LogError("LARS Import - failed", e);
+                throw;
+            }
         }
 
         private async Task InsertDataFromZipStreamToImportTables(Stream content)
