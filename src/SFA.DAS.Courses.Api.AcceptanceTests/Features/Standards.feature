@@ -44,4 +44,21 @@ Scenario: Get list of standards
     | title       | level | sector                        |
     | Brewer      | 1     | Engineering and manufacturing |
 
-    #todo: scenarios for sort order
+    Scenario: Get list of standards by keyword sorted by relevance
+	Given I have an http client
+    When I GET the following url: /api/courses/standards?keyword=beer&orderBy=score
+    Then an http status code of 200 is returned
+    And the following valid standards are returned
+    | title       | level | sector                        |
+    | Brewer      | 1     | Engineering and manufacturing |
+    | Head Brewer | 2     | Engineering and manufacturing |
+
+    Scenario: Get list of standards by keyword sorted by name
+	Given I have an http client
+    When I GET the following url: /api/courses/standards?keyword=beer&orderBy=title
+    Then an http status code of 200 is returned
+    And the following valid standards are returned
+    | title       | level | sector                        |
+    | Brewer      | 1     | Engineering and manufacturing |
+    | Head Brewer | 2     | Engineering and manufacturing |
+    

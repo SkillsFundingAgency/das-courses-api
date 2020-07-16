@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
+using SFA.DAS.Courses.Domain.Search;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {
@@ -30,7 +31,8 @@ namespace SFA.DAS.Courses.Api.Controllers
         public async Task<IActionResult> GetList(
             [FromQuery] string keyword,
             [FromQuery] IList<Guid> routeIds, 
-            [FromQuery] IList<int> levels)
+            [FromQuery] IList<int> levels,
+            [FromQuery] OrderBy orderBy)
         {
             try
             {
@@ -38,7 +40,8 @@ namespace SFA.DAS.Courses.Api.Controllers
                 {
                     Keyword = keyword, 
                     RouteIds = routeIds,
-                    Levels = levels
+                    Levels = levels,
+                    OrderBy = orderBy
                 });
 
                 var response = new GetStandardsListResponse
