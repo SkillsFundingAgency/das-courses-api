@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
+using Lucene.Net.Util;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
@@ -25,9 +27,16 @@ namespace SFA.DAS.Courses.Data.Search
             var reader = DirectoryReader.Open(directory);
             var searcher = new IndexSearcher(reader);
 
-            var titleQuery = new FuzzyQuery(new Term(nameof(Standard.Title), searchTerm));
-            var jobTitlesQuery = new FuzzyQuery(new Term(nameof(Standard.TypicalJobTitles), searchTerm));
-            var keywordsQuery = new FuzzyQuery(new Term(nameof(Standard.Keywords), searchTerm));
+            // todo: 
+            // use same analyser for the search term
+            // use nlog to support fragments
+
+            var analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
+            var queryBuilder = new QueryBuilder(analyzer);
+
+            var titleQuery = new FuzzyQuery(new Term(SearchableStandard.TitleSoundex, searchTerm));
+            var jobTitlesQuery = new FuzzyQuery(new Term(SearchableStandard.TypicalJobTitlesSoundex, searchTerm));
+            var keywordsQuery = new FuzzyQuery(new Term(SearchableStandard.KeywordsSoundex, searchTerm));
             
             var boolQuery = new BooleanQuery
             {

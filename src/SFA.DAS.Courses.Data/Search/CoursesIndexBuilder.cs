@@ -1,4 +1,10 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using J2N.Collections.Generic;
+using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
+using Lucene.Net.Analysis.Miscellaneous;
+using Lucene.Net.Analysis.NGram;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
@@ -24,7 +30,19 @@ namespace SFA.DAS.Courses.Data.Search
         public void Build()
         {
             var standardAnalyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
-            var config = new IndexWriterConfig(LuceneVersion.LUCENE_48, standardAnalyzer);
+            var keywordAnalyzer = new KeywordAnalyzer();
+            var fieldAnalyzers = new Dictionary<string, Analyzer>
+            {
+                {SearchableStandard.TitleSoundex, standardAnalyzer},
+                {SearchableStandard.TypicalJobTitlesSoundex, standardAnalyzer},
+                {SearchableStandard.KeywordsSoundex, standardAnalyzer},
+                {SearchableStandard.TitlePhrase, keywordAnalyzer},
+                {SearchableStandard.TypicalJobTitlesPhrase, keywordAnalyzer},
+                {SearchableStandard.KeywordsPhrase, keywordAnalyzer}
+            };
+            var perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), fieldAnalyzers);
+
+            var config = new IndexWriterConfig(LuceneVersion.LUCENE_48, perFieldAnalyzerWrapper);
             var directory = _directoryFactory.GetDirectory();
             
             using (var writer = new IndexWriter(directory, config))
