@@ -40,11 +40,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardImportRepository
         public async Task Then_The_LarsStandardImport_Items_Are_Returned()
         {
             //Act
-            var sectorsImport = await _larsStandardImportRepository.GetAll();
+            var actual = await _larsStandardImportRepository.GetAll();
             
             //Assert
-            Assert.IsNotNull(sectorsImport);
-            sectorsImport.Should().BeEquivalentTo(_larsStandardImport);
+            Assert.IsNotNull(actual);
+            actual.Should().BeEquivalentTo(_larsStandardImport);
         }
     }
 }

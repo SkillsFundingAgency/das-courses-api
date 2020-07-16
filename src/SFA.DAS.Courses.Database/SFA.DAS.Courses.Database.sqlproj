@@ -61,6 +61,10 @@
   <ItemGroup>
     <Build Include="Tables\ApprenticeshipFunding.sql" />
     <Build Include="Tables\ApprenticeshipFunding_Import.sql" />
+    <Build Include="Tables\Framework.sql" />
+    <Build Include="Tables\FrameworkFundingPeriod.sql" />
+    <Build Include="Tables\FrameworkFundingPeriod_Import.sql" />
+    <Build Include="Tables\Framework_Import.sql" />
     <Build Include="Tables\ImportAudit.sql" />
     <Build Include="Tables\LarsStandard.sql" />
     <Build Include="Tables\LarsStandard_Import.sql" />

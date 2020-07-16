@@ -12,7 +12,7 @@ using Microsoft.OpenApi.Models;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Courses.Api.AppStart;
 using SFA.DAS.Courses.Api.Infrastructure;
-using SFA.DAS.Courses.Application.StandardsImport.Handlers.ImportStandards;
+using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Interfaces;
 
@@ -27,14 +27,18 @@ namespace SFA.DAS.Courses.Api
             var config = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory())
-#if DEBUG
-                .AddJsonFile("appsettings.json", true)
-                .AddJsonFile("appsettings.Development.json", true)
-#endif
                 .AddEnvironmentVariables();
-
+            
+            
             if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
+                
+#if DEBUG
+                config
+                    .AddJsonFile("appsettings.json", true)
+                    .AddJsonFile("appsettings.Development.json", true);
+#endif
+                
                 config.AddAzureTableStorage(options =>
                     {
                         options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
@@ -57,20 +61,26 @@ namespace SFA.DAS.Courses.Api
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
             
-            var serviceProvider = services.BuildServiceProvider();
-
+            var coursesConfiguration = _configuration
+                .GetSection("Courses")
+                .Get<CoursesConfiguration>();
+            
             if (!ConfigurationIsLocalOrDev())
             {
-                services.AddAuthentication(serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
+                var azureAdConfiguration = _configuration
+                    .GetSection("AzureAd")
+                    .Get<AzureActiveDirectoryConfiguration>();
 
+                services.AddAuthentication(azureAdConfiguration);
             }
 
-            var coursesConfiguration = serviceProvider.GetService<IOptions<CoursesConfiguration>>().Value;
-            services.AddHealthChecks()
-                .AddSqlServer(coursesConfiguration.ConnectionString);
+            if (_configuration["Environment"] != "DEV")
+            {
+                services.AddHealthChecks()
+                    .AddSqlServer(coursesConfiguration.ConnectionString);    
+            }
             
-
-            services.AddMediatR(typeof(ImportStandardsCommand).Assembly);
+            services.AddMediatR(typeof(ImportDataCommand).Assembly);
 
             services.AddServiceRegistration();
 
@@ -92,22 +102,24 @@ namespace SFA.DAS.Courses.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
             });
             
-            serviceProvider = services.BuildServiceProvider();
-            var indexBuilder = serviceProvider.GetService<IIndexBuilder>();
-            indexBuilder.Build();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IIndexBuilder indexBuilder)
         {
+            indexBuilder.Build();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             
-            app.UseAuthentication();    
-        
-            app.UseHealthChecks();
+            app.UseAuthentication();
 
+            if (!_configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            {
+                app.UseHealthChecks();    
+            }
+            
             app.UseRouting();
             app.UseEndpoints(builder =>
             {
