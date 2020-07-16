@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +39,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             try
             {
+                _logger.LogInformation("Standards import - commencing");
                 var timeStarted = DateTime.UtcNow;
                 await GetStandardsFromApiAndInsertIntoStagingTable();
 
@@ -47,14 +48,14 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 if (!standardsToInsert.Any())
                 {
                     await AuditImport(timeStarted, 0);
-                    _logger.LogWarning("No standards loaded. No standards retrieved from API");
+                    _logger.LogWarning("Standards import - No standards loaded. No standards retrieved from API");
                     return;
                 }
             
                 _standardRepository.DeleteAll();
                 _sectorRepository.DeleteAll();
                 
-                _logger.LogInformation($"Adding {standardsToInsert.Count} to Standards table.");
+                _logger.LogInformation($"Standards import - Adding {standardsToInsert.Count} to Standards table.");
 
                 await _sectorRepository.InsertMany(_sectors.Select(c => (Sector)c).ToList());
                 
@@ -62,10 +63,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 await _standardRepository.InsertMany(standards);
                 
                 await AuditImport(timeStarted, standards.Count);
+                _logger.LogInformation("Standards import - Data import of standards commencing");
             }
             catch (Exception e)
             {
-                _logger.LogError("Unable to update Standards data",e);
+                _logger.LogError("Standards import - failed",e);
                 throw;
             }
             
@@ -80,7 +82,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private async Task GetStandardsFromApiAndInsertIntoStagingTable()
         {
             var standards = (await _instituteOfApprenticeshipService.GetStandards()).ToList();
-            _logger.LogInformation($"Retrieved {standards.Count} standards from API");
+            _logger.LogInformation($"Standards import - Retrieved {standards.Count} standards from API");
 
             await GetAndInsertSectors(standards);
 
