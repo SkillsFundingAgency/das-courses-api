@@ -68,9 +68,38 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             Assert.AreEqual(6, actual .ElementAt(4).Id);
             Assert.AreEqual(5, actual .ElementAt(5).Id);
         }
+        
+        [Test, RecursiveMoqAutoData]
+        public void And_OrderBy_Score_Then_Ordered_By_Score_Then_By_Title_Then_By_Level(
+            string keyword,
+            StandardsSortOrderService standardsSortOrderService)
+        {
+            //Arrange
+            var orderBy = OrderBy.Score;
+            var standards = new List<Standard>
+            {
+                new Standard{Id = 1, SearchScore = 1, Title = "aardvark", Level = 2, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 2, SearchScore = 1, Title = "aardvark", Level = 1, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 3, SearchScore = 1, Title = "aardvark", Level = 4, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 4, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 5, SearchScore = 1, Title = "aardvark", Level = 6, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
+                new Standard{Id = 6, SearchScore = 1, Title = "aardvark", Level = 5, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()}
+            };
+
+            //Act
+            var actual = standardsSortOrderService.OrderBy(standards, orderBy, keyword);
+
+            //Assert
+            Assert.AreEqual(5, actual.ElementAt(0).Id);
+            Assert.AreEqual(6, actual.ElementAt(1).Id);
+            Assert.AreEqual(3, actual.ElementAt(2).Id);
+            Assert.AreEqual(4, actual.ElementAt(3).Id);
+            Assert.AreEqual(1, actual.ElementAt(4).Id);
+            Assert.AreEqual(2, actual.ElementAt(5).Id);
+        }
 
         [Test, RecursiveMoqAutoData]
-        public void And_OrderBy_Score_Then_Ordered_By_Score_Then_By_Title_Then_By_LarsStandard(
+        public void And_OrderBy_Score_Then_Ordered_By_Score_Then_By_Title_Then_By_Level_Then_By_LarsStandard(
             string keyword,
             StandardsSortOrderService standardsSortOrderService)
         {
@@ -80,10 +109,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             {
                 new Standard{Id = 1, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 5}},
                 new Standard{Id = 2, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 4}},
-                new Standard{Id = 3, SearchScore = 1, Title = "aardvark", Level = 2, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 6}},
+                new Standard{Id = 3, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 6}},
                 new Standard{Id = 4, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 2}},
-                new Standard{Id = 5, SearchScore = 1, Title = "aardvark", Level = 1, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 1}},
-                new Standard{Id = 6, SearchScore = 1, Title = "aardvark", Level = 5, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 3}}
+                new Standard{Id = 5, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 1}},
+                new Standard{Id = 6, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 3}}
             };
 
             //Act
@@ -155,7 +184,35 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public void And_OrderBy_Score_Then_Ordered_By_Title_Then_By_Score_Then_By_LarsStandard(
+        public void And_OrderBy_Score_Then_Ordered_By_Title_Then_By_Score_Then_By_Level(
+            StandardsSortOrderService standardsSortOrderService)
+        {
+            //Arrange
+            var orderBy = OrderBy.Title;
+            var standards = new List<Standard>
+            {
+                new Standard{Id = 1, SearchScore = 1, Title = "aardvark", Level = 5, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 5}},
+                new Standard{Id = 2, SearchScore = 1, Title = "aardvark", Level = 4, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 4}},
+                new Standard{Id = 3, SearchScore = 1, Title = "aardvark", Level = 6, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 6}},
+                new Standard{Id = 4, SearchScore = 1, Title = "aardvark", Level = 2, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 2}},
+                new Standard{Id = 5, SearchScore = 1, Title = "aardvark", Level = 1, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 1}},
+                new Standard{Id = 6, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 3}}
+            };
+
+            //Act
+            var actual = standardsSortOrderService.OrderBy(standards, orderBy, null);
+
+            //Assert
+            Assert.AreEqual(3, actual.ElementAt(0).Id);
+            Assert.AreEqual(1, actual.ElementAt(1).Id);
+            Assert.AreEqual(2, actual.ElementAt(2).Id);
+            Assert.AreEqual(6, actual.ElementAt(3).Id);
+            Assert.AreEqual(4, actual.ElementAt(4).Id);
+            Assert.AreEqual(5, actual.ElementAt(5).Id);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public void And_OrderBy_Score_Then_Ordered_By_Title_Then_By_Score_Then_By_Level_Then_By_LarsStandard(
             StandardsSortOrderService standardsSortOrderService)
         {
             //Arrange
@@ -164,10 +221,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             {
                 new Standard{Id = 1, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 5}},
                 new Standard{Id = 2, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 4}},
-                new Standard{Id = 3, SearchScore = 1, Title = "aardvark", Level = 2, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 6}},
+                new Standard{Id = 3, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 6}},
                 new Standard{Id = 4, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 2}},
-                new Standard{Id = 5, SearchScore = 1, Title = "aardvark", Level = 1, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 1}},
-                new Standard{Id = 6, SearchScore = 1, Title = "aardvark", Level = 5, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 3}}
+                new Standard{Id = 5, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 1}},
+                new Standard{Id = 6, SearchScore = 1, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard{StandardId = 3}}
             };
 
             //Act
