@@ -183,46 +183,5 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(standard => standard.RouteId)
                 .WithStrictOrdering());
         }
-
-        /*[Test, RecursiveMoqAutoData]
-        public async Task And_Keyword_Then_Standards_Are_Ordered_By_Score_Then_Title_Then_Level(
-            string keyword,
-            StandardSearchResultsList searchResult,
-            [Frozen] Mock<IStandardRepository> mockStandardsRepository,
-            [Frozen] Mock<ISearchManager> mockSearchManager,
-            StandardsService service)
-        {
-            var standardsFromRepo = new List<Standard>
-            {
-                new Standard{Id = 1, SearchScore = 2f, Title = "zz top", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
-                new Standard{Id = 2, SearchScore = 1f, Title = "aardvark", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
-                new Standard{Id = 3, SearchScore = 1f, Title = "aardvark", Level = 2, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
-                new Standard{Id = 4, SearchScore = 4f, Title = "in between", Level = 3, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
-                new Standard{Id = 5, SearchScore = 2f, Title = "zz top", Level = 1, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()},
-                new Standard{Id = 6, SearchScore = 4f, Title = "in between", Level = 5, Sector = new Sector(), ApprenticeshipFunding = new List<ApprenticeshipFunding>(), LarsStandard = new LarsStandard()}
-            };
-            searchResult.Standards = standardsFromRepo.Select(standard => new StandardSearchResult
-            {
-                Id = standard.Id, 
-                Score = standard.SearchScore.GetValueOrDefault()
-            });
-            mockStandardsRepository
-                .Setup(repository => repository.GetAll())
-                .ReturnsAsync(standardsFromRepo);
-            mockSearchManager
-                .Setup(manager => manager.Query(keyword))
-                .Returns(searchResult);
-
-            var getStandardsListResult = await service.GetStandardsList(keyword, new List<Guid>(), new List<int>());
-            
-            getStandardsListResult.Should().BeEquivalentTo(standardsFromRepo
-                    .OrderByDescending(standard => standard.SearchScore)
-                    .ThenBy(standard => standard.Title)
-                    .ThenBy(standard => standard.Level), 
-                config => config
-                    .Including(standard => standard.Title)
-                    .Including(standard => standard.Level)
-                    .WithStrictOrdering());
-        }*/
     }
 }

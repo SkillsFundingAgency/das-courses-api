@@ -2,7 +2,7 @@
 {
     public enum OrderBy
     {
-        Score,
-        Title
+        Title,
+        Score
     }
 }
