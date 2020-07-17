@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,30 +39,42 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         }
         public async Task ImportData()
         {
-            var latestFile = _jsonFileHelper.GetLatestFrameworkFileFromDataDirectory();
-
-            if (string.IsNullOrEmpty(latestFile))
+            try
             {
-                _logger.LogWarning("No framework data file found to import");
-                return;
+                _logger.LogInformation($"Framework data load - starting");
+
+                var latestFile = _jsonFileHelper.GetLatestFrameworkFileFromDataDirectory();
+
+                if (string.IsNullOrEmpty(latestFile))
+                {
+                    _logger.LogWarning("No framework data file found to import");
+                    return;
+                }
+
+                var lastFrameworkImport = await _importAuditRepository.GetLastImportByType(ImportType.FrameworkImport);
+
+                if (lastFrameworkImport != null && latestFile == lastFrameworkImport.FileName)
+                {
+                    _logger.LogInformation($"Framework file {latestFile} has already been imported");
+                    return;
+                }
+
+                var importStartTime = DateTime.UtcNow;
+            
+                await InsertFrameworksIntoStagingTable(latestFile);
+
+                await InsertFrameworksFromImportTable();
+            
+                var audit = new ImportAudit(importStartTime,_rowsImported,ImportType.FrameworkImport,latestFile);
+                await _importAuditRepository.Insert(audit);
+
+                _logger.LogInformation($"Framework data load - completed");
             }
-
-            var lastFrameworkImport = await _importAuditRepository.GetLastImportByType(ImportType.FrameworkImport);
-
-            if (lastFrameworkImport != null && latestFile == lastFrameworkImport.FileName)
+            catch (Exception e)
             {
-                _logger.LogInformation($"Framework file {latestFile} has already been imported");
-                return;
+                _logger.LogError(e, "Framework data load - error occured");
+                throw;
             }
-
-            var importStartTime = DateTime.UtcNow;
-            
-            await InsertFrameworksIntoStagingTable(latestFile);
-
-            await InsertFrameworksFromImportTable();
-            
-            var audit = new ImportAudit(importStartTime,_rowsImported,ImportType.FrameworkImport,latestFile);
-            await _importAuditRepository.Insert(audit);
         }
 
         private async Task InsertFrameworksIntoStagingTable(string latestFile)
