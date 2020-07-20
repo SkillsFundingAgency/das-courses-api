@@ -32,7 +32,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             [FromQuery] string keyword,
             [FromQuery] IList<Guid> routeIds, 
             [FromQuery] IList<int> levels,
-            [FromQuery] OrderBy orderBy = OrderBy.Title)
+            [FromQuery] OrderBy orderBy = OrderBy.Score)
         {
             try
             {
