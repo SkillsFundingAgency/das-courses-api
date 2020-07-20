@@ -66,7 +66,7 @@ namespace SFA.DAS.Courses.Data
         {
             optionsBuilder.UseLazyLoadingProxies();
             
-            if (_configuration == null)
+            if (_configuration == null || _azureServiceTokenProvider == null)
             {
                 return;
             }
