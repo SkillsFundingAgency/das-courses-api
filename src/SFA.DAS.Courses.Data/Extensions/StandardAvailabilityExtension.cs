@@ -6,9 +6,13 @@ namespace SFA.DAS.Courses.Data.Extensions
 {
     public static class StandardAvailabilityExtension
     {
-        public static IQueryable<Standard> FilterAvailableToStart(this IQueryable<Standard> standards)
+        public static IQueryable<Standard> FilterAvailableToStart(this IQueryable<Standard> standards, bool shouldFilter = true)
         {
-
+            if (!shouldFilter)
+            {
+                return standards;
+            }
+            
             var filteredStandards = standards.Where(ls => (ls.LarsStandard.LastDateStarts == null
                                                           || ls.LarsStandard.LastDateStarts >= DateTime.UtcNow)
                                                           && ls.LarsStandard.LastDateStarts != ls.LarsStandard.EffectiveFrom

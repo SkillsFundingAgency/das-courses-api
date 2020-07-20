@@ -124,6 +124,34 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
         }
 
+        [Test]
+        public void Then_If_The_Flag_Is_False_Return_UnFiltered_Standards()
+        {
+            //Arrange
+            var sameDate = DateTime.UtcNow;
+            var standards = new List<Standard>
+            {
+                ValidStandard(),
+                new Standard
+                {
+                    Title = "Not Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = sameDate,
+                        LastDateStarts = sameDate
+                    }
+                    
+                }
+            }.AsQueryable();
+            
+            //Act
+            var actual = standards.FilterAvailableToStart(false);
+
+            //Assert
+            actual.Count().Should().Be(2);
+        }
+
         private static Standard ValidStandard()
         {
             return new Standard
