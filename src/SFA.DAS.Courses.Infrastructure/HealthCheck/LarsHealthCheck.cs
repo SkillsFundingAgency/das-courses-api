@@ -40,7 +40,11 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
                 return new HealthCheckResult(HealthStatus.Degraded, "LARS data has imported zero rows", null, new Dictionary<string, object> { { "Duration", durationString } });
             }
 
-            return HealthCheckResult.Healthy(HealthCheckResultDescription, new Dictionary<string, object> { {"Duration", durationString } });
+            return HealthCheckResult.Healthy(HealthCheckResultDescription, new Dictionary<string, object>
+            {
+                {"Duration", durationString },
+                {"FileName", latestLarsData.FileName.Split('/').Last()}
+            });
         }
     }
 }
