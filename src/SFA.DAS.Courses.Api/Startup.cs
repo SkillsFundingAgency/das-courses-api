@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -15,6 +16,7 @@ using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Infrastructure.HealthCheck;
 
 namespace SFA.DAS.Courses.Api
 {
@@ -77,7 +79,16 @@ namespace SFA.DAS.Courses.Api
             if (_configuration["Environment"] != "DEV")
             {
                 services.AddHealthChecks()
-                    .AddSqlServer(coursesConfiguration.ConnectionString);    
+                    .AddSqlServer(coursesConfiguration.ConnectionString)
+                    .AddCheck<LarsHealthCheck>("Lars Data Health Check",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] {"ready"})
+                    .AddCheck<InstituteOfApprenticeshipServiceHealthCheck>("IFATE Health Check",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] {"ready"})
+                    .AddCheck<FrameworksHealthCheck>("Frameworks Health Check",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] {"ready"});
             }
             
             services.AddMediatR(typeof(ImportDataCommand).Assembly);
