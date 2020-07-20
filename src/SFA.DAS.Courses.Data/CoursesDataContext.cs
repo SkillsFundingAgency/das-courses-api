@@ -1,6 +1,8 @@
-﻿using Microsoft.Azure.Services.AppAuthentication;
+﻿using System;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Courses.Data.Configuration;
 using SFA.DAS.Courses.Domain.Configuration;
@@ -27,7 +29,7 @@ namespace SFA.DAS.Courses.Data
     
     public partial class CoursesDataContext : DbContext, ICoursesDataContext
     {
-        private const string azureResource = "https://database.windows.net/";
+        private const string AzureResource = "https://database.windows.net/";
 
         public DbSet<Domain.Entities.Standard> Standards { get; set; }
         public DbSet<Domain.Entities.StandardImport> StandardsImport { get; set; }
@@ -43,30 +45,41 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.FrameworkFunding> FrameworkFunding { get; set; }
         public DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
 
-        private readonly IOptions<CoursesConfiguration> _configuration;
-        private AzureServiceTokenProvider _azureServiceTokenProvider;
+        private readonly CoursesConfiguration _configuration;
+        private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
      
         public CoursesDataContext()
         {
         }
-        
+
+        public CoursesDataContext(DbContextOptions options) : base(options)
+        {
+            
+        }
+        public CoursesDataContext(IOptions<CoursesConfiguration> config, DbContextOptions options, AzureServiceTokenProvider azureServiceTokenProvider) :base(options)
+        {
+            _configuration = config.Value;
+            _azureServiceTokenProvider = azureServiceTokenProvider;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();
+            
+            if (_configuration == null)
+            {
+                return;
+            }
+            
             var connection = new SqlConnection
             {
-                ConnectionString = _configuration.Value.ConnectionString,
-                AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(azureResource).Result
+                ConnectionString = _configuration.ConnectionString,
+                AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result
             };
             optionsBuilder.UseSqlServer(connection);
+
         }
 
-        public CoursesDataContext(IOptions<CoursesConfiguration> config, DbContextOptions options, AzureServiceTokenProvider azureServiceTokenProvider) :base(options)
-        {
-            _configuration = config;
-            _azureServiceTokenProvider = azureServiceTokenProvider;
-        }
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new Standard());

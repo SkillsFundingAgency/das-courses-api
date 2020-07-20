@@ -13,12 +13,12 @@ namespace SFA.DAS.Courses.Api.AppStart
         {
             if (environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
-                services.AddDbContext<CoursesDataContext>(options => options.UseInMemoryDatabase("SFA.DAS.Courses"));
+                services.AddDbContext<CoursesDataContext>(options => options.UseInMemoryDatabase("SFA.DAS.Courses"), ServiceLifetime.Transient);
             }
             else
             {
                 services.AddSingleton(new AzureServiceTokenProvider());
-                services.AddDbContext<CoursesDataContext>();
+                services.AddDbContext<CoursesDataContext>(ServiceLifetime.Transient);
             }
 
             services.AddTransient<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
