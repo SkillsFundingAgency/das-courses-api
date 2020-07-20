@@ -85,6 +85,9 @@ namespace SFA.DAS.Courses.Api
                         tags: new[] {"ready"})
                     .AddCheck<InstituteOfApprenticeshipServiceHealthCheck>("IFATE Health Check",
                         failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] {"ready"})
+                    .AddCheck<FrameworksHealthCheck>("Frameworks Health Check",
+                        failureStatus: HealthStatus.Unhealthy,
                         tags: new[] {"ready"});
             }
             
