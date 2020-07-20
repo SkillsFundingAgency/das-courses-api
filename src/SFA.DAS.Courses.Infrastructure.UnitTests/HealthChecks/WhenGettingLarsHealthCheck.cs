@@ -46,20 +46,22 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
         }
 
         [Test, MoqAutoData]
-        public async Task Then_If_The_Data_Is_Less_Than_Two_Weeks_And_An_Hour_Then_HealthCheck_Return_Healthy(
+        public async Task Then_If_The_Data_Is_Less_Than_Two_Weeks_And_An_Hour_Then_HealthCheck_Return_Healthy_With_File_Name(
+            string fileName,
             [Frozen] Mock<IImportAuditRepository> mock, 
             HealthCheckContext healthCheckContext, 
             LarsHealthCheck handler)
         {
             //Arrange
             mock.Setup(x => x.GetLastImportByType(ImportType.LarsImport)).ReturnsAsync(new ImportAudit(
-                DateTime.UtcNow.AddDays(10), 6));
+                DateTime.UtcNow.AddDays(10), 6,ImportType.LarsImport, $"test/test/test/{fileName}"));
 
             //Act
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             //Assert
             Assert.AreEqual(HealthStatus.Healthy, actual.Status);
+            Assert.IsTrue(actual.Data["FileName"].Equals(fileName));
         }
 
         [Test, MoqAutoData]
