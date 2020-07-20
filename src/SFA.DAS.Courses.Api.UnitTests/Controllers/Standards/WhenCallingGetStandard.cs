@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             int standardId,
             GetStandardResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
-            StandardsController controller)
+            [Greedy] StandardsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -41,7 +41,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
         public async Task And_Exception_Then_Returns_Not_Found(
             int standardId,
             [Frozen] Mock<IMediator> mockMediator,
-            StandardsController controller)
+            [Greedy] StandardsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(

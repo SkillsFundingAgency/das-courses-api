@@ -29,6 +29,9 @@ namespace SFA.DAS.Courses.Data.Search
             
             using (var writer = new IndexWriter(directory, config))
             {
+                writer.DeleteAll();
+                writer.Commit();
+
                 foreach (var standard in _coursesDataContext.Standards.OrderBy(standard => standard.Title))
                 {
                     var doc = new Document();

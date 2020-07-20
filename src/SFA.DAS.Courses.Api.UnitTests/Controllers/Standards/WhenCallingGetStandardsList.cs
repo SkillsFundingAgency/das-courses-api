@@ -25,7 +25,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             string keyword,
             GetStandardsListResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
-            StandardsController controller)
+            [Greedy] StandardsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -51,7 +51,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             List<int> levels,
             string keyword,
             [Frozen] Mock<IMediator> mockMediator,
-            StandardsController controller)
+            [Greedy] StandardsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(

@@ -1,7 +1,6 @@
 using System.Linq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.Internal;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
 
@@ -28,9 +27,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             actual.Id.Should().Be(standard.LarsCode);
             actual.StandardPageUrl.Should().Be(standard.StandardPageUrl.AbsoluteUri);
-            actual.CoreSkillsCount.Should().Be(standard.Duties.Where(c => c.IsThisACoreDuty.Equals(1))
-                .Select(c => c.DutyDetail).Join("|"));
-            actual.TypicalJobTitles.Should().Be(standard.TypicalJobTitles.Join("|"));
+            actual.CoreSkillsCount.Should().Be(string.Join("|", standard.Duties.Where(c => c.IsThisACoreDuty.Equals(1))
+                .Select(c => c.DutyDetail)));
+            actual.TypicalJobTitles.Should().Be(string.Join("|",standard.TypicalJobTitles));
 
         }
     }
