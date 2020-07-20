@@ -35,7 +35,7 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
             return HealthCheckResult.Healthy(HealthCheckResultDescription, new Dictionary<string, object>
             {
                 { "Duration", durationString },
-                { "FileName", auditRecord.FileName.Split('/').Last() }
+                { "FileName", auditRecord.FileName.Split('\\').Last() }
             });
         }
     }

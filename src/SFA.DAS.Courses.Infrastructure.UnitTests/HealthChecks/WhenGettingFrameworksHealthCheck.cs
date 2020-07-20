@@ -55,7 +55,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
             // Arrange
             
             repository.Setup(x => x.GetLastImportByType(ImportType.FrameworkImport))
-                .ReturnsAsync(new ImportAudit(DateTime.Now,100,ImportType.FrameworkImport,$"/test/test/some/{fileName}"));
+                .ReturnsAsync(new ImportAudit(DateTime.Now,100,ImportType.FrameworkImport,$"\\test\\test\\some\\{fileName}"));
                 
             // Act
             var actual = await healthCheck.CheckHealthAsync(healthCheckContext);
