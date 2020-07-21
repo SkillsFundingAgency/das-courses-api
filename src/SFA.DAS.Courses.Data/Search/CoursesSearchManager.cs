@@ -26,29 +26,31 @@ namespace SFA.DAS.Courses.Data.Search
             var directory = _directoryFactory.GetDirectory();
             var reader = DirectoryReader.Open(directory);
             var searcher = new IndexSearcher(reader);
+            
+            var titlePhraseQuery = new PhraseQuery{new Term(SearchableStandard.TitlePhrase, searchTerm)};
+            var jobTitlesPhraseQuery = new PhraseQuery{new Term(SearchableStandard.TypicalJobTitlesPhrase, searchTerm)};
+            var keywordsPhraseQuery = new PhraseQuery{new Term(SearchableStandard.KeywordsPhrase, searchTerm)};
 
-            // todo: 
-            // use same analyser for the search term
-            // use nlog to support fragments
-
-            var analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
-            var queryBuilder = new QueryBuilder(analyzer);
-
-            var titleQuery = new FuzzyQuery(new Term(SearchableStandard.TitleSoundex, searchTerm));
-            var jobTitlesQuery = new FuzzyQuery(new Term(SearchableStandard.TypicalJobTitlesSoundex, searchTerm));
-            var keywordsQuery = new FuzzyQuery(new Term(SearchableStandard.KeywordsSoundex, searchTerm));
+            var titleSoundexQuery = new FuzzyQuery(new Term(SearchableStandard.TitleSoundex, searchTerm));
+            var jobTitlesSoundexQuery = new FuzzyQuery(new Term(SearchableStandard.TypicalJobTitlesSoundex, searchTerm));
+            var keywordsSoundexQuery = new FuzzyQuery(new Term(SearchableStandard.KeywordsSoundex, searchTerm));
             
             var boolQuery = new BooleanQuery
             {
-                {titleQuery, Occur.SHOULD},
-                {jobTitlesQuery, Occur.SHOULD},
-                {keywordsQuery, Occur.SHOULD}
+                //phrase
+                {titlePhraseQuery, Occur.SHOULD},
+                {jobTitlesPhraseQuery, Occur.SHOULD},
+                {keywordsPhraseQuery, Occur.SHOULD},
+                //soundex
+                {titleSoundexQuery, Occur.SHOULD},
+                {jobTitlesSoundexQuery, Occur.SHOULD},
+                {keywordsSoundexQuery, Occur.SHOULD}
             };
 
             var topDocs = searcher.Search(boolQuery, 1000);
             
             var results = new List<StandardSearchResult>();
-            foreach (var scoreDoc in topDocs.ScoreDocs.OrderByDescending(doc => doc.Score))
+            foreach (var scoreDoc in topDocs.ScoreDocs)
             {
                 var doc = searcher.Doc(scoreDoc.Doc);
                 results.Add(new StandardSearchResult(doc, scoreDoc.Score));

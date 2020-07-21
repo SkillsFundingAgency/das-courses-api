@@ -14,9 +14,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
         private const int DentalTechId = 1;
         private const int DentalLabAsstId = 2;
         private const int DentalPracticeMgrId = 3;
-        private const int Baker1Id = 10;
-        private const int Baker2Id = 11;
-        private const int Baker3Id = 12;
         private const int OutdoorId = 40;
         private const int NetworkId = 50;
         private const int DeveloperId = 60;
@@ -27,15 +24,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             new Standard{Id = DentalTechId, Title = "Dental technician (integrated)", TypicalJobTitles = "something else", Keywords = "something else"},
             new Standard{Id = DentalLabAsstId, Title = "Laboratory assistant", TypicalJobTitles = "something else", Keywords = "dentistry|dental devices|something else"},
             new Standard{Id = DentalPracticeMgrId, Title = "Practice manager", TypicalJobTitles = "something else|Dental practice", Keywords = "something else"},
-            // default sort
-            new Standard{Id = Baker1Id, Title = "AAA Baker"},
-            new Standard{Id = Baker2Id, Title = "ZZZ Baker"},
-            new Standard{Id = Baker3Id, Title = "CCC Baker"},
             // control
             new Standard{Id = OutdoorId, Title = "Outdoor activity instructor", TypicalJobTitles = "", Keywords = "Outdoor activity instructor|canoeing|sailing|climbing|surfing|cycling|hillwalking|archery|bushcraft|rock poolings|geology|plant identification|habitat|wildlife walk"},
             new Standard{Id = NetworkId, Title = "Network engineer", TypicalJobTitles = "Network Technician|Network Engineer", Keywords = "communication|networks"},
             // text matching
-            new Standard{Id = DeveloperId, Title = "Software developer", TypicalJobTitles = "Web Developer|Application Developer", Keywords = "coding|technology"}
+            new Standard{Id = DeveloperId, Title = "Software developer", TypicalJobTitles = "Web Developer|Application Developer", Keywords = "coding things|technology"}
         };
 
         private CoursesSearchManager _searchManager;
@@ -53,11 +46,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             _searchManager = new CoursesSearchManager(directoryFactory);
         }
 
-        [TestCase("SOFTWARE", 1, DeveloperId, TestName = "Title case insensitive")]
+        [TestCase("SOFTWARE DEVELOPER", 1, DeveloperId, TestName = "Title phrase case insensitive")]
         [TestCase("softawre", 1, DeveloperId, TestName = "Title soundex")]
-        [TestCase("APPLICATION", 1, DeveloperId, TestName = "TypicalJobTitles case insensitive")]
+        [TestCase("APPLICATION DEVELOPER", 1, DeveloperId, TestName = "TypicalJobTitles phrase case insensitive")]
         [TestCase("applacation", 1, DeveloperId, TestName = "TypicalJobTitles soundex")]
-        [TestCase("CODING", 1, DeveloperId, TestName = "Keywords case insensitive")]
+        [TestCase("CODING THINGS", 1, DeveloperId, TestName = "Keywords phrase case insensitive")]
         [TestCase("kodng", 1, DeveloperId, TestName = "Keywords soundex")]
         public void Then_Searches_Test_Cases(string searchTerm, int expectedCount, int expectedId)
         {
@@ -81,40 +74,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
 
             dentalTech.Score.Should().BeGreaterThan(dentalPracticeMgr.Score);
             dentalPracticeMgr.Score.Should().BeGreaterThan(dentalLabAsst.Score);
-        }
-
-        [Test]
-        public void Then_Orders_By_Score()
-        {
-            var searchTerm = "dental";
-            
-            var result = _searchManager.Query(searchTerm);
-
-            result.Standards.Count().Should().Be(3);
-            result.Standards.Select((searchResult, position) => new {searchResult.Id, position}).ToList()
-                .Should().BeEquivalentTo(new List<dynamic>
-                {
-                    new {Id = DentalTechId, position = 0},
-                    new {Id = DentalPracticeMgrId, position = 1},
-                    new {Id = DentalLabAsstId, position = 2}
-                });
-        }
-
-        [Test]
-        public void Then_Default_Order_By_Title()
-        {
-            var searchTerm = "baker";
-            
-            var result = _searchManager.Query(searchTerm);
-
-            result.Standards.Count().Should().Be(3);
-            result.Standards.Select((searchResult, position) => new {searchResult.Id, position}).ToList()
-                .Should().BeEquivalentTo(new List<dynamic>
-                {
-                    new {Id = Baker1Id, position = 0},
-                    new {Id = Baker3Id, position = 1},
-                    new {Id = Baker2Id, position = 2}
-                });
         }
     }
 }

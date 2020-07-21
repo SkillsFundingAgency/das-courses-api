@@ -1,8 +1,6 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using J2N.Collections.Generic;
 using Lucene.Net.Analysis;
-using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.Miscellaneous;
 using Lucene.Net.Analysis.NGram;
 using Lucene.Net.Analysis.Standard;
@@ -30,17 +28,19 @@ namespace SFA.DAS.Courses.Data.Search
         public void Build()
         {
             var standardAnalyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
-            var keywordAnalyzer = new KeywordAnalyzer();
+            var pipeAnalyzer = new PipeAnalyzer();
             var fieldAnalyzers = new Dictionary<string, Analyzer>
             {
+                //phrase
+                {SearchableStandard.TitlePhrase, pipeAnalyzer},
+                {SearchableStandard.TypicalJobTitlesPhrase, pipeAnalyzer},
+                {SearchableStandard.KeywordsPhrase, pipeAnalyzer},
+                //soundex
                 {SearchableStandard.TitleSoundex, standardAnalyzer},
                 {SearchableStandard.TypicalJobTitlesSoundex, standardAnalyzer},
-                {SearchableStandard.KeywordsSoundex, standardAnalyzer},
-                {SearchableStandard.TitlePhrase, keywordAnalyzer},
-                {SearchableStandard.TypicalJobTitlesPhrase, keywordAnalyzer},
-                {SearchableStandard.KeywordsPhrase, keywordAnalyzer}
+                {SearchableStandard.KeywordsSoundex, standardAnalyzer}
             };
-            var perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48), fieldAnalyzers);
+            var perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer, fieldAnalyzers);
 
             var config = new IndexWriterConfig(LuceneVersion.LUCENE_48, perFieldAnalyzerWrapper);
             var directory = _directoryFactory.GetDirectory();
@@ -50,7 +50,7 @@ namespace SFA.DAS.Courses.Data.Search
                 writer.DeleteAll();
                 writer.Commit();
 
-                foreach (var standard in _coursesDataContext.Standards.OrderBy(standard => standard.Title))
+                foreach (var standard in _coursesDataContext.Standards)
                 {
                     var doc = new Document();
                     var searchable = new SearchableStandard(standard);

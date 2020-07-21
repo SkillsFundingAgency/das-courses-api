@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Domain.Search
         public string TypicalJobTitles { get; }
         public string Keywords { get; }
 
-        private const string SoundexSuffix = "Soundex";                    
+        private const string SoundexSuffix = "Soundex";
         private const string PhraseSuffix = "Phrase";
 
         public static string TitleSoundex => $"{nameof(Standard.Title)}-{SoundexSuffix}";
@@ -36,9 +36,11 @@ namespace SFA.DAS.Courses.Domain.Search
             return new Field[]
             {
                 new Int32Field(nameof(Standard.Id), Id, Field.Store.YES),
+                // phrase
                 new TextField(TitlePhrase, Title ?? "", Field.Store.NO) {Boost = 32.0f},
                 new TextField(TypicalJobTitlesPhrase, TypicalJobTitles ?? "", Field.Store.NO) {Boost = 16.0f},
                 new TextField(KeywordsPhrase, Keywords ?? "", Field.Store.NO) {Boost = 8.0f},
+                // soundex
                 new TextField(TitleSoundex, Title ?? "", Field.Store.NO) {Boost = 4.0f},
                 new TextField(TypicalJobTitlesSoundex, TypicalJobTitles ?? "", Field.Store.NO) {Boost = 2.0f},
                 new TextField(KeywordsSoundex, Keywords ?? "", Field.Store.NO)
