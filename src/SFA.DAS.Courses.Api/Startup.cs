@@ -90,7 +90,6 @@ namespace SFA.DAS.Courses.Api
                     .AddCheck<FrameworksHealthCheck>("Frameworks Health Check",
                         failureStatus: HealthStatus.Unhealthy,
                         tags: new[] {"ready"});
-
             }
 
             services.AddMediatR(typeof(ImportDataCommand).Assembly);
