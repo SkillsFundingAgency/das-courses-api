@@ -47,7 +47,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
         }
 
         [TestCase("SOFTWARE DEVELOPER", 1, DeveloperId, TestName = "Title phrase case insensitive")]
+        [TestCase(" SOFTWARE DEVELOPER", 1, DeveloperId, TestName = "Phrase leading whitespace")]
+        [TestCase("SOFTWARE DEVELOPER ", 1, DeveloperId, TestName = "Phrase trailing whitespace")]
         [TestCase("softawre", 1, DeveloperId, TestName = "Title soundex")]
+        [TestCase(" softawre", 1, DeveloperId, TestName = "Soundex leading whitespace")]
+        [TestCase("softawre ", 1, DeveloperId, TestName = "Soundex trailing whitespace")]
         [TestCase("APPLICATION DEVELOPER", 1, DeveloperId, TestName = "TypicalJobTitles phrase case insensitive")]
         [TestCase("applacation", 1, DeveloperId, TestName = "TypicalJobTitles soundex")]
         [TestCase("CODING THINGS", 1, DeveloperId, TestName = "Keywords phrase case insensitive")]

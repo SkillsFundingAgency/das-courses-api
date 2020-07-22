@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
-using Lucene.Net.Util;
-using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
 
@@ -21,7 +17,7 @@ namespace SFA.DAS.Courses.Data.Search
 
         public StandardSearchResultsList Query(string searchTerm)
         {
-            searchTerm = searchTerm.ToLowerInvariant();
+            searchTerm = searchTerm.ToLowerInvariant().Trim();
 
             var directory = _directoryFactory.GetDirectory();
             var reader = DirectoryReader.Open(directory);
