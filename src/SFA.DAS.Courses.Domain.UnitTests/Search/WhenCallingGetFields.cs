@@ -20,9 +20,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
                 new Int32Field(nameof(Standard.Id), source.Id, Field.Store.YES),
                 new TextField(SearchableStandard.TitlePhrase, source.Title, Field.Store.NO) {Boost = 32.0f},
                 new TextField(SearchableStandard.TypicalJobTitlesPhrase, source.TypicalJobTitles, Field.Store.NO) {Boost = 16.0f},
-                new TextField(SearchableStandard.KeywordsPhrase, source.Keywords, Field.Store.NO) {Boost = 8.0f},
-                new TextField(SearchableStandard.TitleSoundex, source.Title, Field.Store.NO) {Boost = 4.0f},
-                new TextField(SearchableStandard.TypicalJobTitlesSoundex, source.TypicalJobTitles, Field.Store.NO) {Boost = 2.0f},
+                new TextField(SearchableStandard.KeywordsPhrase, source.Keywords, Field.Store.NO) {Boost = 1.5f},
+                new TextField(SearchableStandard.TitleSoundex, source.Title, Field.Store.NO) {Boost = 6.0f},
+                new TextField(SearchableStandard.TypicalJobTitlesSoundex, source.TypicalJobTitles, Field.Store.NO) {Boost = 3.0f},
                 new TextField(SearchableStandard.KeywordsSoundex, source.Keywords, Field.Store.NO)
             };
 
@@ -42,9 +42,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
                 new Int32Field(nameof(Standard.Id), source.Id, Field.Store.YES),
                 new TextField(SearchableStandard.TitlePhrase, "", Field.Store.NO) {Boost = 32.0f},
                 new TextField(SearchableStandard.TypicalJobTitlesPhrase, "", Field.Store.NO) {Boost = 16.0f},
-                new TextField(SearchableStandard.KeywordsPhrase, "", Field.Store.NO) {Boost = 8.0f},
-                new TextField(SearchableStandard.TitleSoundex, "", Field.Store.NO) {Boost = 4.0f},
-                new TextField(SearchableStandard.TypicalJobTitlesSoundex, "", Field.Store.NO) {Boost = 2.0f},
+                new TextField(SearchableStandard.KeywordsPhrase, "", Field.Store.NO) {Boost = 1.5f},
+                new TextField(SearchableStandard.TitleSoundex, "", Field.Store.NO) {Boost = 6.0f},
+                new TextField(SearchableStandard.TypicalJobTitlesSoundex, "", Field.Store.NO) {Boost = 3.0f},
                 new TextField(SearchableStandard.KeywordsSoundex, "", Field.Store.NO)
             };
 
