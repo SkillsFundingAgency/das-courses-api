@@ -15,7 +15,18 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             base.ConfigureWebHost(builder);
-
+            
+            builder.ConfigureAppConfiguration(configurationBuilder =>
+            {
+                configurationBuilder.AddInMemoryCollection(new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("ConfigurationStorageConnectionString", "UseDevelopmentStorage=true;"),
+                    new KeyValuePair<string, string>("ConfigNames", "SFA.DAS.Courses.Api"),
+                    new KeyValuePair<string, string>("Environment", "DEV"),
+                    new KeyValuePair<string, string>("Version", "1.0")
+                });
+            });
+            
             builder.ConfigureServices(services =>
             {
                 var serviceProvider = new ServiceCollection()
@@ -31,6 +42,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 });
                 services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
 
+                
                 var sp = services.BuildServiceProvider();
 
                 using (var scope = sp.CreateScope())
@@ -54,16 +66,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 }
             });
 
-            builder.ConfigureAppConfiguration(configurationBuilder =>
-            {
-                configurationBuilder.AddInMemoryCollection(new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("ConfigurationStorageConnectionString", "UseDevelopmentStorage=true;"),
-                    new KeyValuePair<string, string>("ConfigNames", "SFA.DAS.Courses.Api"),
-                    new KeyValuePair<string, string>("Environment", "DEV"),
-                    new KeyValuePair<string, string>("Version", "1.0")
-                });
-            });
+            
         }
     }
 }

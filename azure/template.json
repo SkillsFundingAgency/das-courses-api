@@ -17,9 +17,24 @@
         "sharedBackEndAppServicePlanName": {
             "type": "string"
         },
+        "sharedBackEndSubnetResourceId": {
+            "type": "string"
+        },
         "appServiceAllowedIPs": {
             "type": "array",
             "defaultValue": []
+        },
+        "sharedEnvVirtualNetworkName": {
+            "type": "string"
+        },
+        "subnetObject": {
+            "type": "object"
+        },
+        "subnetServiceEndpointList": {
+            "type": "array"
+        },
+        "subnetDelegations": {
+            "type": "array"
         },
         "appServicePlanInstances": {
             "type": "int",
@@ -28,7 +43,7 @@
         "appServicePlanSize": {
             "type": "string",
             "defaultValue": "1"
-        },        
+        },
         "apiCustomHostname": {
             "type": "string"
         },
@@ -47,7 +62,7 @@
         "elasticPoolName": {
             "defaultValue": "",
             "type": "string"
-        },        
+        },
         "databaseSkuName": {
             "type": "string",
             "defaultValue": "S0"
@@ -187,6 +202,9 @@
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
                     },
+                    "subnetResourceId": {
+                        "value": "[parameters('sharedBackEndSubnetResourceId')]"
+                    },
                     "appServiceAppSettings": {
                         "value": [
                             {
@@ -233,6 +251,36 @@
         },
         {
             "apiVersion": "2017-05-10",
+            "name": "function-app-subnet",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('sharedEnvVirtualNetworkName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetObject').name]"
+                    },
+                    "subnetAddressPrefix": {
+                        "value": "[parameters('subnetObject').addressSpace]"
+                    },
+                    "serviceEndpointList": {
+                        "value": "[parameters('subnetServiceEndpointList')]"
+                    },
+                    "delegations": {
+                        "value": "[parameters('subnetDelegations')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
             "name": "importer-function-app-insights",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -271,6 +319,9 @@
                     "appServicePlanResourceGroup": {
                         "value": "[resourceGroup().name]"
                     },
+                    "subnetResourceId": {
+                        "value": "[reference('function-app-subnet').outputs.SubnetResourceId.value]"
+                    },
                     "functionAppAppSettings": {
                         "value": [
                             {
@@ -291,7 +342,7 @@
                             },
                             {
                                 "name": "AzureWebJobsStorage",
-                                "value": "[reference('storage-account').outputs.storageConnectionString.value]"
+                                "value": "[reference('storage-account').outputs.StorageConnectionString.value]"
                             },
                             {
                                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -299,7 +350,7 @@
                             },
                             {
                                 "name": "FUNCTIONS_EXTENSION_VERSION",
-                                "value": "~2"
+                                "value": "~3"
                             },
                             {
                                 "name": "LoggingRedisConnectionString",

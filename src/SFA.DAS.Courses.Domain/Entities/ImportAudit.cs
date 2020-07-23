@@ -25,5 +25,6 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         IFATEImport = 0,
         LarsImport = 1,
+        FrameworkImport =2,
     }
 }

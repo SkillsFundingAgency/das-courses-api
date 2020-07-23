@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -28,6 +27,28 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             var directory = directoryFactory.GetDirectory();
             var files = directory.ListAll();
             files.Length.Should().NotBe(0);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public void And_Called_Multiple_Times_Then_No_Duplicates(
+            List<Standard> standards,
+            Mock<ICoursesDataContext> mockDataContext,
+            DirectoryFactory directoryFactory)
+        {
+            var directory = directoryFactory.GetDirectory();
+            mockDataContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(standards);
+            var builder = new CoursesIndexBuilder(mockDataContext.Object, directoryFactory);
+
+            // act
+            builder.Build();
+            var firstFiles = directory.ListAll();
+            builder.Build();
+            var secondFiles = directory.ListAll();
+
+            firstFiles.Length.Should().NotBe(0);
+            secondFiles.Length.Should().Be(firstFiles.Length);
         }
     }
 }
