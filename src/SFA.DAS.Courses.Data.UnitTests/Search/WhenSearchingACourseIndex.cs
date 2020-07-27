@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
@@ -12,24 +13,25 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
     public class WhenSearchingACourseIndex
     {
         private const int DentalTechId = 1;
-        private const int DentalTechId2 = 11;
         private const int DentalLabAsstId = 2;
-        private const int DentalLabAsstId2 = 12;
         private const int DentalPracticeMgrId = 3;
-        private const int DentalPracticeMgrId2 = 13;
+        private const int PortMatchInTitle = 11;
+        private const int PortMatchInOtherTitles = 12;
+        private const int PortMatchInKeywords = 13;
         private const int OutdoorId = 40;
         private const int NetworkId = 50;
         private const int DeveloperId = 60;
 
         private readonly List<Standard> _standards= new List<Standard>
         {
-            // scoring and sorting
+            // scoring and sorting group 1 - has noise in search fields
             new Standard{Id = DentalTechId, Title = "Dental technician", TypicalJobTitles = "something else", Keywords = "something else"},
-            new Standard{Id = DentalTechId2, Title = "Technician dental", TypicalJobTitles = "something else", Keywords = "something else"},
-            new Standard{Id = DentalLabAsstId, Title = "Laboratory assistant", TypicalJobTitles = "something else", Keywords = "dentistry|Dental technician|something else"},
-            new Standard{Id = DentalLabAsstId2, Title = "Laboratory assistant", TypicalJobTitles = "something else", Keywords = "dentistry|Technician dental|something else"},
-            new Standard{Id = DentalPracticeMgrId, Title = "Practice manager", TypicalJobTitles = "something else|Dental technician", Keywords = "something else"},
-            new Standard{Id = DentalPracticeMgrId2, Title = "Practice manager", TypicalJobTitles = "something else|Technician dental", Keywords = "something else"},
+            new Standard{Id = DentalLabAsstId, Title = "something else", TypicalJobTitles = "something else", Keywords = "something else|Dental technician|something else"},
+            new Standard{Id = DentalPracticeMgrId, Title = "something else", TypicalJobTitles = "something else|Dental technician", Keywords = "something else"},
+            // scoring group 2 - no noise in search fields
+            new Standard{Id = PortMatchInTitle, Title = "Port operator", TypicalJobTitles = "something else", Keywords = "something else"},
+            new Standard{Id = PortMatchInOtherTitles, Title = "something else", TypicalJobTitles = "Port operator", Keywords = "something else"},
+            new Standard{Id = PortMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "Port operator"},
             // control
             new Standard{Id = OutdoorId, Title = "Outdoor activity instructor", TypicalJobTitles = "", Keywords = "Outdoor activity instructor|canoeing|sailing|climbing|surfing|cycling|hillwalking|archery|bushcraft|rock poolings|geology|plant identification|habitat|wildlife walk"},
             new Standard{Id = NetworkId, Title = "Network engineer", TypicalJobTitles = "Network Something|Network Engineer", Keywords = "communication|networks"},
@@ -73,25 +75,127 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
         }
         
         [Test]
-        public void Then_Scores_By_Title_Then_TypicalJobTitles_Then_Keywords()
+        public void And_Noise_In_Search_Fields_Then_Scores_By_Title_Then_TypicalJobTitles_Then_Keywords()
         {
-            var searchTerm = "dental technician";
+            var exactMatch = "dental technician";
+            var twoWordMatch = "technician dental";
+            var singleWordMatch = "technician";
+            var soundexMatch = "technical";
             
-            var result = _searchManager.Query(searchTerm);
+            var exactMatchResult = _searchManager.Query(exactMatch);
+            var twoWordMatchResult = _searchManager.Query(twoWordMatch);
+            var singleWordResult = _searchManager.Query(singleWordMatch);
+            var soundexResult = _searchManager.Query(soundexMatch);
 
-            result.Standards.Count().Should().Be(6);
-            var dentalTech = result.Standards.Single(searchResult => searchResult.Id == DentalTechId);
-            var dentalTech2 = result.Standards.Single(searchResult => searchResult.Id == DentalTechId2);
-            var dentalLabAsst = result.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId);
-            var dentalLabAsst2 = result.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId2);
-            var dentalPracticeMgr = result.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId);
-            var dentalPracticeMgr2 = result.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId2);
+            exactMatchResult.Standards.Count().Should().Be(3);
+            var exactMatchInTitle = exactMatchResult.Standards.Single(searchResult => searchResult.Id == DentalTechId);
+            var exactMatchInKeywords = exactMatchResult.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId);
+            var exactMatchInOtherTitles = exactMatchResult.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId);
+            
+            twoWordMatchResult.Standards.Count().Should().Be(3);
+            var twoWordMatchInTitle = twoWordMatchResult.Standards.Single(searchResult => searchResult.Id == DentalTechId);
+            var twoWordMatchInKeywords = twoWordMatchResult.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId);
+            var twoWordMatchInOtherTitles = twoWordMatchResult.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId);
 
-            dentalTech.Score.Should().BeGreaterThan(dentalPracticeMgr.Score, "exact match on title");
-            dentalPracticeMgr.Score.Should().BeGreaterThan(dentalTech2.Score, "exact match on typical job title");
-            dentalTech2.Score.Should().BeGreaterThan(dentalPracticeMgr2.Score, "2 word match on title");
-            dentalPracticeMgr2.Score.Should().BeGreaterThan(dentalLabAsst.Score, "2 word match on typical job title");
-            dentalLabAsst.Score.Should().BeGreaterThan(dentalLabAsst2.Score, "exact match on keyword");
+            singleWordResult.Standards.Count().Should().Be(3);
+            var singleWordMatchInTitle = singleWordResult.Standards.Single(searchResult => searchResult.Id == DentalTechId);
+            var singleWordMatchInKeywords = singleWordResult.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId);
+            var singleWordMatchInOtherTitles = singleWordResult.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId);
+
+            soundexResult.Standards.Count().Should().Be(3);
+            var soundexMatchInTitle = soundexResult.Standards.Single(searchResult => searchResult.Id == DentalTechId);
+            var soundexMatchInKeywords = soundexResult.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId);
+            var soundexMatchInOtherTitles = soundexResult.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId);
+
+            WriteScoresToConsole(new List<Tuple<string, float>>
+            {
+                new Tuple<string, float>(nameof(exactMatchInTitle), exactMatchInTitle.Score),
+                new Tuple<string, float>(nameof(exactMatchInOtherTitles), exactMatchInOtherTitles.Score),
+                new Tuple<string, float>(nameof(twoWordMatchInTitle), twoWordMatchInTitle.Score),
+                new Tuple<string, float>(nameof(twoWordMatchInOtherTitles), twoWordMatchInOtherTitles.Score),
+                new Tuple<string, float>(nameof(singleWordMatchInTitle), singleWordMatchInTitle.Score),
+                new Tuple<string, float>(nameof(singleWordMatchInOtherTitles), singleWordMatchInOtherTitles.Score),
+                new Tuple<string, float>(nameof(exactMatchInKeywords), exactMatchInKeywords.Score),
+                new Tuple<string, float>(nameof(twoWordMatchInKeywords), twoWordMatchInKeywords.Score),
+                new Tuple<string, float>(nameof(singleWordMatchInKeywords), singleWordMatchInKeywords.Score),
+                new Tuple<string, float>(nameof(soundexMatchInTitle), soundexMatchInTitle.Score),
+                new Tuple<string, float>(nameof(soundexMatchInOtherTitles), soundexMatchInOtherTitles.Score),
+                new Tuple<string, float>(nameof(soundexMatchInKeywords), soundexMatchInKeywords.Score),
+            });
+
+            exactMatchInTitle.Score.Should().BeGreaterThan(exactMatchInOtherTitles.Score, "exact match on title");
+            exactMatchInOtherTitles.Score.Should().BeGreaterThan(twoWordMatchInTitle.Score, "exact match on typical job title");
+            twoWordMatchInTitle.Score.Should().BeGreaterThan(twoWordMatchInOtherTitles.Score, "2 word match on title");
+            twoWordMatchInOtherTitles.Score.Should().BeGreaterThan(singleWordMatchInTitle.Score, "2 word match on typical job title");
+            singleWordMatchInTitle.Score.Should().BeGreaterThan(singleWordMatchInOtherTitles.Score, "1 word match on title");
+            singleWordMatchInOtherTitles.Score.Should().BeGreaterThan(exactMatchInKeywords.Score, "1 word match on typical job title");
+            exactMatchInKeywords.Score.Should().BeGreaterThan(twoWordMatchInKeywords.Score, "exact match on keyword");
+            twoWordMatchInKeywords.Score.Should().BeGreaterThan(singleWordMatchInKeywords.Score, "2 word match on keyword");
+            singleWordMatchInKeywords.Score.Should().BeGreaterThan(soundexMatchInTitle.Score, "1 word match on keyword");
+            soundexMatchInTitle.Score.Should().BeGreaterThan(soundexMatchInOtherTitles.Score, "soundex match on title");
+            soundexMatchInOtherTitles.Score.Should().BeGreaterThan(soundexMatchInKeywords.Score, "soundex match on typical job title");
+        }
+
+        [Test]
+        public void And_No_Noise_Then_Scores_By_Title_Then_TypicalJobTitles_Then_Keywords()
+        {
+            var exactMatch = "Port operator";
+            var twoWordMatch = "operator port";
+            var singleWordMatch = "operator";
+            var soundexMatch = "poo";
+            
+            var exactMatchResult = _searchManager.Query(exactMatch);
+            var twoWordMatchResult = _searchManager.Query(twoWordMatch);
+            var singleWordResult = _searchManager.Query(singleWordMatch);
+            var soundexResult = _searchManager.Query(soundexMatch);
+
+            exactMatchResult.Standards.Count().Should().Be(3);
+            var exactMatchInTitle = exactMatchResult.Standards.Single(searchResult => searchResult.Id == PortMatchInTitle);
+            var exactMatchInKeywords = exactMatchResult.Standards.Single(searchResult => searchResult.Id == PortMatchInKeywords);
+            var exactMatchInOtherTitles = exactMatchResult.Standards.Single(searchResult => searchResult.Id == PortMatchInOtherTitles);
+            
+            twoWordMatchResult.Standards.Count().Should().Be(3);
+            var twoWordMatchInTitle = twoWordMatchResult.Standards.Single(searchResult => searchResult.Id == PortMatchInTitle);
+            var twoWordMatchInKeywords = twoWordMatchResult.Standards.Single(searchResult => searchResult.Id == PortMatchInKeywords);
+            var twoWordMatchInOtherTitles = twoWordMatchResult.Standards.Single(searchResult => searchResult.Id == PortMatchInOtherTitles);
+
+            singleWordResult.Standards.Count().Should().Be(3);
+            var singleWordMatchInTitle = singleWordResult.Standards.Single(searchResult => searchResult.Id == PortMatchInTitle);
+            var singleWordMatchInKeywords = singleWordResult.Standards.Single(searchResult => searchResult.Id == PortMatchInKeywords);
+            var singleWordMatchInOtherTitles = singleWordResult.Standards.Single(searchResult => searchResult.Id == PortMatchInOtherTitles);
+
+            soundexResult.Standards.Count().Should().Be(3);
+            var soundexMatchInTitle = soundexResult.Standards.Single(searchResult => searchResult.Id == PortMatchInTitle);
+            var soundexMatchInKeywords = soundexResult.Standards.Single(searchResult => searchResult.Id == PortMatchInKeywords);
+            var soundexMatchInOtherTitles = soundexResult.Standards.Single(searchResult => searchResult.Id == PortMatchInOtherTitles);
+
+            WriteScoresToConsole(new List<Tuple<string, float>>
+            {
+                new Tuple<string, float>(nameof(exactMatchInTitle), exactMatchInTitle.Score),
+                new Tuple<string, float>(nameof(exactMatchInOtherTitles), exactMatchInOtherTitles.Score),
+                new Tuple<string, float>(nameof(twoWordMatchInTitle), twoWordMatchInTitle.Score),
+                new Tuple<string, float>(nameof(twoWordMatchInOtherTitles), twoWordMatchInOtherTitles.Score),
+                new Tuple<string, float>(nameof(singleWordMatchInTitle), singleWordMatchInTitle.Score),
+                new Tuple<string, float>(nameof(singleWordMatchInOtherTitles), singleWordMatchInOtherTitles.Score),
+                new Tuple<string, float>(nameof(exactMatchInKeywords), exactMatchInKeywords.Score),
+                new Tuple<string, float>(nameof(twoWordMatchInKeywords), twoWordMatchInKeywords.Score),
+                new Tuple<string, float>(nameof(singleWordMatchInKeywords), singleWordMatchInKeywords.Score),
+                new Tuple<string, float>(nameof(soundexMatchInTitle), soundexMatchInTitle.Score),
+                new Tuple<string, float>(nameof(soundexMatchInOtherTitles), soundexMatchInOtherTitles.Score),
+                new Tuple<string, float>(nameof(soundexMatchInKeywords), soundexMatchInKeywords.Score),
+            });
+
+            exactMatchInTitle.Score.Should().BeGreaterThan(exactMatchInOtherTitles.Score, "exact match on title");
+            exactMatchInOtherTitles.Score.Should().BeGreaterThan(twoWordMatchInTitle.Score, "exact match on typical job title");
+            twoWordMatchInTitle.Score.Should().BeGreaterThan(twoWordMatchInOtherTitles.Score, "2 word match on title");
+            twoWordMatchInOtherTitles.Score.Should().BeGreaterThan(singleWordMatchInTitle.Score, "2 word match on typical job title");
+            singleWordMatchInTitle.Score.Should().BeGreaterThan(singleWordMatchInOtherTitles.Score, "1 word match on title");
+            singleWordMatchInOtherTitles.Score.Should().BeGreaterThan(exactMatchInKeywords.Score, "1 word match on typical job title");
+            exactMatchInKeywords.Score.Should().BeGreaterThan(twoWordMatchInKeywords.Score, "exact match on keyword");
+            twoWordMatchInKeywords.Score.Should().BeGreaterThan(singleWordMatchInKeywords.Score, "2 word match on keyword");
+            singleWordMatchInKeywords.Score.Should().BeGreaterThan(soundexMatchInTitle.Score, "1 word match on keyword");
+            soundexMatchInTitle.Score.Should().BeGreaterThan(soundexMatchInOtherTitles.Score, "soundex match on title");
+            soundexMatchInOtherTitles.Score.Should().BeGreaterThan(soundexMatchInKeywords.Score, "soundex match on typical job title");
         }
 
         [Test]
@@ -101,13 +205,21 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             
             var result = _searchManager.Query(searchTerm);
 
-            result.Standards.Count().Should().Be(6);
+            result.Standards.Count().Should().Be(3);
             var dentalTech = result.Standards.Single(searchResult => searchResult.Id == DentalTechId);
             var dentalLabAsst = result.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId);
             var dentalPracticeMgr = result.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId);
 
             dentalTech.Score.Should().BeGreaterThan(dentalPracticeMgr.Score);
             dentalPracticeMgr.Score.Should().BeGreaterThan(dentalLabAsst.Score);
+        }
+
+        private void WriteScoresToConsole(IEnumerable<Tuple<string, float>> scores)
+        {
+            foreach (var score in scores)
+            {
+                Console.WriteLine($"{score.Item1}:{score.Item2}");
+            }
         }
     }
 }

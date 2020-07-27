@@ -32,9 +32,9 @@ namespace SFA.DAS.Courses.Data.Search
             foreach (var term in searchTerm.Split(' ', StringSplitOptions.RemoveEmptyEntries))
             {
                 //term
-                boolQuery.Add(new TermQuery(new Term(SearchableStandard.TitleSoundex, term)), Occur.SHOULD);
-                boolQuery.Add(new TermQuery(new Term(SearchableStandard.TypicalJobTitlesSoundex, term)), Occur.SHOULD);
-                boolQuery.Add(new TermQuery(new Term(SearchableStandard.KeywordsSoundex, term)), Occur.SHOULD);
+                boolQuery.Add(new TermQuery(new Term(SearchableStandard.TitleTerm, term)), Occur.SHOULD);
+                boolQuery.Add(new TermQuery(new Term(SearchableStandard.TypicalJobTitlesTerm, term)), Occur.SHOULD);
+                boolQuery.Add(new TermQuery(new Term(SearchableStandard.KeywordsTerm, term)), Occur.SHOULD);
                 //soundex
                 boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.TitleSoundex, term)), Occur.SHOULD);
                 boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.TypicalJobTitlesSoundex, term)), Occur.SHOULD);
