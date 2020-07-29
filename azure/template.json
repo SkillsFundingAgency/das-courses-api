@@ -24,18 +24,6 @@
             "type": "array",
             "defaultValue": []
         },
-        "sharedEnvVirtualNetworkName": {
-            "type": "string"
-        },
-        "subnetObject": {
-            "type": "object"
-        },
-        "subnetServiceEndpointList": {
-            "type": "array"
-        },
-        "subnetDelegations": {
-            "type": "array"
-        },
         "appServicePlanInstances": {
             "type": "int",
             "defaultValue": 1
