@@ -12,6 +12,7 @@ using NUnit.Framework;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Api.Controllers;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
+using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
@@ -23,6 +24,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             List<Guid> routeIds,
             List<int> levels,
             string keyword,
+            OrderBy orderBy,
             GetStandardsListResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
@@ -32,11 +34,12 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                     It.Is<GetStandardsListQuery>(query => 
                         query.Keyword == keyword && 
                         query.RouteIds.Equals(routeIds) &&
-                        query.Levels.Equals(levels)), 
+                        query.Levels.Equals(levels)&&
+                        query.OrderBy.Equals(orderBy)), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            var controllerResult = await controller.GetList(keyword, routeIds, levels) as ObjectResult;
+            var controllerResult = await controller.GetList(keyword, routeIds, levels, orderBy) as ObjectResult;
 
             var model = controllerResult.Value as GetStandardsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -50,6 +53,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             List<Guid> routeIds,
             List<int> levels,
             string keyword,
+            OrderBy orderBy,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
         {
@@ -59,7 +63,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                     It.IsAny<CancellationToken>()))
                 .Throws<InvalidOperationException>();
 
-            var controllerResult = await controller.GetList(keyword, routeIds, levels) as StatusCodeResult;
+            var controllerResult = await controller.GetList(keyword, routeIds, levels, orderBy) as StatusCodeResult;
 
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         }

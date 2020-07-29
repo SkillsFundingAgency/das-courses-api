@@ -43,3 +43,24 @@ Scenario: Get list of standards
     And the following valid standards are returned
     | title       | level | sector                        |
     | Brewer      | 1     | Engineering and manufacturing |
+
+    Scenario: Get list of standards by keyword sorted by relevance
+	Given I have an http client
+    When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=score
+    Then an http status code of 200 is returned
+    And the following valid standards are returned
+    | title                            | level | sector              |
+    | Junior animator SortOrder        | 4     | Creative and design |
+    | Photographic assistant SortOrder | 3     | Creative and design |
+    | Camera prep technician           | 3     | Creative and design |
+
+    Scenario: Get list of standards by keyword sorted by name
+	Given I have an http client
+    When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=title
+    Then an http status code of 200 is returned
+    And the following valid standards are returned
+    | title                            | level | sector              |
+    | Camera prep technician           | 3     | Creative and design |
+    | Junior animator SortOrder        | 4     | Creative and design |
+    | Photographic assistant SortOrder | 3     | Creative and design |
+    

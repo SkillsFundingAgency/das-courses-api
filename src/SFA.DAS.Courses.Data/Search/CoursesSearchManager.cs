@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
-using SFA.DAS.Courses.Domain.Entities;
+using Lucene.Net.Util;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
 
@@ -19,27 +20,35 @@ namespace SFA.DAS.Courses.Data.Search
 
         public StandardSearchResultsList Query(string searchTerm)
         {
-            searchTerm = searchTerm.ToLowerInvariant();
+            searchTerm = searchTerm.ToLowerInvariant().Trim();
+
+            var boolQuery = new BooleanQuery();
+            
+            //phrase
+            boolQuery.Add(new PhraseQuery{new Term(SearchableStandard.TitlePhrase, searchTerm)}, Occur.SHOULD);
+            boolQuery.Add(new PhraseQuery{new Term(SearchableStandard.TypicalJobTitlesPhrase, searchTerm)}, Occur.SHOULD);
+            boolQuery.Add(new PhraseQuery{new Term(SearchableStandard.KeywordsPhrase, searchTerm)}, Occur.SHOULD);
+
+            foreach (var term in searchTerm.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            {
+                //term
+                boolQuery.Add(new TermQuery(new Term(SearchableStandard.TitleTerm, term)), Occur.SHOULD);
+                boolQuery.Add(new TermQuery(new Term(SearchableStandard.TypicalJobTitlesTerm, term)), Occur.SHOULD);
+                boolQuery.Add(new TermQuery(new Term(SearchableStandard.KeywordsTerm, term)), Occur.SHOULD);
+                //soundex
+                boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.TitleSoundex, term)), Occur.SHOULD);
+                boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.TypicalJobTitlesSoundex, term)), Occur.SHOULD);
+                boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.KeywordsSoundex, term)), Occur.SHOULD);
+            }
 
             var directory = _directoryFactory.GetDirectory();
             var reader = DirectoryReader.Open(directory);
             var searcher = new IndexSearcher(reader);
 
-            var titleQuery = new FuzzyQuery(new Term(nameof(Standard.Title), searchTerm));
-            var jobTitlesQuery = new FuzzyQuery(new Term(nameof(Standard.TypicalJobTitles), searchTerm));
-            var keywordsQuery = new FuzzyQuery(new Term(nameof(Standard.Keywords), searchTerm));
-            
-            var boolQuery = new BooleanQuery
-            {
-                {titleQuery, Occur.SHOULD},
-                {jobTitlesQuery, Occur.SHOULD},
-                {keywordsQuery, Occur.SHOULD}
-            };
-
             var topDocs = searcher.Search(boolQuery, 1000);
             
             var results = new List<StandardSearchResult>();
-            foreach (var scoreDoc in topDocs.ScoreDocs.OrderByDescending(doc => doc.Score))
+            foreach (var scoreDoc in topDocs.ScoreDocs)
             {
                 var doc = searcher.Doc(scoreDoc.Doc);
                 results.Add(new StandardSearchResult(doc, scoreDoc.Score));

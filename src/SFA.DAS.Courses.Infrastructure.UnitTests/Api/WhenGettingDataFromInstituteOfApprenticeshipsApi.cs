@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Infrastructure.Api;
+
 
 namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
 {
@@ -49,7 +50,6 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             
             //Act Assert
             Assert.ThrowsAsync<HttpRequestException>(() => apprenticeshipService.GetStandards());
-            
         }
     }
 }

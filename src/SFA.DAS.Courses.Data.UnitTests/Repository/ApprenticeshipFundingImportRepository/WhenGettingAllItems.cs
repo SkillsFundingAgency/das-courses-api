@@ -40,11 +40,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingImportR
         public async Task Then_The_ApprenticeshipFundingImport_Items_Are_Returned()
         {
             //Act
-            var sectorsImport = await _apprenticeshipFundingImportRepository.GetAll();
+            var actual = await _apprenticeshipFundingImportRepository.GetAll();
             
             //Assert
-            Assert.IsNotNull(sectorsImport);
-            sectorsImport.Should().BeEquivalentTo(_apprenticeshipFundingImports);
+            Assert.IsNotNull(actual);
+            actual.Should().BeEquivalentTo(_apprenticeshipFundingImports);
         }
     }
 }
