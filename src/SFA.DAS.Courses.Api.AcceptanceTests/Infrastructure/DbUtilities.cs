@@ -39,6 +39,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     Route = "Construction",
                     Id = Guid.Parse("B30D7750-9ADF-41BA-94BD-E4584128EC76")
+                },
+                new Sector
+                {
+                    Route = "Creative and design",
+                    Id = Guid.Parse("7ECB9D82-47A0-45EB-94FE-2F9E2161A55F")
                 }
             };
         }
@@ -106,6 +111,51 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         StandardId = 4
+                    }
+                },
+                new Standard
+                {
+                    Id = 5,
+                    Title = "Photographic assistant SortOrder",
+                    Keywords = null,
+                    TypicalJobTitles = "Assistant Photographer|Photographic Technician",
+                    Level = 3,
+                    RouteId = sectors[2].Id,
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 5
+                    }
+                },
+                new Standard
+                {
+                    Id = 6,
+                    Title = "Camera prep technician",
+                    Keywords = "SortOrder",
+                    TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
+                    Level = 3,
+                    RouteId = sectors[2].Id,
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 6
+                    }
+                },
+                new Standard
+                {
+                    Id = 7,
+                    Title = "Junior animator SortOrder",
+                    Keywords = "SortOrder",
+                    TypicalJobTitles = "Junior animator|SortOrder",
+                    Level = 4,
+                    RouteId = sectors[2].Id,
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LastDateStarts = null,
+                        StandardId = 7
                     }
                 }
             };

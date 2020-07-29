@@ -53,6 +53,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             model.Standards.Should().BeEquivalentTo(
                 GetExpected(table), options=> options
+                    .WithStrictOrdering()
                     .Excluding(std=>std.Sector)
                     .Excluding(std=>std.ApprenticeshipFunding)
                     .Excluding(std=>std.LarsStandard)
