@@ -36,8 +36,7 @@ namespace SFA.DAS.Courses.Api.AppStart
                     {
                         ValidAudiences = new List<string>
                         {
-                            config.Identifier,
-                            config.Id
+                            config.Identifier
                         }
                     };
                 });

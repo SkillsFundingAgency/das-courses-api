@@ -4,6 +4,5 @@ namespace SFA.DAS.Courses.Domain.Configuration
     {
         public string Tenant { get; set; }
         public string Identifier { get; set; }
-        public string Id { get; set; }
     }
 }
