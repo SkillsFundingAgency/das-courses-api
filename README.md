@@ -4,7 +4,7 @@
 
 ## Requirements
 
-- DotNet Core 2.2 and any supported IDE for DEV running.
+- DotNet Core 3.1 and any supported IDE for DEV running.
 - *If you are not wishing to run the in memory database then*
 - SQL Server database.
 - Azure Storage Account
