@@ -9,6 +9,7 @@ using SFA.DAS.Courses.Application.Courses.Queries.GetSectors;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {
+    [ApiVersion("1.0")]
     [ApiController]
     [Route("api/courses/[controller]/")]
     public class SectorsController : ControllerBase

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {
+    [ApiVersion("1.0")]
     [ApiController]
     [Route("/ops/dataload/")]
     public class DataLoadController : ControllerBase
