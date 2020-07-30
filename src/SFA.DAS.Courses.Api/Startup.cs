@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using MediatR;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -117,14 +118,14 @@ namespace SFA.DAS.Courses.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
                 c.SwaggerDoc("operations", new OpenApiInfo { Title = "CoursesAPI operations" });
+                c.OperationFilter<SwaggerVersionHeaderFilter>();
             });
             
             services.AddApiVersioning(opt => {
                 opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
-                opt.AssumeDefaultVersionWhenUnspecified = true;
-                opt.DefaultApiVersion = new ApiVersion(1,0);
             });
         }
+        
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IIndexBuilder indexBuilder)
         {
