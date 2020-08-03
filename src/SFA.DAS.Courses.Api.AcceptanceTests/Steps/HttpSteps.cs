@@ -22,6 +22,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         public void GivenIHaveAnHttpClient()
         {
             var client = new AcceptanceTestingWebApplicationFactory<Startup>().CreateClient();
+            client.DefaultRequestHeaders.Add("X-Version", "1.0");
             _context.Set(client,ContextKeys.HttpClient);
         }
 

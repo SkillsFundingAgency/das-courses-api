@@ -12,6 +12,7 @@ using SFA.DAS.Courses.Domain.Search;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {
+    [ApiVersion("1.0")]
     [ApiController]
     [Route("api/courses/[controller]/")]
     public class StandardsController : ControllerBase

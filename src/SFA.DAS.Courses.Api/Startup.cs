@@ -1,9 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using MediatR;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -105,6 +109,7 @@ namespace SFA.DAS.Courses.Api
                     {
                         o.Conventions.Add(new AuthorizeControllerModelConvention());
                     }
+                    o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
@@ -112,14 +117,28 @@ namespace SFA.DAS.Courses.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
+                c.SwaggerDoc("operations", new OpenApiInfo { Title = "CoursesAPI operations" });
+                c.OperationFilter<SwaggerVersionHeaderFilter>();
             });
-
+            
+            services.AddApiVersioning(opt => {
+                opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+            });
         }
+        
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IIndexBuilder indexBuilder)
         {
             indexBuilder.Build();
-
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoursesAPI v1");
+                c.SwaggerEndpoint("/swagger/operations/swagger.json", "Operations v1");
+                c.RoutePrefix = string.Empty;
+            });
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -140,12 +159,7 @@ namespace SFA.DAS.Courses.Api
                     pattern: "api/{controller=Standards}/{action=Index}/{id?}");
             });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoursesAPI");
-                c.RoutePrefix = string.Empty;
-            });
+            
         }
 
         private bool ConfigurationIsLocalOrDev()
