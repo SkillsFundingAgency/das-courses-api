@@ -8,6 +8,7 @@ namespace SFA.DAS.Courses.Api
     {
         public static void Main(string[] args)
         {
+            NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             CreateWebHostBuilder(args).Build().Run();
         }
 

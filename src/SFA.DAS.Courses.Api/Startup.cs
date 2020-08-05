@@ -124,6 +124,8 @@ namespace SFA.DAS.Courses.Api
             services.AddApiVersioning(opt => {
                 opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
             });
+
+            services.AddLogging();
         }
         
 
