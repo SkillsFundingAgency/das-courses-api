@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Data.Repository
 {
-    public class SectorSubjectAreaTier2ImportRepository
+    public class SectorSubjectAreaTier2ImportRepository : ISectorSubjectAreaTier2ImportRepository
     {
         private readonly ICoursesDataContext _coursesDataContext;
         public SectorSubjectAreaTier2ImportRepository (ICoursesDataContext coursesDataContext)
