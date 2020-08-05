@@ -14,6 +14,8 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.SectorSubjectAreaTier2Desc).HasColumnName("SectorSubjectAreaTier2Desc").HasColumnType("varchar").HasMaxLength(500);
             builder.Property(x => x.EffectiveFrom).HasColumnName("EffectiveFrom").HasColumnType("datetime").IsRequired();
             builder.Property(x => x.EffectiveTo).HasColumnName("EffectiveTo").HasColumnType("datetime").IsRequired(false);
+            
+            builder.HasIndex(x => x.SectorSubjectAreaTier2).IsUnique();
         }
     }
 }
