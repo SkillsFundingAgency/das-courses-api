@@ -11,7 +11,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = larsStandardImport.EffectiveFrom,
                 EffectiveTo = larsStandardImport.EffectiveTo,
                 StandardId = larsStandardImport.StandardId,
-                LastDateStarts = larsStandardImport.LastDateStarts
+                LastDateStarts = larsStandardImport.LastDateStarts,
+                SectorSubjectAreaTier2 = larsStandardImport.SectorSubjectAreaTier2
             };
         }
     }

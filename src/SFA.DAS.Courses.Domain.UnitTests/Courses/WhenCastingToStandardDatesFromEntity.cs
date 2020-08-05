@@ -19,6 +19,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c=>c.StandardId)
                 .Excluding(c=>c.Version)
                 .Excluding(c=>c.Standard)
+                .Excluding(c=>c.SectorSubjectAreaTier2)
             );
         }
     }
