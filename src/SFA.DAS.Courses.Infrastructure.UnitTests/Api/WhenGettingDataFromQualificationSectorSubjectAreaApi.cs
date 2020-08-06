@@ -52,12 +52,12 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
         [Test, AutoData]
         public async Task Then_The_Endpoint_Is_Called_And_An_Item_Detail_Is_Returned(
             string itemHash,
-            List<Domain.ImportTypes.QualificationItem> qualificationItems)
+            Domain.ImportTypes.QualificationItem qualificationItem)
         {
             //Arrange
             var response = new HttpResponseMessage
             {
-                Content = new StringContent(JsonConvert.SerializeObject(qualificationItems)),
+                Content = new StringContent(JsonConvert.SerializeObject(qualificationItem)),
                 StatusCode = HttpStatusCode.Accepted
             };
             var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri($"{Constants.QualificationSectorSubjectAreaUrl}items/{itemHash}"));
@@ -68,7 +68,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             var actual = await apprenticeshipService.GetEntry(itemHash);
             
             //Assert
-            actual.Should().BeEquivalentTo(qualificationItems);
+            actual.Should().BeEquivalentTo(qualificationItem);
             httpMessageHandler.Protected()
                 .Verify<Task<HttpResponseMessage>>(
                     "SendAsync",Times.Once(),

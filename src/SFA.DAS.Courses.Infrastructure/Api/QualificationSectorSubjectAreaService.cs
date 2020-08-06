@@ -17,7 +17,7 @@ namespace SFA.DAS.Courses.Infrastructure.Api
             _client = client;
         }
 
-        public async Task<IEnumerable<QualificationItem>> GetEntry(string itemHash)
+        public async Task<QualificationItem> GetEntry(string itemHash)
         {
             AddHeader();
             var response =  await _client.GetAsync($"{Constants.QualificationSectorSubjectAreaUrl}items/{itemHash}");
@@ -25,7 +25,7 @@ namespace SFA.DAS.Courses.Infrastructure.Api
             response.EnsureSuccessStatusCode();
             
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<List<QualificationItem>>(jsonResponse);
+            return JsonConvert.DeserializeObject<QualificationItem>(jsonResponse);
         }
 
         public async Task<IEnumerable<QualificationItemList>> GetEntries()

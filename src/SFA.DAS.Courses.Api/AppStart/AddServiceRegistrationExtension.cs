@@ -31,7 +31,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IFrameworksImportService, FrameworksImportService>();
             services.AddTransient<IJsonFileHelper, JsonFileHelper>();   
             services.AddTransient<IFrameworksService, FrameworksService>();
-            services.AddTransient<IQualificationSectorSubjectAreaService, QualificationSectorSubjectAreaService>();
+            services.AddHttpClient<IQualificationSectorSubjectAreaService, QualificationSectorSubjectAreaService>();
 
             AddDatabaseRegistrations(services);
         }
