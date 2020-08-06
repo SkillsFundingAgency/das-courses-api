@@ -9,7 +9,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Desc = source.SectorSubjectAreaTier2Desc,
                 EffectiveFrom = source.EffectiveFrom,
-                EffectiveTo = source.EffectiveTo
+                EffectiveTo = source.EffectiveTo,
+                Name = source.Name
             };
         }
     }
