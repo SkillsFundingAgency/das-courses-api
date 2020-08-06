@@ -1,11 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Services
@@ -13,7 +10,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
     public class LarsImportService  : ILarsImportService
     {
         private readonly ILarsPageParser _larsPageParser;
-        private readonly ILarsDataDownloadService _larsDataDownloadService;
         private readonly IImportAuditRepository _importAuditRepository;
         private readonly IApprenticeshipFundingImportRepository _apprenticeshipFundingImportRepository;
         private readonly ILarsStandardImportRepository _larsStandardImportRepository;
@@ -21,8 +17,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly ILarsStandardRepository _larsStandardRepository;
         private readonly ISectorSubjectAreaTier2ImportRepository _sectorSubjectAreaTier2ImportRepository;
         private readonly ISectorSubjectAreaTier2Repository _sectorSubjectAreaTier2Repository;
-        private readonly IZipArchiveHelper _zipArchiveHelper;
         private readonly ILogger<LarsImportService> _logger;
+        private readonly LarsImportStaging _larsImportStaging;
 
         public LarsImportService (ILarsPageParser larsPageParser, 
             ILarsDataDownloadService larsDataDownloadService, 
@@ -34,10 +30,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             ISectorSubjectAreaTier2ImportRepository sectorSubjectAreaTier2ImportRepository,
             ISectorSubjectAreaTier2Repository sectorSubjectAreaTier2Repository,
             IZipArchiveHelper zipArchiveHelper,
+            IQualificationSectorSubjectAreaService qualificationSectorSubjectAreaService,
             ILogger<LarsImportService> logger)
         {
             _larsPageParser = larsPageParser;
-            _larsDataDownloadService = larsDataDownloadService;
             _importAuditRepository = importAuditRepository;
             _apprenticeshipFundingImportRepository = apprenticeshipFundingImportRepository;
             _larsStandardImportRepository = larsStandardImportRepository;
@@ -45,13 +41,27 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _larsStandardRepository = larsStandardRepository;
             _sectorSubjectAreaTier2ImportRepository = sectorSubjectAreaTier2ImportRepository;
             _sectorSubjectAreaTier2Repository = sectorSubjectAreaTier2Repository;
-            _zipArchiveHelper = zipArchiveHelper;
             _logger = logger;
+            _larsImportStaging = new LarsImportStaging(
+                larsDataDownloadService,
+                zipArchiveHelper,
+                _apprenticeshipFundingImportRepository,
+                _larsStandardImportRepository,
+                _sectorSubjectAreaTier2ImportRepository,
+                qualificationSectorSubjectAreaService,
+                _logger);
         }
         public async Task ImportData()
         {
             try
             {
+                var importAuditStartTime = DateTime.UtcNow;
+                
+                _logger.LogInformation("LARS Import - starting data transfer from import tables");
+                _larsStandardRepository.DeleteAll();
+                _apprenticeshipFundingRepository.DeleteAll();
+                _sectorSubjectAreaTier2Repository.DeleteAll();
+                
                 _logger.LogInformation("LARS Import - commencing");
                 var lastFilePath =
                     _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
@@ -66,16 +76,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     return;
                 }
 
-                _logger.LogInformation($"LARS import - starting import of {filePath.Result}");
-                var importAuditStartTime = DateTime.UtcNow;
-                var content = await _larsDataDownloadService.GetFileStream(filePath.Result);
-
-                await InsertDataFromZipStreamToImportTables(content);
-
-                _logger.LogInformation("LARS Import - starting data transfer from import tables");
-                _larsStandardRepository.DeleteAll();
-                _apprenticeshipFundingRepository.DeleteAll();
-                _sectorSubjectAreaTier2Repository.DeleteAll();
+                await _larsImportStaging.Import(filePath.Result);
 
                 var larsStandardImports = _larsStandardImportRepository.GetAll();
                 var apprenticeshipFundingImports = _apprenticeshipFundingImportRepository.GetAll();
@@ -110,39 +111,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
         }
 
-        private async Task InsertDataFromZipStreamToImportTables(Stream content)
-        {
-            _logger.LogInformation("LARS Import - starting extract from ZIP");
-            var standardsCsv = _zipArchiveHelper
-                .ExtractModelFromCsvFileZipStream<StandardCsv>(content, Constants.LarsStandardsFileName);
-            var apprenticeshipFundingCsv = _zipArchiveHelper
-                .ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(content,
-                    Constants.LarsApprenticeshipFundingFileName);
-            var sectorSubjectAreaTier2Csv = _zipArchiveHelper
-                .ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(content,
-                    Constants.LarsSectorSubjectAreaTier2FileName);
-
-            _larsStandardImportRepository.DeleteAll();
-            _apprenticeshipFundingImportRepository.DeleteAll();
-            _sectorSubjectAreaTier2ImportRepository.DeleteAll();
-
-            var larsImportResult = _larsStandardImportRepository
-                .InsertMany(standardsCsv.Select(c => (LarsStandardImport) c).ToList());
-
-            var filterRecords = apprenticeshipFundingCsv
-                .Where(c => c.ApprenticeshipType.StartsWith("STD", StringComparison.CurrentCultureIgnoreCase))
-                .Select(c => (ApprenticeshipFundingImport) c).ToList();
-            
-            var apprenticeFundingImportResult =
-                _apprenticeshipFundingImportRepository.InsertMany(filterRecords);
-
-            var sectorSubjectAreaTier2ImportResult =
-                _sectorSubjectAreaTier2ImportRepository.InsertMany(sectorSubjectAreaTier2Csv
-                    .Select(x => (SectorSubjectAreaTier2Import) x).ToList());
-
-            await Task.WhenAll(larsImportResult, apprenticeFundingImportResult, sectorSubjectAreaTier2ImportResult);
-            
-            _logger.LogInformation("LARS Import - finished load into Import tables");
-        }
+        
     }
 }
