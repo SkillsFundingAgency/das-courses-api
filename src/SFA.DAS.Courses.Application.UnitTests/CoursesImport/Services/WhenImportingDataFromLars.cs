@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         public async Task Then_The_Download_Path_Is_Parsed_From_The_Url_And_The_Current_File_Is_Checked_Against_The_Existing_And_If_Same_Then_No_Download(
             string filePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
@@ -49,7 +49,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             LarsImportService larsImportService)
         {
@@ -74,7 +74,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             LarsImportService larsImportService)
         {
@@ -98,7 +98,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<IZipArchiveHelper> zipHelper,
             LarsImportService larsImportService)
@@ -125,7 +125,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<IZipArchiveHelper> zipHelper,
             LarsImportService larsImportService)
@@ -152,7 +152,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<IZipArchiveHelper> zipHelper,
             LarsImportService larsImportService)
@@ -180,7 +180,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string newFilePath,
             List<QualificationItemList> apiItems,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<IQualificationSectorSubjectAreaService> qualificationSectorSubjectAreaService,
             LarsImportService larsImportService)
@@ -210,7 +210,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
@@ -250,7 +250,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             SectorSubjectAreaTier2Csv sectorSubjectAreaTier2Csv3,
             [Frozen] Mock<IQualificationSectorSubjectAreaService> qualificationSectorSubjectAreaService,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
@@ -317,7 +317,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
             List<SectorSubjectAreaTier2Csv> sectorSubjectAreaTier2Csv,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
             [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2Repository> sectorSubjectAreaTier2Repository,
@@ -363,7 +363,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             List<StandardCsv> standardCsv,
             List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
             [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
@@ -408,7 +408,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             List<ApprenticeshipFundingImport> apprenticeshipFundingImports,
             List<SectorSubjectAreaTier2Import> sectorSubjectAreaTier2Imports,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,

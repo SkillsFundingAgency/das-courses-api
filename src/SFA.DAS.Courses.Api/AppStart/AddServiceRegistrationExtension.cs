@@ -25,14 +25,15 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ISectorService, SectorService>();
             services.AddTransient<ILarsPageParser, LarsPageParser>();
             services.AddTransient<ILevelsService, LevelsService>();
-            services.AddHttpClient<ILarsDataDownloadService, LarsDataDownloadService>();
+            services.AddHttpClient<IDataDownloadService, DataDownloadService>();
             services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
             services.AddTransient<ILarsImportService, LarsImportService>();
             services.AddTransient<IFrameworksImportService, FrameworksImportService>();
             services.AddTransient<IJsonFileHelper, JsonFileHelper>();   
             services.AddTransient<IFrameworksService, FrameworksService>();
             services.AddHttpClient<IQualificationSectorSubjectAreaService, QualificationSectorSubjectAreaService>();
-
+            services.AddTransient<INationalAchievementRatesPageParser, NationalAchievementRatesPageParser>();
+            
             AddDatabaseRegistrations(services);
         }
 

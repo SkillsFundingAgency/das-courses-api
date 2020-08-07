@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly LarsImportStaging _larsImportStaging;
 
         public LarsImportService (ILarsPageParser larsPageParser, 
-            ILarsDataDownloadService larsDataDownloadService, 
+            IDataDownloadService dataDownloadService, 
             IImportAuditRepository importAuditRepository,
             IApprenticeshipFundingImportRepository apprenticeshipFundingImportRepository,
             ILarsStandardImportRepository larsStandardImportRepository, 
@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _sectorSubjectAreaTier2Repository = sectorSubjectAreaTier2Repository;
             _logger = logger;
             _larsImportStaging = new LarsImportStaging(
-                larsDataDownloadService,
+                dataDownloadService,
                 zipArchiveHelper,
                 _apprenticeshipFundingImportRepository,
                 _larsStandardImportRepository,

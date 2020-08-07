@@ -14,7 +14,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 {
     internal class LarsImportStaging
     {
-        private readonly ILarsDataDownloadService _larsDataDownloadService;
+        private readonly IDataDownloadService _dataDownloadService;
         private readonly IZipArchiveHelper _zipArchiveHelper;
         private readonly IApprenticeshipFundingImportRepository _apprenticeshipFundingImportRepository;
         private readonly ILarsStandardImportRepository _larsStandardImportRepository;
@@ -24,7 +24,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private Dictionary<decimal, string> _qualificationData;
 
         public LarsImportStaging (
-            ILarsDataDownloadService larsDataDownloadService,
+            IDataDownloadService dataDownloadService,
             IZipArchiveHelper zipArchiveHelper,
             IApprenticeshipFundingImportRepository apprenticeshipFundingImportRepository,
             ILarsStandardImportRepository larsStandardImportRepository,
@@ -32,7 +32,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             IQualificationSectorSubjectAreaService qualificationSectorSubjectAreaService,
             ILogger<LarsImportService> logger)
         {
-            _larsDataDownloadService = larsDataDownloadService;
+            _dataDownloadService = dataDownloadService;
             _zipArchiveHelper = zipArchiveHelper;
             _apprenticeshipFundingImportRepository = apprenticeshipFundingImportRepository;
             _larsStandardImportRepository = larsStandardImportRepository;
@@ -47,7 +47,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
             _qualificationData = await LoadQualificationSectorSubjectAreaData();
             
-            var content = await _larsDataDownloadService.GetFileStream(filePath);
+            var content = await _dataDownloadService.GetFileStream(filePath);
 
             await InsertDataFromZipStreamToImportTables(content);
         }
