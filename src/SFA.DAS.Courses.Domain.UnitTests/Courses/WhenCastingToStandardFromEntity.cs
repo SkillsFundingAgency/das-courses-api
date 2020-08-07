@@ -25,6 +25,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.Route.Should().Be(source.Sector.Route);
             response.ApprenticeshipFunding.Should().NotBeNull();
             response.StandardDates.Should().NotBeNull();
+            response.SectorSubjectAreaTier2.Should().Be(source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2);
+            response.SectorSubjectAreaTier2Description.Should().Be(source.LarsStandard.SectorSubjectArea.Name);
         }
     }
 }

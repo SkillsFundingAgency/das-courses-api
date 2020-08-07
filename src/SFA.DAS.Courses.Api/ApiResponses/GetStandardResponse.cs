@@ -19,7 +19,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string CoreSkillsCount { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
-
+        public decimal SectorSubjectAreaTier2 { get ; set ; }
+        public string SectorSubjectAreaTier2Description { get ; set ; }
         public List<ApprenticeshipFundingResponse> ApprenticeshipFunding { get ; set ; }
 
         public StandardDatesResponse StandardDates { get ; set ; }
@@ -41,7 +42,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
-                StandardDates = source.StandardDates
+                StandardDates = source.StandardDates,
+                SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
+                SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description
             };
         }
     }

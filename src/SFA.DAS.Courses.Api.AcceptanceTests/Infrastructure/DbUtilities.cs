@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Data;
+using SFA.DAS.Courses.Domain.Entities;
 using Sector = SFA.DAS.Courses.Domain.Entities.Sector;
 using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
 using LarsStandard = SFA.DAS.Courses.Domain.Entities.LarsStandard;
@@ -14,8 +15,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         {
             var testSectors = GetTestSectors().ToList();
             context.Sectors.AddRange(testSectors);
+            context.SectorSubjectAreaTier2.AddRange(GetSectorSubjectAreaTier2Items());
             context.Standards.AddRange(GetValidTestStandards());
             context.Standards.AddRange(GetInValidTestStandards());
+            
             context.SaveChanges();
         }
 
@@ -23,9 +26,31 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         {
             context.Standards.RemoveRange(context.Standards.ToList());
             context.Sectors.RemoveRange(context.Sectors.ToList());
+            context.SectorSubjectAreaTier2.RemoveRange(context.SectorSubjectAreaTier2.ToList());
             context.SaveChanges();
         }
 
+        public static IEnumerable<SectorSubjectAreaTier2> GetSectorSubjectAreaTier2Items()
+        {
+            return new List<SectorSubjectAreaTier2>
+            {
+                new SectorSubjectAreaTier2
+                {
+                    EffectiveFrom = DateTime.Today,
+                    SectorSubjectAreaTier2Desc = "Test Sector",
+                    SectorSubjectAreaTier2 = 1m,
+                    Name = "Test Sector"
+                },
+                new SectorSubjectAreaTier2
+                {
+                    EffectiveFrom = DateTime.Today,
+                    SectorSubjectAreaTier2Desc = "Test Sector 2",
+                    SectorSubjectAreaTier2 = 1.1m,
+                    Name = "Test Sector 2"
+                }
+            };
+        }
+        
         public static IEnumerable<Sector> GetTestSectors()
         {
             return new List<Sector>
@@ -51,6 +76,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static IEnumerable<Standard> GetValidTestStandards()
         {
             var sectors = GetTestSectors().ToList();
+            var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
             return new List<Standard>
             {
                 new Standard
@@ -65,7 +91,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 1
+                        StandardId = 1,
+                        SectorSubjectAreaTier2 = 1m
                     }
                 },
                 new Standard
@@ -80,7 +107,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 2
+                        StandardId = 2,
+                        SectorSubjectAreaTier2 = 1m
                     }
                 },
                 new Standard
@@ -95,7 +123,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 3
+                        StandardId = 3,
+                        SectorSubjectAreaTier2 = 1.1m
                     }
                 },
                 new Standard
@@ -110,7 +139,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 4
+                        StandardId = 4,
+                        SectorSubjectAreaTier2 = 1.1m
                     }
                 },
                 new Standard
@@ -125,7 +155,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 5
+                        StandardId = 5,
+                        SectorSubjectAreaTier2 = 1m
                     }
                 },
                 new Standard
@@ -140,7 +171,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 6
+                        StandardId = 6,
+                        SectorSubjectAreaTier2 = 1.1m
                     }
                 },
                 new Standard
@@ -155,7 +187,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 7
+                        StandardId = 7,
+                        SectorSubjectAreaTier2 = 1m
                     }
                 }
             };
@@ -164,6 +197,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static IEnumerable<Standard> GetInValidTestStandards()
         {
             var sectors = GetTestSectors().ToList();
+            var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
             return new List<Standard>
             {
                 new Standard
@@ -177,7 +211,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
-                        StandardId = 11
+                        StandardId = 11,
+                        SectorSubjectAreaTier2 = 1m
                     }
                 },
                 new Standard
@@ -191,7 +226,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
-                        StandardId = 14
+                        StandardId = 14,
+                        SectorSubjectAreaTier2 = 1m
                     }
                 }
             };
