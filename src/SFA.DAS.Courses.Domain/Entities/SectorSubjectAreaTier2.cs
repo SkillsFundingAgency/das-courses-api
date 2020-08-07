@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SFA.DAS.Courses.Domain.Entities
 {
     public class SectorSubjectAreaTier2 : SectorSubjectAreaTier2Base
@@ -13,5 +15,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Name = source.Name
             };
         }
+
+        public virtual ICollection<LarsStandard> LarsStandard { get ; set ; }
     }
 }
