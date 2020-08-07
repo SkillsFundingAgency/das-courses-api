@@ -21,7 +21,14 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.HasOne(c => c.Standard)
                 .WithOne(c => c.LarsStandard)
                 .HasForeignKey<Domain.Entities.LarsStandard>(c => c.StandardId)
-                .HasPrincipalKey<Domain.Entities.Standard>(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .HasPrincipalKey<Domain.Entities.Standard>(c => c.Id)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+            
+            builder.HasOne(c=>c.SectorSubjectArea)
+                .WithMany(c=>c.LarsStandard)
+                .HasForeignKey(c=>c.SectorSubjectAreaTier2)
+                .HasPrincipalKey(c=>c.SectorSubjectAreaTier2)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
         }
     }
 }

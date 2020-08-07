@@ -16,6 +16,12 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.EffectiveFrom).HasColumnName("EffectiveFrom").HasColumnType("datetime").IsRequired();
             builder.Property(x => x.EffectiveTo).HasColumnName("EffectiveTo").HasColumnType("datetime").IsRequired(false);
             
+            builder.HasMany(c=>c.LarsStandard)
+                .WithOne(c=>c.SectorSubjectArea)
+                .HasForeignKey(c=>c.SectorSubjectAreaTier2)
+                .HasPrincipalKey(c=>c.SectorSubjectAreaTier2)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+            
             builder.HasIndex(x => x.SectorSubjectAreaTier2).IsUnique();
         }
     }
