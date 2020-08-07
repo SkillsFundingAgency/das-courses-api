@@ -30,7 +30,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             ISectorSubjectAreaTier2ImportRepository sectorSubjectAreaTier2ImportRepository,
             ISectorSubjectAreaTier2Repository sectorSubjectAreaTier2Repository,
             IZipArchiveHelper zipArchiveHelper,
-            IQualificationSectorSubjectAreaService qualificationSectorSubjectAreaService,
             ILogger<LarsImportService> logger)
         {
             _larsPageParser = larsPageParser;
@@ -48,7 +47,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 _apprenticeshipFundingImportRepository,
                 _larsStandardImportRepository,
                 _sectorSubjectAreaTier2ImportRepository,
-                qualificationSectorSubjectAreaService,
                 _logger);
         }
         public async Task ImportData()

@@ -11,10 +11,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [Test, AutoData]
         public void Then_The_Fields_Are_Correctly_Mapped(SectorSubjectAreaTier2Csv source, string name)
         {
-            var actual = new SectorSubjectAreaTier2Import().Map(source, name);
+            var actual = (SectorSubjectAreaTier2Import)source;
             
             actual.Should().BeEquivalentTo(source);
-            actual.Name.Should().Be(name);
+            actual.Name.Should().Be(source.SectorSubjectAreaTier2Desc);
         }
     }
 }

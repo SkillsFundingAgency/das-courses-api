@@ -4,7 +4,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class SectorSubjectAreaTier2Import : SectorSubjectAreaTier2Base
     {
-        public SectorSubjectAreaTier2Import Map(SectorSubjectAreaTier2Csv source, string name)
+        public static implicit operator SectorSubjectAreaTier2Import(SectorSubjectAreaTier2Csv source)
         {
             return new SectorSubjectAreaTier2Import
             {
@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 SectorSubjectAreaTier2Desc = source.SectorSubjectAreaTier2Desc,
                 EffectiveFrom = source.EffectiveFrom,
                 EffectiveTo = source.EffectiveTo,
-                Name = name
+                Name = source.SectorSubjectAreaTier2Desc
             };
         }
     }

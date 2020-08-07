@@ -20,16 +20,13 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly ILarsStandardImportRepository _larsStandardImportRepository;
         private readonly ILogger<LarsImportService> _logger;
         private readonly ISectorSubjectAreaTier2ImportRepository _sectorSubjectAreaTier2ImportRepository;
-        private readonly IQualificationSectorSubjectAreaService _qualificationSectorSubjectAreaService;
-        private Dictionary<decimal, string> _qualificationData;
-
+        
         public LarsImportStaging (
             IDataDownloadService dataDownloadService,
             IZipArchiveHelper zipArchiveHelper,
             IApprenticeshipFundingImportRepository apprenticeshipFundingImportRepository,
             ILarsStandardImportRepository larsStandardImportRepository,
             ISectorSubjectAreaTier2ImportRepository sectorSubjectAreaTier2ImportRepository,
-            IQualificationSectorSubjectAreaService qualificationSectorSubjectAreaService,
             ILogger<LarsImportService> logger)
         {
             _dataDownloadService = dataDownloadService;
@@ -37,7 +34,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _apprenticeshipFundingImportRepository = apprenticeshipFundingImportRepository;
             _larsStandardImportRepository = larsStandardImportRepository;
             _sectorSubjectAreaTier2ImportRepository = sectorSubjectAreaTier2ImportRepository;
-            _qualificationSectorSubjectAreaService = qualificationSectorSubjectAreaService;
             _logger = logger;
         }
 
@@ -45,29 +41,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             _logger.LogInformation($"LARS import - starting import of {filePath}");
 
-            _qualificationData = await LoadQualificationSectorSubjectAreaData();
-            
             var content = await _dataDownloadService.GetFileStream(filePath);
 
             await InsertDataFromZipStreamToImportTables(content);
-        }
-
-        private async Task<Dictionary<decimal,string>> LoadQualificationSectorSubjectAreaData()
-        {
-            var entries = await _qualificationSectorSubjectAreaService.GetEntries();
-            
-            var dictionary = new ConcurrentDictionary<decimal, string>();
-
-            await Task.WhenAll(entries.Select(entry => GetEntry(entry, dictionary)).ToArray());
-
-            return dictionary.ToDictionary(k=>k.Key, v=>v.Value);
-        }
-
-        private async Task GetEntry(QualificationItemList entry, ConcurrentDictionary<decimal, string> dictionary)
-        {
-            var result = await _qualificationSectorSubjectAreaService.GetEntry(entry.ItemHash.FirstOrDefault());
-            decimal.TryParse(result.QualificationSectorSubjectArea, out var decimalResult);
-            dictionary.TryAdd(decimalResult, result.Name);
         }
 
         private async Task InsertDataFromZipStreamToImportTables(Stream content)
@@ -96,10 +72,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
             var sectorSubjectAreaTier2ImportResult =
                 _sectorSubjectAreaTier2ImportRepository.InsertMany(sectorSubjectAreaTier2Csv
-                    .Select(x => new SectorSubjectAreaTier2Import().Map(x, 
-                        _qualificationData.ContainsKey(x.SectorSubjectAreaTier2) 
-                            ? _qualificationData[x.SectorSubjectAreaTier2] 
-                            : "")).ToList());
+                    .Select(x => (SectorSubjectAreaTier2Import)x).ToList());
 
             await Task.WhenAll(larsImportResult, apprenticeFundingImportResult, sectorSubjectAreaTier2ImportResult);
             

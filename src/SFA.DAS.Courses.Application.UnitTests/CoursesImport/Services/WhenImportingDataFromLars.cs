@@ -180,38 +180,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     x.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(It.IsAny<Stream>(),Constants.LarsSectorSubjectAreaTier2FileName), 
                 Times.Once);
         }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_The_QualificationSectorSubjectArea_Data_Is_Loaded(
-            string filePath,
-            string content,
-            string newFilePath,
-            List<QualificationItemList> apiItems,
-            [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<IDataDownloadService> service,
-            [Frozen] Mock<IImportAuditRepository> repository,
-            [Frozen] Mock<IQualificationSectorSubjectAreaService> qualificationSectorSubjectAreaService,
-            LarsImportService larsImportService)
-        {
-            //Arrange
-            service.Setup(x => x.GetFileStream(newFilePath))
-                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
-            pageParser.Setup(x => x.GetCurrentLarsDataDownloadFilePath()).ReturnsAsync(newFilePath);
-            repository.Setup(x => x.GetLastImportByType(ImportType.LarsImport))
-                .ReturnsAsync((ImportAudit)null);
-            qualificationSectorSubjectAreaService.Setup(x => x.GetEntries()).ReturnsAsync(apiItems);
-            
-            //Act
-            await larsImportService.ImportData();
-            
-            //Assert
-            qualificationSectorSubjectAreaService.Verify(x=>x.GetEntries(), Times.Once);
-            foreach (var item in apiItems)
-            {
-                qualificationSectorSubjectAreaService.Verify(x=>x.GetEntry(item.ItemHash.FirstOrDefault()), Times.Once);
-            }
-        }
-
+        
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Current_Lars_Import_Data_Is_Deleted(
             string filePath,
@@ -242,21 +211,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_The_Standard_Data_Is_Loaded_Into_The_Import_Repository_Using_QualificationSectorSubjectArea_Data(
+        public async Task Then_The_Standard_Data_Is_Loaded_Into_The_Import_Repository(
             string filePath,
             string content,
             string newFilePath,
-            string sectorSubjectAreaName,
-            QualificationItem apiItem1,
-            QualificationItem apiItem2,
-            QualificationItem apiItem3,
             ApprenticeshipFundingCsv frameWorkCsv,
             List<StandardCsv> standardCsv,
             List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
             SectorSubjectAreaTier2Csv sectorSubjectAreaTier2Csv1,
             SectorSubjectAreaTier2Csv sectorSubjectAreaTier2Csv2,
             SectorSubjectAreaTier2Csv sectorSubjectAreaTier2Csv3,
-            [Frozen] Mock<IQualificationSectorSubjectAreaService> qualificationSectorSubjectAreaService,
             [Frozen] Mock<ILarsPageParser> pageParser,
             [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
@@ -267,17 +231,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             LarsImportService larsImportService)
         {
             //Arrange
-            apiItem1.QualificationSectorSubjectArea = sectorSubjectAreaTier2Csv1.SectorSubjectAreaTier2.ToString();
-            apiItem1.Name = sectorSubjectAreaName;
-            apiItem2.QualificationSectorSubjectArea = sectorSubjectAreaTier2Csv2.SectorSubjectAreaTier2.ToString();
-            apiItem2.Name = sectorSubjectAreaName;
-            apiItem3.QualificationSectorSubjectArea = sectorSubjectAreaTier2Csv3.SectorSubjectAreaTier2.ToString();
-            apiItem3.Name = sectorSubjectAreaName;
-            qualificationSectorSubjectAreaService
-                .SetupSequence(x => x.GetEntry(It.IsAny<string>()))
-                .ReturnsAsync(apiItem1)
-                .ReturnsAsync(apiItem2)
-                .ReturnsAsync(apiItem3);
             apprenticeFundingCsv = apprenticeFundingCsv.Select(c => {c.ApprenticeshipType = "STD"; return c;}).ToList();
             frameWorkCsv.ApprenticeshipType = "FRMK"; 
             apprenticeFundingCsv.Add(frameWorkCsv);
@@ -310,9 +263,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 x.InsertMany(It.Is<List<ApprenticeshipFundingImport>>(c=>c.Count.Equals(apprenticeFundingCsv.Count-1))), Times.Once);
             sectorSubjectAreaTier2ImportRepository.Verify(x=>
                 x.InsertMany(It.Is<List<SectorSubjectAreaTier2Import>>(c=>
-                    c.Count.Equals(3) 
-                    && c.TrueForAll(v=>v.Name.Equals(sectorSubjectAreaName))
-                    )), Times.Once); 
+                    c.Count.Equals(3))), Times.Once); 
 
         }
         
