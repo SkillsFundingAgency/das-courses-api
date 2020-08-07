@@ -58,9 +58,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 var importAuditStartTime = DateTime.UtcNow;
                 
                 _logger.LogInformation("LARS Import - starting data transfer from import tables");
-                _larsStandardRepository.DeleteAll();
-                _apprenticeshipFundingRepository.DeleteAll();
-                _sectorSubjectAreaTier2Repository.DeleteAll();
                 
                 _logger.LogInformation("LARS Import - commencing");
                 var lastFilePath =
@@ -84,6 +81,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 await Task.WhenAll(larsStandardImports, apprenticeshipFundingImports, sectorSubjectAreaTier2Imports);
 
+                _larsStandardRepository.DeleteAll();
+                _apprenticeshipFundingRepository.DeleteAll();
+                _sectorSubjectAreaTier2Repository.DeleteAll();
+                
                 var importLarsStandardResult =
                     _larsStandardRepository.InsertMany(larsStandardImports.Result
                         .Select(c => (LarsStandard)c).ToList());

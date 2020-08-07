@@ -26,6 +26,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
+            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2Repository> sectorSubjectAreaRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaImportRepository,
             LarsImportService larsImportService)
         {
             //Arrange
@@ -41,6 +45,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             service.Verify(x=>x.GetFileStream(It.IsAny<string>()), Times.Never);
             larsStandardImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
             apprenticeshipFundingImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            sectorSubjectAreaImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            larsStandardRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            apprenticeshipFundingRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            sectorSubjectAreaRepository.Verify(x=>x.DeleteAll(), Times.Never);
         }
         
         [Test, RecursiveMoqAutoData]
