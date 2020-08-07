@@ -6,7 +6,7 @@
 	[EffectiveFrom] DATETIME NOT NULL,
 	[EffectiveTo] DATETIME NULL,
 	[LastDateStarts] DATETIME NULL,
-	[SectorSubjectAreaTier2] decimal(10,4) NULL,
+	[SectorSubjectAreaTier2] decimal(10,4) NOT NULL DEFAULT(0.0),
 )
 GO
 
