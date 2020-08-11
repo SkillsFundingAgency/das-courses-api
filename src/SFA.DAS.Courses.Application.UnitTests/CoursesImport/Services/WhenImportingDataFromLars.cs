@@ -22,10 +22,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         public async Task Then_The_Download_Path_Is_Parsed_From_The_Url_And_The_Current_File_Is_Checked_Against_The_Existing_And_If_Same_Then_No_Download(
             string filePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
+            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2Repository> sectorSubjectAreaRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaImportRepository,
             LarsImportService larsImportService)
         {
             //Arrange
@@ -41,6 +45,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             service.Verify(x=>x.GetFileStream(It.IsAny<string>()), Times.Never);
             larsStandardImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
             apprenticeshipFundingImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            sectorSubjectAreaImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            larsStandardRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            apprenticeshipFundingRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            sectorSubjectAreaRepository.Verify(x=>x.DeleteAll(), Times.Never);
         }
         
         [Test, RecursiveMoqAutoData]
@@ -49,7 +57,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             LarsImportService larsImportService)
         {
@@ -74,7 +82,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             LarsImportService larsImportService)
         {
@@ -98,7 +106,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<IZipArchiveHelper> zipHelper,
             LarsImportService larsImportService)
@@ -125,7 +133,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<IZipArchiveHelper> zipHelper,
             LarsImportService larsImportService)
@@ -147,14 +155,42 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
+        public async Task Then_The_SectorSubjectAreaTier2_Csv_Is_Extracted_From_The_Archive(
+            string filePath,
+            string content,
+            string newFilePath,
+            [Frozen] Mock<ILarsPageParser> pageParser,
+            [Frozen] Mock<IDataDownloadService> service,
+            [Frozen] Mock<IImportAuditRepository> repository,
+            [Frozen] Mock<IZipArchiveHelper> zipHelper,
+            LarsImportService larsImportService)
+        {
+            //Arrange
+            service.Setup(x => x.GetFileStream(newFilePath))
+                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
+            pageParser.Setup(x => x.GetCurrentLarsDataDownloadFilePath()).ReturnsAsync(newFilePath);
+            repository.Setup(x => x.GetLastImportByType(ImportType.LarsImport))
+                .ReturnsAsync((ImportAudit)null);
+            
+            //Act
+            await larsImportService.ImportData();
+            
+            //Assert
+            zipHelper.Verify(x=>
+                    x.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(It.IsAny<Stream>(),Constants.LarsSectorSubjectAreaTier2FileName), 
+                Times.Once);
+        }
+        
+        [Test, RecursiveMoqAutoData]
         public async Task Then_The_Current_Lars_Import_Data_Is_Deleted(
             string filePath,
             string content,
             string newFilePath,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
             [Frozen] Mock<IImportAuditRepository> repository,
             LarsImportService larsImportService)
         {
@@ -171,6 +207,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             larsStandardImportRepository.Verify(x=>x.DeleteAll(), Times.Once);
             apprenticeshipFundingImportRepository.Verify(x=>x.DeleteAll(), Times.Once);
+            sectorSubjectAreaTier2ImportRepository.Verify(x=>x.DeleteAll(), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -181,10 +218,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             ApprenticeshipFundingCsv frameWorkCsv,
             List<StandardCsv> standardCsv,
             List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
+            SectorSubjectAreaTier2Csv sectorSubjectAreaTier2Csv1,
+            SectorSubjectAreaTier2Csv sectorSubjectAreaTier2Csv2,
+            SectorSubjectAreaTier2Csv sectorSubjectAreaTier2Csv3,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<IZipArchiveHelper> zipHelper,
             LarsImportService larsImportService)
@@ -206,6 +247,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     x.ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(It.IsAny<Stream>(),
                         Constants.LarsApprenticeshipFundingFileName))
                 .Returns(apprenticeFundingCsv);
+            zipHelper.Setup(x =>
+                    x.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(It.IsAny<Stream>(),
+                        Constants.LarsSectorSubjectAreaTier2FileName))
+                .Returns(new List<SectorSubjectAreaTier2Csv>{sectorSubjectAreaTier2Csv1,sectorSubjectAreaTier2Csv2,sectorSubjectAreaTier2Csv3});
             
             
             //Act
@@ -216,6 +261,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 x.InsertMany(It.Is<List<LarsStandardImport>>(c=>c.Count.Equals(standardCsv.Count))), Times.Once);
             apprenticeshipFundingImportRepository.Verify(x=>
                 x.InsertMany(It.Is<List<ApprenticeshipFundingImport>>(c=>c.Count.Equals(apprenticeFundingCsv.Count-1))), Times.Once);
+            sectorSubjectAreaTier2ImportRepository.Verify(x=>
+                x.InsertMany(It.Is<List<SectorSubjectAreaTier2Import>>(c=>
+                    c.Count.Equals(3))), Times.Once); 
+
         }
         
         [Test, RecursiveMoqAutoData]
@@ -225,10 +274,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string newFilePath,
             List<StandardCsv> standardCsv,
             List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
+            List<SectorSubjectAreaTier2Csv> sectorSubjectAreaTier2Csv,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
             [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2Repository> sectorSubjectAreaTier2Repository,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<IZipArchiveHelper> zipHelper,
             LarsImportService larsImportService)
@@ -247,7 +298,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     x.ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(It.IsAny<Stream>(),
                         Constants.LarsApprenticeshipFundingFileName))
                 .Returns(apprenticeFundingCsv);
-            
+            zipHelper.Setup(x =>
+                    x.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(It.IsAny<Stream>(),
+                        Constants.LarsSectorSubjectAreaTier2FileName))
+                .Returns(sectorSubjectAreaTier2Csv);
             
             //Act
             await larsImportService.ImportData();
@@ -255,7 +309,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             larsStandardRepository.Verify(x=> x.DeleteAll(), Times.Once);
             apprenticeshipFundingRepository.Verify(x=> x.DeleteAll(), Times.Once);
-            
+            sectorSubjectAreaTier2Repository.Verify(x=>x.DeleteAll(), Times.Once);
         }
         
         [Test, RecursiveMoqAutoData]
@@ -268,7 +322,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             List<StandardCsv> standardCsv,
             List<ApprenticeshipFundingCsv> apprenticeFundingCsv,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
             [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
@@ -311,11 +365,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string newFilePath,
             List<LarsStandardImport> larsStandardImports,
             List<ApprenticeshipFundingImport> apprenticeshipFundingImports,
+            List<SectorSubjectAreaTier2Import> sectorSubjectAreaTier2Imports,
             [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<ILarsDataDownloadService> service,
+            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
             LarsImportService larsImportService)
         {
             //Arrange
@@ -331,7 +387,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             await larsImportService.ImportData();
             
             //Assert
-            var totalRecords = larsStandardImports.Count + apprenticeshipFundingImports.Count;
+            var totalRecords = larsStandardImports.Count + apprenticeshipFundingImports.Count + sectorSubjectAreaTier2Imports.Count;
             repository.Verify(x=>x
                 .Insert(It.Is<ImportAudit>(c
                     =>c.ImportType.Equals(ImportType.LarsImport) 

@@ -14,7 +14,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = standardCsv.EffectiveFrom,
                 EffectiveTo = standardCsv.EffectiveTo,
                 LastDateStarts = standardCsv.LastDateStarts,
-                StandardId = standardCsv.StandardCode
+                StandardId = standardCsv.StandardCode,
+                SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2
             };
         }
     }

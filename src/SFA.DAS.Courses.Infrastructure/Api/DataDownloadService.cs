@@ -5,11 +5,11 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Infrastructure.Api
 {
-    public class LarsDataDownloadService : ILarsDataDownloadService
+    public class DataDownloadService : IDataDownloadService
     {
         private readonly HttpClient _client;
 
-        public LarsDataDownloadService (HttpClient client)
+        public DataDownloadService (HttpClient client)
         {
             _client = client;
         }
