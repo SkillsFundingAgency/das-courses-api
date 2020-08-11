@@ -54,6 +54,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("duties")]
         public List<Duty> Duties { get; set; }
 
+        [JsonProperty("coreAndOptions")]
+        public bool CoreAndOptions { get ; set ; }
     }
     
     public class Skill
