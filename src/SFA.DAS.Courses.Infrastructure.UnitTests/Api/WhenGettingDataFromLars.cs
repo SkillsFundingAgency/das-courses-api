@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             var downloadUrl = "https://test";
             var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri(downloadUrl));
             var client = new HttpClient(httpMessageHandler.Object);
-            var larsDataDownloadService = new LarsDataDownloadService(client);
+            var larsDataDownloadService = new DataDownloadService(client);
 
             //Act
             var actual = await larsDataDownloadService.GetFileStream(downloadUrl);
@@ -52,7 +52,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             var downloadUrl = "https://test.zip";
             var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri(downloadUrl));
             var client = new HttpClient(httpMessageHandler.Object);
-            var larsDataDownloadService = new LarsDataDownloadService(client);
+            var larsDataDownloadService = new DataDownloadService(client);
 
             //Act Assert
             Assert.ThrowsAsync<HttpRequestException>(() => larsDataDownloadService.GetFileStream(downloadUrl));

@@ -22,6 +22,22 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IStandardsImportService, StandardsImportService>();
             services.AddTransient<IStandardsService, StandardsService>();
             services.AddTransient<IStandardsSortOrderService, StandardsSortOrderService>();
+            services.AddTransient<ISectorService, SectorService>();
+            services.AddTransient<ILarsPageParser, LarsPageParser>();
+            services.AddTransient<ILevelsService, LevelsService>();
+            services.AddHttpClient<IDataDownloadService, DataDownloadService>();
+            services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
+            services.AddTransient<ILarsImportService, LarsImportService>();
+            services.AddTransient<IFrameworksImportService, FrameworksImportService>();
+            services.AddTransient<IJsonFileHelper, JsonFileHelper>();   
+            services.AddTransient<IFrameworksService, FrameworksService>();
+            services.AddHttpClient<IQualificationSectorSubjectAreaService, QualificationSectorSubjectAreaService>();
+            
+            AddDatabaseRegistrations(services);
+        }
+
+        private static void AddDatabaseRegistrations(IServiceCollection services)
+        {
             services.AddTransient<IStandardImportRepository, StandardImportRepository>();
             services.AddTransient<IStandardRepository, StandardRepository>();
             services.AddTransient<IImportAuditRepository, ImportAuditRepository>();
@@ -35,15 +51,8 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IFrameworkImportRepository, FrameworkImportRepository>();
             services.AddTransient<IFrameworkFundingImportRepository, FrameworkFundingImportRepository>();
             services.AddTransient<IFrameworkFundingRepository, FrameworkFundingRepository>();
-            services.AddTransient<ISectorService, SectorService>();
-            services.AddTransient<ILarsPageParser, LarsPageParser>();
-            services.AddTransient<ILevelsService, LevelsService>();
-            services.AddHttpClient<ILarsDataDownloadService, LarsDataDownloadService>();
-            services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
-            services.AddTransient<ILarsImportService, LarsImportService>();
-            services.AddTransient<IFrameworksImportService, FrameworksImportService>();
-            services.AddTransient<IJsonFileHelper, JsonFileHelper>();   
-            services.AddTransient<IFrameworksService, FrameworksService>();   
+            services.AddTransient<ISectorSubjectAreaTier2Repository, SectorSubjectAreaTier2Repository>();
+            services.AddTransient<ISectorSubjectAreaTier2ImportRepository, SectorSubjectAreaTier2ImportRepository>();
         }
     }
 }
