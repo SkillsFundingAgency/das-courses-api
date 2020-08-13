@@ -34,7 +34,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.Id.Should().Be(standard.LarsCode);
             actual.StandardPageUrl.Should().Be(standard.StandardPageUrl.AbsoluteUri);            
             actual.TypicalJobTitles.Should().Be(string.Join("|", standard.TypicalJobTitles));
-
         }
 
         [Test, AutoData]
@@ -46,12 +45,12 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Act
             var actual = (StandardImport)standard;
 
-            //Assert - CoreSkillsCount should contain details for all skills in standard.Skills
+            //Assert
             actual.CoreSkillsCount.Should().Be(string.Join("|", standard.Skills.Select(c => c.Detail)));
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_Are_Mapped_In_Correct_Order_If_The_CoreAndOptions_Is_False(ImportTypes.Standard standard)
+        public void Then_All_Skills_Are_Mapped_In_Same_Order_As_Skills_List_If_The_CoreAndOptions_Is_False(ImportTypes.Standard standard)
         {
             //Arrange
             standard.CoreAndOptions = false;            
@@ -59,7 +58,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Act
             var actual = (StandardImport)standard;
 
-            //Assert - skill details should be in the same order as skills listed in standard.Skills
+            //Assert
             Assert.AreEqual(standard.Skills.Select(s => s.Detail), actual.CoreSkillsCount.Split("|").ToList());
         }
 
@@ -87,12 +86,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Mapped_In_Correct_Order_If_The_CoreAndOptions_Is_True(ImportTypes.Standard standard)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Mapped_In_Same_Order_As_Skills_List_If_The_CoreAndOptions_Is_True(ImportTypes.Standard standard)
         {
             //Arrange
             standard.CoreAndOptions = true;
-
-            //Add skills randomly from the standard.Skills list to each duty.MappedSkills
             foreach (var skill in standard.Skills)
             {
                 foreach (var duty in standard.Duties)
@@ -109,11 +106,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Act
             var actual = (StandardImport)standard;
             var coreSkillsCountList = actual.CoreSkillsCount.IsNullOrEmpty() ? new List<string>() : actual.CoreSkillsCount.Split("|").ToList();
-
-            //Remove skills not in core list from standard.Skills to compare list order
             standard.Skills.RemoveAll(s => !coreSkillsCountList.Contains(s.Detail));
 
-            //Assert - CoreSkillsCount should contain details for each skill mapped to a core duty's MappedSkills, in the order that they appear in the standard.Skills list            
+            //Assert           
             Assert.AreEqual(standard.Skills.Select(s => s.Detail), coreSkillsCountList);
         }
 
