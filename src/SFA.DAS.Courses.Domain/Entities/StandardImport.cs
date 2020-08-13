@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Domain.ImportTypes;
 
@@ -13,19 +14,21 @@ namespace SFA.DAS.Courses.Domain.Entities
             //Check duties and skills not empty
             if (standard.Duties.Any() && standard.Skills.Any())
             {
-                if(standard.CoreAndOptions)
-                {   
+                if (standard.CoreAndOptions)
+                {
                     //Put all of the MappedSkills skillIds from all of the core duties into a list
-                    var mappedSkillsList = standard.Duties.Where(d => d.IsThisACoreDuty.Equals(1)).SelectMany(d => d.MappedSkills).ToList();
+                    var mappedSkillsList = standard.Duties.Where(d => d.IsThisACoreDuty.Equals(1) && d.MappedSkills != null).SelectMany(d => d.MappedSkills).Select(s => s.ToString());
+
                     //Store the detail property for each skill in standard.Skills who's skillId appears in the list of mapped skills for core duties
-                    coreSkillsCount = string.Join("|", standard.Skills.Where(s => mappedSkillsList.Contains(s.SkillId)).Select(s => s.Detail));
-                } else
-                {   
-                    //Stores all skill details from skills in standard.Skills if CoreAndOptions false
+                    coreSkillsCount = string.Join("|", standard.Skills.Where(s => mappedSkillsList.Contains(s.SkillId)).Select(s => s.Detail));                    
+                }
+                else
+                {
+                    //Store all skill details from skills in standard.Skills if CoreAndOptions false
                     coreSkillsCount = string.Join("|", standard.Skills.Select(s => s.Detail));
                 }
             }
-            
+
 
             return new StandardImport
             {

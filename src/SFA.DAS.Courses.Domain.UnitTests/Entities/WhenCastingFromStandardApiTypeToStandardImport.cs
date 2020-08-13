@@ -64,24 +64,20 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown_If_The_CoreAndOptions_Is_True(ImportTypes.Standard standard, string detail, Guid skillId, Duty duty)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown_If_The_CoreAndOptions_Is_True(ImportTypes.Standard standard, string detail, string skillId, Duty duty)
         {
             // Arrange
             standard.CoreAndOptions = true;
-            standard.Skills = new List<Skill>
-            {
-                new Skill
+            standard.Skills.Add(new Skill
                 {
                     Detail = detail,
-                    SkillId = skillId,
+                    SkillId = skillId.Substring(7),
                 }
-            };
-            duty.MappedSkills = new List<Guid> { skillId };
+            );
+
+            duty.MappedSkills = new List<Guid> { Guid.Parse(skillId.Substring(7)) };
             duty.IsThisACoreDuty = 1;
-            standard.Duties = new List<Duty>
-            {
-                duty
-            };
+            standard.Duties.Add(duty);      
 
             //Act
             var actual = (StandardImport)standard;
@@ -91,7 +87,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_Are_Mapped_In_Correct_Order_If_The_CoreAndOptions_Is_True(ImportTypes.Standard standard)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Mapped_In_Correct_Order_If_The_CoreAndOptions_Is_True(ImportTypes.Standard standard)
         {
             //Arrange
             standard.CoreAndOptions = true;
@@ -104,7 +100,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     var random = new Random();
                     if (random.Next(2) == 1)
                     {
-                        duty.MappedSkills.Add(skill.SkillId);
+                        duty.IsThisACoreDuty = 1;
+                        duty.MappedSkills.Add(Guid.Parse(skill.SkillId.Substring(7)));
                     }
                 }
             }
@@ -113,9 +110,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
             var coreSkillsCountList = actual.CoreSkillsCount.IsNullOrEmpty() ? new List<string>() : actual.CoreSkillsCount.Split("|").ToList();
 
-            //Assert - CoreSkillsCount should contain details for each skill mapped to a core duty's MappedSkills, in the order that they appear in the standard.Skills list
             //Remove skills not in core list from standard.Skills to compare list order
             standard.Skills.RemoveAll(s => !coreSkillsCountList.Contains(s.Detail));
+
+            //Assert - CoreSkillsCount should contain details for each skill mapped to a core duty's MappedSkills, in the order that they appear in the standard.Skills list            
             Assert.AreEqual(standard.Skills.Select(s => s.Detail), coreSkillsCountList);
         }
 
