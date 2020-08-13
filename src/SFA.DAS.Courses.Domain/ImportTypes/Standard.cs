@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     public class Skill
     {
         [JsonProperty("skillId")]
-        public Guid SkillId { get; set; }
+        public string SkillId { get; set; }
         [JsonProperty("detail")]
         public string Detail { get; set; }
     }
