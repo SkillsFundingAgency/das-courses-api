@@ -37,6 +37,20 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
+        public void Then_Leading_And_Trailing_Whitespace_Is_Removed_From_The_Course_Title(ImportTypes.Standard standard)
+        {
+            //Arrange
+            var expectedTitle = standard.Title;
+            standard.Title = $"  {expectedTitle} ";
+            
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Title.Should().Be(expectedTitle);
+        }
+
+        [Test, AutoData]
         public void Then_All_Skills_Are_Mapped_If_The_CoreAndOptions_Is_False(ImportTypes.Standard standard)
         {
             //Arrange
