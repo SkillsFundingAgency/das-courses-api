@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace SFA.DAS.Courses.Domain.ImportTypes
@@ -54,6 +55,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("duties")]
         public List<Duty> Duties { get; set; }
 
+        [JsonProperty("coreAndOptions")]
+        public bool CoreAndOptions { get ; set ; }
     }
     
     public class Skill
@@ -72,7 +75,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("dutyDetail")]
         public string DutyDetail { get; set; }
 
-        [JsonProperty("isThisACoreDuty")]
+        [JsonProperty("isThisACoreDuty"), Range(0, 1)]
         public long IsThisACoreDuty { get; set; }
 
         [JsonProperty("mappedBehaviour")]
