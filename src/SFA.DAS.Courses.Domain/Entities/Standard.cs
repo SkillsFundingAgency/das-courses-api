@@ -17,7 +17,6 @@
                 RouteId = standard.RouteId,
                 Title = standard.Title,
                 Sector = standard.Sector,
-                TypicalDuration = standard.TypicalDuration,
                 TypicalJobTitles = standard.TypicalJobTitles,
                 Version = standard.Version,
                 Keywords = standard.Keywords

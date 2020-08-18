@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -10,7 +10,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public int Level { get; set; }
         public decimal Version { get; set; }
         public string OverviewOfRole { get; set; }
-        public int TypicalDuration { get; set; }
         public virtual Sector Sector {get; set; }
         public Guid RouteId { get; set; }
         public string Keywords { get; set; }

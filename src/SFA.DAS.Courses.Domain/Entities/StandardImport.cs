@@ -35,7 +35,6 @@ namespace SFA.DAS.Courses.Domain.Entities
                 OverviewOfRole = standard.OverviewOfRole,
                 StandardPageUrl = standard.StandardPageUrl.AbsoluteUri,
                 Title = standard.Title.Trim(),
-                TypicalDuration = standard.TypicalDuration,
                 TypicalJobTitles = string.Join("|", standard.TypicalJobTitles),
                 Version = standard.Version,
                 Keywords = standard.Keywords.Any() ? string.Join("|", standard.Keywords) : null,
