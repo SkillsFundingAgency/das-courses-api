@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -10,5 +10,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public DateTime? EffectiveTo { get; set; }
         public int MaxEmployerLevyCap { get; set; }
         public virtual Standard Standard { get; set; }
+        public int Duration { get; set; }
     }
 }

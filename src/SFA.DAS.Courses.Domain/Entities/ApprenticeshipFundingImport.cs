@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -13,7 +13,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = apprenticeshipFundingCsv.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingCsv.EffectiveTo,
                 StandardId = apprenticeshipFundingCsv.ApprenticeshipCode,
-                MaxEmployerLevyCap = Convert.ToInt32(apprenticeshipFundingCsv.MaxEmployerLevyCap)
+                MaxEmployerLevyCap = Convert.ToInt32(apprenticeshipFundingCsv.MaxEmployerLevyCap),
+                Duration = (int)apprenticeshipFundingCsv.Duration
             }; 
                 
         }
