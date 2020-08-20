@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SFA.DAS.Courses.Domain.Courses
 {
@@ -9,6 +9,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public DateTime? EffectiveTo { get ; set ; }
 
         public int MaxEmployerLevyCap { get ; set ; }
+        public int Duration { get; set; }
 
         public static implicit operator ApprenticeshipFunding(
             Domain.Entities.ApprenticeshipFunding apprenticeshipFunding)
@@ -17,7 +18,8 @@ namespace SFA.DAS.Courses.Domain.Courses
             {
                 EffectiveFrom = apprenticeshipFunding.EffectiveFrom,
                 EffectiveTo = apprenticeshipFunding.EffectiveTo,
-                MaxEmployerLevyCap = apprenticeshipFunding.MaxEmployerLevyCap
+                MaxEmployerLevyCap = apprenticeshipFunding.MaxEmployerLevyCap,
+                Duration = apprenticeshipFunding.Duration
             };  
         }
     }

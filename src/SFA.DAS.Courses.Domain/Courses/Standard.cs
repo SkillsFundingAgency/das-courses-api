@@ -11,7 +11,6 @@ namespace SFA.DAS.Courses.Domain.Courses
         public decimal Version { get; set; }
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
-        public int TypicalDuration { get; set; }
         public string Route { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }
@@ -34,7 +33,6 @@ namespace SFA.DAS.Courses.Domain.Courses
                 Version = source.Version,
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
-                TypicalDuration = source.TypicalDuration,
                 Route = source.Sector.Route,
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,

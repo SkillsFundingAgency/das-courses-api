@@ -1,7 +1,6 @@
 ﻿CREATE TABLE [dbo].[Standard]
 (
 	[Id] INT PRIMARY KEY,
-	[TypicalDuration] INT NOT NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
@@ -17,5 +16,5 @@
 GO
 
 CREATE NONCLUSTERED INDEX [IDX_Standard_RouteId] ON [dbo].[Standard] (RouteId) 
-INCLUDE (Id,TypicalDuration,Title,[Level],  IntegratedDegree, OverviewOfRole,[Keywords],[TypicalJobTitles], CoreSkillsCount,[StandardPageUrl], [Version]) WITH (ONLINE = ON) 
+INCLUDE (Id,Title,[Level],  IntegratedDegree, OverviewOfRole,[Keywords],[TypicalJobTitles], CoreSkillsCount,[StandardPageUrl], [Version]) WITH (ONLINE = ON) 
 GO 

@@ -1,4 +1,4 @@
-namespace SFA.DAS.Courses.Domain.Entities
+﻿namespace SFA.DAS.Courses.Domain.Entities
 {
     public class ApprenticeshipFunding : ApprenticeshipFundingBase
     {
@@ -10,7 +10,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = apprenticeshipFundingImport.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingImport.EffectiveTo,
                 StandardId = apprenticeshipFundingImport.StandardId,
-                MaxEmployerLevyCap = apprenticeshipFundingImport.MaxEmployerLevyCap
+                MaxEmployerLevyCap = apprenticeshipFundingImport.MaxEmployerLevyCap,
+                Duration = apprenticeshipFundingImport.Duration
             };
         }
     }

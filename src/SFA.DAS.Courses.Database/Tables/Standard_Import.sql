@@ -1,7 +1,6 @@
 ﻿CREATE TABLE [dbo].[Standard_Import]
 (
 	[Id] INT PRIMARY KEY,
-	[TypicalDuration] INT NOT NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,

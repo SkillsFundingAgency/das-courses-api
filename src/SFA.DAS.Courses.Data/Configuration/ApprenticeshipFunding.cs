@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace SFA.DAS.Courses.Data.Configuration
@@ -15,6 +15,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.EffectiveFrom).HasColumnName("EffectiveFrom").HasColumnType("datetime").IsRequired();
             builder.Property(x => x.EffectiveTo).HasColumnName("EffectiveTo").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.MaxEmployerLevyCap).HasColumnName("MaxEmployerLevyCap").HasColumnType("int").IsRequired();
+            builder.Property(x => x.Duration).HasColumnName("Duration").HasColumnType("int").IsRequired();
 
             builder.HasOne(c => c.Standard)
                 .WithMany(c => c.ApprenticeshipFunding)
