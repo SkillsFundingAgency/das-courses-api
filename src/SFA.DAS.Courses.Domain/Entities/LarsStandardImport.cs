@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 LastDateStarts = standardCsv.LastDateStarts,
                 StandardId = standardCsv.StandardCode,
                 SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2,
-                OtherBodyApprovalRequired = standardCsv.OtherBodyApprovalRequired
+                OtherBodyApprovalRequired = Boolean.TryParse(standardCsv.OtherBodyApprovalRequired, out bool result)
             };
         }
     }
