@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -12,5 +12,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public DateTime? LastDateStarts { get; set; }
         public decimal SectorSubjectAreaTier2 { get; set; }
         public virtual Standard Standard { get; set; }
+        public bool OtherBodyApprovalRequired { get; set; }
     }
 }
