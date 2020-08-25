@@ -27,6 +27,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.StandardDates.Should().NotBeNull();
             response.SectorSubjectAreaTier2.Should().Be(source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2);
             response.SectorSubjectAreaTier2Description.Should().Be(source.LarsStandard.SectorSubjectArea.Name);
+            response.OtherBodyApprovalRequired.Should().Be(source.LarsStandard.OtherBodyApprovalRequired);
         }
     }
 }

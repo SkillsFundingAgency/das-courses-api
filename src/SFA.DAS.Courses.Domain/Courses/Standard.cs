@@ -22,6 +22,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public StandardDates StandardDates { get ; set ; }
         public decimal SectorSubjectAreaTier2 { get ; set ; }
         public string SectorSubjectAreaTier2Description { get ; set ; }
+        public bool OtherBodyApprovalRequired { get; set; }
 
         public static implicit operator Standard(Entities.Standard source)
         {
@@ -41,7 +42,8 @@ namespace SFA.DAS.Courses.Domain.Courses
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFunding)c).ToList(),
                 StandardDates = source.LarsStandard,
                 SectorSubjectAreaTier2 = source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2,
-                SectorSubjectAreaTier2Description = source.LarsStandard.SectorSubjectArea.Name
+                SectorSubjectAreaTier2Description = source.LarsStandard.SectorSubjectArea.Name,
+                OtherBodyApprovalRequired = source.LarsStandard.OtherBodyApprovalRequired
             };
         }
     }

@@ -1,3 +1,4 @@
+﻿using System;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
@@ -11,10 +12,13 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [Test, AutoData]
         public void Then_The_Fields_Are_Mapped_Correctly(StandardCsv standardCsv)
         {
+            standardCsv.OtherBodyApprovalRequired = "Y";
             var actual = (LarsStandardImport) standardCsv;
             
-            actual.Should().BeEquivalentTo(standardCsv, options=>options.Excluding(c=>c.StandardCode));
+            actual.Should().BeEquivalentTo(standardCsv, options=>options.Excluding(c=>c.StandardCode).Excluding(c => c.OtherBodyApprovalRequired));
             actual.StandardId.Should().Be(standardCsv.StandardCode);
+            actual.OtherBodyApprovalRequired.Should()
+                .Be(true);
         }
     }
 }
