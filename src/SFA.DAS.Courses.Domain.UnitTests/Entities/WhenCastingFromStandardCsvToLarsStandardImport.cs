@@ -12,6 +12,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
     {
         [Test]
         [MoqInlineAutoData("y", true)]
+        [MoqInlineAutoData("Y", true)]
         [MoqInlineAutoData("n", false)]
         [MoqInlineAutoData(null, false)]
         [MoqInlineAutoData("false", false)]
