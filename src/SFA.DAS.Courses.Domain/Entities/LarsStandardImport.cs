@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -15,8 +15,16 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveTo = standardCsv.EffectiveTo,
                 LastDateStarts = standardCsv.LastDateStarts,
                 StandardId = standardCsv.StandardCode,
-                SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2
+                SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2,
+                OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(standardCsv.OtherBodyApprovalRequired)
             };
+        }
+
+        private static bool MapOtherBodyApprovalRequired(string source)
+        {
+            if (String.Equals(source, "y", StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
         }
     }
 }

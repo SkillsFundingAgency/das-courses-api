@@ -23,6 +23,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public List<ApprenticeshipFundingResponse> ApprenticeshipFunding { get ; set ; }
 
         public StandardDatesResponse StandardDates { get ; set ; }
+        public bool OtherBodyApprovalRequired { get; set; }
 
         public static implicit operator GetStandardResponse(Standard source)
         {
@@ -42,7 +43,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
                 StandardDates = source.StandardDates,
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
-                SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description
+                SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description,
+                OtherBodyApprovalRequired = source.OtherBodyApprovalRequired
             };
         }
     }

@@ -1,4 +1,4 @@
-namespace SFA.DAS.Courses.Domain.Entities
+﻿namespace SFA.DAS.Courses.Domain.Entities
 {
     public class LarsStandard : LarsStandardBase
     {
@@ -13,7 +13,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveTo = larsStandardImport.EffectiveTo,
                 StandardId = larsStandardImport.StandardId,
                 LastDateStarts = larsStandardImport.LastDateStarts,
-                SectorSubjectAreaTier2 = larsStandardImport.SectorSubjectAreaTier2
+                SectorSubjectAreaTier2 = larsStandardImport.SectorSubjectAreaTier2,
+                OtherBodyApprovalRequired = larsStandardImport.OtherBodyApprovalRequired
             };
         }
     }

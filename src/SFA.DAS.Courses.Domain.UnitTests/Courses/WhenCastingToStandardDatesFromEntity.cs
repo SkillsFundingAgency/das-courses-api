@@ -1,4 +1,4 @@
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Courses;
@@ -21,6 +21,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c=>c.Standard)
                 .Excluding(c=>c.SectorSubjectArea)
                 .Excluding(c=>c.SectorSubjectAreaTier2)
+                .Excluding(c => c.OtherBodyApprovalRequired)
             );
         }
     }

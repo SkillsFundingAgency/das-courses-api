@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SFA.DAS.Courses.Domain.ImportTypes
 {
@@ -10,5 +10,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public DateTime? EffectiveTo { get; set; }
         public DateTime? LastDateStarts { get; set; }
         public decimal SectorSubjectAreaTier2 { get; set; }
+        public string OtherBodyApprovalRequired { get; set; }
     }
 }
