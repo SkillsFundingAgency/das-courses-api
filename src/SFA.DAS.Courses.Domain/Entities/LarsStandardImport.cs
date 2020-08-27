@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static bool MapOtherBodyApprovalRequired(string source)
         {
-            if (source == "Y")
+            if (String.Equals(source, "y", StringComparison.OrdinalIgnoreCase))
                 return true;
             return false;
         }

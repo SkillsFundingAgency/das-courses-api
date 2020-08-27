@@ -7,6 +7,6 @@
 	[EffectiveTo] DATETIME NULL,
 	[LastDateStarts] DATETIME NULL,
 	[SectorSubjectAreaTier2] decimal(10,4) NOT NULL DEFAULT (0.0),
-    [OtherBodyApprovalRequired] bit NOT NULL
+    [OtherBodyApprovalRequired] bit NOT NULL DEFAULT 0
 )
 GO
