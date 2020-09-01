@@ -6,6 +6,7 @@ using SFA.DAS.Courses.Domain.Entities;
 using Sector = SFA.DAS.Courses.Domain.Entities.Sector;
 using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
 using LarsStandard = SFA.DAS.Courses.Domain.Entities.LarsStandard;
+using Framework = SFA.DAS.Courses.Domain.Entities.Framework;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 {
@@ -18,7 +19,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             context.SectorSubjectAreaTier2.AddRange(GetSectorSubjectAreaTier2Items());
             context.Standards.AddRange(GetValidTestStandards());
             context.Standards.AddRange(GetInValidTestStandards());
-            
+            context.Frameworks.AddRange(GetFrameworks());
             context.SaveChanges();
         }
 
@@ -27,6 +28,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             context.Standards.RemoveRange(context.Standards.ToList());
             context.Sectors.RemoveRange(context.Sectors.ToList());
             context.SectorSubjectAreaTier2.RemoveRange(context.SectorSubjectAreaTier2.ToList());
+            context.Frameworks.RemoveRange(context.Frameworks.ToList());
             context.SaveChanges();
         }
 
@@ -50,7 +52,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 }
             };
         }
-        
+
         public static IEnumerable<Sector> GetTestSectors()
         {
             return new List<Sector>
@@ -231,6 +233,85 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     }
                 }
             };
+        }
+
+        public static IEnumerable<Framework> GetFrameworks()
+        {
+            return new List<Framework>
+            {
+                new Framework
+                {
+                    Duration = 2,
+                    Id = "1",
+                    Level = 2,
+                    Title = "Test framework 1",
+                    EffectiveFrom = new DateTime(2020, 01, 01),
+                    EffectiveTo = new DateTime(2025, 01, 01),
+                    ExtendedTitle = "This is the test framework 1",
+                    FrameworkCode = 20,
+                    FrameworkName = "Framework test 1",
+                    MaxFunding = 10000,
+                    PathwayCode = 2,
+                    PathwayName = "Test pathway 1",
+                    ProgrammeType = 2,
+                    ProgType = 2,
+                    CurrentFundingCap = 20000,
+                    HasSubGroups = false,
+                    IsActiveFramework = true,
+                    TypicalLengthFrom = 2,
+                    TypicalLengthTo = 3,
+                    TypicalLengthUnit = "Years",
+                },
+                new Framework
+                {
+                    Id = "2",
+                    Level = 3,
+                    Title = "Test framework 2",
+                    EffectiveFrom = new DateTime(2021, 01, 01),
+                    EffectiveTo = new DateTime(2022, 01, 01),
+                    ExtendedTitle = "This is the test framework 2",
+                    FrameworkCode = 3,
+                    FrameworkName = "Framework test 2",
+                    MaxFunding = 15000,
+                    PathwayCode = 1,
+                    PathwayName = "Test pathway 2",
+                    ProgrammeType = 4,
+                    ProgType = 4,
+                    CurrentFundingCap = 18000,
+                    HasSubGroups = true,
+                    IsActiveFramework = true,
+                    TypicalLengthFrom = 3,
+                    TypicalLengthTo = 4,
+                    TypicalLengthUnit = "Years",
+                },
+                new Framework
+                {
+                    Id = "3",
+                    Level = 4,
+                    Title = "Test framework 3",
+                    EffectiveFrom = new DateTime(2015, 01, 01),
+                    EffectiveTo = new DateTime(2019, 01, 01),
+                    ExtendedTitle = "This is the test framework 3",
+                    FrameworkCode = 5,
+                    FrameworkName = "Framework test 3",
+                    MaxFunding = 8000,
+                    PathwayCode = 7,
+                    PathwayName = "Test pathway 3",
+                    ProgrammeType = 5,
+                    ProgType = 5,
+                    CurrentFundingCap = 2000,
+                    HasSubGroups = false,
+                    IsActiveFramework = false,
+                    TypicalLengthFrom = 1,
+                    TypicalLengthTo = 2,
+                    TypicalLengthUnit = "Years",
+                },
+            };
+        }
+
+        public static Framework GetFramework(string id)
+        {
+            return GetFrameworks().FirstOrDefault(c => c.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }
