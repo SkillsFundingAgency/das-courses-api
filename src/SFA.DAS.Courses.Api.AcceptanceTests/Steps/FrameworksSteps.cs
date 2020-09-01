@@ -47,7 +47,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             }
 
             var model = await HttpUtilities.ReadContent<GetFrameworkResponse>(result.Content);
-            var expected = DbUtilities.GetFramework();
+            var expected = DbUtilities.GetFramework("1");
 
             model.Should().BeEquivalentTo(expected, options => options
                 .Excluding(frm => frm.FundingPeriods)

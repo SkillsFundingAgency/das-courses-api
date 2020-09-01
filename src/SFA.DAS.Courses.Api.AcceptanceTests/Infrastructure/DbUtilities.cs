@@ -309,31 +309,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             };
         }
 
-        public static Framework GetFramework()
+        public static Framework GetFramework(string id)
         {
-            return new Framework
-            {
-                Duration = 2,
-                Id = "1",
-                Level = 2,
-                Title = "Test framework 1",
-                EffectiveFrom = new DateTime(2020, 01, 01),
-                EffectiveTo = new DateTime(2025, 01, 01),
-                ExtendedTitle = "This is the test framework 1",
-                FrameworkCode = 20,
-                FrameworkName = "Framework test 1",
-                MaxFunding = 10000,
-                PathwayCode = 2,
-                PathwayName = "Test pathway 1",
-                ProgrammeType = 2,
-                ProgType = 2,
-                CurrentFundingCap = 20000,
-                HasSubGroups = false,
-                IsActiveFramework = true,
-                TypicalLengthFrom = 2,
-                TypicalLengthTo = 3,
-                TypicalLengthUnit = "Years",
-            };
+            return GetFrameworks().FirstOrDefault(c => c.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }
