@@ -14,6 +14,7 @@
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="2.2.0" />
+    <PackageReference Include="SFA.DAS.Api.Common" Version="1.0.8" />
   </ItemGroup>
 
 </Project>

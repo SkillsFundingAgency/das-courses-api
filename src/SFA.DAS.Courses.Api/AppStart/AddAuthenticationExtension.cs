@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Api.Common.Infrastructure.Configuration;
 using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Infrastructure.Configuration;
