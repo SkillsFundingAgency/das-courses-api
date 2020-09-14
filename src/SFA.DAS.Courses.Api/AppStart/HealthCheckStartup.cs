@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
-using SFA.DAS.Courses.Api.Infrastructure;
+using SFA.DAS.Api.Common.Infrastructure;
 
 namespace SFA.DAS.Courses.Api.AppStart
 {
