@@ -5,8 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using SFA.DAS.Courses.Data;
-using SFA.DAS.Courses.Data.Repository;
+using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 

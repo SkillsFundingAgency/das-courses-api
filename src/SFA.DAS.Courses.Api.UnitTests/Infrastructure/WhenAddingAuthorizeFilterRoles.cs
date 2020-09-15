@@ -1,10 +1,12 @@
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AutoFixture.NUnit3;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using NUnit.Framework;
+using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Courses.Api.Controllers;
-using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Api.UnitTests.Infrastructure
@@ -13,10 +15,10 @@ namespace SFA.DAS.Courses.Api.UnitTests.Infrastructure
     {
         [Test, MoqAutoData]
         public void Then_The_Data_Load_Policy_Is_Added_To_The_Controllers_Starting_With_DataLoad(
-            ControllerModel model,
-            AuthorizeControllerModelConvention convention)
+            ControllerModel model)
         {
             //Arrange
+            var convention = new AuthorizeControllerModelConvention(new List<string>{PolicyNames.DataLoad});
             var delegatingType = typeof(DataLoadController);
             model = new ControllerModel(new TypeDelegator(delegatingType), model.Attributes)
             {
@@ -35,10 +37,10 @@ namespace SFA.DAS.Courses.Api.UnitTests.Infrastructure
         
         [Test, MoqAutoData]
         public void Then_The_Default_Policy_Is_Added_To_The_Controllers_That_Arent_In_The_Policy_Load_List(
-            ControllerModel model,
-            AuthorizeControllerModelConvention convention)
+            ControllerModel model)
         {
             //Arrange
+            var convention = new AuthorizeControllerModelConvention(new List<string>{PolicyNames.DataLoad});
             var delegatingType = typeof(StandardsController);
             model = new ControllerModel(new TypeDelegator(delegatingType), model.Attributes)
             {
