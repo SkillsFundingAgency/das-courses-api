@@ -35,7 +35,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public List<string> JobRoles { get; set; }
 
         [JsonProperty("version")]
-        public decimal Version { get; set; }
+        public decimal? Version { get; set; }
 
         [JsonProperty("skills")]
         public List<Skill> Skills { get; set; }
