@@ -197,6 +197,51 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     c.Count.Equals(apiImportStandards.Count-2))), Times.Once);
 
         }
+        
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Only_The_Latest_Version__Of_ImportedStandards_With_A_LarsCode_And_ApprovedForDelivery_Status_Are_Imported(
+            int wrongStatusLarsCode,
+            List<StandardImport> standardImportsEntity,
+            Domain.ImportTypes.Standard apiStandard1,
+            Domain.ImportTypes.Standard apiStandard2,
+            Domain.ImportTypes.Standard apiStandard3,
+            Domain.ImportTypes.Standard apiStandard4,
+            [Frozen] Mock<IStandardRepository> repository,
+            [Frozen] Mock<IStandardImportRepository> importRepository,
+            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> apiImportStandards,
+            StandardsImportService standardsImportService)
+        {
+            //Arrange
+            apiImportStandards.ForEach(c=>
+            {
+                c.Status = "Approved for Delivery";
+                c.Version = 1.1m;
+            });
+            apiStandard1.LarsCode = 0;
+            apiStandard1.Status = "Approved for Delivery";
+            apiImportStandards.Add(apiStandard1);
+            apiStandard2.LarsCode = wrongStatusLarsCode;
+            apiStandard2.Status = "Some Other Status";
+            apiImportStandards.Add(apiStandard2);
+            apiStandard3.LarsCode = apiStandard4.LarsCode;
+            apiStandard3.Status = "Approved for Delivery";
+            apiStandard4.Status = "Approved for Delivery";
+            apiStandard4.Version = 1.1m;
+            apiStandard3.Version = 1.0m;
+            apiImportStandards.Add(apiStandard3);
+            apiImportStandards.Add(apiStandard4);
+            service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
+            
+            //Act
+            await standardsImportService.ImportStandards();
+            
+            //Assert
+            importRepository.Verify(x=>
+                x.InsertMany(It.Is<List<StandardImport>>(c=>
+                    c.Count.Equals(apiImportStandards.Count-3) && c.TrueForAll(c=>c.Version.Equals(1.1m)))), Times.Once);
+
+        }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_It_Is_Audited_After_The_Run(

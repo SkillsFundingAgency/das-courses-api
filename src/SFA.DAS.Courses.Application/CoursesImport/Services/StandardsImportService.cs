@@ -94,10 +94,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _standardImportRepository.DeleteAll();
             await _standardImportRepository.InsertMany(
                 standards
-                    .GroupBy(c=>c.LarsCode)
-                    .Select(c=>c.FirstOrDefault())
                     .Where(c => c!=null && c.LarsCode > 0
                             && c.Status.Equals("Approved for Delivery", StringComparison.CurrentCultureIgnoreCase))
+                    .GroupBy(c=>c.LarsCode)
+                    .Select(c=>c.OrderByDescending(x=>x.Version).FirstOrDefault())
                     .Select(c => (StandardImport) c)
                     .ToList());
         }
