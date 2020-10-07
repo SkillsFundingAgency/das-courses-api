@@ -90,7 +90,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             importRepository.Verify(x=>
                 x.InsertMany(It.Is<List<StandardImport>>(c=>
-                    c.Count.Equals(standardsImport.Count))), Times.Once);
+                    c.Count.Equals(1))), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -165,6 +165,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_Only_ImportedStandards_With_A_LarsCode_And_ApprovedForDelivery_Status_Are_Imported(
+            int wrongStatusLarsCode,
             List<StandardImport> standardImportsEntity,
             Domain.ImportTypes.Standard apiStandard1,
             Domain.ImportTypes.Standard apiStandard2,
@@ -178,12 +179,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             apiImportStandards.ForEach(c=>
             {
                 c.Status = "Approved for Delivery";
-                c.LarsCode = 10;
             });
             apiStandard1.LarsCode = 0;
             apiStandard1.Status = "Approved for Delivery";
             apiImportStandards.Add(apiStandard1);
-            apiStandard2.LarsCode = 10;
+            apiStandard2.LarsCode = wrongStatusLarsCode;
             apiStandard2.Status = "Some Other Status";
             apiImportStandards.Add(apiStandard2);
             service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
