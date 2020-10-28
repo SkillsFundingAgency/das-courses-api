@@ -24,12 +24,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
                 new TextField(SearchableStandard.KeywordsPhrase, source.Keywords, Field.Store.NO) {Boost = 1.6f},
                 // term
                 new TextField(SearchableStandard.TitleTerm, source.Title, Field.Store.NO) {Boost = 12.0f},
-                new TextField(SearchableStandard.TypicalJobTitlesTerm, source.TypicalJobTitles, Field.Store.NO) {Boost = 10.0f},
+                new TextField(SearchableStandard.TypicalJobTitlesTerm, source.TypicalJobTitles, Field.Store.NO) {Boost = 18.0f},
                 new TextField(SearchableStandard.KeywordsTerm, source.Keywords, Field.Store.NO) {Boost = 1.5f},
                 // soundex
-                new TextField(SearchableStandard.TitleSoundex, source.Title, Field.Store.NO) {Boost = 0.04f},
-                new TextField(SearchableStandard.TypicalJobTitlesSoundex, source.TypicalJobTitles, Field.Store.NO) {Boost = 0.02f},
-                new TextField(SearchableStandard.KeywordsSoundex, source.Keywords, Field.Store.NO) {Boost = 0.01f}
+                new TextField(SearchableStandard.TitleSoundex, source.Title, Field.Store.NO) {Boost = 0.01f},
             };
 
             var searchable = new SearchableStandard(source);
@@ -52,12 +50,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
                 new TextField(SearchableStandard.KeywordsPhrase, "", Field.Store.NO) {Boost = 1.6f},
                 // term
                 new TextField(SearchableStandard.TitleTerm, "", Field.Store.NO) {Boost = 12.0f},
-                new TextField(SearchableStandard.TypicalJobTitlesTerm, "", Field.Store.NO) {Boost = 10.0f},
+                new TextField(SearchableStandard.TypicalJobTitlesTerm, "", Field.Store.NO) {Boost = 18.0f},
                 new TextField(SearchableStandard.KeywordsTerm, "", Field.Store.NO) {Boost = 1.5f},
                 // soundex
-                new TextField(SearchableStandard.TitleSoundex, "", Field.Store.NO) {Boost = 0.04f},
-                new TextField(SearchableStandard.TypicalJobTitlesSoundex, "", Field.Store.NO) {Boost = 0.02f},
-                new TextField(SearchableStandard.KeywordsSoundex, "", Field.Store.NO) {Boost = 0.01f}
+                new TextField(SearchableStandard.TitleSoundex, "", Field.Store.NO) {Boost = 0.01f}
             };
 
             var searchable = new SearchableStandard(source);

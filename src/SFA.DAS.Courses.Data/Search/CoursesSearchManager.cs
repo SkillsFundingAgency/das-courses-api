@@ -37,8 +37,6 @@ namespace SFA.DAS.Courses.Data.Search
                 boolQuery.Add(new TermQuery(new Term(SearchableStandard.KeywordsTerm, term)), Occur.SHOULD);
                 //soundex
                 boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.TitleSoundex, term)), Occur.SHOULD);
-                boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.TypicalJobTitlesSoundex, term)), Occur.SHOULD);
-                boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.KeywordsSoundex, term)), Occur.SHOULD);
             }
 
             var directory = _directoryFactory.GetDirectory();

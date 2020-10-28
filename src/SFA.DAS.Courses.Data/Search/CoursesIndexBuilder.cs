@@ -35,10 +35,16 @@ namespace SFA.DAS.Courses.Data.Search
                 {SearchableStandard.TitlePhrase, pipeAnalyzer},
                 {SearchableStandard.TypicalJobTitlesPhrase, pipeAnalyzer},
                 {SearchableStandard.KeywordsPhrase, pipeAnalyzer},
+                //term
+                {SearchableStandard.TitleTerm, standardAnalyzer},
+                {SearchableStandard.TypicalJobTitlesTerm, standardAnalyzer},
+                {SearchableStandard.KeywordsTerm, standardAnalyzer},
+                //ngram
+                {SearchableStandard.TitleNGram, standardAnalyzer},
+                {SearchableStandard.TypicalJobTitlesNGram, standardAnalyzer},
+                {SearchableStandard.KeywordsNGram, standardAnalyzer},
                 //soundex
-                {SearchableStandard.TitleSoundex, standardAnalyzer},
-                {SearchableStandard.TypicalJobTitlesSoundex, standardAnalyzer},
-                {SearchableStandard.KeywordsSoundex, standardAnalyzer}
+                {SearchableStandard.TitleSoundex, standardAnalyzer}
             };
             var perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer, fieldAnalyzers);
 

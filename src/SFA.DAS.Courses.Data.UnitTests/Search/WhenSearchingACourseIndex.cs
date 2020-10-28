@@ -63,9 +63,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
         [TestCase(" softawre", 1, DeveloperId, TestName = "Soundex leading whitespace")]
         [TestCase("softawre ", 1, DeveloperId, TestName = "Soundex trailing whitespace")]
         [TestCase("APPLICATION DEVELOPER", 1, DeveloperId, TestName = "TypicalJobTitles phrase case insensitive")]
-        [TestCase("applacation", 1, DeveloperId, TestName = "TypicalJobTitles soundex")]
         [TestCase("CODING THINGS", 1, DeveloperId, TestName = "Keywords phrase case insensitive")]
-        [TestCase("kodng", 1, DeveloperId, TestName = "Keywords soundex")]
         public void Then_Searches_Test_Cases(string searchTerm, int expectedCount, int expectedId)
         {
             var result = _searchManager.Query(searchTerm);
@@ -102,10 +100,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             var singleWordMatchInKeywords = singleWordResult.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId);
             var singleWordMatchInOtherTitles = singleWordResult.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId);
 
-            soundexResult.Standards.Count().Should().Be(3);
+            soundexResult.Standards.Count().Should().Be(1);
             var soundexMatchInTitle = soundexResult.Standards.Single(searchResult => searchResult.Id == DentalTechId);
-            var soundexMatchInKeywords = soundexResult.Standards.Single(searchResult => searchResult.Id == DentalLabAsstId);
-            var soundexMatchInOtherTitles = soundexResult.Standards.Single(searchResult => searchResult.Id == DentalPracticeMgrId);
 
             WriteScoresToConsole(new List<Tuple<string, float>>
             {
@@ -118,9 +114,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
                 new Tuple<string, float>(nameof(exactMatchInKeywords), exactMatchInKeywords.Score),
                 new Tuple<string, float>(nameof(twoWordMatchInKeywords), twoWordMatchInKeywords.Score),
                 new Tuple<string, float>(nameof(singleWordMatchInKeywords), singleWordMatchInKeywords.Score),
-                new Tuple<string, float>(nameof(soundexMatchInTitle), soundexMatchInTitle.Score),
-                new Tuple<string, float>(nameof(soundexMatchInOtherTitles), soundexMatchInOtherTitles.Score),
-                new Tuple<string, float>(nameof(soundexMatchInKeywords), soundexMatchInKeywords.Score),
+                new Tuple<string, float>(nameof(soundexMatchInTitle), soundexMatchInTitle.Score)
             });
 
             exactMatchInTitle.Score.Should().BeGreaterThan(exactMatchInOtherTitles.Score, "exact match on title");
@@ -132,8 +126,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             exactMatchInKeywords.Score.Should().BeGreaterThan(twoWordMatchInKeywords.Score, "exact match on keyword");
             twoWordMatchInKeywords.Score.Should().BeGreaterThan(singleWordMatchInKeywords.Score, "2 word match on keyword");
             singleWordMatchInKeywords.Score.Should().BeGreaterThan(soundexMatchInTitle.Score, "1 word match on keyword");
-            soundexMatchInTitle.Score.Should().BeGreaterThan(soundexMatchInOtherTitles.Score, "soundex match on title");
-            soundexMatchInOtherTitles.Score.Should().BeGreaterThan(soundexMatchInKeywords.Score, "soundex match on typical job title");
         }
 
         [Test]
@@ -164,10 +156,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             var singleWordMatchInKeywords = singleWordResult.Standards.Single(searchResult => searchResult.Id == PortMatchInKeywords);
             var singleWordMatchInOtherTitles = singleWordResult.Standards.Single(searchResult => searchResult.Id == PortMatchInOtherTitles);
 
-            soundexResult.Standards.Count().Should().Be(3);
+            soundexResult.Standards.Count().Should().Be(1);
             var soundexMatchInTitle = soundexResult.Standards.Single(searchResult => searchResult.Id == PortMatchInTitle);
-            var soundexMatchInKeywords = soundexResult.Standards.Single(searchResult => searchResult.Id == PortMatchInKeywords);
-            var soundexMatchInOtherTitles = soundexResult.Standards.Single(searchResult => searchResult.Id == PortMatchInOtherTitles);
 
             WriteScoresToConsole(new List<Tuple<string, float>>
             {
@@ -180,9 +170,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
                 new Tuple<string, float>(nameof(exactMatchInKeywords), exactMatchInKeywords.Score),
                 new Tuple<string, float>(nameof(twoWordMatchInKeywords), twoWordMatchInKeywords.Score),
                 new Tuple<string, float>(nameof(singleWordMatchInKeywords), singleWordMatchInKeywords.Score),
-                new Tuple<string, float>(nameof(soundexMatchInTitle), soundexMatchInTitle.Score),
-                new Tuple<string, float>(nameof(soundexMatchInOtherTitles), soundexMatchInOtherTitles.Score),
-                new Tuple<string, float>(nameof(soundexMatchInKeywords), soundexMatchInKeywords.Score),
+                new Tuple<string, float>(nameof(soundexMatchInTitle), soundexMatchInTitle.Score)
             });
 
             exactMatchInTitle.Score.Should().BeGreaterThan(exactMatchInOtherTitles.Score, "exact match on title");
@@ -194,8 +182,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             exactMatchInKeywords.Score.Should().BeGreaterThan(twoWordMatchInKeywords.Score, "exact match on keyword");
             twoWordMatchInKeywords.Score.Should().BeGreaterThan(singleWordMatchInKeywords.Score, "2 word match on keyword");
             singleWordMatchInKeywords.Score.Should().BeGreaterThan(soundexMatchInTitle.Score, "1 word match on keyword");
-            soundexMatchInTitle.Score.Should().BeGreaterThan(soundexMatchInOtherTitles.Score, "soundex match on title");
-            soundexMatchInOtherTitles.Score.Should().BeGreaterThan(soundexMatchInKeywords.Score, "soundex match on typical job title");
         }
 
         [Test]
