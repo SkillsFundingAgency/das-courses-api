@@ -24,6 +24,8 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.CoreSkillsCount).HasColumnName("CoreSkillsCount");
             builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
             builder.Property(x => x.Keywords).HasColumnName("Keywords");
+            builder.Property(x => x.Skills).HasJsonConversion();
+            builder.Property(x => x.Knowledge).HasJsonConversion();
             builder.Property(x => x.Behaviours).HasJsonConversion();
 
             builder.HasOne(c => c.Sector)

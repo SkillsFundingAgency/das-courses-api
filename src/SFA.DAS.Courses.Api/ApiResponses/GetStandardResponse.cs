@@ -16,6 +16,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string Route { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }
+        public List<string> Skills { get; set; }
+        public List<string> Knowledge { get; set; }
         public List<string> Behaviours { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
@@ -39,6 +41,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Route = source.Route,
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
+                Skills = source.Skills,
+                Knowledge = source.Knowledge,
                 Behaviours = source.Behaviours,
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,

@@ -23,6 +23,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                  .Excluding(c => c.Duties)
                  .Excluding(c => c.Keywords)
                  .Excluding(c => c.Skills)
+                 .Excluding(c => c.Knowledge)
                  .Excluding(c => c.Behaviours)
                  .Excluding(c => c.JobRoles)
                  .Excluding(c => c.LarsCode)
@@ -151,6 +152,30 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Version.Should().Be(0);
+        }
+
+        [Test, AutoData]
+        public void Then_All_Skills_Are_Mapped(ImportTypes.Standard standard)
+        {
+            //Arrange
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Skills.Should().BeEquivalentTo(standard.Skills.Select(c => c.Detail));
+        }
+
+        [Test, AutoData]
+        public void Then_All_Knowledge_Is_Mapped(ImportTypes.Standard standard)
+        {
+            //Arrange
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Knowledge.Should().BeEquivalentTo(standard.Knowledge.Select(c => c.Detail));
         }
 
         [Test, AutoData]
