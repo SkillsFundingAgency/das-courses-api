@@ -16,6 +16,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string Route { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }
+        public List<string> Behaviours { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
         public decimal SectorSubjectAreaTier2 { get ; set ; }
@@ -38,6 +39,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Route = source.Route,
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
+                Behaviours = source.Behaviours,
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
