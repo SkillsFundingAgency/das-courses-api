@@ -189,5 +189,20 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Assert
             actual.Behaviours.Should().BeEquivalentTo(standard.Behaviours.Select(c => c.Detail));
         }
+
+        [Test, AutoData]
+        public void Then_Mappings_Cope_With_Null_Sources(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Knowledge = null;
+            standard.Behaviours = null;
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Knowledge.Should().BeEmpty();
+            actual.Behaviours.Should().BeEmpty();
+        }
     }
 }

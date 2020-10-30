@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public List<Knowledge> Knowledge { get; set; } = new List<Knowledge>();
 
         [JsonProperty("behaviours")]
-        public List<Behaviour> Behaviours { get; set; }
+        public List<Behaviour> Behaviours { get; set; } = new List<Behaviour>();
 
         [JsonProperty("integratedDegree")]
         public string IntegratedDegree { get; set; }
