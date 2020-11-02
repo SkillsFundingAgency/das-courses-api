@@ -12,7 +12,7 @@ variables:
     value: 'release'
   - group: "ESFA - SonarCloud"
   - name: sonarCloudProjectKey
-    value: "SkillsFundingAgency_das-coursedelivery-api"    
+    value: "SkillsFundingAgency_das-courses-api"    
 
 resources:
   repositories:
