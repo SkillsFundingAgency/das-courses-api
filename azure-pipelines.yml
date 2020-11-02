@@ -4,7 +4,8 @@ trigger:
     include:
       - "*"
 
-pr: none
+pr:
+  - master
 
 variables:
   - group: 'Prod Management Resources'
