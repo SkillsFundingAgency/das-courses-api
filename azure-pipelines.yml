@@ -38,6 +38,7 @@ jobs:
 
   - task: SonarCloudPrepare@1
     displayName: 'Prepare SonarCloud analysis configuration'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
     inputs:
       SonarCloud: "$(SonarCloudConnectionId)"
       organization: "$(SonarCloudOrganisationKey)"
@@ -74,9 +75,11 @@ jobs:
 
   - task: SonarCloudAnalyze@1
     displayName: 'Run SonarCloud analysis'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
       
   - task: SonarCloudPublish@1
     displayName: 'Publish SonarCloud analysis results on build summary'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
     inputs:
       pollingTimeoutSec: '300'
 
