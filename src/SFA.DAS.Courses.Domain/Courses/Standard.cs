@@ -6,6 +6,7 @@ namespace SFA.DAS.Courses.Domain.Courses
     public class Standard
     {
         public int Id { get; set; }
+        public float? SearchScore { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
         public decimal Version { get; set; }
@@ -29,6 +30,7 @@ namespace SFA.DAS.Courses.Domain.Courses
             return new Standard
             {
                 Id = source.Id,
+                SearchScore = source.SearchScore,
                 Title = source.Title,
                 Level = source.Level,
                 Version = source.Version,

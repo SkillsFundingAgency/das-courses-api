@@ -7,6 +7,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
     public class GetStandardResponse
     {
         public int Id { get; set; }
+        public float? SearchScore { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
         public decimal Version { get; set; }
@@ -30,6 +31,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
             return new GetStandardResponse
             {
                 Id = source.Id,
+                SearchScore = source.SearchScore,
                 Title = source.Title,
                 Level = source.Level,
                 Version = source.Version,
