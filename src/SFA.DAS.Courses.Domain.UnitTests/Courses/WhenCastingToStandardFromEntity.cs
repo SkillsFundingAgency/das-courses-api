@@ -20,6 +20,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c=>c.RouteId)
                 .Excluding(x=>x.Sector)
                 .Excluding(x=>x.SearchScore)
+                .Excluding(standard => standard.RegulatedBody)
             );
 
             response.Route.Should().Be(source.Sector.Route);
