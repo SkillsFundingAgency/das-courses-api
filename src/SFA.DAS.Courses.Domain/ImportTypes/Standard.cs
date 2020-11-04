@@ -54,6 +54,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("coreAndOptions")]
         public bool CoreAndOptions { get ; set ; }
+
+        [JsonProperty("regulatedBody")] 
+        public string RegulatedBody { get; set; }
     }
     
     public class Skill
