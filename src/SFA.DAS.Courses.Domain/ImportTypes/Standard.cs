@@ -21,10 +21,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("level")]
         public int Level { get; set; }
-        
+
         [JsonProperty("route")]
         public string Route { get; set; }
-        
+
         [JsonIgnore]
         public Guid RouteId { get; set; }
 
@@ -40,6 +40,12 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("skills")]
         public List<Skill> Skills { get; set; }
 
+        [JsonProperty("knowledges")]
+        public List<Knowledge> Knowledge { get; set; } = new List<Knowledge>();
+
+        [JsonProperty("behaviours")]
+        public List<Behaviour> Behaviours { get; set; } = new List<Behaviour>();
+
         [JsonProperty("integratedDegree")]
         public string IntegratedDegree { get; set; }
 
@@ -48,7 +54,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("standardPageUrl")]
         public Uri StandardPageUrl { get; set; }
-        
+
         [JsonProperty("duties")]
         public List<Duty> Duties { get; set; }
 
@@ -66,7 +72,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("detail")]
         public string Detail { get; set; }
     }
-    
+
     public class Duty
     {
         [JsonProperty("dutyID")]
@@ -92,5 +98,23 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("criteriaForMeasuringPerformance")]
         public string CriteriaForMeasuringPerformance { get; set; }
+    }
+
+    public class Behaviour
+    {
+        [JsonProperty("behaviourId")]
+        public string BehaviourId { get; set; }
+
+        [JsonProperty("detail")]
+        public string Detail { get; set; }
+    }
+
+    public class Knowledge
+    {
+        [JsonProperty("knowledgeId")]
+        public string KnowledgeId { get; set; }
+
+        [JsonProperty("detail")]
+        public string Detail { get; set; }
     }
 }

@@ -40,6 +40,9 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Keywords = standard.Keywords.Any() ? string.Join("|", standard.Keywords) : null,
                 RouteId = standard.RouteId,
                 RegulatedBody = standard.RegulatedBody
+                Skills = standard.Skills?.Select(x => x.Detail).ToList() ?? new List<string>(),
+                Knowledge = standard.Knowledge?.Select(x => x.Detail).ToList() ?? new List<string>(),
+                Behaviours = standard.Behaviours?.Select(x => x.Detail).ToList() ?? new List<string>(),
             };
         }
 
