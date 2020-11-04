@@ -19,7 +19,8 @@
                 Sector = standard.Sector,
                 TypicalJobTitles = standard.TypicalJobTitles,
                 Version = standard.Version,
-                Keywords = standard.Keywords
+                Keywords = standard.Keywords,
+                RegulatedBody = standard.RegulatedBody
             };
         }
     }
