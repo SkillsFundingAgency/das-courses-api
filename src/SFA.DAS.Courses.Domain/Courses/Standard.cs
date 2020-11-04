@@ -15,6 +15,9 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string Route { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }
+        public List<string> Skills { get; set; }
+        public List<string> Knowledge { get; set; }
+        public List<string> Behaviours { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
 
@@ -39,6 +42,9 @@ namespace SFA.DAS.Courses.Domain.Courses
                 Route = source.Sector.Route,
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
+                Skills = source.Skills,
+                Knowledge = source.Knowledge,
+                Behaviours = source.Behaviours,
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFunding)c).ToList(),

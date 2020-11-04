@@ -26,6 +26,7 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Include(c=>c.Sector)
                 .Include(c=>c.ApprenticeshipFunding)
                 .Include(c=>c.LarsStandard)
+                .ThenInclude(c=>c.SectorSubjectArea)
                 .ToListAsync();
             
             return result;

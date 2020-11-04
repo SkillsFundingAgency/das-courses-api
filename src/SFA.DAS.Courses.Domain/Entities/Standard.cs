@@ -19,7 +19,10 @@
                 Sector = standard.Sector,
                 TypicalJobTitles = standard.TypicalJobTitles,
                 Version = standard.Version,
-                Keywords = standard.Keywords
+                Keywords = standard.Keywords,
+                Skills = standard.Skills,
+                Knowledge = standard.Knowledge,
+                Behaviours = standard.Behaviours,
             };
         }
     }
