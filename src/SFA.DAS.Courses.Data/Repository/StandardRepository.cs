@@ -58,6 +58,7 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Include(c=>c.Sector)
                 .Include(c=>c.ApprenticeshipFunding)
                 .Include(c=>c.LarsStandard)
+                .ThenInclude(c=>c.SectorSubjectArea)
                 .SingleOrDefaultAsync(c=>c.Id.Equals(id));
 
             if (standard == null)
@@ -85,7 +86,8 @@ namespace SFA.DAS.Courses.Data.Repository
                 .FilterAvailableToStart()
                 .Include(c => c.Sector)
                 .Include(c => c.ApprenticeshipFunding)
-                .Include(c => c.LarsStandard);
+                .Include(c => c.LarsStandard)
+                .ThenInclude(c=>c.SectorSubjectArea);
                 
 
             return await standards.ToListAsync();
