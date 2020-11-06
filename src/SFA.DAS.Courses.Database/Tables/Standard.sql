@@ -11,7 +11,7 @@
 	[CoreSkillsCount] VARCHAR(MAX) NULL,
 	[StandardPageUrl] VARCHAR(500) NOT NULL,
 	[Version] DECIMAL NULL,
-  [RegulatedBody] VARCHAR(MAX) NULL,
+  [RegulatedBody] VARCHAR(1000) NULL,
   [Skills] NVARCHAR(MAX) NULL, 
   [Knowledge] NVARCHAR(MAX) NULL, 
 	[Behaviours] NVARCHAR(MAX) NULL, 
