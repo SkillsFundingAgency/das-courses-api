@@ -19,17 +19,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
             {
                 new Int32Field(nameof(SearchableStandard.Id), source.Id, Field.Store.YES),
                 // phrase
-                new TextField(SearchableStandard.TitlePhrase, source.Title, Field.Store.NO) {Boost = 25.0f},
-                new TextField(SearchableStandard.TypicalJobTitlesPhrase, source.TypicalJobTitles, Field.Store.NO) {Boost = 20.0f},
-                new TextField(SearchableStandard.KeywordsPhrase, source.Keywords, Field.Store.NO) {Boost = 1.6f},
+                new TextField(SearchableStandard.TitlePhrase, source.Title, Field.Store.NO) {Boost = 1000f},
+                new TextField(SearchableStandard.TypicalJobTitlesPhrase, source.TypicalJobTitles, Field.Store.NO) {Boost = 500f},
+                new TextField(SearchableStandard.KeywordsPhrase, source.Keywords, Field.Store.NO) {Boost = 100f},
                 // term
-                new TextField(SearchableStandard.TitleTerm, source.Title, Field.Store.NO) {Boost = 12.0f},
-                new TextField(SearchableStandard.TypicalJobTitlesTerm, source.TypicalJobTitles, Field.Store.NO) {Boost = 10.0f},
-                new TextField(SearchableStandard.KeywordsTerm, source.Keywords, Field.Store.NO) {Boost = 1.5f},
-                // soundex
-                new TextField(SearchableStandard.TitleSoundex, source.Title, Field.Store.NO) {Boost = 0.04f},
-                new TextField(SearchableStandard.TypicalJobTitlesSoundex, source.TypicalJobTitles, Field.Store.NO) {Boost = 0.02f},
-                new TextField(SearchableStandard.KeywordsSoundex, source.Keywords, Field.Store.NO) {Boost = 0.01f}
+                new TextField(SearchableStandard.TitleTerm, source.Title, Field.Store.NO) {Boost = 40f},
+                new TextField(SearchableStandard.TypicalJobTitlesTerm, source.TypicalJobTitles, Field.Store.NO) {Boost = 20f},
+                new TextField(SearchableStandard.KeywordsTerm, source.Keywords, Field.Store.NO) ,
+                // ngram
+                new TextField(SearchableStandard.TitleNGram, source.Title, Field.Store.NO) {Boost = 10f},
             };
 
             var searchable = new SearchableStandard(source);
@@ -47,17 +45,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
             {
                 new Int32Field(nameof(SearchableStandard.Id), source.Id, Field.Store.YES),
                 // phrase
-                new TextField(SearchableStandard.TitlePhrase, "", Field.Store.NO) {Boost = 25.0f},
-                new TextField(SearchableStandard.TypicalJobTitlesPhrase, "", Field.Store.NO) {Boost = 20.0f},
-                new TextField(SearchableStandard.KeywordsPhrase, "", Field.Store.NO) {Boost = 1.6f},
+                new TextField(SearchableStandard.TitlePhrase, "", Field.Store.NO) {Boost = 1000f},
+                new TextField(SearchableStandard.TypicalJobTitlesPhrase, "", Field.Store.NO) {Boost = 500f},
+                new TextField(SearchableStandard.KeywordsPhrase, "", Field.Store.NO) {Boost = 100f},
                 // term
-                new TextField(SearchableStandard.TitleTerm, "", Field.Store.NO) {Boost = 12.0f},
-                new TextField(SearchableStandard.TypicalJobTitlesTerm, "", Field.Store.NO) {Boost = 10.0f},
-                new TextField(SearchableStandard.KeywordsTerm, "", Field.Store.NO) {Boost = 1.5f},
+                new TextField(SearchableStandard.TitleTerm, "", Field.Store.NO) {Boost = 40f},
+                new TextField(SearchableStandard.TypicalJobTitlesTerm, "", Field.Store.NO) {Boost = 20f},
+                new TextField(SearchableStandard.KeywordsTerm, "", Field.Store.NO),
                 // soundex
-                new TextField(SearchableStandard.TitleSoundex, "", Field.Store.NO) {Boost = 0.04f},
-                new TextField(SearchableStandard.TypicalJobTitlesSoundex, "", Field.Store.NO) {Boost = 0.02f},
-                new TextField(SearchableStandard.KeywordsSoundex, "", Field.Store.NO) {Boost = 0.01f}
+                new TextField(SearchableStandard.TitleNGram, "", Field.Store.NO) {Boost = 10f}
             };
 
             var searchable = new SearchableStandard(source);

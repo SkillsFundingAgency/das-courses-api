@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Analysis.TokenAttributes;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
@@ -22,6 +25,8 @@ namespace SFA.DAS.Courses.Data.Search
         {
             searchTerm = searchTerm.ToLowerInvariant().Trim();
 
+            var ngramSearchTerms = TokenizeQuery(new EdgeNGramAnalyzer(), searchTerm);
+
             var boolQuery = new BooleanQuery();
             
             //phrase
@@ -29,16 +34,18 @@ namespace SFA.DAS.Courses.Data.Search
             boolQuery.Add(new PhraseQuery{new Term(SearchableStandard.TypicalJobTitlesPhrase, searchTerm)}, Occur.SHOULD);
             boolQuery.Add(new PhraseQuery{new Term(SearchableStandard.KeywordsPhrase, searchTerm)}, Occur.SHOULD);
 
+            //term
             foreach (var term in searchTerm.Split(' ', StringSplitOptions.RemoveEmptyEntries))
             {
-                //term
                 boolQuery.Add(new TermQuery(new Term(SearchableStandard.TitleTerm, term)), Occur.SHOULD);
                 boolQuery.Add(new TermQuery(new Term(SearchableStandard.TypicalJobTitlesTerm, term)), Occur.SHOULD);
                 boolQuery.Add(new TermQuery(new Term(SearchableStandard.KeywordsTerm, term)), Occur.SHOULD);
-                //soundex
-                boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.TitleSoundex, term)), Occur.SHOULD);
-                boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.TypicalJobTitlesSoundex, term)), Occur.SHOULD);
-                boolQuery.Add(new FuzzyQuery(new Term(SearchableStandard.KeywordsSoundex, term)), Occur.SHOULD);
+            }
+
+            //ngram
+            foreach (var term in ngramSearchTerms)
+            {
+                boolQuery.Add(new TermQuery(new Term(SearchableStandard.TitleNGram, term)), Occur.SHOULD);
             }
 
             var directory = _directoryFactory.GetDirectory();
@@ -59,6 +66,20 @@ namespace SFA.DAS.Courses.Data.Search
                 TotalCount = topDocs.TotalHits,
                 Standards = results
             };
+        }
+
+        private IEnumerable<string> TokenizeQuery(Analyzer analyzer, string query)
+        {
+            var result = new List<string>();
+
+            using TokenStream tokenStream = analyzer.GetTokenStream(null, new StringReader(query));
+            tokenStream.Reset();
+            while (tokenStream.IncrementToken())
+            {
+                result.Add(tokenStream.GetAttribute<ICharTermAttribute>().ToString());
+            }
+
+            return result;
         }
     }
 }
