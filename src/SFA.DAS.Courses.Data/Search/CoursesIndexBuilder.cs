@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using J2N.Collections.Generic;
+﻿using J2N.Collections.Generic;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Miscellaneous;
-using Lucene.Net.Analysis.NGram;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
@@ -29,16 +27,19 @@ namespace SFA.DAS.Courses.Data.Search
         {
             var standardAnalyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
             var pipeAnalyzer = new PipeAnalyzer();
+            var ngramAnalyzer = new EdgeNGramAnalyzer();
             var fieldAnalyzers = new Dictionary<string, Analyzer>
             {
                 //phrase
                 {SearchableStandard.TitlePhrase, pipeAnalyzer},
                 {SearchableStandard.TypicalJobTitlesPhrase, pipeAnalyzer},
                 {SearchableStandard.KeywordsPhrase, pipeAnalyzer},
-                //soundex
-                {SearchableStandard.TitleSoundex, standardAnalyzer},
-                {SearchableStandard.TypicalJobTitlesSoundex, standardAnalyzer},
-                {SearchableStandard.KeywordsSoundex, standardAnalyzer}
+                //term
+                {SearchableStandard.TitleTerm, standardAnalyzer},
+                {SearchableStandard.TypicalJobTitlesTerm, standardAnalyzer},
+                {SearchableStandard.KeywordsTerm, standardAnalyzer},
+                //ngram
+                {SearchableStandard.TitleNGram, ngramAnalyzer}
             };
             var perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer, fieldAnalyzers);
 

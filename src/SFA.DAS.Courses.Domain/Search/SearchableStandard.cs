@@ -23,7 +23,7 @@ namespace SFA.DAS.Courses.Domain.Search
         
         private const string PhraseSuffix = "Phrase";
         private const string TermSuffix = "Term";
-        private const string SoundexSuffix = "Soundex";
+        private const string NGramSuffix = "NGram";
 
         // phrase
         public static string TitlePhrase => $"{nameof(Standard.Title)}-{PhraseSuffix}";
@@ -33,10 +33,9 @@ namespace SFA.DAS.Courses.Domain.Search
         public static string TitleTerm => $"{nameof(Standard.Title)}-{TermSuffix}";
         public static string TypicalJobTitlesTerm => $"{nameof(Standard.TypicalJobTitles)}-{TermSuffix}";
         public static string KeywordsTerm => $"{nameof(Standard.Keywords)}-{TermSuffix}";
-        // soundex
-        public static string TitleSoundex => $"{nameof(Standard.Title)}-{SoundexSuffix}";
-        public static string TypicalJobTitlesSoundex => $"{nameof(Standard.TypicalJobTitles)}-{SoundexSuffix}";
-        public static string KeywordsSoundex => $"{nameof(Standard.Keywords)}-{SoundexSuffix}";
+        // n-gram
+        public static string TitleNGram => $"{nameof(Standard.Title)}-{NGramSuffix}";
+
 
         public  IEnumerable<IIndexableField> GetFields()
         {
@@ -44,17 +43,15 @@ namespace SFA.DAS.Courses.Domain.Search
             {
                 new Int32Field(nameof(Id), Id, Field.Store.YES),
                 // phrase
-                new TextField(TitlePhrase, Title ?? "", Field.Store.NO) {Boost = 25.0f},
-                new TextField(TypicalJobTitlesPhrase, TypicalJobTitles ?? "", Field.Store.NO) {Boost = 20.0f},
-                new TextField(KeywordsPhrase, Keywords ?? "", Field.Store.NO) {Boost = 1.6f},
+                new TextField(TitlePhrase, Title ?? "", Field.Store.NO) {Boost = 1000f},
+                new TextField(TypicalJobTitlesPhrase, TypicalJobTitles ?? "", Field.Store.NO) {Boost = 500f},
+                new TextField(KeywordsPhrase, Keywords ?? "", Field.Store.NO) {Boost = 100f},
                 // term
-                new TextField(TitleTerm, Title ?? "", Field.Store.NO) {Boost = 12.0f},
-                new TextField(TypicalJobTitlesTerm, TypicalJobTitles ?? "", Field.Store.NO) {Boost = 10.0f},
-                new TextField(KeywordsTerm, Keywords ?? "", Field.Store.NO) {Boost = 1.5f},
-                // soundex
-                new TextField(TitleSoundex, Title ?? "", Field.Store.NO) {Boost = 0.04f},
-                new TextField(TypicalJobTitlesSoundex, TypicalJobTitles ?? "", Field.Store.NO) {Boost = 0.02f},
-                new TextField(KeywordsSoundex, Keywords ?? "", Field.Store.NO) {Boost = 0.01f}
+                new TextField(TitleTerm, Title ?? "", Field.Store.NO) {Boost = 40f},
+                new TextField(TypicalJobTitlesTerm, TypicalJobTitles ?? "", Field.Store.NO) {Boost = 20f},
+                new TextField(KeywordsTerm, Keywords ?? "", Field.Store.NO),
+                // ngram
+                new TextField(TitleNGram, Title ?? "", Field.Store.NO) {Boost = 10f}
             };
         }
     }
