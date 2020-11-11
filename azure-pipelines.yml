@@ -4,12 +4,16 @@ trigger:
     include:
       - "*"
 
-pr: none
+pr:
+  - master
 
 variables:
   - group: 'Prod Management Resources'
   - name: buildConfiguration
     value: 'release'
+  - group: "ESFA - SonarCloud"
+  - name: sonarCloudProjectKey
+    value: "SkillsFundingAgency_das-courses-api"    
 
 resources:
   repositories:
@@ -32,6 +36,16 @@ jobs:
     inputs:
       configFilePath: GitVersion.yml
       updateAssemblyInfo: true
+
+  - task: SonarCloudPrepare@1
+    displayName: 'Prepare SonarCloud analysis configuration'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+    inputs:
+      SonarCloud: "$(SonarCloudConnectionId)"
+      organization: "$(SonarCloudOrganisationKey)"
+      scannerMode: 'MSBuild'
+      projectName: "$(Build.DefinitionName)"
+      projectKey: "$(sonarCloudProjectKey)"      
 
   - task: DotNetCoreCLI@2
     displayName: Restore
@@ -59,6 +73,16 @@ jobs:
       command: test
       projects: '**/*.AcceptanceTests.csproj'
       arguments: '--configuration $(buildConfiguration) --no-build'
+
+  - task: SonarCloudAnalyze@1
+    displayName: 'Run SonarCloud analysis'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+      
+  - task: SonarCloudPublish@1
+    displayName: 'Publish SonarCloud analysis results on build summary'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+    inputs:
+      pollingTimeoutSec: '300'
 
   - template: azure-pipelines-templates/dependency-check.yml@das-platform-building-blocks
 

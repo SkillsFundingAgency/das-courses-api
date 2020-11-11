@@ -1,41 +1,37 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
+    <ProjectGuid>F89B4688-2BBF-4114-BB20-7CAB7E7FA0E8</ProjectGuid>
   </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="FluentAssertions" Version="5.10.3" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.5" />
-      <PackageReference Include="Nunit" Version="3.12.0" />
-      <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-      <PackageReference Include="SpecFlow" Version="3.3.30" />
-      <PackageReference Include="SpecFlow.NUnit" Version="3.3.30" />
-      <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.3.30" />
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.5" />
+    <PackageReference Include="Nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
+    <PackageReference Include="SpecFlow" Version="3.3.30" />
+    <PackageReference Include="SpecFlow.NUnit" Version="3.3.30" />
+    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.3.30" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Courses.Api\SFA.DAS.Courses.Api.csproj" />
   </ItemGroup>
-
-    <ItemGroup>
-        <SpecFlowFeatureFiles Update="Features\Sectors.feature">
-          <LastGenOutput>Sectors.feature.cs</LastGenOutput>
-          <Generator>SpecFlowSingleFileGenerator</Generator>
-        </SpecFlowFeatureFiles>
-        <SpecFlowFeatureFiles Update="Features\Levels.feature">
-          <LastGenOutput>Levels.feature.cs</LastGenOutput>
-          <Generator>SpecFlowSingleFileGenerator</Generator>
-        </SpecFlowFeatureFiles>
-        <SpecFlowFeatureFiles Update="Features\Standards.feature">
-            <Generator>SpecFlowSingleFileGenerator</Generator>
-            <LastGenOutput>Standards.feature.cs</LastGenOutput>
-        </SpecFlowFeatureFiles>
-    </ItemGroup>
-
+  <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\Sectors.feature">
+      <LastGenOutput>Sectors.feature.cs</LastGenOutput>
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\Levels.feature">
+      <LastGenOutput>Levels.feature.cs</LastGenOutput>
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\Standards.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Standards.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+  </ItemGroup>
 </Project>

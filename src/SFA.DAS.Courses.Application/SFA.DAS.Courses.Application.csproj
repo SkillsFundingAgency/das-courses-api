@@ -1,13 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-      <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ProjectGuid>9817A4FE-9D15-4C14-B798-D5717E70CCC1</ProjectGuid>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="MediatR" Version="8.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
   </ItemGroup>

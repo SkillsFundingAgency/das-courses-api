@@ -1,16 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Lucene.Net" Version="4.8.0-beta00008" />
-        <PackageReference Include="Lucene.Net.Analysis.Phonetic" Version="4.8.0-beta00008" />
-        <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.5.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
-    </ItemGroup>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ProjectGuid>A644BCD7-58DE-49BB-93C9-6D9439A2D051</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00008" />
+    <PackageReference Include="Lucene.Net.Analysis.Phonetic" Version="4.8.0-beta00008" />
+    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
+  </ItemGroup>
 </Project>
