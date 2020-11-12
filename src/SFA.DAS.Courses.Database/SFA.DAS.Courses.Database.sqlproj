@@ -57,6 +57,9 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables\" />
+    <Folder Include="Schemas" />
+    <Folder Include="Versioning" />
+    <Folder Include="Versioning\Tables" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\ApprenticeshipFunding.sql" />
@@ -74,5 +77,9 @@
     <Build Include="Tables\Sector_Import.sql" />
     <Build Include="Tables\Standard.sql" />
     <Build Include="Tables\Standard_Import.sql" />
+    <Build Include="Versioning\Tables\Standard_Staging.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Schemas\Versioning.sql" />
   </ItemGroup>
 </Project>
