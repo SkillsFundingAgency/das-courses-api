@@ -40,5 +40,23 @@ namespace SFA.DAS.Courses.Api.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        [Route("standards")]
+        public async Task<IActionResult> LoadStandards()
+        {
+            try
+            {
+                _logger.LogInformation("Standards import request received");
+                await _mediator.Send(new ImportStandardsCommand());
+                _logger.LogInformation("Standards import completed successfully");
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Data import failed");
+                return BadRequest();
+            }
+        }
     }
 }

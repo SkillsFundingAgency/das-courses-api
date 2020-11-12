@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.Azure.Services.AppAuthentication;
+﻿using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Courses.Data.Configuration;
+using SFA.DAS.Courses.Data.Configuration.Versioning;
 using SFA.DAS.Courses.Domain.Configuration;
 
 namespace SFA.DAS.Courses.Data
@@ -26,6 +25,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
+        DbSet<Domain.Entities.Versioning.StandardStaging> StandardStaging { get; set; } 
         int SaveChanges();
     }
     
@@ -48,6 +48,7 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
+        public DbSet<Domain.Entities.Versioning.StandardStaging> StandardStaging { get; set; }
 
         private readonly CoursesConfiguration _configuration;
         private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
@@ -101,6 +102,7 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new FrameworkFundingImport());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2Import());
+            modelBuilder.ApplyConfiguration(new StandardStagingConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
