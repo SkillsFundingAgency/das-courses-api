@@ -38,6 +38,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                     .Excluding(std=>std.LarsStandard)
                     .Excluding(std=>std.RouteId)
                     .Excluding(std=>std.SearchScore)
+                    .Excluding(std => std.RegulatedBody)
                 );
         }
 
@@ -59,6 +60,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                     .Excluding(std=>std.LarsStandard)
                     .Excluding(std=>std.RouteId)
                     .Excluding(std=>std.SearchScore)
+                    .Excluding(std => std.RegulatedBody)
             );
         }
 

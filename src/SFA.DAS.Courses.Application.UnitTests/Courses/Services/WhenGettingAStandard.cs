@@ -33,6 +33,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(c=>c.Sector)
                 .Excluding(c=>c.RouteId)
                 .Excluding(c=>c.SearchScore)
+                .Excluding(c => c.RegulatedBody)
             );
 
             standard.Route.Should().Be(standardFromRepo.Sector.Route);

@@ -11,10 +11,11 @@
 	[CoreSkillsCount] VARCHAR(MAX) NULL,
 	[StandardPageUrl] VARCHAR(500) NOT NULL,
 	[Version] DECIMAL NULL,
-    [Skills] NVARCHAR(MAX) NULL, 
-    [Knowledge] NVARCHAR(MAX) NULL, 
+  [RegulatedBody] VARCHAR(1000) NULL,
+  [Skills] NVARCHAR(MAX) NULL, 
+  [Knowledge] NVARCHAR(MAX) NULL, 
 	[Behaviours] NVARCHAR(MAX) NULL, 
-    CONSTRAINT [AK_Standard_Column] UNIQUE ([Id])
+  CONSTRAINT [AK_Standard_Column] UNIQUE ([Id])
 )
 GO
 

@@ -20,6 +20,7 @@
                 TypicalJobTitles = standard.TypicalJobTitles,
                 Version = standard.Version,
                 Keywords = standard.Keywords,
+                RegulatedBody = standard.RegulatedBody,
                 Skills = standard.Skills,
                 Knowledge = standard.Knowledge,
                 Behaviours = standard.Behaviours,
