@@ -40,6 +40,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                     .Excluding(standard => standard.SearchScore)
                     .Excluding(standard => standard.Sector)
                     .Excluding(standard => standard.RouteId)
+                    .Excluding(standard => standard.RegulatedBody)
                 );
             
             foreach (var standard in result)
@@ -84,7 +85,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                     .Excluding(standard => standard.ApprenticeshipFunding)
                     .Excluding(standard => standard.SearchScore)
                     .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId));
+                    .Excluding(standard => standard.RouteId)
+                    .Excluding(standard => standard.RegulatedBody));
         }
         
         [Test, RecursiveMoqAutoData]
@@ -124,7 +126,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                     .Excluding(standard => standard.ApprenticeshipFunding)
                     .Excluding(standard => standard.LarsStandard)
                     .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId));
+                    .Excluding(standard => standard.RouteId)
+                    .Excluding(standard => standard.RegulatedBody));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -151,7 +154,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                     .Excluding(standard => standard.ApprenticeshipFunding)
                     .Excluding(standard => standard.LarsStandard)
                     .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId));
+                    .Excluding(standard => standard.RouteId)
+                    .Excluding(standard => standard.RegulatedBody));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -181,6 +185,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(standard => standard.LarsStandard)
                 .Excluding(standard => standard.Sector)
                 .Excluding(standard => standard.RouteId)
+                .Excluding(standard => standard.RegulatedBody)
                 .WithStrictOrdering());
         }
     }
