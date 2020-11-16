@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Domain.Courses
 {
@@ -28,6 +29,8 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string SectorSubjectAreaTier2Description { get ; set ; }
         public bool OtherBodyApprovalRequired { get; set; }
         public string ApprovalBody { get; set; }
+        public List<Duty> Duties { get; set; }
+        public bool CoreAndOptions { get; set; }
 
         public static implicit operator Standard(Entities.Standard source)
         {
@@ -42,7 +45,6 @@ namespace SFA.DAS.Courses.Domain.Courses
                 Keywords = source.Keywords,
                 Route = source.Sector.Route,
                 TypicalJobTitles = source.TypicalJobTitles,
-                CoreSkillsCount = source.CoreSkillsCount,
                 Skills = source.Skills,
                 Knowledge = source.Knowledge,
                 Behaviours = source.Behaviours,
@@ -53,7 +55,9 @@ namespace SFA.DAS.Courses.Domain.Courses
                 SectorSubjectAreaTier2 = source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Description = source.LarsStandard.SectorSubjectArea.Name,
                 OtherBodyApprovalRequired = source.LarsStandard.OtherBodyApprovalRequired,
-                ApprovalBody = source.RegulatedBody
+                ApprovalBody = source.RegulatedBody,
+                Duties = source.Duties,
+                CoreAndOptions = source.CoreAndOptions
             };
         }
     }

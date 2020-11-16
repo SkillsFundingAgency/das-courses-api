@@ -29,7 +29,6 @@ namespace SFA.DAS.Courses.Domain.Entities
             return new StandardImport
             {
                 Id = standard.LarsCode,
-                CoreSkillsCount = coreSkillsCount,
                 IntegratedDegree = standard.IntegratedDegree,
                 Level = standard.Level,
                 OverviewOfRole = standard.OverviewOfRole,
@@ -43,6 +42,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Skills = standard.Skills?.Select(x => x.Detail).ToList() ?? new List<string>(),
                 Knowledge = standard.Knowledge?.Select(x => x.Detail).ToList() ?? new List<string>(),
                 Behaviours = standard.Behaviours?.Select(x => x.Detail).ToList() ?? new List<string>(),
+                Duties = standard.Duties.Any() ? standard.Duties : new List<Duty>(),
+                CoreAndOptions = standard.CoreAndOptions
             };
         }
 

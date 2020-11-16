@@ -8,13 +8,14 @@
     [RouteId] UNIQUEIDENTIFIER NOT NULL,
 	[Keywords] VARCHAR(MAX) NULL,
 	[TypicalJobTitles] VARCHAR(MAX) NULL,
-	[CoreSkillsCount] VARCHAR(MAX) NULL,
 	[StandardPageUrl] VARCHAR(500) NOT NULL,
 	[Version] DECIMAL NULL,
   [RegulatedBody] VARCHAR(1000) NULL,
   [Skills] NVARCHAR(MAX) NULL, 
   [Knowledge] NVARCHAR(MAX) NULL, 
   [Behaviours] NVARCHAR(MAX) NULL,
-  CONSTRAINT [AK_StandardImport_Column] UNIQUE ([Id])
+  [Duties] NVARCHAR(MAX) NULL, 
+    [CoreAndOptions] BIT NOT NULL DEFAULT 0, 
+    CONSTRAINT [AK_StandardImport_Column] UNIQUE ([Id])
 )
 GO
