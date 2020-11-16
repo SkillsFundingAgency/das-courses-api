@@ -74,7 +74,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Skills.Should().BeEquivalentTo(standard.Skills.Select(c => c.Detail));
+            actual.Skills.Should().BeEquivalentTo(standard.Skills);
         }
 
         [Test, AutoData]
