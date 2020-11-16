@@ -45,7 +45,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
         }
 
         [Test, MoqAutoData]
-        public async Task And_Has_Keyword_And_No_Results_Then_Logs(
+        public async Task And_Has_Keyword_And_No_Other_Filters_And_No_Results_Then_Logs(
             int count,
             GetStandardsListQuery query,
             [Frozen] Mock<ILogger<GetStandardsListQueryHandler>> mockLogger,
@@ -53,11 +53,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             GetStandardsListQueryHandler handler)
         {
             var standards = new List<Standard>();
+            query.Levels = new List<int>();
+            query.RouteIds = new List<Guid>();
             mockStandardsService
                 .Setup(service => service.GetStandardsList(
                     query.Keyword, 
-                    query.RouteIds,
-                    query.Levels,
+                    It.Is<List<Guid>>(c=>c.Count == 0),
+                    It.Is<List<int>>(c=>c.Count == 0),
                     query.OrderBy))
                 .ReturnsAsync(standards);
             mockStandardsService
