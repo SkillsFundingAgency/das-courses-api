@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
 
             if (standards.Count == 0 && !string.IsNullOrWhiteSpace(request.Keyword) && request.RouteIds.Count == 0 && request.Levels.Count == 0)
             {
-                _logger.LogInformation($"Zero results for searching by keyword [{request.Keyword}]");
+                _logger.LogInformation($"Zero results for searching by keyword [{request.Keyword}]", new {request.Keyword});
             }
 
             return new GetStandardsListResult
