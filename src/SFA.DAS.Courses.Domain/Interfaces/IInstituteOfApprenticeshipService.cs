@@ -8,5 +8,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     {
         Task<IEnumerable<Standard>> GetStandards();
         Task<IEnumerable<T>> GetStandards<T>();
+        Task<Dictionary<string, string>> GetStandardDocuments();
     }
 }

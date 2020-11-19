@@ -58,5 +58,23 @@ namespace SFA.DAS.Courses.Api.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        [Route("standard/documents")]
+        public async Task<IActionResult> LoadStandardDocuments()
+        {
+            try
+            {
+                _logger.LogInformation("Standards import request received");
+                await _mediator.Send(new ImportStandardDocumentsCommand());
+                _logger.LogInformation("Standards import completed successfully");
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Document import failed");
+                throw;
+            }
+        }
     }
 }
