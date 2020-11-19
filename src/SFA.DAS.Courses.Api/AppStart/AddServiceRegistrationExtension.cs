@@ -54,6 +54,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ISectorSubjectAreaTier2Repository, SectorSubjectAreaTier2Repository>();
             services.AddTransient<ISectorSubjectAreaTier2ImportRepository, SectorSubjectAreaTier2ImportRepository>();
             services.AddTransient<IStandardStagingRepository, StandardStagingRepository>();
+            services.AddTransient<IStandardDocumentRepository, StandardDocumentRepository>(); 
         }
     }
 }
