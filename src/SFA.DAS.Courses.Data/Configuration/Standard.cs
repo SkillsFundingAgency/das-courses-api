@@ -46,6 +46,7 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.Ignore(x => x.SearchScore);
+            builder.Ignore(x => x.CoreDuties);
 
             builder.HasIndex(x => x.Id).IsUnique();
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -9,21 +8,12 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
         {
-            string coreSkillsCount = null;
+            string coreDuties = null;
 
             if (standard.Duties.Any() && standard.Skills.Any())
             {
-                if (standard.CoreAndOptions)
-                {
-                    var mappedSkillsList = GetMappedSkillsList(standard);
-                    coreSkillsCount = GetSkillDetailFromMappedCoreSkill(standard, mappedSkillsList);
-                }
-                else
-                {
-                    coreSkillsCount = string.Join("|", 
-                        standard.Skills
-                        .Select(s => s.Detail));
-                }
+                var mappedSkillsList = GetMappedSkillsList(standard);
+                coreDuties = GetSkillDetailFromMappedCoreSkill(standard, mappedSkillsList);
             }
 
             return new StandardImport
@@ -39,11 +29,12 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Keywords = standard.Keywords.Any() ? string.Join("|", standard.Keywords) : null,
                 RouteId = standard.RouteId,
                 RegulatedBody = standard.RegulatedBody,
-                Skills = standard.Skills.Any() ? standard.Skills : new List<Skill>(),
+                Skills = standard.Skills?.Select(x => x.Detail).ToList() ?? new List<string>(),
                 Knowledge = standard.Knowledge?.Select(x => x.Detail).ToList() ?? new List<string>(),
                 Behaviours = standard.Behaviours?.Select(x => x.Detail).ToList() ?? new List<string>(),
-                Duties = standard.Duties.Any() ? standard.Duties : new List<Duty>(),
-                CoreAndOptions = standard.CoreAndOptions
+                Duties = standard.Duties?.Select(x => x.DutyDetail).ToList() ?? new List<string>(),
+                CoreAndOptions = standard.CoreAndOptions,
+                CoreDuties = coreDuties
             };
         }
 

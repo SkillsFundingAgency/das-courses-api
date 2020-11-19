@@ -24,7 +24,8 @@
                 Knowledge = standard.Knowledge,
                 Behaviours = standard.Behaviours,
                 Duties = standard.Duties,
-                CoreAndOptions = standard.CoreAndOptions
+                CoreAndOptions = standard.CoreAndOptions,
+                CoreDuties = standard.CoreDuties
             };
         }
     }

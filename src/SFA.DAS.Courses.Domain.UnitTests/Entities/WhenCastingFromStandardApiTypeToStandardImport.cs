@@ -53,6 +53,53 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown(ImportTypes.Standard standard, string detail, string skillId, Duty duty)
+        {
+            // Arrange	
+            standard.Skills.Add(new Skill
+            {
+                Detail = detail,
+                SkillId = skillId.Substring(7),
+            }
+            );
+
+            duty.MappedSkills = new List<Guid> { Guid.Parse(skillId.Substring(7)) };
+            duty.IsThisACoreDuty = 1;
+            standard.Duties.Add(duty);
+
+            //Act	
+            var actual = (StandardImport)standard;
+
+            //Assert	
+            actual.CoreDuties.Should().Be(detail);
+        }
+
+        [Test, AutoData]
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Mapped_In_Same_Order_As_Skills_List(ImportTypes.Standard standard)
+        {
+            //Arrange	
+            foreach (var skill in standard.Skills)
+            {
+                foreach (var duty in standard.Duties)
+                {
+                    var random = new Random();
+                    if (random.Next(2) == 1)
+                    {
+                        duty.IsThisACoreDuty = 1;
+                        duty.MappedSkills.Add(Guid.Parse(skill.SkillId.Substring(7)));
+                    }
+                }
+            }
+
+            //Act	
+            var actual = (StandardImport)standard;
+            standard.Skills.RemoveAll(s => !actual.CoreDuties.Contains(s.Detail));
+
+            //Assert           	
+            Assert.AreEqual(standard.Skills.Select(s => s.Detail), actual.CoreDuties);
+        }
+
+        [Test, AutoData]
         public void Then_If_The_Version_Is_Null_It_Is_Set_As_Zero(ImportTypes.Standard standard)
         {
             //Arrange
@@ -74,7 +121,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Skills.Should().BeEquivalentTo(standard.Skills);
+            actual.Skills.Should().BeEquivalentTo(standard.Skills.Select(x => x.Detail).ToList());
         }
 
         [Test, AutoData]
@@ -99,6 +146,18 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Behaviours.Should().BeEquivalentTo(standard.Behaviours.Select(c => c.Detail));
+        }
+
+        [Test, AutoData]
+        public void Then_All_Duties_Are_Mapped(ImportTypes.Standard standard)
+        {
+            //Arrange
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Duties.Should().BeEquivalentTo(standard.Duties.Select(c => c.DutyDetail));
         }
 
         [Test, AutoData]

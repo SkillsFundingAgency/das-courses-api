@@ -41,6 +41,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                     .Excluding(std => std.RegulatedBody)
                     .Excluding(std => std.Duties)
                     .Excluding(std => std.CoreAndOptions)
+                    .Excluding(std => std.CoreDuties)
                 );
         }
 
@@ -65,6 +66,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                     .Excluding(std => std.RegulatedBody)
                     .Excluding(std => std.Duties)
                     .Excluding(std => std.CoreAndOptions)
+                    .Excluding(std => std.CoreDuties)
             );
         }
 
