@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Standard = SFA.DAS.Courses.Domain.Courses.Standard;
+using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
