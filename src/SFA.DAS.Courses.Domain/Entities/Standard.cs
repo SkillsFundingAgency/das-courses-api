@@ -9,7 +9,6 @@
             return new Standard
             {
                 Id = standard.Id,
-                CoreSkillsCount = standard.CoreSkillsCount,
                 IntegratedDegree = standard.IntegratedDegree,
                 Level = standard.Level,
                 OverviewOfRole = standard.OverviewOfRole,
@@ -24,6 +23,9 @@
                 Skills = standard.Skills,
                 Knowledge = standard.Knowledge,
                 Behaviours = standard.Behaviours,
+                Duties = standard.Duties,
+                CoreAndOptions = standard.CoreAndOptions,
+                CoreDuties = standard.CoreDuties
             };
         }
     }

@@ -53,59 +53,31 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_Are_Mapped_If_The_CoreAndOptions_Is_False(ImportTypes.Standard standard)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown(ImportTypes.Standard standard, string detail, string skillId, Duty duty)
         {
-            //Arrange
-            standard.CoreAndOptions = false;            
-
-            //Act
-            var actual = (StandardImport)standard;
-
-            //Assert
-            actual.CoreSkillsCount.Should().Be(string.Join("|", standard.Skills.Select(c => c.Detail)));
-        }
-
-        [Test, AutoData]
-        public void Then_All_Skills_Are_Mapped_In_Same_Order_As_Skills_List_If_The_CoreAndOptions_Is_False(ImportTypes.Standard standard)
-        {
-            //Arrange
-            standard.CoreAndOptions = false;            
-
-            //Act
-            var actual = (StandardImport)standard;
-
-            //Assert
-            Assert.AreEqual(standard.Skills.Select(s => s.Detail), actual.CoreSkillsCount.Split("|").ToList());
-        }
-
-        [Test, AutoData]
-        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown_If_The_CoreAndOptions_Is_True(ImportTypes.Standard standard, string detail, string skillId, Duty duty)
-        {
-            // Arrange
-            standard.CoreAndOptions = true;
+            // Arrange	
             standard.Skills.Add(new Skill
-                {
-                    Detail = detail,
-                    SkillId = skillId.Substring(7),
-                }
+            {
+                Detail = detail,
+                SkillId = skillId.Substring(7),
+            }
             );
 
             duty.MappedSkills = new List<Guid> { Guid.Parse(skillId.Substring(7)) };
             duty.IsThisACoreDuty = 1;
-            standard.Duties.Add(duty);      
+            standard.Duties.Add(duty);
 
-            //Act
+            //Act	
             var actual = (StandardImport)standard;
 
-            //Assert
-            actual.CoreSkillsCount.Should().Be(detail);
+            //Assert	
+            actual.CoreDuties.Should().Be(detail);
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Mapped_In_Same_Order_As_Skills_List_If_The_CoreAndOptions_Is_True(ImportTypes.Standard standard)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Mapped_In_Same_Order_As_Skills_List(ImportTypes.Standard standard)
         {
-            //Arrange
-            standard.CoreAndOptions = true;
+            //Arrange	
             foreach (var skill in standard.Skills)
             {
                 foreach (var duty in standard.Duties)
@@ -119,26 +91,12 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 }
             }
 
-            //Act
+            //Act	
             var actual = (StandardImport)standard;
-            var coreSkillsCountList = actual.CoreSkillsCount.IsNullOrEmpty() ? new List<string>() : actual.CoreSkillsCount.Split("|").ToList();
-            standard.Skills.RemoveAll(s => !coreSkillsCountList.Contains(s.Detail));
+            standard.Skills.RemoveAll(s => !actual.CoreDuties.Contains(s.Detail));
 
-            //Assert           
-            Assert.AreEqual(standard.Skills.Select(s => s.Detail), coreSkillsCountList);
-        }
-
-        [Test, AutoData]
-        public void Then_No_Skills_Are_Mapped_If_No_Skill_Data_Available(ImportTypes.Standard standard)
-        {
-            // Arrange
-            standard.Skills = new List<Skill> { };
-            
-            // Act
-            var actual = (StandardImport)standard;
-
-            // Assert
-            actual.CoreSkillsCount.Should().Be(null);
+            //Assert           	
+            Assert.AreEqual(standard.Skills.Select(s => s.Detail), actual.CoreDuties);
         }
 
         [Test, AutoData]
@@ -163,7 +121,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Skills.Should().BeEquivalentTo(standard.Skills.Select(c => c.Detail));
+            actual.Skills.Should().BeEquivalentTo(standard.Skills.Select(x => x.Detail).ToList());
         }
 
         [Test, AutoData]
@@ -188,6 +146,18 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Behaviours.Should().BeEquivalentTo(standard.Behaviours.Select(c => c.Detail));
+        }
+
+        [Test, AutoData]
+        public void Then_All_Duties_Are_Mapped(ImportTypes.Standard standard)
+        {
+            //Arrange
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Duties.Should().BeEquivalentTo(standard.Duties.Select(c => c.DutyDetail));
         }
 
         [Test, AutoData]

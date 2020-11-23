@@ -19,17 +19,19 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.OverviewOfRole).HasColumnName("OverviewOfRole").IsRequired();
             builder.Property(x => x.RouteId).HasColumnName("RouteId").HasColumnType("uniqueidentifier").IsRequired();
             builder.Property(x => x.TypicalJobTitles).HasColumnName("TypicalJobTitles");
-            builder.Property(x => x.CoreSkillsCount).HasColumnName("CoreSkillsCount");
             builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
             builder.Property(x => x.Keywords).HasColumnName("Keywords");
             builder.Property(x => x.RegulatedBody).HasColumnName("RegulatedBody").HasColumnType("varchar").HasMaxLength(1000).IsRequired(false);
             builder.Property(x => x.Skills).HasJsonConversion();
             builder.Property(x => x.Knowledge).HasJsonConversion();
             builder.Property(x => x.Behaviours).HasJsonConversion();
+            builder.Property(x => x.Duties).HasJsonConversion();
+            builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
 
             builder.Ignore(x => x.Sector);
             builder.Ignore(x => x.ApprenticeshipFunding);
             builder.Ignore(x => x.LarsStandard);
+            builder.Ignore(x => x.CoreDuties);
 
             builder.HasIndex(x => x.Id).IsUnique();
         }

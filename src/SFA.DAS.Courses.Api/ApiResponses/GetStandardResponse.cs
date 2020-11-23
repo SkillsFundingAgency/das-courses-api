@@ -29,6 +29,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public StandardDatesResponse StandardDates { get ; set ; }
         public bool OtherBodyApprovalRequired { get; set; }
         public string ApprovalBody { get; set; }
+        public List<string> Duties { get; set; }
+        public bool CoreAndOptions { get; set; }
+        public string CoreDuties { get; set; }
 
         public static implicit operator GetStandardResponse(Standard source)
         {
@@ -54,7 +57,10 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description,
                 OtherBodyApprovalRequired = source.OtherBodyApprovalRequired,
-                ApprovalBody = source.ApprovalBody
+                ApprovalBody = source.ApprovalBody,
+                Duties = source.Duties,
+                CoreAndOptions = source.CoreAndOptions,
+                CoreDuties = source.CoreDuties
             };
         }
     }

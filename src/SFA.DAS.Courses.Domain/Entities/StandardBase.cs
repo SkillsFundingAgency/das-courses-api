@@ -14,7 +14,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public Guid RouteId { get; set; }
         public string Keywords { get; set; }
         public string TypicalJobTitles { get; set; }
-        public string CoreSkillsCount { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
         public string RegulatedBody { get; set; }
@@ -23,5 +22,8 @@ namespace SFA.DAS.Courses.Domain.Entities
         public List<string> Skills { get; set; }
         public List<string> Knowledge { get; set; }
         public List<string> Behaviours { get; set; }
+        public List<string> Duties { get; set; }
+        public bool CoreAndOptions { get; set; }
+        public string CoreDuties { get; set; }
     }
 }

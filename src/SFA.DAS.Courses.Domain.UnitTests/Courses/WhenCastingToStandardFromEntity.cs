@@ -18,9 +18,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c=>c.ApprenticeshipFunding)
                 .Excluding(c=>c.LarsStandard)
                 .Excluding(c=>c.RouteId)
-                .Excluding(x=>x.Sector)
-                .Excluding(x=>x.SearchScore)
-                .Excluding(standard => standard.RegulatedBody)
+                .Excluding(c=>c.Sector)
+                .Excluding(c=>c.SearchScore)
+                .Excluding(c => c.RegulatedBody)
+                .Excluding(c => c.CoreDuties)
             );
 
             response.Route.Should().Be(source.Sector.Route);
