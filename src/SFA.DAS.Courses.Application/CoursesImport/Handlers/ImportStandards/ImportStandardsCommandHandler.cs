@@ -24,8 +24,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
 
             var stagedStandards = importedStandards.Select(s => (StandardStaging)s).ToList();
 
-            standardStagingRepository.DeleteAll();
-
             await standardStagingRepository.InsertMany(stagedStandards);
 
             return Unit.Value;

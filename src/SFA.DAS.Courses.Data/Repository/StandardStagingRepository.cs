@@ -16,14 +16,10 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task InsertMany(IEnumerable<StandardStaging> standardsStaging)
         {
+            coursesDataContext.StandardStaging.RemoveRange(coursesDataContext.StandardStaging);
+
             await coursesDataContext.StandardStaging.AddRangeAsync(standardsStaging);
 
-            coursesDataContext.SaveChanges();
-        }
-
-        public void DeleteAll()
-        {
-            coursesDataContext.StandardStaging.RemoveRange(coursesDataContext.StandardStaging);
             coursesDataContext.SaveChanges();
         }
     }
