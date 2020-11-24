@@ -164,7 +164,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Only_ImportedStandards_With_A_LarsCode_And_ApprovedForDelivery_Status_Are_Imported(
+        public async Task Then_Only_ImportedStandards_With_A_LarsCode_Are_Imported(
             int wrongStatusLarsCode,
             List<StandardImport> standardImportsEntity,
             Domain.ImportTypes.Standard apiStandard1,
@@ -194,12 +194,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             importRepository.Verify(x=>
                 x.InsertMany(It.Is<List<StandardImport>>(c=>
-                    c.Count.Equals(apiImportStandards.Count-2))), Times.Once);
+                    c.Count.Equals(apiImportStandards.Count-1))), Times.Once);
 
         }
         
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Only_The_Latest_Version__Of_ImportedStandards_With_A_LarsCode_And_ApprovedForDelivery_Status_Are_Imported(
+        public async Task Then_Only_The_Latest_Version_Of_ImportedStandards_With_A_LarsCode_Are_Imported(
             int wrongStatusLarsCode,
             List<StandardImport> standardImportsEntity,
             Domain.ImportTypes.Standard apiStandard1,
@@ -223,6 +223,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             apiImportStandards.Add(apiStandard1);
             apiStandard2.LarsCode = wrongStatusLarsCode;
             apiStandard2.Status = "Some Other Status";
+            apiStandard2.Version = 1.1m;
             apiImportStandards.Add(apiStandard2);
             apiStandard3.LarsCode = apiStandard4.LarsCode;
             apiStandard3.Status = "Approved for Delivery";
@@ -239,7 +240,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             importRepository.Verify(x=>
                 x.InsertMany(It.Is<List<StandardImport>>(c=>
-                    c.Count.Equals(apiImportStandards.Count-3) && c.TrueForAll(c=>c.Version.Equals(1.1m)))), Times.Once);
+                    c.Count.Equals(apiImportStandards.Count-2) && c.TrueForAll(c=>c.Version.Equals(1.1m)))), Times.Once);
 
         }
 

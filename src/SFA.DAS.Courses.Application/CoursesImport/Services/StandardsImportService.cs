@@ -92,14 +92,15 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
             
             _standardImportRepository.DeleteAll();
+            var standardsImport = standards
+                .Where(c => c!=null && c.LarsCode > 0
+                )
+                .GroupBy(c=>c.LarsCode)
+                .Select(c=>c.OrderByDescending(x=>x.Version).FirstOrDefault())
+                .Select(c => (StandardImport) c)
+                .ToList();
             await _standardImportRepository.InsertMany(
-                standards
-                    .Where(c => c!=null && c.LarsCode > 0
-                            && c.Status.Equals("Approved for Delivery", StringComparison.CurrentCultureIgnoreCase))
-                    .GroupBy(c=>c.LarsCode)
-                    .Select(c=>c.OrderByDescending(x=>x.Version).FirstOrDefault())
-                    .Select(c => (StandardImport) c)
-                    .ToList());
+                standardsImport);
         }
 
         private async Task GetAndInsertSectors(List<Domain.ImportTypes.Standard> standards)
