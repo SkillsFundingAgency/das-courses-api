@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace SFA.DAS.Courses.Domain.ImportTypes.Versioning
 {
@@ -36,6 +35,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Versioning
 
         public List<string> JobRoles { get; set; } = new List<string>();
 
+        public string AssessmentPlanUrl { get; set; }
+
         public string SSA1 { get; set; }
 
         public string SSA2 { get; set; }
@@ -56,7 +57,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Versioning
 
         public List<string> TypicalJobTitles { get; set; } = new List<string>();
 
-        public Uri? StandardPageUrl { get; set; }
+        public string StandardPageUrl { get; set; }
 
         public List<Duty> Duties { get; set; } = new List<Duty>();
 

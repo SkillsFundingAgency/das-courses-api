@@ -27,6 +27,7 @@ namespace SFA.DAS.Courses.Data.Configuration.Versioning
             builder.Property(x => x.MaxFunding).HasColumnName(nameof(StandardStaging.MaxFunding)).HasColumnType("smallmoney");
             builder.Property(x => x.Route).HasColumnName(nameof(StandardStaging.Route)).HasColumnType("varchar").HasMaxLength(500);
             builder.Property(x => x.Keywords).HasColumnName(nameof(StandardStaging.Keywords)).HasJsonConversion();
+            builder.Property(x => x.AssessmentPlanUrl).HasColumnName(nameof(StandardStaging.AssessmentPlanUrl)).HasColumnType("varchar").HasMaxLength(500);
             builder.Property(x => x.SSA1).HasColumnName(nameof(StandardStaging.SSA1)).HasColumnType("varchar").HasMaxLength(500);
             builder.Property(x => x.SSA2).HasColumnName(nameof(StandardStaging.SSA2)).HasColumnType("varchar").HasMaxLength(500);
             builder.Property(x => x.StandardInformation).HasColumnName(nameof(StandardStaging.StandardInformation));
@@ -35,7 +36,7 @@ namespace SFA.DAS.Courses.Data.Configuration.Versioning
             builder.Property(x => x.Skills).HasColumnName(nameof(StandardStaging.Skills)).HasJsonConversion();
             builder.Property(x => x.Options).HasColumnName(nameof(StandardStaging.Options)).HasJsonConversion();
             builder.Property(x => x.OptionsUnstructuredTemplate).HasColumnName(nameof(StandardStaging.OptionsUnstructuredTemplate)).HasJsonConversion();
-            builder.Property(x => x.IntegratedApprenticehsip).HasColumnName(nameof(StandardStaging.IntegratedApprenticehsip)).HasColumnType("bit");
+            builder.Property(x => x.IntegratedApprenticeship).HasColumnName(nameof(StandardStaging.IntegratedApprenticeship)).HasColumnType("bit");
             builder.Property(x => x.IntegratedDegree).HasColumnName(nameof(StandardStaging.IntegratedDegree)).HasColumnType("varchar").HasMaxLength(100);
             builder.Property(x => x.CoreAndOptions).HasColumnName(nameof(StandardStaging.CoreAndOptions)).HasColumnType("bit");
             builder.Property(x => x.TypicalJobTitles).HasColumnName(nameof(StandardStaging.TypicalJobTitles)).HasJsonConversion();
