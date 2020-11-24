@@ -7,5 +7,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     public interface IStandardStagingRepository
     {
         Task InsertMany(IEnumerable<StandardStaging> standardsStaging);
+        Task<IEnumerable<StandardStaging>> GetAll();
     }
 }

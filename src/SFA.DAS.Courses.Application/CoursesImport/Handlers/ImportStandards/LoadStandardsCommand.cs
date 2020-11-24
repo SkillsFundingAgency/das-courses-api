@@ -2,5 +2,5 @@
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
 {
-    public class ImportStandardsCommand : IRequest<Unit> { }
+    public class LoadStandardsCommand : IRequest<Unit> { }
 }

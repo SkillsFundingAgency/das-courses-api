@@ -9,7 +9,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 {
     [ApiVersion("1.0")]
     [ApiController]
-    [Route("/ops/dataload/")]
+    [Route("ops")]
     public class DataLoadController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -24,7 +24,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
         
         [HttpPost]
-        [Route("")]
+        [Route("dataload")]
         public async Task<IActionResult> Index()
         {
             try
@@ -42,14 +42,14 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpPost]
-        [Route("standards")]
-        public async Task<IActionResult> LoadStandards()
+        [Route("import/standards")]
+        public async Task<IActionResult> ImportStandards()
         {
             try
             {
                 _logger.LogInformation("Standards import request received");
                 await _mediator.Send(new ImportStandardsCommand());
-                _logger.LogInformation("Standards import completed successfully");
+                _logger.LogInformation("Standards import request completed successfully");
                 return NoContent();
             }
             catch (Exception e)
@@ -60,7 +60,25 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpPost]
-        [Route("standard/documents")]
+        [Route("load/standards")]
+        public async Task<IActionResult> LoadStandards()
+        {
+            try
+            {
+                _logger.LogInformation("Standards load request received");
+                await _mediator.Send(new LoadStandardsCommand());
+                _logger.LogInformation("Standards load request completed successfully");
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Data load failed");
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("import/standards/documents")]
         public async Task<IActionResult> LoadStandardDocuments()
         {
             try
