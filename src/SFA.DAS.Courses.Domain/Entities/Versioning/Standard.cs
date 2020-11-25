@@ -51,35 +51,5 @@ namespace SFA.DAS.Courses.Domain.Entities.Versioning
             TypicalJobTitles = importedStandard.TypicalJobTitles,
             StandardPageUrl = importedStandard.StandardPageUrl
         };
-
-        //public void Update(Standard importedStandard)
-        //{
-        //    LarsCode = importedStandard.LarsCode;
-        //    ReferenceNumber = importedStandard.ReferenceNumber;
-        //    Title = importedStandard.Title;
-        //    Status = importedStandard.Status;
-        //    Version = importedStandard.Version;
-        //    EarlierStartDate = importedStandard.EarlierStartDate;
-        //    LatestStartDate = importedStandard.LatestStartDate;
-        //    LatestEndDate = importedStandard.LatestEndDate;
-        //    OverviewOfRole = importedStandard.OverviewOfRole;
-        //    Level = importedStandard.Level;
-        //    TypicalDuration = importedStandard.TypicalDuration;
-        //    MaxFunding = importedStandard.MaxFunding;
-        //    Route = importedStandard.Route;
-        //    Keywords = importedStandard.Keywords;
-        //    SSA1 = importedStandard.SSA1;
-        //    SSA2 = importedStandard.SSA2;
-        //    Knowledges = importedStandard.Knowledges;
-        //    Behaviours = importedStandard.Behaviours;
-        //    Skills = importedStandard.Skills;
-        //    Options = importedStandard.Options;
-        //    OptionsUnstructuredTemplate = importedStandard.OptionsUnstructuredTemplate;
-        //    IntegratedApprenticeship = importedStandard.IntegratedApprenticeship;
-        //    IntegratedDegree = importedStandard.IntegratedDegree;
-        //    CoreAndOptions = importedStandard.CoreAndOptions;
-        //    TypicalJobTitles = importedStandard.TypicalJobTitles;
-        //    StandardPageUrl = importedStandard.StandardPageUrl;
-        //}
     }
 }
