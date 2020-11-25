@@ -2,7 +2,6 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using SFA.DAS.Courses.Data.Configuration;
 using SFA.DAS.Courses.Data.Configuration.Versioning;
 using SFA.DAS.Courses.Domain.Configuration;
 
@@ -25,7 +24,9 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
-        DbSet<Domain.Entities.Versioning.StandardStaging> StandardStaging { get; set; } 
+        DbSet<Domain.Entities.Versioning.StandardStaging> StandardStaging { get; set; }
+        DbSet<Domain.Entities.Versioning.Standard> VersioningStandard { get; set; }
+        DbSet<Domain.Entities.Versioning.StandardAdditionalInformation> VersioningStandardAdditionalInformation { get; set; }
         int SaveChanges();
     }
     
@@ -49,6 +50,9 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
         public DbSet<Domain.Entities.Versioning.StandardStaging> StandardStaging { get; set; }
+        public DbSet<Domain.Entities.Versioning.Standard> VersioningStandard { get; set; }
+        public DbSet<Domain.Entities.Versioning.StandardAdditionalInformation> VersioningStandardAdditionalInformation { get; set; }
+
 
         private readonly CoursesConfiguration _configuration;
         private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
@@ -87,23 +91,8 @@ namespace SFA.DAS.Courses.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new Standard());
-            modelBuilder.ApplyConfiguration(new StandardImport());
-            modelBuilder.ApplyConfiguration(new ImportAudit());
-            modelBuilder.ApplyConfiguration(new Sector());
-            modelBuilder.ApplyConfiguration(new SectorImport());
-            modelBuilder.ApplyConfiguration(new ApprenticeshipFunding());
-            modelBuilder.ApplyConfiguration(new ApprenticeshipFundingImport());
-            modelBuilder.ApplyConfiguration(new LarsStandard());
-            modelBuilder.ApplyConfiguration(new LarsStandardImport());
-            modelBuilder.ApplyConfiguration(new Framework());
-            modelBuilder.ApplyConfiguration(new FrameworkImport());
-            modelBuilder.ApplyConfiguration(new FrameworkFunding());
-            modelBuilder.ApplyConfiguration(new FrameworkFundingImport());
-            modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2());
-            modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2Import());
-            modelBuilder.ApplyConfiguration(new StandardStagingConfiguration());
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(StandardConfiguration).Assembly);
         }
     }
 }

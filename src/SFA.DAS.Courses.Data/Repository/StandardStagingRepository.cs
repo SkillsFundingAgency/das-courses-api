@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities.Versioning;
 using SFA.DAS.Courses.Domain.Interfaces;
 
@@ -21,6 +22,11 @@ namespace SFA.DAS.Courses.Data.Repository
             await coursesDataContext.StandardStaging.AddRangeAsync(standardsStaging);
 
             coursesDataContext.SaveChanges();
+        }
+
+        public async Task<IEnumerable<StandardStaging>> GetAll()
+        {
+            return await coursesDataContext.StandardStaging.ToListAsync();
         }
     }
 }
