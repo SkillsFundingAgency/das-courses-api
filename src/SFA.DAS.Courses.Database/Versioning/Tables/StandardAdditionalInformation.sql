@@ -6,7 +6,6 @@
     [Knowledges] NVARCHAR(MAX) NULL, 
     [Behaviours] NVARCHAR(MAX) NULL,
     [Skills] NVARCHAR(MAX) NULL, 
-    [Options] NVARCHAR(MAX) NULL,
-    [OptionsUnstructuredTemplate] NVARCHAR(MAX) NULL
+    [Options] NVARCHAR(MAX) NULL
 )
 GO 

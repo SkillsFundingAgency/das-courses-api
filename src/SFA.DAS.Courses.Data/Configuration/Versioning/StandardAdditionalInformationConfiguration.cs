@@ -19,7 +19,6 @@ namespace SFA.DAS.Courses.Data.Configuration.Versioning
             builder.Property(x => x.Behaviours).HasColumnName(nameof(DomainEntities.StandardAdditionalInformation.Behaviours)).HasJsonConversion();
             builder.Property(x => x.Skills).HasColumnName(nameof(DomainEntities.StandardAdditionalInformation.Skills)).HasJsonConversion();
             builder.Property(x => x.Options).HasColumnName(nameof(DomainEntities.StandardAdditionalInformation.Options)).HasJsonConversion();
-            builder.Property(x => x.OptionsUnstructuredTemplate).HasColumnName(nameof(DomainEntities.StandardAdditionalInformation.OptionsUnstructuredTemplate)).HasJsonConversion();
         }
     }
 }

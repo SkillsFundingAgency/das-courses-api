@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Courses.Domain.Entities.Versioning
 {
@@ -11,7 +12,6 @@ namespace SFA.DAS.Courses.Domain.Entities.Versioning
         public List<string> Behaviours { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Options { get; set; }
-        public List<string> OptionsUnstructuredTemplate { get; set; }
 
         public static implicit operator StandardAdditionalInformation(StandardStaging importedStandard) => new StandardAdditionalInformation
         {
@@ -21,8 +21,7 @@ namespace SFA.DAS.Courses.Domain.Entities.Versioning
             Knowledges = importedStandard.Knowledges,
             Behaviours = importedStandard.Behaviours,
             Skills = importedStandard.Skills,
-            Options = importedStandard.Options,
-            OptionsUnstructuredTemplate = importedStandard.OptionsUnstructuredTemplate
+            Options = importedStandard.Options.Any() ? importedStandard.Options : importedStandard.OptionsUnstructuredTemplate.Any() ? importedStandard.OptionsUnstructuredTemplate : new List<string>()
         };
     }
 }
