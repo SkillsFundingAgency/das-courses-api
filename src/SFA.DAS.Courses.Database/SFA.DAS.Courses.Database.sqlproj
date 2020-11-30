@@ -78,6 +78,8 @@
     <Build Include="Tables\Standard.sql" />
     <Build Include="Tables\Standard_Import.sql" />
     <Build Include="Versioning\Tables\Standard_Staging.sql" />
+    <Build Include="Versioning\Tables\Standard.sql" />
+    <Build Include="Versioning\Tables\StandardAdditionalInformation.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Schemas\Versioning.sql" />
