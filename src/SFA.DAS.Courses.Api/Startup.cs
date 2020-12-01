@@ -17,6 +17,7 @@ using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Courses.Api.AppStart;
+using SFA.DAS.Courses.Api.Filters;
 using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using SFA.DAS.Courses.Data;
@@ -124,12 +125,14 @@ namespace SFA.DAS.Courses.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoursesAPI", Version = "v1" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "CoursesAPI", Version = "v2" });
                 c.SwaggerDoc("operations", new OpenApiInfo { Title = "CoursesAPI operations" });
-                c.OperationFilter<SwaggerVersionHeaderFilter>();
+                c.OperationFilter<SwaggerOperationVersionHeaderFilter>();
             });
             
             services.AddApiVersioning(opt => {
                 opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+                opt.ReportApiVersions = true;
             });
 
             services.AddLogging();
@@ -144,6 +147,7 @@ namespace SFA.DAS.Courses.Api
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoursesAPI v1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "CoursesAPI v2" );
                 c.SwaggerEndpoint("/swagger/operations/swagger.json", "Operations v1");
                 c.RoutePrefix = string.Empty;
             });

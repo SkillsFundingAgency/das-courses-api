@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ProjectGuid>52499A9C-BC56-43C5-B538-F8CF03DA999C</ProjectGuid>
+    <PreserveCompilationContext>false</PreserveCompilationContext>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.1.1" />

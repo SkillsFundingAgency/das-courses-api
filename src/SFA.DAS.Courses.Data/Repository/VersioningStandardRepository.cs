@@ -32,5 +32,10 @@ namespace SFA.DAS.Courses.Data.Repository
 
             coursesDataContext.SaveChanges();
         }
+
+        public async Task<IEnumerable<Standard>> GetAllActiveStandardsSummary()
+        {
+            return await coursesDataContext.VersioningStandard.ToListAsync();
+        }
     }
 }
