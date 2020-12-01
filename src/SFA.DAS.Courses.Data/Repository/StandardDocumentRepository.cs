@@ -21,10 +21,12 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public string SaveDocument(string key, string content)
         {
+            retryPolicy.Execute(_ => standardCollection.FindOneAndDelete(new BsonDocument("_id", key)), new Context(nameof(SaveDocument)));
+
             var document = BsonDocument.Parse(content);
             document.Add(new BsonElement("_id", key));
-            //await retryPolicy.ExecuteAsync(_ => standardCollection.ReplaceOneAsync(new BsonDocument("_id", key), document), new Context(nameof(SaveDocument)));
             retryPolicy.Execute(_ => standardCollection.InsertOne(document), new Context(nameof(SaveDocument)));
+
             return key;
         }
     }
