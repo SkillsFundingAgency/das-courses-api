@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities.Versioning;
@@ -36,6 +38,13 @@ namespace SFA.DAS.Courses.Data.Repository
         public async Task<IEnumerable<Standard>> GetAllActiveStandardsSummary()
         {
             return await coursesDataContext.VersioningStandard.ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> GetOptions(string standardUId)
+        {
+            var standardInfo = await coursesDataContext.VersioningStandardAdditionalInformation.Where(v => v.StandardUId == standardUId).FirstOrDefaultAsync();
+            if (standardInfo == null) throw new ArgumentException("Invalid standardUId");
+            return standardInfo.Options?.ToArray() ?? Array.Empty<string>();
         }
     }
 }
