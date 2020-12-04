@@ -17,9 +17,9 @@ namespace SFA.DAS.Courses.Data.Repository
             this.coursesDataContext = coursesDataContext;
         }
 
-        public async Task<Standard> GetStandardByUId(string standardUId)
+        public Task<Standard> GetStandardByUId(string standardUId)
         {
-            return await coursesDataContext.VersioningStandard.FirstOrDefaultAsync(s => s.StandardUId == standardUId);
+            return coursesDataContext.VersioningStandard.FirstOrDefaultAsync(v => v.StandardUId == standardUId);
         }
 
         public async Task InsertMany(IEnumerable<Standard> standards, IEnumerable<StandardAdditionalInformation> additionalInformation)

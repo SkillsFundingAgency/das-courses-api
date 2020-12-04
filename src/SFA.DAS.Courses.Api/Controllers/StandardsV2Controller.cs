@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Application.Courses.Queries.GetOptions;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandardSummary;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {
@@ -39,6 +39,21 @@ namespace SFA.DAS.Courses.Api.Controllers
             try
             {
                 var result = await _mediator.Send(new GetStandardOptionsQuery(standardUId));
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        [Route("summary")]
+        public async Task<IActionResult> GetStandardSummary(string standardUId)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetStandardSummaryQuery(standardUId));
                 return Ok(result);
             }
             catch (ArgumentException ex)
