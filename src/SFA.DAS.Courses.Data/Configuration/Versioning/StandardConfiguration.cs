@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Data.Configuration.Versioning
             builder.Property(x => x.CoreAndOptions).HasColumnName(nameof(DomainEntities.Standard.CoreAndOptions)).HasColumnType("bit");
             builder.Property(x => x.TypicalJobTitles).HasColumnName(nameof(DomainEntities.Standard.TypicalJobTitles)).HasJsonConversion();
             builder.Property(x => x.StandardPageUrl).HasColumnName(nameof(DomainEntities.Standard.StandardPageUrl)).HasColumnType("varchar").HasMaxLength(500);
-
+            builder.Property(x => x.AssessmentPlanUrl).HasColumnName(nameof(DomainEntities.Standard.AssessmentPlanUrl)).HasColumnType("varchar").HasMaxLength(500);
             builder.HasIndex(x => x.Status);
         }
     }

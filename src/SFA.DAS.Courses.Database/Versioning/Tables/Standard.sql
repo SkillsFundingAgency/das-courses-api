@@ -21,6 +21,7 @@
     [CoreAndOptions] BIT NULL,
     [TypicalJobTitles] VARCHAR(MAX) NULL,
     [StandardPageUrl] VARCHAR(500) NULL, 
+    [AssessmentPlanUrl] VARCHAR(500) NULL, 
     CONSTRAINT [AK_Standard_StandardUId] UNIQUE ([StandardUId])
 )
 GO

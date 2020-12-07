@@ -26,6 +26,7 @@ namespace SFA.DAS.Courses.Domain.Entities.Versioning
         public bool? CoreAndOptions { get; set; }
         public List<string> TypicalJobTitles { get; set; }
         public string StandardPageUrl { get; set; }
+        public string AssessmentPlanUrl { get; set; }
 
         public static implicit operator Standard(StandardStaging importedStandard) => new Standard
         {
@@ -49,7 +50,8 @@ namespace SFA.DAS.Courses.Domain.Entities.Versioning
             IntegratedDegree = importedStandard.IntegratedDegree,
             CoreAndOptions = importedStandard.CoreAndOptions,
             TypicalJobTitles = importedStandard.TypicalJobTitles,
-            StandardPageUrl = importedStandard.StandardPageUrl
+            StandardPageUrl = importedStandard.StandardPageUrl,
+            AssessmentPlanUrl = importedStandard.AssessmentPlanUrl
         };
     }
 }
