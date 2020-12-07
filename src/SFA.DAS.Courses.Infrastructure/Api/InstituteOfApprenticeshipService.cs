@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.Configuration;
+using VersioningEntities = SFA.DAS.Courses.Domain.Entities.Versioning;
 using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.Interfaces;
 
@@ -54,7 +55,7 @@ namespace SFA.DAS.Courses.Infrastructure.Api
                 var serializedContent = SerializeElement(standardElement);
                 var standardReference = standardElement.GetProperty("referenceNumber").GetString();
                 var version = standardElement.GetProperty("version").GetString();
-                documents.Add(GetKey(standardReference, version), serializedContent);
+                documents.Add(VersioningEntities.StandardStaging.GetStandardUId(standardReference, version), serializedContent);
             }
             return documents;
         }
@@ -66,12 +67,6 @@ namespace SFA.DAS.Courses.Infrastructure.Api
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 WriteIndented = false
             });
-        }
-
-        private static string GetKey(string referenceNumber, string version)
-        {
-            if (string.IsNullOrWhiteSpace(version)) version = "xx";
-            return $"{referenceNumber}_{version}"; 
         }
     }
 }

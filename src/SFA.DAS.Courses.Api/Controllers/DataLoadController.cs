@@ -79,7 +79,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpPost]
         [Route("import/standards/documents")]
-        public async Task<IActionResult> LoadStandardDocuments()
+        public async Task<IActionResult> ImportStandardDocuments()
         {
             try
             {

@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Domain.Entities.Versioning
 
         public static implicit operator StandardStaging(ImportTypes.Versioning.Standard importedStandard) => new StandardStaging
         {
-            StandardUId = GetStandardUId(importedStandard.ReferenceNumber.Trim(), importedStandard.Version.Trim()),
+            StandardUId = GetStandardUId(importedStandard.ReferenceNumber, importedStandard.Version),
             LarsCode = importedStandard.LarsCode,
             ReferenceNumber = importedStandard.ReferenceNumber.Trim(),
             Title = importedStandard.Title,
@@ -69,10 +69,10 @@ namespace SFA.DAS.Courses.Domain.Entities.Versioning
             StandardPageUrl = importedStandard.StandardPageUrl
         };
 
-        static string GetStandardUId(string referenceNumber, string version)
+        public static string GetStandardUId(string referenceNumber, string version)
         {
-            var derivedVersion = string.IsNullOrWhiteSpace(version) ? "xx" : version;
-            return $"{referenceNumber}_{derivedVersion}";
+            var derivedVersion = string.IsNullOrWhiteSpace(version) ? "1.0" : version;
+            return $"{referenceNumber.Trim()}_{derivedVersion.Trim()}";
         }
     }
 }
