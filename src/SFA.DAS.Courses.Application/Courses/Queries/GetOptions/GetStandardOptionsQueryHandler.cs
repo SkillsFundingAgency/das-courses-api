@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -17,7 +18,8 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetOptions
         public async Task<GetStandardOptionsResult> Handle(GetStandardOptionsQuery request, CancellationToken cancellationToken)
         {
             var result = new GetStandardOptionsResult() { StandardUId = request.StandardUId};
-            result.Options = await versioningStandardRepository.GetOptions(request.StandardUId);
+            var details = await versioningStandardRepository.GetStandardAdditionalInformation(request.StandardUId);
+            result.Options = details.Options?.ToArray() ?? Array.Empty<string>(); ;
             return result;
         }
     }

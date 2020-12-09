@@ -9,6 +9,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<Standard> GetStandardByUId(string standardUId);
         Task InsertMany(IEnumerable<Standard> standards, IEnumerable<StandardAdditionalInformation> additionalInformation);
         Task<IEnumerable<Standard>> GetAllActiveStandardsSummary();
-        Task<IEnumerable<string>> GetOptions(string standardUId);
+        Task<StandardAdditionalInformation> GetStandardAdditionalInformation(string standardUId);
     }
 }

@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Courses.Api.ApiResponses.Versioning;
 using SFA.DAS.Courses.Application.Courses.Queries.GetOptions;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandardDetail;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardSummary;
 
@@ -41,7 +43,7 @@ namespace SFA.DAS.Courses.Api.Controllers
                 var result = await _mediator.Send(new GetStandardOptionsQuery(standardUId));
                 return Ok(result);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return NotFound();
             }
@@ -56,7 +58,22 @@ namespace SFA.DAS.Courses.Api.Controllers
                 var result = await _mediator.Send(new GetStandardSummaryQuery(standardUId));
                 return Ok(result);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        [Route("detail")]
+        public async Task<IActionResult> GetStandardDetails(string standardUId)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetStandardDetailQuery(standardUId));
+                return Ok((GetStandardDetailResponse)result);
+            }
+            catch (ArgumentException)
             {
                 return NotFound();
             }

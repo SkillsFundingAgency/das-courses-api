@@ -22,6 +22,11 @@ namespace SFA.DAS.Courses.Data.Repository
             return coursesDataContext.VersioningStandard.FirstOrDefaultAsync(v => v.StandardUId == standardUId);
         }
 
+        public Task<StandardAdditionalInformation> GetStandardAdditionalInformation(string standardUId)
+        {
+            return coursesDataContext.VersioningStandardAdditionalInformation.FirstOrDefaultAsync(v => v.StandardUId == standardUId);
+        }
+
         public async Task InsertMany(IEnumerable<Standard> standards, IEnumerable<StandardAdditionalInformation> additionalInformation)
         {
             coursesDataContext.VersioningStandard.RemoveRange(coursesDataContext.VersioningStandard);
@@ -38,13 +43,6 @@ namespace SFA.DAS.Courses.Data.Repository
         public async Task<IEnumerable<Standard>> GetAllActiveStandardsSummary()
         {
             return await coursesDataContext.VersioningStandard.ToListAsync();
-        }
-
-        public async Task<IEnumerable<string>> GetOptions(string standardUId)
-        {
-            var standardInfo = await coursesDataContext.VersioningStandardAdditionalInformation.Where(v => v.StandardUId == standardUId).FirstOrDefaultAsync();
-            if (standardInfo == null) throw new ArgumentException("Invalid standardUId");
-            return standardInfo.Options?.ToArray() ?? Array.Empty<string>();
         }
     }
 }
