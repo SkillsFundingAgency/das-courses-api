@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses.Versioning;
-using SFA.DAS.Courses.Application.Courses.Queries.GetOptions;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardDetail;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardSummary;
@@ -36,12 +35,12 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpGet]
         [Route("options")]
-        public async Task<IActionResult> GetOptions(string standardUId)
+        public async Task<IActionResult> GetStandardOptions(string standardUId)
         {
             try
             {
-                var result = await _mediator.Send(new GetStandardOptionsQuery(standardUId));
-                return Ok(result);
+                var result = await _mediator.Send(new GetStandardDetailQuery(standardUId));
+                return Ok((GetStandardOptionsResponse)result.StandardAdditionalInformation);
             }
             catch (ArgumentException)
             {
