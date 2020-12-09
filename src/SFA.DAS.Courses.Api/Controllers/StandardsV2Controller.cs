@@ -56,7 +56,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             try
             {
                 var result = await _mediator.Send(new GetStandardSummaryQuery(standardUId));
-                return Ok(result);
+                return Ok((GetStandardSummaryResponse)result.Standard);
             }
             catch (ArgumentException)
             {
