@@ -4,8 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses.Versioning;
+using SFA.DAS.Courses.Application.Courses.Queries.GetActiveStandardsSummary;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardDetail;
-using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardSummary;
 
 namespace SFA.DAS.Courses.Api.Controllers
@@ -42,7 +42,7 @@ namespace SFA.DAS.Courses.Api.Controllers
                 var result = await _mediator.Send(new GetStandardDetailQuery(standardUId));
                 return Ok((GetStandardOptionsResponse)result.StandardAdditionalInformation);
             }
-            catch (ArgumentException)
+            catch (ArgumentException) //TODO add exception handler filter
             {
                 return NotFound();
             }

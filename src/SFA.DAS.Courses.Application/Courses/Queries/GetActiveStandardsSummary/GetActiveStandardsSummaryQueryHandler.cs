@@ -3,10 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SFA.DAS.Courses.Domain.Entities.Versioning;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
+namespace SFA.DAS.Courses.Application.Courses.Queries.GetActiveStandardsSummary
 {
     public class GetActiveStandardsSummaryQueryHandler : IRequestHandler<GetActiveStandardsSummaryQuery, GetActiveStandardsSummaryResult>
     {
@@ -27,7 +26,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
                 .Where(c => c.LarsCode > 0 && c.Status.Equals("Approved for Delivery", StringComparison.CurrentCultureIgnoreCase))
                 .GroupBy(c => c.LarsCode)
                 .Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault())
-                .Select(c => (Standard)c);
+                .Select(c => c);
 
             return result;
         }
