@@ -7,7 +7,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardRepository
     {
-        Task<IEnumerable<Standard>> GetAll();
+        Task<IEnumerable<Standard>> GetAll(bool filterAvailableToStart = true);
         Task<int> Count();
         void DeleteAll();
         Task InsertMany(IEnumerable<Standard> standards);
