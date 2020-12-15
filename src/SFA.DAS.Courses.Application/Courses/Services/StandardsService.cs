@@ -45,9 +45,9 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             return standards.Select(standard => (Standard)standard);
         }
 
-        public async Task<int> Count()
+        public async Task<int> Count(bool filterAvailableToStart = true)
         {
-            var count = await _standardsRepository.Count();
+            var count = await _standardsRepository.Count(filterAvailableToStart);
             return count;
         }
 

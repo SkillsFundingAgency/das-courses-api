@@ -14,14 +14,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         [Test, MoqAutoData]
         public async Task Then_Gets_Count_From_Repo(
             int count,
+            bool filterAvailableToStart,
             [Frozen] Mock<IStandardRepository> mockRepository,
             StandardsService service)
         {
             mockRepository
-                .Setup(repository => repository.Count())
+                .Setup(repository => repository.Count(filterAvailableToStart))
                 .ReturnsAsync(count);
 
-            var actual = await service.Count();
+            var actual = await service.Count(filterAvailableToStart);
 
             actual.Should().Be(count);
         }

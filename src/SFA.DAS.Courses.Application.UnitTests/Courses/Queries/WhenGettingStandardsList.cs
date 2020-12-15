@@ -35,7 +35,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.FilterAvailableToStart))
                 .ReturnsAsync(standards);
             mockStandardsService
-                .Setup(service => service.Count())
+                .Setup(service => service.Count(query.FilterAvailableToStart))
                 .ReturnsAsync(count);
 
             var result = await handler.Handle(query, CancellationToken.None);
@@ -65,7 +65,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.FilterAvailableToStart))
                 .ReturnsAsync(standards);
             mockStandardsService
-                .Setup(service => service.Count())
+                .Setup(service => service.Count(query.FilterAvailableToStart))
                 .ReturnsAsync(count);
 
             await handler.Handle(query, CancellationToken.None);
