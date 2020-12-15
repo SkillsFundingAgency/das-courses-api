@@ -25,7 +25,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetAll())
+                .Setup(repository => repository.GetAll(true))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
@@ -69,7 +69,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.Id).Contains(standard.Id))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetAll())
+                .Setup(repository => repository.GetAll(true))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
