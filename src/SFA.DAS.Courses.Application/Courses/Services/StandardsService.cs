@@ -28,11 +28,12 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             string keyword, 
             IList<Guid> routeIds, 
             IList<int> levels,
-            OrderBy orderBy)
+            OrderBy orderBy,
+            bool filterAvailableToStart = true)
         {
             var standards = routeIds.Any() || levels.Any()  ?
                 await _standardsRepository.GetFilteredStandards(routeIds, levels) :
-                await _standardsRepository.GetAll();
+                await _standardsRepository.GetAll(filterAvailableToStart);
 
             if (!string.IsNullOrEmpty(keyword))
             {

@@ -31,7 +31,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.Keyword, 
                     query.RouteIds,
                     query.Levels,
-                    query.OrderBy))
+                    query.OrderBy,
+                    query.FilterAvailableToStart))
                 .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count())
@@ -60,7 +61,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.Keyword, 
                     It.Is<List<Guid>>(c=>c.Count == 0),
                     It.Is<List<int>>(c=>c.Count == 0),
-                    query.OrderBy))
+                    query.OrderBy,
+                    query.FilterAvailableToStart))
                 .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count())

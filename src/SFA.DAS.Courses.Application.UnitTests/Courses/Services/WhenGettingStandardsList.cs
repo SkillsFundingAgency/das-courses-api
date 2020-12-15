@@ -51,6 +51,40 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         }
 
         [Test, RecursiveMoqAutoData]
+        public async Task And_No_Keyword_And_Not_Filtering_By_Available_To_Start_Then_Gets_All_From_Repository(
+            List<Standard> standardsFromRepo,
+            OrderBy orderBy,
+            [Frozen] Mock<IStandardRepository> mockStandardsRepository,
+            [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
+            StandardsService service)
+        {
+            mockStandardsRepository
+                .Setup(repository => repository.GetAll(false))
+                .ReturnsAsync(standardsFromRepo);
+            mockSortOrderService
+                .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
+                .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
+
+            var result = (await service.GetStandardsList("", new List<Guid>(), new List<int>(), orderBy, false)).ToList();
+
+            result.Should().BeEquivalentTo(standardsFromRepo, 
+                config => config
+                    .Excluding(standard => standard.LarsStandard)
+                    .Excluding(standard => standard.ApprenticeshipFunding)
+                    .Excluding(standard => standard.SearchScore)
+                    .Excluding(standard => standard.Sector)
+                    .Excluding(standard => standard.RouteId)
+                    .Excluding(standard => standard.RegulatedBody)
+                    .Excluding(standard => standard.CoreDuties)
+            );
+            
+            foreach (var standard in result)
+            {
+                standard.Route.Should().Be(standardsFromRepo.Single(c => c.Id.Equals(standard.Id)).Sector.Route);
+            }
+        }
+
+        [Test, RecursiveMoqAutoData]
         public async Task And_Has_Keyword_Then_Gets_Standards_From_SearchManager(
             string keyword,
             OrderBy orderBy,
