@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -69,7 +69,7 @@ namespace SFA.DAS.Courses.Data.Repository
             return standard;
         }
 
-        public async Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels)
+        public async Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels, bool filterAvailableToStart = true)
         {
             var standards = _coursesDataContext.Standards.AsQueryable();
 
@@ -83,7 +83,7 @@ namespace SFA.DAS.Courses.Data.Repository
             }
 
             standards = standards
-                .FilterAvailableToStart(true)
+                .FilterAvailableToStart(filterAvailableToStart)
                 .Include(c => c.Sector)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)

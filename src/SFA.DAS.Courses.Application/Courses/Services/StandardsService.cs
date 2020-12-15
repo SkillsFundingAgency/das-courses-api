@@ -32,7 +32,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             bool filterAvailableToStart = true)
         {
             var standards = routeIds.Any() || levels.Any()  ?
-                await _standardsRepository.GetFilteredStandards(routeIds, levels) :
+                await _standardsRepository.GetFilteredStandards(routeIds, levels, filterAvailableToStart) :
                 await _standardsRepository.GetAll(filterAvailableToStart);
 
             if (!string.IsNullOrEmpty(keyword))
