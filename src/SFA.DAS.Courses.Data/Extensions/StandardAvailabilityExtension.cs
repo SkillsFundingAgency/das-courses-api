@@ -10,7 +10,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             if (!filterAvailableToStart)
             {
-                return standards;
+                return standards.Where(ls=>ls.LarsStandard != null);
             }
 
             var filteredStandards = standards.Where(ls => (ls.LarsStandard.LastDateStarts == null

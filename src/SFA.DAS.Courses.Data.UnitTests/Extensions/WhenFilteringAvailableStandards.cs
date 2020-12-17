@@ -182,6 +182,51 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             actual.Count().Should().Be(5);
             actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
         }
+        
+        [Test]
+        public void Then_If_The_FilterAvailableToStart_Param_Is_False_Then_All_Standards_With_Lars_Records_Are_Returned()
+        {
+            //Arrange
+            var sameDate = DateTime.UtcNow;
+            var standards = new List<Standard>
+            {
+                ValidStandard(),
+                new Standard
+                {
+                    Title = "Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = sameDate,
+                        LastDateStarts = sameDate
+                    }
+                },
+                new Standard
+                {
+                    Title = "Not Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = null
+                },
+                new Standard
+                {
+                    Title = "Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = 
+                        new LarsStandard
+                        {
+                            EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
+                            LastDateStarts = DateTime.UtcNow.AddMonths(-1)
+                        }
+                }
+            }.AsQueryable();
+            
+            //Act
+            var actual = standards.FilterAvailableToStart(false);
+
+            //Assert
+            actual.Count().Should().Be(3);
+            actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
+        }
 
         private static Standard ValidStandard()
         {
