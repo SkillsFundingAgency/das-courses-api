@@ -47,9 +47,9 @@ namespace SFA.DAS.Courses.Domain.Entities
                 return result;
             }
 
-            if (standard.Level <= 5)
+            if (standard.Level <= 5 && standard.IntegratedApprenticeship.HasValue)
             {
-                return standard.IntegratedApprenticeship;
+                return standard.IntegratedApprenticeship.Value;
             }
 
             return false;
