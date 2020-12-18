@@ -174,5 +174,48 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.Knowledge.Should().BeEmpty();
             actual.Behaviours.Should().BeEmpty();
         }
+
+        [Test]
+        [InlineAutoData(3, "true", false)]
+        [InlineAutoData(5, "true", false)]
+        [InlineAutoData(6, "true", true)]
+        [InlineAutoData(6, "false", false)]
+        [InlineAutoData(6, "", false)]
+        [InlineAutoData(6, "abc", false)]
+        [InlineAutoData(7, "True", true)]
+        public void Then_If_The_Standard_Is_Level_Six_Or_Above_The_Integrated_Degree_Field_Is_Used_To_Set_The_Standard_As_IntegratedApprenticeship(
+            int level, string integratedDegreeValue, bool expected, ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Level = level;
+            standard.IntegratedDegree = integratedDegreeValue;
+            
+            //Act
+            var actual = (StandardImport) standard;
+
+            //Assert
+            actual.IntegratedApprenticeship.Should().Be(expected);
+        }
+
+        [Test]
+        [InlineAutoData(3, true, true)]
+        [InlineAutoData(4, false, false)]
+        [InlineAutoData(5, true, true)]
+        [InlineAutoData(6, true, false)]
+        [InlineAutoData(6, false, false)]
+        public void Then_If_The_Standard_Is_Level_Five_Or_Below_Then_The_IntegratedApprenticeship_Field_Is_Used_To_Set_The_Standard_As_IntegratedApprenticeship(
+            int level, bool integratedValue, bool expected, ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Level = level;
+            standard.IntegratedApprenticeship = integratedValue;
+            
+            //Act
+            var actual = (StandardImport) standard;
+
+            //Assert
+            actual.IntegratedApprenticeship.Should().Be(expected);
+        }
+        
     }
 }

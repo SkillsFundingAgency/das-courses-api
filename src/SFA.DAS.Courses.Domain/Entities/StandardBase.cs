@@ -25,5 +25,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public string CoreDuties { get; set; }
+        public bool IntegratedApprenticeship { get ; set ; }
     }
 }

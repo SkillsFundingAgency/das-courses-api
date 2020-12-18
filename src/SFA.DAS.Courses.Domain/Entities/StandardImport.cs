@@ -34,8 +34,25 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Behaviours = standard.Behaviours?.Select(x => x.Detail).ToList() ?? new List<string>(),
                 Duties = standard.Duties?.Select(x => x.DutyDetail).ToList() ?? new List<string>(),
                 CoreAndOptions = standard.CoreAndOptions,
-                CoreDuties = coreDuties
+                CoreDuties = coreDuties,
+                IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard)
             };
+        }
+
+        private static bool SetIsIntegratedApprenticeship(Domain.ImportTypes.Standard standard)
+        {
+            if (standard.Level >= 6)
+            {
+                bool.TryParse(standard.IntegratedDegree, out var result);
+                return result;
+            }
+
+            if (standard.Level <= 5)
+            {
+                return standard.IntegratedApprenticeship;
+            }
+
+            return false;
         }
 
         private static IEnumerable<string> GetMappedSkillsList(Domain.ImportTypes.Standard standard)
