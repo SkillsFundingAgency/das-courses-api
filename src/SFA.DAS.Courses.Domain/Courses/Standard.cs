@@ -31,6 +31,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public string CoreDuties { get; set; }
+        public bool IntegratedApprenticeship { get ; set ; }
 
         public static implicit operator Standard(Entities.Standard source)
         {
@@ -58,7 +59,8 @@ namespace SFA.DAS.Courses.Domain.Courses
                 ApprovalBody = source.RegulatedBody,
                 Duties = source.Duties,
                 CoreAndOptions = source.CoreAndOptions,
-                CoreDuties = source.CoreDuties
+                CoreDuties = source.CoreDuties,
+                IntegratedApprenticeship = source.IntegratedApprenticeship
             };
         }
     }
