@@ -15,7 +15,8 @@
     [Knowledge] NVARCHAR(MAX) NULL, 
     [Behaviours] NVARCHAR(MAX) NULL,
     [Duties] NVARCHAR(MAX) NULL, 
-    [CoreAndOptions] BIT NOT NULL DEFAULT 0, 
+    [CoreAndOptions] BIT NOT NULL DEFAULT 0,
+    [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0,
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([Id])
 )
 GO
