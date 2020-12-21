@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Infrastructure.FileHelper
         {
             var directoryInfo = new DirectoryInfo("DataFiles");
 
-            var file = directoryInfo.GetFiles().ToList().OrderByDescending(c => c.CreationTimeUtc).FirstOrDefault();
+            var file = directoryInfo.GetFiles().ToList().OrderByDescending(c => c.Name).FirstOrDefault();
 
             return file?.FullName ?? "";
         }
