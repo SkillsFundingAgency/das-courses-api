@@ -28,11 +28,12 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             string keyword, 
             IList<Guid> routeIds, 
             IList<int> levels,
-            OrderBy orderBy)
+            OrderBy orderBy,
+            bool filterAvailableToStart = true)
         {
             var standards = routeIds.Any() || levels.Any()  ?
-                await _standardsRepository.GetFilteredStandards(routeIds, levels) :
-                await _standardsRepository.GetAll();
+                await _standardsRepository.GetFilteredStandards(routeIds, levels, filterAvailableToStart) :
+                await _standardsRepository.GetAll(filterAvailableToStart);
 
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -44,9 +45,9 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             return standards.Select(standard => (Standard)standard);
         }
 
-        public async Task<int> Count()
+        public async Task<int> Count(bool filterAvailableToStart = true)
         {
-            var count = await _standardsRepository.Count();
+            var count = await _standardsRepository.Count(filterAvailableToStart);
             return count;
         }
 

@@ -7,11 +7,11 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardRepository
     {
-        Task<IEnumerable<Standard>> GetAll();
-        Task<int> Count();
+        Task<IEnumerable<Standard>> GetAll(bool filterAvailableToStart = true);
+        Task<int> Count(bool filterAvailableToStart = true);
         void DeleteAll();
         Task InsertMany(IEnumerable<Standard> standards);
         Task<Standard> Get(int id);
-        Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels);
+        Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels, bool filterAvailableToStart = true);
     }
 }

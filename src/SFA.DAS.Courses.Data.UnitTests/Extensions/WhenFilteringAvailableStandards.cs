@@ -32,7 +32,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
 
             //Act
-            var actual = standards.FilterAvailableToStart();
+            var actual = standards.FilterAvailableToStart(true);
 
             //Assert
             actual.Count().Should().Be(1);
@@ -60,7 +60,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
             
             //Act
-            var actual = standards.FilterAvailableToStart();
+            var actual = standards.FilterAvailableToStart(true);
 
             //Assert
             actual.Count().Should().Be(1);
@@ -88,7 +88,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
             
             //Act
-            var actual = standards.FilterAvailableToStart();
+            var actual = standards.FilterAvailableToStart(true);
 
             //Assert
             actual.Count().Should().Be(1);
@@ -117,10 +117,114 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
             
             //Act
-            var actual = standards.FilterAvailableToStart();
+            var actual = standards.FilterAvailableToStart(true);
 
             //Assert
             actual.Count().Should().Be(1);
+            actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
+        }
+
+        [Test]
+        public void Then_If_The_FilterAvailableToStart_Param_Is_False_Then_All_Standards_Are_Returned()
+        {
+            //Arrange
+            var sameDate = DateTime.UtcNow;
+            var standards = new List<Standard>
+            {
+                ValidStandard(),
+                new Standard
+                {
+                    Title = "Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = sameDate,
+                        LastDateStarts = sameDate
+                    }
+                },
+                new Standard
+                {
+                    Title = "Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
+                        LastDateStarts = DateTime.UtcNow.AddDays(-1)
+                    }
+                },
+                new Standard
+                {
+                    Title = "Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(1),
+                        LastDateStarts = null
+                    }
+                },
+                new Standard
+                {
+                    Title = "Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = 
+                        new LarsStandard
+                        {
+                            EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
+                            LastDateStarts = DateTime.UtcNow.AddMonths(-1)
+                        }
+                }
+            }.AsQueryable();
+            
+            //Act
+            var actual = standards.FilterAvailableToStart(false);
+
+            //Assert
+            actual.Count().Should().Be(5);
+            actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
+        }
+        
+        [Test]
+        public void Then_If_The_FilterAvailableToStart_Param_Is_False_Then_All_Standards_With_Lars_Records_Are_Returned()
+        {
+            //Arrange
+            var sameDate = DateTime.UtcNow;
+            var standards = new List<Standard>
+            {
+                ValidStandard(),
+                new Standard
+                {
+                    Title = "Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = sameDate,
+                        LastDateStarts = sameDate
+                    }
+                },
+                new Standard
+                {
+                    Title = "Not Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = null
+                },
+                new Standard
+                {
+                    Title = "Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    LarsStandard = 
+                        new LarsStandard
+                        {
+                            EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
+                            LastDateStarts = DateTime.UtcNow.AddMonths(-1)
+                        }
+                }
+            }.AsQueryable();
+            
+            //Act
+            var actual = standards.FilterAvailableToStart(false);
+
+            //Assert
+            actual.Count().Should().Be(3);
             actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
         }
 

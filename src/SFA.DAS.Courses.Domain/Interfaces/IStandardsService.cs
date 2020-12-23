@@ -8,8 +8,8 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardsService
     {
-        Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<Guid> routeIds, IList<int> levels, OrderBy orderBy);
-        Task<int> Count();
+        Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<Guid> routeIds, IList<int> levels, OrderBy orderBy, bool filterAvailableToStart = true);
+        Task<int> Count(bool filterAvailableToStart = true);
         Task<Standard> GetStandard(int standardId);
     }
 }

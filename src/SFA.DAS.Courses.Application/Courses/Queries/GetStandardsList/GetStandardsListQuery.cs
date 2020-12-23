@@ -11,5 +11,6 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
         public IList<Guid> RouteIds { get ; set ; }
         public IList<int> Levels { get; set; }
         public OrderBy OrderBy { get; set; }
+        public bool FilterAvailableToStart { get ; set ; }
     }
 }
