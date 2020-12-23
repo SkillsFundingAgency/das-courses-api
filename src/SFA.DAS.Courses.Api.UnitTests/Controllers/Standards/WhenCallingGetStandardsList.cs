@@ -25,6 +25,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             List<int> levels,
             string keyword,
             OrderBy orderBy,
+            bool filterAvailableToStart,
             GetStandardsListResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
@@ -34,12 +35,13 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                     It.Is<GetStandardsListQuery>(query => 
                         query.Keyword == keyword && 
                         query.RouteIds.Equals(routeIds) &&
-                        query.Levels.Equals(levels)&&
-                        query.OrderBy.Equals(orderBy)), 
+                        query.Levels.Equals(levels) &&
+                        query.OrderBy.Equals(orderBy) &&
+                        query.FilterAvailableToStart.Equals(filterAvailableToStart)), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            var controllerResult = await controller.GetList(keyword, routeIds, levels, orderBy) as ObjectResult;
+            var controllerResult = await controller.GetList(keyword, routeIds, levels, orderBy, filterAvailableToStart) as ObjectResult;
 
             var model = controllerResult.Value as GetStandardsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);

@@ -82,5 +82,32 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             
             actual.Should().BeEquivalentTo(new List<Standard>{validStandards[0]});
         }
+        
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_Standards_Are_Filtered_By_Level_And_Include_Not_Available_To_Start(
+            [StandardsAreLarsValid] List<Standard> validStandards,
+            [StandardsNotLarsValid] List<Standard> invalidStandards,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            invalidStandards[0].Level = validStandards[0].Level;
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(validStandards);
+            allStandards.AddRange(invalidStandards);
+            mockCoursesDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(allStandards);
+
+            var actual = await repository.GetFilteredStandards(
+                new List<Guid>(), 
+                new List<int> {validStandards[0].Level},false);
+
+            var expectedList = new List<Standard>
+            {
+                validStandards[0],
+                invalidStandards[0]
+            };
+            actual.Should().BeEquivalentTo(expectedList);
+        }
     }
 }

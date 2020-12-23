@@ -18,11 +18,11 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public async Task<IEnumerable<Standard>> GetAll()
+        public async Task<IEnumerable<Standard>> GetAll(bool filterAvailableToStart = true)
         {
             var result = await _coursesDataContext
                 .Standards
-                .FilterAvailableToStart()
+                .FilterAvailableToStart(filterAvailableToStart)
                 .Include(c=>c.Sector)
                 .Include(c=>c.ApprenticeshipFunding)
                 .Include(c=>c.LarsStandard)
@@ -32,9 +32,9 @@ namespace SFA.DAS.Courses.Data.Repository
             return result;
         }
 
-        public async Task<int> Count()
+        public async Task<int> Count(bool filterAvailableToStart = true)
         {
-            return await _coursesDataContext.Standards.FilterAvailableToStart().CountAsync();
+            return await _coursesDataContext.Standards.FilterAvailableToStart(filterAvailableToStart).CountAsync();
         }
 
         public void DeleteAll()
@@ -69,7 +69,7 @@ namespace SFA.DAS.Courses.Data.Repository
             return standard;
         }
 
-        public async Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels)
+        public async Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels, bool filterAvailableToStart = true)
         {
             var standards = _coursesDataContext.Standards.AsQueryable();
 
@@ -83,7 +83,7 @@ namespace SFA.DAS.Courses.Data.Repository
             }
 
             standards = standards
-                .FilterAvailableToStart()
+                .FilterAvailableToStart(filterAvailableToStart)
                 .Include(c => c.Sector)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
