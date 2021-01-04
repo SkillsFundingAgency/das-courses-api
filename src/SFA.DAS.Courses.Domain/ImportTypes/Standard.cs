@@ -63,6 +63,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("regulatedBody")] 
         public string RegulatedBody { get; set; }
+
+        [JsonProperty("integratedApprenticeship")]
+        public bool? IntegratedApprenticeship { get ; set ; }
     }
     
     public class Skill

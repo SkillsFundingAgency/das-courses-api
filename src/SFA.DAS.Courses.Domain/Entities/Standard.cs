@@ -25,7 +25,8 @@
                 Behaviours = standard.Behaviours,
                 Duties = standard.Duties,
                 CoreAndOptions = standard.CoreAndOptions,
-                CoreDuties = standard.CoreDuties
+                CoreDuties = standard.CoreDuties,
+                IntegratedApprenticeship = standard.IntegratedApprenticeship
             };
         }
     }

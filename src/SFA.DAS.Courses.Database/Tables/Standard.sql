@@ -16,10 +16,11 @@
 	[Behaviours] NVARCHAR(MAX) NULL, 
     [Duties] NVARCHAR(MAX) NULL, 
     [CoreAndOptions] BIT NOT NULL DEFAULT 0, 
+    [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0,
     CONSTRAINT [AK_Standard_Column] UNIQUE ([Id])
 )
 GO
 
 CREATE NONCLUSTERED INDEX [IDX_Standard_RouteId] ON [dbo].[Standard] (RouteId) 
-INCLUDE (Id,Title,[Level],  IntegratedDegree, OverviewOfRole,[Keywords],[TypicalJobTitles], [StandardPageUrl], [Version]) WITH (ONLINE = ON) 
+INCLUDE (Id,Title,[Level],  IntegratedDegree, OverviewOfRole,[Keywords],[TypicalJobTitles], [StandardPageUrl], [Version],[RegulatedBody],[Skills],[Knowledge],[Behaviours],[CoreAndOptions],[IntegratedApprenticeship]) WITH (ONLINE = ON) 
 GO 
