@@ -84,4 +84,7 @@
   <ItemGroup>
     <Build Include="Schemas\Versioning.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="SFA.DAS.Courses.Database.refactorlog" />
+  </ItemGroup>
 </Project>
