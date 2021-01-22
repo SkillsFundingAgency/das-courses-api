@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="703db929-2f0d-4890-b3cf-c32c049e11b3" ChangeDateTime="01/21/2021 15:45:49">
+    <Property Name="ElementName" Value="[Versioning].[Standard].[EarlierStartDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Versioning].[Standard]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="EarliestStartDate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="090a1fce-66a6-4f11-919b-e2b47f1b951c" ChangeDateTime="01/21/2021 15:47:44">
+    <Property Name="ElementName" Value="[Versioning].[Standard_Staging].[EarlierStartDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Versioning].[Standard_Staging]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="EarliestStartDate" />
+  </Operation>
+</Operations>
