@@ -15,7 +15,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Versioning
 
         public string Version { get; set; }
 
-        public DateTime? EarlierStartDate { get; set; }
+        public DateTime? EarliestStartDate { get; set; }
 
         public DateTime? LatestStartDate { get; set; }
 

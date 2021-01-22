@@ -6,7 +6,7 @@
     [Title] VARCHAR(1000) NOT NULL,
     [Status] VARCHAR(200) NOT NULL,
     [Version] VARCHAR(20) NULL,
-    [EarlierStartDate] DATETIME NULL,
+    [EarliestStartDate] DATETIME NULL,
     [LatestStartDate] DATETIME NULL,
     [LatestEndDate] DATETIME NULL,
     [OverviewOfRole] VARCHAR(MAX) NULL,

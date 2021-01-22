@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Data.Configuration.Versioning
             builder.Property(x => x.Title).HasColumnName(nameof(DomainEntities.Standard.Title)).HasColumnType("varchar").HasMaxLength(1000).IsRequired();
             builder.Property(x => x.Status).HasColumnName(nameof(DomainEntities.Standard.Status)).HasColumnType("varchar").HasMaxLength(200).IsRequired();
             builder.Property(x => x.Version).HasColumnName(nameof(DomainEntities.Standard.Version)).HasColumnType("varchar").HasMaxLength(20);
-            builder.Property(x => x.EarlierStartDate).HasColumnName(nameof(DomainEntities.Standard.EarlierStartDate)).HasColumnType("datetime");
+            builder.Property(x => x.EarliestStartDate).HasColumnName(nameof(DomainEntities.Standard.EarliestStartDate)).HasColumnType("datetime");
             builder.Property(x => x.LatestStartDate).HasColumnName(nameof(DomainEntities.Standard.LatestStartDate)).HasColumnType("datetime");
             builder.Property(x => x.LatestEndDate).HasColumnName(nameof(DomainEntities.Standard.LatestEndDate)).HasColumnType("datetime");
             builder.Property(x => x.OverviewOfRole).HasColumnName(nameof(DomainEntities.Standard.OverviewOfRole));

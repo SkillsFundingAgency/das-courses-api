@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses.Versioning
         public string Title { get; set; }
         public string Status { get; set; }
         public string Version { get; set; }
-        public DateTime? EarlierStartDate { get; set; }
+        public DateTime? EarliestStartDate { get; set; }
         public DateTime? LatestStartDate { get; set; }
         public DateTime? LatestEndDate { get; set; }
         public string OverviewOfRole { get; set; }
@@ -48,7 +48,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses.Versioning
                 Title = standard.Title,
                 Status = standard.Status,
                 Version = standard.Version,
-                EarlierStartDate = standard.EarlierStartDate,
+                EarliestStartDate = standard.EarliestStartDate,
                 LatestStartDate = standard.LatestStartDate,
                 LatestEndDate = standard.LatestEndDate,
                 OverviewOfRole = standard.OverviewOfRole,
