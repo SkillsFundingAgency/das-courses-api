@@ -5,13 +5,13 @@
 
 Scenario: Get list of standards
 	Given I have an http client
-    When I GET the following url: /api/courses/standards
+    When I GET the following url: /api/courses/standards?filter=ActiveAvailable
     Then an http status code of 200 is returned
     And all valid standards are returned
 
     Scenario: Get list of standards by keyword
 	Given I have an http client
-    When I GET the following url: /api/courses/standards?keyword=beer
+    When I GET the following url: /api/courses/standards?keyword=beer&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
     | title       | level | sector                        |
@@ -20,7 +20,7 @@ Scenario: Get list of standards
 
     Scenario: Get list of standards by levels
 	Given I have an http client
-    When I GET the following url: /api/courses/standards?levels=1&levels=7
+    When I GET the following url: /api/courses/standards?levels=1&levels=7&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
     | title   | level | sector                        |
@@ -29,7 +29,7 @@ Scenario: Get list of standards
 
     Scenario: Get list of standards by sectors
 	Given I have an http client
-    When I GET the following url: /api/courses/standards?routeIds=B30D7750-9ADF-41BA-94BD-E4584128EC76
+    When I GET the following url: /api/courses/standards?routeIds=B30D7750-9ADF-41BA-94BD-E4584128EC76&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
     | title                                           | level | sector       |
@@ -38,7 +38,7 @@ Scenario: Get list of standards
 
     Scenario: Get list of standards by keyword and levels
 	Given I have an http client
-    When I GET the following url: /api/courses/standards?keyword=beer&levels=1
+    When I GET the following url: /api/courses/standards?keyword=beer&levels=1&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
     | title       | level | sector                        |
@@ -46,7 +46,7 @@ Scenario: Get list of standards
 
     Scenario: Get list of standards by keyword sorted by relevance
 	Given I have an http client
-    When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=score
+    When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=score&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
     | title                            | level | sector              |
@@ -56,11 +56,23 @@ Scenario: Get list of standards
 
     Scenario: Get list of standards by keyword sorted by name
 	Given I have an http client
-    When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=title
+    When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=title&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
     | title                            | level | sector              |
     | Camera prep technician           | 3     | Creative and design |
     | Junior animator SortOrder        | 4     | Creative and design |
     | Photographic assistant SortOrder | 3     | Creative and design |
+
+    Scenario: Get list of active standards not restricted by start date
+	Given I have an http client
+    When I GET the following url: /api/courses/standards?filter=Active
+    Then an http status code of 200 is returned
+    Then all valid and invalid standards are returned
+
+    Scenario: Get list of active standards with no filter
+	Given I have an http client
+    When I GET the following url: /api/courses/standards
+    Then an http status code of 400 is returned
+    
     
