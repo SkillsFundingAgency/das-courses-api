@@ -34,7 +34,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             [FromQuery] IList<Guid> routeIds, 
             [FromQuery] IList<int> levels,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
-            [FromQuery] bool filterAvailableToStart = true)
+            [FromQuery] StandardFilter filter = StandardFilter.None)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Api.Controllers
                     RouteIds = routeIds,
                     Levels = levels,
                     OrderBy = orderBy,
-                    FilterAvailableToStart = filterAvailableToStart
+                    Filter = filter
                 });
 
                 var response = new GetStandardsListResponse

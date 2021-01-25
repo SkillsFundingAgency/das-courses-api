@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.Extensions;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Search;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Extensions
 {
@@ -32,7 +33,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
 
             //Act
-            var actual = standards.FilterAvailableToStart(true);
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable);
 
             //Assert
             actual.Count().Should().Be(1);
@@ -60,7 +61,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
             
             //Act
-            var actual = standards.FilterAvailableToStart(true);
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable);
 
             //Assert
             actual.Count().Should().Be(1);
@@ -88,7 +89,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
             
             //Act
-            var actual = standards.FilterAvailableToStart(true);
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable);
 
             //Assert
             actual.Count().Should().Be(1);
@@ -117,7 +118,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
             
             //Act
-            var actual = standards.FilterAvailableToStart(true);
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable);
 
             //Assert
             actual.Count().Should().Be(1);
@@ -176,7 +177,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
             
             //Act
-            var actual = standards.FilterAvailableToStart(false);
+            var actual = standards.FilterStandards(StandardFilter.Active);
 
             //Assert
             actual.Count().Should().Be(5);
@@ -221,7 +222,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             }.AsQueryable();
             
             //Act
-            var actual = standards.FilterAvailableToStart(false);
+            var actual = standards.FilterStandards(StandardFilter.Active);
 
             //Assert
             actual.Count().Should().Be(3);

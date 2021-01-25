@@ -32,10 +32,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.RouteIds,
                     query.Levels,
                     query.OrderBy,
-                    query.FilterAvailableToStart))
+                    query.Filter))
                 .ReturnsAsync(standards);
             mockStandardsService
-                .Setup(service => service.Count(query.FilterAvailableToStart))
+                .Setup(service => service.Count(query.Filter))
                 .ReturnsAsync(count);
 
             var result = await handler.Handle(query, CancellationToken.None);
@@ -62,10 +62,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     It.Is<List<Guid>>(c=>c.Count == 0),
                     It.Is<List<int>>(c=>c.Count == 0),
                     query.OrderBy,
-                    query.FilterAvailableToStart))
+                    query.Filter))
                 .ReturnsAsync(standards);
             mockStandardsService
-                .Setup(service => service.Count(query.FilterAvailableToStart))
+                .Setup(service => service.Count(query.Filter))
                 .ReturnsAsync(count);
 
             await handler.Handle(query, CancellationToken.None);
