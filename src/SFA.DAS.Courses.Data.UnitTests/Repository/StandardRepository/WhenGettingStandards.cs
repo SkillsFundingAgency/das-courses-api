@@ -9,6 +9,7 @@ using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.Customisations;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
@@ -28,8 +29,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
-
-            var actualStandards = await repository.GetAll();
+            
+            var actualStandards = await repository.GetAll(StandardFilter.ActiveAvailable);
             
             Assert.IsNotNull(actualStandards);
             actualStandards.Should().BeEquivalentTo(validStandards);
@@ -49,7 +50,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetAll(false);
+            var actualStandards = await repository.GetAll(StandardFilter.Active);
             
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
