@@ -34,19 +34,10 @@ namespace SFA.DAS.Courses.Api.Controllers
             [FromQuery] IList<Guid> routeIds, 
             [FromQuery] IList<int> levels,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
-            [FromQuery] StandardFilter filter = StandardFilter.None)
+            [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
         {
             try
             {
-                // Explicit defense against not specifying a filter.
-                // Would work currently, but once data includes versions
-                // Api will break due to LarsCode not being supplied
-                // To be rectified with the SV Implementation.
-                if (filter == StandardFilter.None)
-                {
-                    return BadRequest();
-                }
-
                 var queryResult = await _mediator.Send(new GetStandardsListQuery
                 {
                     Keyword = keyword, 
