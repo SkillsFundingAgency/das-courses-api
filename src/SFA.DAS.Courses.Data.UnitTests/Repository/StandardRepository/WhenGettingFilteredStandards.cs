@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actual = await repository.GetFilteredStandards(
                 new List<Guid> { validStandards[0].RouteId },
                 new List<int>(),
-                StandardFilter.None);
+                StandardFilter.ActiveAvailable);
             
             //Assert
             Assert.IsNotNull(actual);
@@ -82,7 +82,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actual = await repository.GetFilteredStandards(
                 new List<Guid>(), 
                 new List<int> {validStandards[0].Level},
-                StandardFilter.None);
+                StandardFilter.ActiveAvailable);
             
             actual.Should().BeEquivalentTo(new List<Standard>{validStandards[0]});
         }
