@@ -73,6 +73,7 @@ Scenario: Get list of standards
     Scenario: Get list of active standards with no filter
 	Given I have an http client
     When I GET the following url: /api/courses/standards
-    Then an http status code of 400 is returned
+    Then an http status code of 200 is returned
+    And all valid standards are returned
     
     
