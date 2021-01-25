@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.Customisations;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
@@ -27,7 +28,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var count = await repository.Count();
+            var count = await repository.Count(StandardFilter.ActiveAvailable);
 
             count.Should().Be(validStandards.Count);
         }
@@ -46,7 +47,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var count = await repository.Count(false);
+            var count = await repository.Count(StandardFilter.Active);
 
             
             count.Should().Be(validStandards.Count + invalidStandards.Count);

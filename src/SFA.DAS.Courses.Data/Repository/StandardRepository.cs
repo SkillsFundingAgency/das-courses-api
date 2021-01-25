@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Data.Extensions;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Domain.Search;
 
 namespace SFA.DAS.Courses.Data.Repository
 {
@@ -18,23 +19,9 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public async Task<IEnumerable<Standard>> GetAll(bool filterAvailableToStart = true)
+        public async Task<int> Count(StandardFilter filter)
         {
-            var result = await _coursesDataContext
-                .Standards
-                .FilterAvailableToStart(filterAvailableToStart)
-                .Include(c=>c.Sector)
-                .Include(c=>c.ApprenticeshipFunding)
-                .Include(c=>c.LarsStandard)
-                .ThenInclude(c=>c.SectorSubjectArea)
-                .ToListAsync();
-            
-            return result;
-        }
-
-        public async Task<int> Count(bool filterAvailableToStart = true)
-        {
-            return await _coursesDataContext.Standards.FilterAvailableToStart(filterAvailableToStart).CountAsync();
+            return await _coursesDataContext.Standards.AsQueryable().FilterStandards(filter).CountAsync();
         }
 
         public void DeleteAll()
@@ -69,7 +56,12 @@ namespace SFA.DAS.Courses.Data.Repository
             return standard;
         }
 
-        public async Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels, bool filterAvailableToStart = true)
+        public async Task<IEnumerable<Standard>> GetAll(StandardFilter filter)
+        {
+            return await GetFilteredStandards(new List<Guid>(), new List<int>(), filter);
+        }
+
+        public async Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels, StandardFilter filter)
         {
             var standards = _coursesDataContext.Standards.AsQueryable();
 
@@ -83,7 +75,7 @@ namespace SFA.DAS.Courses.Data.Repository
             }
 
             standards = standards
-                .FilterAvailableToStart(filterAvailableToStart)
+                .FilterStandards(filter)
                 .Include(c => c.Sector)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
