@@ -38,6 +38,15 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             try
             {
+                // Explicit defense against not specifying a filter.
+                // Would work currently, but once data includes versions
+                // Api will break due to LarsCode not being supplied
+                // To be rectified with the SV Implementation.
+                if (filter == StandardFilter.None)
+                {
+                    return BadRequest();
+                }
+
                 var queryResult = await _mediator.Send(new GetStandardsListQuery
                 {
                     Keyword = keyword, 
