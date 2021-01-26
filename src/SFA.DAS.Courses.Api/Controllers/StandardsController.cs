@@ -38,6 +38,13 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             try
             {
+                if(filter == StandardFilter.None)
+                {
+                    // If filter = None specified it overrides default. 
+                    // Defensive catch until Standards Version improvements
+                    filter = StandardFilter.ActiveAvailable;
+                }
+
                 var queryResult = await _mediator.Send(new GetStandardsListQuery
                 {
                     Keyword = keyword, 
