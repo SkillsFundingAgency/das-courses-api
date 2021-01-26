@@ -70,6 +70,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                     .Excluding(std => std.CoreAndOptions)
                     .Excluding(std => std.CoreDuties)
                 );
+            model.Total.Should().Be(standardsList.Count);
         }
 
         [Then("all standards are returned")]
@@ -98,6 +99,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                     .Excluding(std => std.CoreAndOptions)
                     .Excluding(std => std.CoreDuties)
                 );
+            model.Total.Should().Be(standardsList.Count);
         }
 
         [Then("the following valid standards are returned")]
