@@ -176,13 +176,14 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test]
-        [InlineAutoData(3, "true", false)]
-        [InlineAutoData(5, "true", false)]
-        [InlineAutoData(6, "true", true)]
-        [InlineAutoData(6, "false", false)]
+        [InlineAutoData(3, "integrated degree", false)]
+        [InlineAutoData(5, "integrated degree", false)]
+        [InlineAutoData(6, "integrated degree", true)]
+        [InlineAutoData(6, "INTEGRATED degree", true)]
+        [InlineAutoData(6, "non integrated", false)]
         [InlineAutoData(6, "", false)]
         [InlineAutoData(6, "abc", false)]
-        [InlineAutoData(7, "True", true)]
+        [InlineAutoData(7, "Integrated Degree", true)]
         public void Then_If_The_Standard_Is_Level_Six_Or_Above_The_Integrated_Degree_Field_Is_Used_To_Set_The_Standard_As_IntegratedApprenticeship(
             int level, string integratedDegreeValue, bool expected, ImportTypes.Standard standard)
         {
