@@ -43,8 +43,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         {
             if (standard.Level >= 6)
             {
-                bool.TryParse(standard.IntegratedDegree, out var result);
-                return result;
+                return standard.IntegratedDegree.Equals("integrated degree", StringComparison.CurrentCultureIgnoreCase);
             }
 
             if (standard.Level <= 5 && standard.IntegratedApprenticeship.HasValue)
