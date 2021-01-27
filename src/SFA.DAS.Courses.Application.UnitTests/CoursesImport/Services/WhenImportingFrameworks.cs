@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         {
             jsonFileHelper.Setup(x => x.GetLatestFrameworkFileFromDataDirectory()).Returns(frameworkFile);
 
-            await frameworksImportService.ImportData();
+            await frameworksImportService.ImportDataIntoStaging();
             
             jsonFileHelper.Verify(x=>x.ParseJsonFile<Framework>(frameworkFile), Times.Once);
         }
@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         {
             jsonFileHelper.Setup(x => x.GetLatestFrameworkFileFromDataDirectory()).Returns(string.Empty);
 
-            await frameworksImportService.ImportData();
+            await frameworksImportService.ImportDataIntoStaging();
 
             frameworkRepository.Verify(x => x.DeleteAll(), Times.Never());
             frameworkRepository.Verify(x=>x.InsertMany(It.IsAny<IEnumerable<Domain.Entities.Framework>>()), Times.Never);
@@ -58,7 +58,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             jsonFileHelper.Setup(x => x.GetLatestFrameworkFileFromDataDirectory()).Returns(frameworkFile);
             importAuditRepository.Setup(x => x.GetLastImportByType(ImportType.FrameworkImport)).ReturnsAsync(auditFile);
             
-            await frameworksImportService.ImportData();
+            await frameworksImportService.ImportDataIntoStaging();
 
             frameworkRepository.Verify(x => x.DeleteAll(), Times.Never());
             frameworkRepository.Verify(x=>x.InsertMany(It.IsAny<IEnumerable<Domain.Entities.Framework>>()), Times.Never);
@@ -81,7 +81,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             importAuditRepository.Setup(x => x.GetLastImportByType(ImportType.FrameworkImport)).ReturnsAsync((ImportAudit)null);
             jsonFileHelper.Setup(x => x.ParseJsonFile<Framework>(It.IsAny<string>())).Returns(frameworks);
 
-            await frameworksImportService.ImportData();
+            await frameworksImportService.ImportDataIntoStaging();
             
             frameworkImportRepository.Verify(x=>x.DeleteAll(), Times.Once);
             frameworkFundingImportRepository.Verify(x=>x.DeleteAll(), Times.Once);
@@ -107,7 +107,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             frameworkImportRepository.Setup(x => x.GetAll()).ReturnsAsync(frameworkImports);
             frameworkFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(frameworkFundingImports);
             
-            await frameworksImportService.ImportData();
+            await frameworksImportService.ImportDataIntoStaging();
             
             frameworkRepository.Verify(x=>x.DeleteAll(), Times.Once);
             frameworkFundingRepository.Verify(x=>x.DeleteAll(), Times.Once);
@@ -132,7 +132,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             frameworkImportRepository.Setup(x => x.GetAll()).ReturnsAsync(frameworkImports);
             frameworkFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(frameworkFundingImports);
 
-            await frameworksImportService.ImportData();
+            await frameworksImportService.ImportDataIntoStaging();
             
             importAuditRepository.Verify(x=>
                 x.Insert(It.Is<ImportAudit>(
