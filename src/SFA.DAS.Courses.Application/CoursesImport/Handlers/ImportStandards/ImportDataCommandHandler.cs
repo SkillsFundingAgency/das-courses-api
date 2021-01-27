@@ -22,9 +22,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
         public async Task<Unit> Handle(ImportDataCommand request, CancellationToken cancellationToken)
         {
 
-            var standardsImport =  _standardsImportService.ImportStandards();
-            var larsImportResult =  _larsImportService.ImportData();
-            var frameworksResult = _frameworksImportService.ImportData();
+            var standardsImport =  _standardsImportService.ImportDataIntoStaging();
+            var larsImportResult =  _larsImportService.ImportDataIntoStaging();
+            var frameworksResult = _frameworksImportService.ImportDataIntoStaging();
             
 
             await Task.WhenAll(larsImportResult, standardsImport, frameworksResult);

@@ -4,6 +4,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface ILarsImportService
     {
-        Task ImportData();
+        Task ImportDataIntoStaging();
     }
 }

@@ -25,9 +25,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
             
             //Assert
             
-            larsImportService.Verify(x=>x.ImportData(), Times.Once);
-            frameworksImportService.Verify(x=>x.ImportData(), Times.Once);
-            standardsImportService.Verify(x=>x.ImportStandards(), Times.Once);
+            larsImportService.Verify(x=>x.ImportDataIntoStaging(), Times.Once);
+            frameworksImportService.Verify(x=>x.ImportDataIntoStaging(), Times.Once);
+            standardsImportService.Verify(x=>x.ImportDataIntoStaging(), Times.Once);
             indexBuilder.Verify(x=>x.Build(), Times.Once);
         }
     }

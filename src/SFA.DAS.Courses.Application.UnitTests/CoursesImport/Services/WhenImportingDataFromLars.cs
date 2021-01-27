@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new ImportAudit(DateTime.Now, 100, ImportType.LarsImport, filePath));
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
             
             //Assert
             pageParser.Verify(x=>x.GetCurrentLarsDataDownloadFilePath(), Times.Once);
@@ -69,7 +69,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync((ImportAudit)null);
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
             
             //Assert
             service.Verify(x=>x.GetFileStream(newFilePath), Times.Once);
@@ -94,7 +94,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new ImportAudit(DateTime.Now, 100, ImportType.LarsImport, downloadPath));
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
             
             //Assert
             service.Verify(x=>x.GetFileStream(newFilePath), Times.Once);
@@ -119,7 +119,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync((ImportAudit)null);
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
             
             //Assert
             zipHelper.Verify(x=>
@@ -146,7 +146,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync((ImportAudit)null);
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
             
             //Assert
             zipHelper.Verify(x=>
@@ -173,7 +173,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync((ImportAudit)null);
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
             
             //Assert
             zipHelper.Verify(x=>
@@ -202,7 +202,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync((ImportAudit)null);
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
             
             //Assert
             larsStandardImportRepository.Verify(x=>x.DeleteAll(), Times.Once);
@@ -254,7 +254,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
 
             //Assert
             larsStandardImportRepository.Verify(x=>
@@ -304,7 +304,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .Returns(sectorSubjectAreaTier2Csv);
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
 
             //Assert
             larsStandardRepository.Verify(x=> x.DeleteAll(), Times.Once);
@@ -349,7 +349,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
 
             //Assert
             larsStandardRepository.Verify(x=>
@@ -384,7 +384,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);
             
             //Act
-            await larsImportService.ImportData();
+            await larsImportService.ImportDataIntoStaging();
             
             //Assert
             var totalRecords = larsStandardImports.Count + apprenticeshipFundingImports.Count + sectorSubjectAreaTier2Imports.Count;

@@ -4,6 +4,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardsImportService
     {
-        Task ImportStandards();
+        Task ImportDataIntoStaging();
     }
 }
