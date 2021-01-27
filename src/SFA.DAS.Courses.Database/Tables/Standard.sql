@@ -1,6 +1,8 @@
 ﻿CREATE TABLE [dbo].[Standard]
 (
-	[Id] INT PRIMARY KEY,
+	[StandardUId] VARCHAR(20) PRIMARY KEY,
+    [IfateReferenceNumber] VARCHAR(10) NOT NULL,
+    [LarsCode] INT NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
@@ -16,11 +18,18 @@
 	[Behaviours] NVARCHAR(MAX) NULL, 
     [Duties] NVARCHAR(MAX) NULL, 
     [CoreAndOptions] BIT NOT NULL DEFAULT 0, 
-    [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0,
-    CONSTRAINT [AK_Standard_Column] UNIQUE ([Id])
+    [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0
 )
 GO
 
+CREATE NONCLUSTERED INDEX [IDX_Standard_LarsCode] ON [dbo].[Standard] (LarsCode) 
+INCLUDE ([StandardUId], [IfateReferenceNumber], [Title] , [Level], [IntegratedDegree], [OverviewOfRole], [RouteId], [Keywords], [TypicalJobTitles], [StandardPageUrl], [Version], [RegulatedBody], [Skills], [Knowledge], [Behaviours], [Duties], [CoreAndOptions], [IntegratedApprenticeship]) WITH (ONLINE = ON) 
+GO 
+
+CREATE NONCLUSTERED INDEX [IDX_Standard_IfateReferenceNumber] ON [dbo].[Standard] (IfateReferenceNumber) 
+INCLUDE ([StandardUId], [LarsCode], [Title] , [Level], [IntegratedDegree], [OverviewOfRole], [RouteId], [Keywords], [TypicalJobTitles], [StandardPageUrl], [Version], [RegulatedBody], [Skills], [Knowledge], [Behaviours], [Duties], [CoreAndOptions], [IntegratedApprenticeship]) WITH (ONLINE = ON) 
+GO 
+
 CREATE NONCLUSTERED INDEX [IDX_Standard_RouteId] ON [dbo].[Standard] (RouteId) 
-INCLUDE (Id,Title,[Level],  IntegratedDegree, OverviewOfRole,[Keywords],[TypicalJobTitles], [StandardPageUrl], [Version],[RegulatedBody],[Skills],[Knowledge],[Behaviours],[CoreAndOptions],[IntegratedApprenticeship]) WITH (ONLINE = ON) 
+INCLUDE ([StandardUId], [IfateReferenceNumber], [LarsCode], [Title] , [Level], [IntegratedDegree], [OverviewOfRole], [Keywords], [TypicalJobTitles], [StandardPageUrl], [Version], [RegulatedBody], [Skills], [Knowledge], [Behaviours], [Duties], [CoreAndOptions], [IntegratedApprenticeship]) WITH (ONLINE = ON) 
 GO 
