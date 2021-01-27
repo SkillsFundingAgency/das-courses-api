@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IFrameworksImportService
     {
-        Task ImportData();
+        Task ImportDataIntoStaging();
     }
 }

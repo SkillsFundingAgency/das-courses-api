@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             StandardsImportService standardsImportService)
         {
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             service.Verify(x=>x.GetStandards(), Times.Once);
@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             StandardsImportService standardsImportService)
         {
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             importRepository.Verify(x=>x.DeleteAll(), Times.Once);
@@ -58,7 +58,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
             
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             sectorImportRepository.Verify(x=>x
@@ -85,7 +85,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
             
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             importRepository.Verify(x=>
@@ -105,7 +105,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
             
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             repository.Verify(x=>x.DeleteAll(),Times.Once);
@@ -130,7 +130,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             sectorImportRepository.Setup(x => x.GetAll()).ReturnsAsync(sectorImportsEntity);
             
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             repository.Verify(x=>x.InsertMany(It.Is<List<Standard>>(c=>c.Count.Equals(standardImportsEntity.Count))), Times.Once);
@@ -152,7 +152,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             importRepository.Setup(x => x.GetAll()).ReturnsAsync(new List<StandardImport>());
             
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             repository.Verify(x=>x.DeleteAll(), Times.Never);
@@ -189,7 +189,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
             
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             importRepository.Verify(x=>
@@ -235,7 +235,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
             
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             importRepository.Verify(x=>
@@ -260,7 +260,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             importRepository.Setup(x => x.GetAll()).ReturnsAsync(standardImportsEntity);
             
             //Act
-            await standardsImportService.ImportStandards();
+            await standardsImportService.ImportDataIntoStaging();
             
             //Assert
             auditRepository.Verify(x=>

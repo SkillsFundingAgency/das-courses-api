@@ -37,11 +37,12 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _frameworkFundingRepository = frameworkFundingRepository;
             _logger = logger;
         }
-        public async Task ImportData()
+
+        public async Task ImportDataIntoStaging()
         {
             try
             {
-                _logger.LogInformation($"Framework data load - starting");
+                _logger.LogInformation($"Framework Import - data into staging - started");
 
                 var latestFile = _jsonFileHelper.GetLatestFrameworkFileFromDataDirectory();
 
@@ -51,30 +52,54 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     return;
                 }
 
-                var lastFrameworkImport = await _importAuditRepository.GetLastImportByType(ImportType.FrameworkImport);
-
-                if (lastFrameworkImport != null && latestFile == lastFrameworkImport.FileName)
-                {
-                    _logger.LogInformation($"Framework file {latestFile} has already been imported");
-                    return;
-                }
+                if (await IsFileAlreadyImported(latestFile)) return;
 
                 var importStartTime = DateTime.UtcNow;
             
                 await InsertFrameworksIntoStagingTable(latestFile);
 
-                await InsertFrameworksFromImportTable();
-            
-                var audit = new ImportAudit(importStartTime,_rowsImported,ImportType.FrameworkImport,latestFile);
-                await _importAuditRepository.Insert(audit);
+                _logger.LogInformation($"Framework Import - data into staging- finished");
 
-                _logger.LogInformation($"Framework data load - completed");
+                await LoadDataFromStaging(importStartTime, latestFile);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Framework data load - error occured");
+                _logger.LogError(e, "Framework data load - an error occurred while trying to import data into staging.");
                 throw;
             }
+        }
+
+        public async Task LoadDataFromStaging(DateTime importStartTime, string latestFile)
+        {
+            try
+            {
+                _logger.LogInformation($"Framework Import - data load from staging - started");
+
+                await InsertFrameworksFromImportTable();
+
+                var audit = new ImportAudit(importStartTime, _rowsImported, ImportType.FrameworkImport, latestFile);
+                await _importAuditRepository.Insert(audit);
+
+                _logger.LogInformation($"Framework Import - data load from staging - finished");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Framework data load - an error occurred while trying to load data from staging.");
+                throw;
+            }
+        }
+
+        private async Task<bool> IsFileAlreadyImported(string latestFile)
+        {
+            var lastFrameworkImport = await _importAuditRepository.GetLastImportByType(ImportType.FrameworkImport);
+
+            if (lastFrameworkImport != null && latestFile == lastFrameworkImport.FileName)
+            {
+                _logger.LogInformation($"Framework file {latestFile} has already been imported");
+                return true;
+            }
+
+            return false;
         }
 
         private async Task InsertFrameworksIntoStagingTable(string latestFile)

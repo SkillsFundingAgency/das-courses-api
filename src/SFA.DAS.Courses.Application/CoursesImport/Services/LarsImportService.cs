@@ -49,17 +49,16 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 _sectorSubjectAreaTier2ImportRepository,
                 _logger);
         }
-        public async Task ImportData()
+
+        public async Task ImportDataIntoStaging()
         {
             try
             {
                 var importAuditStartTime = DateTime.UtcNow;
                 
-                _logger.LogInformation("LARS Import - starting data transfer from import tables");
-                
-                _logger.LogInformation("LARS Import - commencing");
-                var lastFilePath =
-                    _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
+                _logger.LogInformation("LARS Import - data into staging - started");
+
+                var lastFilePath = _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
                 var filePath = _larsPageParser.GetCurrentLarsDataDownloadFilePath();
 
                 await Task.WhenAll(lastFilePath, filePath);
@@ -73,6 +72,23 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 await _larsImportStaging.Import(filePath.Result);
 
+                _logger.LogInformation("LARS Import - data into staging - finished");
+
+                await LoadDataFromStaging(importAuditStartTime, filePath.Result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("LARS Import - an error occurred while trying to import data from LARS file.", e);
+                throw;
+            }
+        }
+
+        public async Task LoadDataFromStaging(DateTime importAuditStartTime, string filePath)
+        {
+            try
+            {
+                _logger.LogInformation("LARS Import - data load from staging - started");
+
                 var larsStandardImports = _larsStandardImportRepository.GetAll();
                 var apprenticeshipFundingImports = _apprenticeshipFundingImportRepository.GetAll();
                 var sectorSubjectAreaTier2Imports = _sectorSubjectAreaTier2ImportRepository.GetAll();
@@ -82,7 +98,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 _larsStandardRepository.DeleteAll();
                 _apprenticeshipFundingRepository.DeleteAll();
                 _sectorSubjectAreaTier2Repository.DeleteAll();
-                
+
                 var importLarsStandardResult =
                     _larsStandardRepository.InsertMany(larsStandardImports.Result
                         .Select(c => (LarsStandard)c).ToList());
@@ -91,7 +107,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                         .Select(c => (ApprenticeshipFunding)c).ToList());
                 var importSectorSubjectAreaTier2Result =
                     _sectorSubjectAreaTier2Repository.InsertMany(sectorSubjectAreaTier2Imports.Result
-                        .Select(c => (SectorSubjectAreaTier2) c).ToList());
+                        .Select(c => (SectorSubjectAreaTier2)c).ToList());
 
                 await Task.WhenAll(importLarsStandardResult, importApprenticeshipFundingResult, importSectorSubjectAreaTier2Result);
 
@@ -100,16 +116,15 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                                    sectorSubjectAreaTier2Imports.Result.Count();
 
                 await _importAuditRepository.Insert(new ImportAudit(importAuditStartTime,
-                    rowsImported, ImportType.LarsImport, filePath.Result));
-                _logger.LogInformation("LARS Import - finished data transfer from import tables");
+                    rowsImported, ImportType.LarsImport, filePath));
+
+                _logger.LogInformation("LARS Import - data load from staging - finished");
             }
             catch (Exception e)
             {
-                _logger.LogError("LARS Import - failed", e);
+                _logger.LogError("LARS Import - an error occurred while trying to load data from staging tables.", e);
                 throw;
             }
         }
-
-        
     }
 }
