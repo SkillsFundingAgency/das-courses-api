@@ -1,6 +1,8 @@
 ﻿CREATE TABLE [dbo].[Standard_Import]
 (
-	[Id] INT PRIMARY KEY,
+	[StandardUId] VARCHAR(20) PRIMARY KEY,
+    [IfateReferenceNumber] VARCHAR(10) NOT NULL,
+    [LarsCode] INT NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
@@ -16,7 +18,6 @@
     [Behaviours] NVARCHAR(MAX) NULL,
     [Duties] NVARCHAR(MAX) NULL, 
     [CoreAndOptions] BIT NOT NULL DEFAULT 0,
-    [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0,
-    CONSTRAINT [AK_StandardImport_Column] UNIQUE ([Id])
+    [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0
 )
 GO
