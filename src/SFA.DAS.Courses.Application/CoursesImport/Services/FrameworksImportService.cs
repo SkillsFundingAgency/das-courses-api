@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _logger = logger;
         }
 
-        public async Task ImportDataIntoStaging()
+        public async Task<(bool Success, string LatestFile)> ImportDataIntoStaging()
         {
             try
             {
@@ -46,21 +46,13 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 var latestFile = _jsonFileHelper.GetLatestFrameworkFileFromDataDirectory();
 
-                if (string.IsNullOrEmpty(latestFile))
-                {
-                    _logger.LogWarning("No framework data file found to import");
-                    return;
-                }
+                if ((await IsValidFile(latestFile) == false)) return (false, null);
 
-                if (await IsFileAlreadyImported(latestFile)) return;
-
-                var importStartTime = DateTime.UtcNow;
-            
                 await InsertFrameworksIntoStagingTable(latestFile);
 
                 _logger.LogInformation($"Framework Import - data into staging- finished");
 
-                await LoadDataFromStaging(importStartTime, latestFile);
+                return (true, latestFile);
             }
             catch (Exception e)
             {
@@ -87,6 +79,19 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 _logger.LogError(e, "Framework data load - an error occurred while trying to load data from staging.");
                 throw;
             }
+        }
+
+        private async Task<bool> IsValidFile(string latestFile)
+        {
+            if (string.IsNullOrEmpty(latestFile))
+            {
+                _logger.LogWarning("No framework data file found to import");
+                return false;
+            }
+
+            if (await IsFileAlreadyImported(latestFile)) return false;
+
+            return true;
         }
 
         private async Task<bool> IsFileAlreadyImported(string latestFile)
