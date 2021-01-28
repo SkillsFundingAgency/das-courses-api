@@ -31,16 +31,17 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
 
             await Task.WhenAll(larsImportTask, standardsImportTask, frameworksImportTask);
 
-            var frameworkImportResponse = frameworksImportTask.Result;
-            var larsImportResponse = larsImportTask.Result;
-
             var tasks = new List<Task>();
 
+            var frameworkImportResponse = frameworksImportTask.Result;
             if (frameworkImportResponse.Success) tasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkImportResponse.LatestFile));
 
-            await Task.WhenAll(tasks);
+            tasks.Add(_standardsImportService.LoadDataFromStaging(importStartTime));
 
-            if(larsImportResponse.Success)  await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);
+            await Task.WhenAll(tasks);
+            
+            var larsImportResponse = larsImportTask.Result;
+            if (larsImportResponse.Success)  await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);
 
             _indexBuilder.Build();
             
