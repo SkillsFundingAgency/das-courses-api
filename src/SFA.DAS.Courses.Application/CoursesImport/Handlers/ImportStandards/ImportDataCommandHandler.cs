@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             if (larsImportResponse.Success)  await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);
 
             _indexBuilder.Build();
-            
+
             return Unit.Value;
         }
     }
