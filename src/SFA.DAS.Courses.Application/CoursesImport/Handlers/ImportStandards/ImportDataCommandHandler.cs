@@ -25,19 +25,23 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
         {
             var importStartTime = DateTime.Now;
 
-            var standardsImport =  _standardsImportService.ImportDataIntoStaging();
-            var larsImportResult =  _larsImportService.ImportDataIntoStaging();
-            var frameworksResult = _frameworksImportService.ImportDataIntoStaging();
+            var standardsImportTask =  _standardsImportService.ImportDataIntoStaging();
+            var larsImportTask =  _larsImportService.ImportDataIntoStaging();
+            var frameworksImportTask = _frameworksImportService.ImportDataIntoStaging();
 
-            await Task.WhenAll(larsImportResult, standardsImport, frameworksResult);
+            await Task.WhenAll(larsImportTask, standardsImportTask, frameworksImportTask);
 
-            var frameworkResponse = frameworksResult.Result;
+            var frameworkImportResponse = frameworksImportTask.Result;
+            var larsImportResponse = larsImportTask.Result;
 
             var tasks = new List<Task>();
 
-            if (frameworkResponse.Success) tasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkResponse.LatestFile));
+            if (frameworkImportResponse.Success) tasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkImportResponse.LatestFile));
 
             await Task.WhenAll(tasks);
+
+            if(larsImportResponse.Success)  await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);
+
             _indexBuilder.Build();
             
             return Unit.Value;
