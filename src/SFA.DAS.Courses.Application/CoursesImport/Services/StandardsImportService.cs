@@ -17,7 +17,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly ISectorRepository _sectorRepository;
         private readonly ISectorImportRepository _sectorImportRepository;
         private readonly ILogger<StandardsImportService> _logger;
-        private List<SectorImport> _sectors;
 
         public StandardsImportService (IInstituteOfApprenticeshipService instituteOfApprenticeshipService, 
                                         IStandardImportRepository standardImportRepository, 
@@ -41,18 +40,16 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             try
             {
                 _logger.LogInformation("Standards import - starting");
-                var timeStarted = DateTime.UtcNow;
+
                 var standards = (await _instituteOfApprenticeshipService.GetStandards()).ToList();
+
                 _logger.LogInformation($"Standards import - Retrieved {standards.Count} standards from API");
 
-                await ImportSectorsIntoStaging(standards);
+                var sectors = GetDistinctSectorsFromStandards(standards);
 
-                foreach (var standard in standards)
-                {
-                    standard.RouteId = _sectors.Single(c => c.Route.Equals(standard.Route)).Id;
-                }
+                await LoadSectorsInStaging(sectors);
 
-                _standardImportRepository.DeleteAll();
+                UpdateStandardsWithRespectiveSectorId(standards, sectors);
 
                 var standardsImport = standards
                     .Where(c => c != null && c.LarsCode > 0)
@@ -61,11 +58,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     .Select(c => (StandardImport)c)
                     .ToList();
 
+                _standardImportRepository.DeleteAll();
                 await _standardImportRepository.InsertMany(standardsImport);
 
                 _logger.LogInformation("Standards import - starting");
-
-                await LoadDataFromStaging(timeStarted);
             }
             catch (Exception e)
             {
@@ -78,6 +74,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             try
             {
+                var sectorsToImport = await _sectorImportRepository.GetAll();
                 var standardsToInsert = (await _standardImportRepository.GetAll()).ToList();
 
                 if (!standardsToInsert.Any())
@@ -92,7 +89,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 _logger.LogInformation($"Standards import - Adding {standardsToInsert.Count} to Standards table.");
 
-                await _sectorRepository.InsertMany(_sectors.Select(c => (Sector)c).ToList());
+                await _sectorRepository.InsertMany(sectorsToImport.Select(c => (Sector)c).ToList());
 
                 var standards = standardsToInsert.Select(c => (Standard)c).ToList();
                 await _standardRepository.InsertMany(standards);
@@ -107,25 +104,37 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
         }
 
-        private async Task AuditImport(DateTime timeStarted, int rowsImported)
+        private static void UpdateStandardsWithRespectiveSectorId(List<Domain.ImportTypes.Standard> standards, IEnumerable<SectorImport> sectors)
         {
-            var auditRecord = new ImportAudit(timeStarted, rowsImported);
-            await _auditRepository.Insert(auditRecord);
+            foreach (var standard in standards)
+            {
+                standard.RouteId = sectors.Single(c => c.Route.Equals(standard.Route)).Id;
+            }
         }
 
-        private async Task ImportSectorsIntoStaging(List<Domain.ImportTypes.Standard> standards)
+        private async Task LoadSectorsInStaging(IEnumerable<SectorImport> sectors)
         {
-            _sectors = standards
+            _sectorImportRepository.DeleteAll();
+            await _sectorImportRepository.InsertMany(sectors);
+        }
+
+        private static List<SectorImport> GetDistinctSectorsFromStandards(List<Domain.ImportTypes.Standard> standards)
+        {
+            return standards
                 .Select(c => c.Route)
                 .Distinct()
                 .Select(c => new SectorImport
                 {
                     Id = Guid.NewGuid(),
                     Route = c
-                }).ToList();
+                })
+                .ToList();
+        }
 
-            _sectorImportRepository.DeleteAll();
-            await _sectorImportRepository.InsertMany(_sectors);
+        private async Task AuditImport(DateTime timeStarted, int rowsImported)
+        {
+            var auditRecord = new ImportAudit(timeStarted, rowsImported);
+            await _auditRepository.Insert(auditRecord);
         }
     }
 }
