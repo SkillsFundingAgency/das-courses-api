@@ -50,12 +50,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 _logger);
         }
 
-        public async Task ImportDataIntoStaging()
+        public async Task<(bool Success, string FileName)> ImportDataIntoStaging()
         {
             try
             {
-                var importAuditStartTime = DateTime.UtcNow;
-                
                 _logger.LogInformation("LARS Import - data into staging - started");
 
                 var lastFilePath = _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
@@ -67,14 +65,14 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     lastFilePath.Result.FileName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     _logger.LogInformation("LARS Import - no new data to import");
-                    return;
+                    return (false, null);
                 }
 
                 await _larsImportStaging.Import(filePath.Result);
 
                 _logger.LogInformation("LARS Import - data into staging - finished");
 
-                await LoadDataFromStaging(importAuditStartTime, filePath.Result);
+                return (true, filePath.Result);
             }
             catch (Exception e)
             {
