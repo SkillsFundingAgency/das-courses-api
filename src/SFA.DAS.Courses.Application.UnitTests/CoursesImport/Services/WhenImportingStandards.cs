@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,17 +56,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             });
             var sectors = standardsImport.Select(s=>s.Route).Distinct().ToList();
             service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
-            
+
             //Act
             await standardsImportService.ImportDataIntoStaging();
-            
+
             //Assert
-            sectorImportRepository.Verify(x=>x
-                .InsertMany(It.Is<List<SectorImport>>(
-                    c=> c.Count.Equals(sectors.Count())
-                    )), Times.Once);
-            importRepository.Verify(x=>x.InsertMany(
-                It.Is<List<StandardImport>>(std=>std.TrueForAll(c=>c.RouteId != Guid.Empty))));
+            sectorImportRepository.Verify(x => x.InsertMany(It.Is<List<SectorImport>>(c => c.Count.Equals(sectors.Count()))), Times.Once);
+            importRepository.Verify(x=>x.InsertMany(It.Is<List<StandardImport>>(std=>std.TrueForAll(c=>c.RouteId != Guid.Empty))));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -94,82 +90,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_The_Data_Is_Deleted_From_The_Standards_And_Sector_Tables(
-            [Frozen] Mock<IStandardRepository> repository,
-            [Frozen] Mock<ISectorRepository> sectorRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
-            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> standardsImport,
-            StandardsImportService standardsImportService)
-        {
-            //Arrange
-            service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
-            
-            //Act
-            await standardsImportService.ImportDataIntoStaging();
-            
-            //Assert
-            repository.Verify(x=>x.DeleteAll(),Times.Once);
-            sectorRepository.Verify(x=>x.DeleteAll(),Times.Once);
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_The_Data_Is_Loaded_From_The_Staging_Tables(
-            List<StandardImport> standardImportsEntity,
-            List<SectorImport> sectorImportsEntity,
-            [Frozen] Mock<IStandardRepository> repository,
-            [Frozen] Mock<ISectorRepository> sectorRepository,
-            [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<ISectorImportRepository> sectorImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
-            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> apiImportStandards,
-            StandardsImportService standardsImportService)
-        {
-            //Arrange
-            service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
-            importRepository.Setup(x => x.GetAll()).ReturnsAsync(standardImportsEntity);
-            sectorImportRepository.Setup(x => x.GetAll()).ReturnsAsync(sectorImportsEntity);
-            
-            //Act
-            await standardsImportService.ImportDataIntoStaging();
-            
-            //Assert
-            repository.Verify(x=>x.InsertMany(It.Is<List<Standard>>(c=>c.Count.Equals(standardImportsEntity.Count))), Times.Once);
-            sectorRepository.Verify(x=>x.InsertMany(It.Is<List<Sector>>(c=>c.Count.Equals(sectorImportsEntity.Count))), Times.Once);
-
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_If_There_Is_No_Data_In_The_Staging_Table_It_Is_Not_Loaded_Into_Standards_Table_And_Nothing_Is_Deleted(
-            List<StandardImport> standardImportsEntity,
-            [Frozen] Mock<IImportAuditRepository> auditRepository,
-            [Frozen] Mock<IStandardRepository> repository,
-            [Frozen] Mock<ISectorRepository> sectorRepository,
-            [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
-            StandardsImportService standardsImportService)
-        {
-            //Arrange
-            importRepository.Setup(x => x.GetAll()).ReturnsAsync(new List<StandardImport>());
-            
-            //Act
-            await standardsImportService.ImportDataIntoStaging();
-            
-            //Assert
-            repository.Verify(x=>x.DeleteAll(), Times.Never);
-            sectorRepository.Verify(x=>x.DeleteAll(), Times.Never);
-            repository.Verify(x=>x.InsertMany(It.IsAny<List<Standard>>()), Times.Never);
-            sectorRepository.Verify(x=>x.InsertMany(It.IsAny<List<Sector>>()), Times.Never);
-            auditRepository.Verify(x=>
-                x.Insert(It.Is<ImportAudit>(c=>c.RowsImported.Equals(0))), Times.Once);
-        }
-
-        [Test, RecursiveMoqAutoData]
         public async Task Then_Only_ImportedStandards_With_A_LarsCode_Are_Imported(
             int wrongStatusLarsCode,
-            List<StandardImport> standardImportsEntity,
             Domain.ImportTypes.Standard apiStandard1,
             Domain.ImportTypes.Standard apiStandard2,
-            [Frozen] Mock<IStandardRepository> repository,
             [Frozen] Mock<IStandardImportRepository> importRepository,
             [Frozen] Mock<IInstituteOfApprenticeshipService> service,
             List<SFA.DAS.Courses.Domain.ImportTypes.Standard> apiImportStandards,
@@ -195,18 +119,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             importRepository.Verify(x=>
                 x.InsertMany(It.Is<List<StandardImport>>(c=>
                     c.Count.Equals(apiImportStandards.Count-1))), Times.Once);
-
         }
         
         [Test, RecursiveMoqAutoData]
         public async Task Then_Only_The_Latest_Version_Of_ImportedStandards_With_A_LarsCode_Are_Imported(
             int wrongStatusLarsCode,
-            List<StandardImport> standardImportsEntity,
             Domain.ImportTypes.Standard apiStandard1,
             Domain.ImportTypes.Standard apiStandard2,
             Domain.ImportTypes.Standard apiStandard3,
             Domain.ImportTypes.Standard apiStandard4,
-            [Frozen] Mock<IStandardRepository> repository,
             [Frozen] Mock<IStandardImportRepository> importRepository,
             [Frozen] Mock<IInstituteOfApprenticeshipService> service,
             List<SFA.DAS.Courses.Domain.ImportTypes.Standard> apiImportStandards,
@@ -241,30 +162,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             importRepository.Verify(x=>
                 x.InsertMany(It.Is<List<StandardImport>>(c=>
                     c.Count.Equals(apiImportStandards.Count-2) && c.TrueForAll(c=>c.Version.Equals(1.1m)))), Times.Once);
-
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_It_Is_Audited_After_The_Run(
-            List<StandardImport> standardImportsEntity,
-            [Frozen] Mock<IImportAuditRepository> auditRepository,
-            [Frozen] Mock<IStandardRepository> repository,
-            [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
-            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> apiImportStandards,
-            StandardsImportService standardsImportService)
-        {
-            //Arrange
-            service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
-            importRepository.Setup(x => x.GetHashCode());
-            importRepository.Setup(x => x.GetAll()).ReturnsAsync(standardImportsEntity);
-            
-            //Act
-            await standardsImportService.ImportDataIntoStaging();
-            
-            //Assert
-            auditRepository.Verify(x=>
-                x.Insert(It.Is<ImportAudit>(c=>c.RowsImported.Equals(standardImportsEntity.Count))), Times.Once);
         }
     }
 }
