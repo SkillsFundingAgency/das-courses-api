@@ -11,7 +11,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         {
             return new LarsStandard
             {
-                Id = larsStandardImport.Id,
                 Version = larsStandardImport.Version,
                 EffectiveFrom = larsStandardImport.EffectiveFrom,
                 EffectiveTo = larsStandardImport.EffectiveTo,

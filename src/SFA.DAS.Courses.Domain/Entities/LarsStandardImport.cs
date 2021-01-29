@@ -9,7 +9,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         {
             return new LarsStandardImport
             {
-                Id = Guid.NewGuid(),
                 Version = standardCsv.Version,
                 EffectiveFrom = standardCsv.EffectiveFrom,
                 EffectiveTo = standardCsv.EffectiveTo,
