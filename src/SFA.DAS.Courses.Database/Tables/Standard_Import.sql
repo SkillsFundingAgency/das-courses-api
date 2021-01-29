@@ -1,6 +1,9 @@
 ﻿CREATE TABLE [dbo].[Standard_Import]
 (
 	[Id] INT PRIMARY KEY,
+    [IfateReferenceNumber] VARCHAR(10) NOT NULL,
+    [LarsCode] INT NULL,
+    [Status] VARCHAR(100) NOT NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,

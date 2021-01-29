@@ -19,6 +19,9 @@ namespace SFA.DAS.Courses.Domain.Entities
             return new StandardImport
             {
                 Id = standard.LarsCode,
+                LarsCode = standard.LarsCode,
+                IfateReferenceNumber = standard.ReferenceNumber,
+                Status = standard.Status,
                 IntegratedDegree = standard.IntegratedDegree,
                 Level = standard.Level,
                 OverviewOfRole = standard.OverviewOfRole,
