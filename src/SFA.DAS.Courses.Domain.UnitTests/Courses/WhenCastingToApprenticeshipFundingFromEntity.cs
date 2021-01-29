@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
@@ -13,9 +13,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             var actual = (Domain.Courses.ApprenticeshipFunding) apprenticeshipFunding;
             
             actual.Should().BeEquivalentTo(apprenticeshipFunding, options => options
-                .Excluding(c=>c.Id)
-                .Excluding(c=>c.StandardId)
-                .Excluding(c=>c.Standard)
+                .Excluding(c => c.StandardUId)
+                .Excluding(c => c.Id)
+                .Excluding(c => c.LarsCode)
+                .Excluding(c => c.Standard)
             );
         }
     }

@@ -88,9 +88,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var orderBy = OrderBy.Score;
             var standards = new List<Standard>
             {
-                new Standard{Id = 1, SearchScore = 1, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{StandardId = 3}},
-                new Standard{Id = 2, SearchScore = 1, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{StandardId = 1}},
-                new Standard{Id = 3, SearchScore = 1, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{StandardId = 2}}
+                new Standard{Id = 1, SearchScore = 1, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{LarsCode = 3}},
+                new Standard{Id = 2, SearchScore = 1, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{LarsCode = 1}},
+                new Standard{Id = 3, SearchScore = 1, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{LarsCode = 2}}
             };
 
             //Act
@@ -154,9 +154,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var orderBy = OrderBy.Title;
             var standards = new List<Standard>
             {
-                new Standard{Id = 1, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{StandardId = 6}},
-                new Standard{Id = 2, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{StandardId = 4}},
-                new Standard{Id = 3, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{StandardId = 5}}
+                new Standard{Id = 1, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{LarsCode = 6}},
+                new Standard{Id = 2, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{LarsCode = 4}},
+                new Standard{Id = 3, Title = "aardvark", Level = 3, LarsStandard = new LarsStandard{LarsCode = 5}}
             };
 
             //Act

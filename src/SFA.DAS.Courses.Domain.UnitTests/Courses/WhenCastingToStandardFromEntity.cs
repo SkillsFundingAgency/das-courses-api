@@ -9,8 +9,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
     public class WhenCastingToStandardFromEntity
     {
         [Test, RecursiveMoqAutoData]
-        public void Then_Maps_Fields_Appropriately(
-            Domain.Entities.Standard source)
+        public void Then_Maps_Fields_Appropriately(Domain.Entities.Standard source)
         {
             var response = (Standard)source;
 

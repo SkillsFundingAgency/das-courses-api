@@ -14,7 +14,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = standardCsv.EffectiveFrom,
                 EffectiveTo = standardCsv.EffectiveTo,
                 LastDateStarts = standardCsv.LastDateStarts,
-                StandardId = standardCsv.StandardCode,
+                LarsCode = standardCsv.StandardCode,
                 SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2,
                 OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(standardCsv.OtherBodyApprovalRequired)
             };
