@@ -84,7 +84,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 new Standard
                 {
-                    Id = 1,
                     LarsCode = 1,
                     StandardUId = "1",
                     Title = "Head Brewer",
@@ -102,7 +101,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    Id = 2,
                     LarsCode = 2,
                     StandardUId = "2",
                     Title = "Brewer",
@@ -120,7 +118,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    Id = 3,
                     LarsCode = 3,
                     StandardUId = "3",
                     Title = "Senior / head of facilities management (degree)",
@@ -138,7 +135,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    Id = 4,
                     LarsCode = 4,
                     StandardUId = "4",
                     Title = "Dentist",
@@ -156,7 +152,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    Id = 5,
                     LarsCode = 5,
                     StandardUId = "5",
                     Title = "Photographic assistant SortOrder",
@@ -174,7 +169,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    Id = 6,
                     LarsCode = 6,
                     StandardUId = "6",
                     Title = "Camera prep technician",
@@ -192,7 +186,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    Id = 7,
                     LarsCode = 7,
                     StandardUId = "7",
                     Title = "Junior animator SortOrder",
@@ -219,7 +212,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 new Standard
                 {
-                    Id = 11,
                     LarsCode = 11,
                     StandardUId = "11",
                     Title = "Head Brewer - invalid",
@@ -236,7 +228,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    Id = 14,
                     LarsCode = 14,
                     StandardUId = "14",
                     Title = "Dentist - invalid",
@@ -262,7 +253,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 new Standard
                 {
-                    Id = 15,
                     LarsCode = 15,
                     StandardUId = "15",
                     Title = "Assistant Brewer - withdrawn",

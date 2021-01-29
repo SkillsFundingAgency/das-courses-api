@@ -36,7 +36,6 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Ignore(x => x.ApprenticeshipFunding);
             builder.Ignore(x => x.LarsStandard);
             builder.Ignore(x => x.CoreDuties);
-            builder.Ignore(x => x.Id);
 
             builder.HasIndex(x => x.StandardUId).IsUnique();
         }

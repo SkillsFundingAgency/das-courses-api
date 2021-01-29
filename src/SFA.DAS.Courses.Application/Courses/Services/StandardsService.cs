@@ -64,7 +64,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 
             var tempStandards = standards
                 .Join(queryResult.Standards,
-                    standard => standard.Id,
+                    standard => standard.LarsCode,
                     searchStandard => searchStandard.Id,
                     (standard, searchStandard) => new {standard, searchStandard})
                 .ToList();
