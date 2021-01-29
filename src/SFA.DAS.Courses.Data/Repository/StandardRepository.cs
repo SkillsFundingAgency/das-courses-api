@@ -75,12 +75,11 @@ namespace SFA.DAS.Courses.Data.Repository
             }
 
             standards = standards
-                .FilterStandards(filter)
                 .Include(c => c.Sector)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
-                .ThenInclude(c=>c.SectorSubjectArea);
-                
+                .ThenInclude(c => c.SectorSubjectArea)
+                .FilterStandards(filter);
 
             return await standards.ToListAsync();
         }
