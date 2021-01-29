@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
 
-        public static implicit operator Standard(Entities.Standard source)
+        public static explicit operator Standard(Entities.Standard source)
         {
             return new Standard
             {
@@ -59,9 +59,9 @@ namespace SFA.DAS.Courses.Domain.Courses
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFunding)c).ToList(),
                 StandardDates = (StandardDates)source.LarsStandard,
-                SectorSubjectAreaTier2 = source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2,
-                SectorSubjectAreaTier2Description = source.LarsStandard.SectorSubjectArea.Name,
-                OtherBodyApprovalRequired = source.LarsStandard.OtherBodyApprovalRequired,
+                SectorSubjectAreaTier2 = source?.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2 ?? 0m,
+                SectorSubjectAreaTier2Description = source?.LarsStandard.SectorSubjectArea.Name,
+                OtherBodyApprovalRequired = source?.LarsStandard.OtherBodyApprovalRequired ?? false,
                 ApprovalBody = source.RegulatedBody,
                 Duties = source.Duties,
                 CoreAndOptions = source.CoreAndOptions,
