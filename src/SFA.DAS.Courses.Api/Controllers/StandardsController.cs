@@ -34,17 +34,10 @@ namespace SFA.DAS.Courses.Api.Controllers
             [FromQuery] IList<Guid> routeIds, 
             [FromQuery] IList<int> levels,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
-            [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
+            [FromQuery] StandardFilter filter = StandardFilter.None)
         {
             try
             {
-                if(filter == StandardFilter.None)
-                {
-                    // If filter = None specified it overrides default. 
-                    // Defensive catch until Standards Version improvements
-                    filter = StandardFilter.ActiveAvailable;
-                }
-
                 var queryResult = await _mediator.Send(new GetStandardsListQuery
                 {
                     Keyword = keyword, 
