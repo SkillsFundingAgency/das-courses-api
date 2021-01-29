@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.Should().BeEquivalentTo(apprenticeshipFundingImport, options=> options
                 .Excluding(c=>c.Standard)
                 .Excluding(c=>c.Id)
-                .Excluding(c=>c.StandardId)
+                .Excluding(c=>c.LarsCode)
             );
         }
     }

@@ -9,9 +9,9 @@ namespace SFA.DAS.Courses.Data.Configuration
         public void Configure(EntityTypeBuilder<Domain.Entities.StandardImport> builder)
         {
             builder.ToTable("Standard_Import");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.StandardUId);
 
-            builder.Property(x => x.Id).HasColumnName("Id").HasColumnType("int").IsRequired();
+            builder.Property(x => x.StandardUId).HasColumnName("StandardUId").HasColumnType("varchar").HasMaxLength(20).IsRequired();
             builder.Property(x => x.LarsCode).HasColumnName("LarsCode").HasColumnType("int");
             builder.Property(x => x.IfateReferenceNumber).HasColumnName("IfateReferenceNumber").HasColumnType("varchar").HasMaxLength(10).IsRequired();
             builder.Property(x => x.Status).HasColumnName("Status").HasColumnType("varchar").HasMaxLength(100).IsRequired();
@@ -36,8 +36,9 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Ignore(x => x.ApprenticeshipFunding);
             builder.Ignore(x => x.LarsStandard);
             builder.Ignore(x => x.CoreDuties);
+            builder.Ignore(x => x.Id);
 
-            builder.HasIndex(x => x.Id).IsUnique();
+            builder.HasIndex(x => x.StandardUId).IsUnique();
         }
     }
 }

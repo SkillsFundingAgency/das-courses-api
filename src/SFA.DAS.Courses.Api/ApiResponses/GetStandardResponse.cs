@@ -7,6 +7,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
     public class GetStandardResponse
     {
         public int Id { get; set; }
+        public string StandardUId { get; set; }
         public string IfateReferenceNumber { get; set; }
         public int LarsCode { get; set; }
         public string Status { get; set; }
@@ -42,6 +43,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
             return new GetStandardResponse
             {
                 Id = source.Id,
+                StandardUId = source.StandardUId,
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 LarsCode = source.LarsCode,
                 Status = source.Status,

@@ -85,6 +85,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     Id = 1,
+                    LarsCode = 1,
+                    StandardUId = "1",
                     Title = "Head Brewer",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -94,13 +96,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 1,
+                        LarsCode = 1,
                         SectorSubjectAreaTier2 = 1m
                     }
                 },
                 new Standard
                 {
                     Id = 2,
+                    LarsCode = 2,
+                    StandardUId = "2",
                     Title = "Brewer",
                     Keywords = "Brewer, Beer",
                     TypicalJobTitles = "Brewery operations",
@@ -110,13 +114,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 2,
+                        LarsCode = 2,
                         SectorSubjectAreaTier2 = 1m
                     }
                 },
                 new Standard
                 {
                     Id = 3,
+                    LarsCode = 3,
+                    StandardUId = "3",
                     Title = "Senior / head of facilities management (degree)",
                     Keywords = "Head",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -126,13 +132,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 3,
+                        LarsCode = 3,
                         SectorSubjectAreaTier2 = 1.1m
                     }
                 },
                 new Standard
                 {
                     Id = 4,
+                    LarsCode = 4,
+                    StandardUId = "4",
                     Title = "Dentist",
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
@@ -142,13 +150,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 4,
+                        LarsCode = 4,
                         SectorSubjectAreaTier2 = 1.1m
                     }
                 },
                 new Standard
                 {
                     Id = 5,
+                    LarsCode = 5,
+                    StandardUId = "5",
                     Title = "Photographic assistant SortOrder",
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
@@ -158,13 +168,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 5,
+                        LarsCode = 5,
                         SectorSubjectAreaTier2 = 1m
                     }
                 },
                 new Standard
                 {
                     Id = 6,
+                    LarsCode = 6,
+                    StandardUId = "6",
                     Title = "Camera prep technician",
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
@@ -174,13 +186,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 6,
+                        LarsCode = 6,
                         SectorSubjectAreaTier2 = 1.1m
                     }
                 },
                 new Standard
                 {
                     Id = 7,
+                    LarsCode = 7,
+                    StandardUId = "7",
                     Title = "Junior animator SortOrder",
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Junior animator|SortOrder",
@@ -190,7 +204,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        StandardId = 7,
+                        LarsCode = 7,
                         SectorSubjectAreaTier2 = 1m
                     }
                 }
@@ -206,6 +220,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     Id = 11,
+                    LarsCode = 11,
+                    StandardUId = "11",
                     Title = "Head Brewer - invalid",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -214,13 +230,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
-                        StandardId = 11,
+                        LarsCode = 11,
                         SectorSubjectAreaTier2 = 1m
                     }
                 },
                 new Standard
                 {
                     Id = 14,
+                    LarsCode = 14,
+                    StandardUId = "14",
                     Title = "Dentist - invalid",
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
@@ -229,7 +247,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
-                        StandardId = 14,
+                        LarsCode = 14,
                         SectorSubjectAreaTier2 = 1m
                     }
                 }
@@ -245,6 +263,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     Id = 15,
+                    LarsCode = 15,
+                    StandardUId = "15",
                     Title = "Assistant Brewer - withdrawn",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Assistant of brewery operations",
