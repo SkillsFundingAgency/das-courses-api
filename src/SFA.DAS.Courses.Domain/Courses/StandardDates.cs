@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Domain.Courses
@@ -11,8 +11,13 @@ namespace SFA.DAS.Courses.Domain.Courses
 
         public DateTime EffectiveFrom { get ; set ; }
 
-        public static implicit operator StandardDates(LarsStandard larsStandard)
+        public static explicit operator StandardDates(LarsStandard larsStandard)
         {
+            if(larsStandard == null)
+            {
+                return null;
+            }
+
             return new StandardDates
             {
                 EffectiveFrom = larsStandard.EffectiveFrom,

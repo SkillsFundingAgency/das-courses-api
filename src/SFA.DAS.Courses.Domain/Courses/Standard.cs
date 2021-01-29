@@ -58,7 +58,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFunding)c).ToList(),
-                StandardDates = source.LarsStandard,
+                StandardDates = (StandardDates)source.LarsStandard,
                 SectorSubjectAreaTier2 = source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Description = source.LarsStandard.SectorSubjectArea.Name,
                 OtherBodyApprovalRequired = source.LarsStandard.OtherBodyApprovalRequired,
