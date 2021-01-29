@@ -52,9 +52,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 UpdateStandardsWithRespectiveSectorId(standards, sectors);
 
                 var standardsImport = standards
-                    .Where(c => c != null && c.LarsCode > 0)
-                    .GroupBy(c => c.LarsCode)
-                    .Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault())
                     .Select(c => (StandardImport)c)
                     .ToList();
 

@@ -12,11 +12,10 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Id =  Guid.NewGuid(),
                 EffectiveFrom = apprenticeshipFundingCsv.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingCsv.EffectiveTo,
-                StandardId = apprenticeshipFundingCsv.ApprenticeshipCode,
+                LarsCode = apprenticeshipFundingCsv.ApprenticeshipCode,
                 MaxEmployerLevyCap = Convert.ToInt32(apprenticeshipFundingCsv.MaxEmployerLevyCap),
                 Duration = (int)apprenticeshipFundingCsv.Duration
             }; 
-                
         }
     }
 }

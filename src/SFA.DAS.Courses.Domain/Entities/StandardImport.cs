@@ -19,6 +19,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             return new StandardImport
             {
                 Id = standard.LarsCode,
+                StandardUId = GetStandardUId(standard.ReferenceNumber, standard.Version),
                 LarsCode = standard.LarsCode,
                 IfateReferenceNumber = standard.ReferenceNumber,
                 Status = standard.Status,
@@ -40,6 +41,12 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreDuties = coreDuties,
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard)
             };
+        }
+
+        private static string GetStandardUId(string ifateReferenceNumber, decimal? version)
+        {
+            var derivedVersion = version.HasValue && version != 0 ? version.Value : 1;
+            return $"{ifateReferenceNumber}_{derivedVersion.ToString("0.0")}";
         }
 
         private static bool SetIsIntegratedApprenticeship(Domain.ImportTypes.Standard standard)

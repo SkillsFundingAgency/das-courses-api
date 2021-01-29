@@ -6,6 +6,7 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class StandardBase
     {
         public int Id { get; set; }
+        public string StandardUId { get; set; }
         public string IfateReferenceNumber { get; set; }
         public int LarsCode { get; set; }
         public string Status { get; set; }

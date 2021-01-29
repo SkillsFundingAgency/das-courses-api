@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     .Excluding(c=>c.ApprenticeshipCode)
                     .Excluding(c=>c.ApprenticeshipType)
                 );
-            actual.StandardId.Should().Be(apprenticeshipFundingCsv.ApprenticeshipCode);
+            actual.LarsCode.Should().Be(apprenticeshipFundingCsv.ApprenticeshipCode);
         }
     }
 }
