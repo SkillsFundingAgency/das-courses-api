@@ -18,7 +18,6 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             return new StandardImport
             {
-                Id = standard.LarsCode,
                 StandardUId = GetStandardUId(standard.ReferenceNumber, standard.Version),
                 LarsCode = standard.LarsCode,
                 IfateReferenceNumber = standard.ReferenceNumber,

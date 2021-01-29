@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -21,11 +21,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardImportRepository
             {
                 new StandardImport
                 {
-                    Id = 1
+                    LarsCode = 1
                 },
                 new StandardImport
                 {
-                    Id = 2
+                    LarsCode = 2
                 }
             };
             

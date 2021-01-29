@@ -46,7 +46,7 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Include(c=>c.ApprenticeshipFunding)
                 .Include(c=>c.LarsStandard)
                 .ThenInclude(c=>c.SectorSubjectArea)
-                .SingleOrDefaultAsync(c=>c.Id.Equals(id));
+                .SingleOrDefaultAsync(c=>c.LarsCode.Equals(id));
 
             if (standard == null)
             {

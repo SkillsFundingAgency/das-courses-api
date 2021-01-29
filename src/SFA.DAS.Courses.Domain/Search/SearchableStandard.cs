@@ -9,7 +9,7 @@ namespace SFA.DAS.Courses.Domain.Search
     {
         public SearchableStandard(Standard standard)
         {
-            Id = standard.Id;
+            Id = standard.LarsCode;
             Title = standard.Title;
             TypicalJobTitles = standard.TypicalJobTitles;
             Keywords = standard.Keywords;

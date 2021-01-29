@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -26,11 +26,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             {
                 new Standard()
                 {
-                    Id = 1
+                    LarsCode = 1
                 },
                 new Standard
                 {
-                    Id = ExpectedStandardId
+                    LarsCode = ExpectedStandardId
                 }
             };
             
@@ -48,7 +48,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             
             //Assert
             Assert.IsNotNull(standards);
-            standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c=>c.Id.Equals(ExpectedStandardId)));
+            standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c=>c.LarsCode.Equals(ExpectedStandardId)));
         }
         
         [Test]
