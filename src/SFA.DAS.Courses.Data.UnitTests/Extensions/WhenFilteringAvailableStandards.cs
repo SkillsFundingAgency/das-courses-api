@@ -126,7 +126,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         }
 
         [Test]
-        public void Then_If_The_FilterAvailableToStart_Param_Is_False_Then_All_Standards_Are_Returned()
+        public void Then_If_The_Filter_Param_Is_Active_Then_All_Standards_Are_Returned()
         {
             //Arrange
             var sameDate = DateTime.UtcNow;
@@ -141,7 +141,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     {
                         EffectiveFrom = sameDate,
                         LastDateStarts = sameDate
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -151,7 +152,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     {
                         EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
                         LastDateStarts = DateTime.UtcNow.AddDays(-1)
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -161,7 +163,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     {
                         EffectiveFrom = DateTime.UtcNow.AddMonths(1),
                         LastDateStarts = null
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -172,7 +175,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                         {
                             EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
                             LastDateStarts = DateTime.UtcNow.AddMonths(-1)
-                        }
+                        },
+                    Status = "Approved for delivery"
                 }
             }.AsQueryable();
             
@@ -185,7 +189,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         }
         
         [Test]
-        public void Then_If_The_FilterAvailableToStart_Param_Is_False_Then_All_Standards_With_Lars_Records_Are_Returned()
+        public void Then_If_The_Filter_Param_Is_Active_Then_All_Standards_With_Lars_Records_Are_Returned()
         {
             //Arrange
             var sameDate = DateTime.UtcNow;
@@ -200,13 +204,15 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     {
                         EffectiveFrom = sameDate,
                         LastDateStarts = sameDate
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
                     Title = "Not Available",
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
-                    LarsStandard = null
+                    LarsStandard = null,
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -217,7 +223,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                         {
                             EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
                             LastDateStarts = DateTime.UtcNow.AddMonths(-1)
-                        }
+                        },
+                    Status = "Approved for delivery"
                 }
             }.AsQueryable();
             
@@ -239,7 +246,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     {
                         EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
                         LastDateStarts = null
-                    }
+                    },
+                Status = "Approved for delivery"
                 
             };
         }

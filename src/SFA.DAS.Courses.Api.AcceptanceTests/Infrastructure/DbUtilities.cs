@@ -97,7 +97,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LastDateStarts = null,
                         LarsCode = 1,
                         SectorSubjectAreaTier2 = 1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -114,7 +115,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LastDateStarts = null,
                         LarsCode = 2,
                         SectorSubjectAreaTier2 = 1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -131,7 +133,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LastDateStarts = null,
                         LarsCode = 3,
                         SectorSubjectAreaTier2 = 1.1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -148,7 +151,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LastDateStarts = null,
                         LarsCode = 4,
                         SectorSubjectAreaTier2 = 1.1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -165,7 +169,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LastDateStarts = null,
                         LarsCode = 5,
                         SectorSubjectAreaTier2 = 1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -182,7 +187,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LastDateStarts = null,
                         LarsCode = 6,
                         SectorSubjectAreaTier2 = 1.1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -199,7 +205,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LastDateStarts = null,
                         LarsCode = 7,
                         SectorSubjectAreaTier2 = 1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 }
             };
         }
@@ -224,7 +231,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
                         LarsCode = 11,
                         SectorSubjectAreaTier2 = 1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 },
                 new Standard
                 {
@@ -240,7 +248,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
                         LarsCode = 14,
                         SectorSubjectAreaTier2 = 1m
-                    }
+                    },
+                    Status = "Approved for delivery"
                 }
             };
         }
@@ -255,12 +264,24 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 15,
                     StandardUId = "15",
-                    Title = "Assistant Brewer - withdrawn",
+                    Title = "Assistant Brewer - Proposal in development",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Assistant of brewery operations",
                     Level = 1,
                     RouteId = sectors[0].Id,
-                    LarsStandard = null
+                    LarsStandard = null,
+                    Status = "Proposal in development"
+                },
+                 new Standard
+                {
+                    Id = 16,
+                    Title = "Metallurgy Engineer - In development",
+                    Keywords = "Metallurgy, Engineer, Metal",
+                    TypicalJobTitles = "Metallurgy Engineer",
+                    Level = 4,
+                    RouteId = sectors[0].Id,
+                    LarsStandard = null,
+                    Status = "In development"
                 }
             };
         }

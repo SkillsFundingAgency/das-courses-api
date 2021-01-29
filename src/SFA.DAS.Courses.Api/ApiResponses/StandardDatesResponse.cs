@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
@@ -11,8 +11,12 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public DateTime EffectiveFrom { get ; set ; }
 
-        public static implicit operator StandardDatesResponse(StandardDates standardDates)
+        public static explicit operator StandardDatesResponse(StandardDates standardDates)
         {
+            if(standardDates == null)
+            {
+                return null;
+            }
             return new StandardDatesResponse
             {
                 EffectiveFrom = standardDates.EffectiveFrom,
