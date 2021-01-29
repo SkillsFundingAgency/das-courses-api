@@ -8,7 +8,6 @@
         {
             return new Standard
             {
-                Id = standard.Id,
                 StandardUId = standard.StandardUId,
                 LarsCode = standard.LarsCode,
                 IfateReferenceNumber = standard.IfateReferenceNumber,

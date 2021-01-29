@@ -30,7 +30,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                  .Excluding(c => c.ReferenceNumber)
             );
 
-            actual.Id.Should().Be(standard.LarsCode);
+            actual.LarsCode.Should().Be(standard.LarsCode);
             actual.StandardPageUrl.Should().Be(standard.StandardPageUrl.AbsoluteUri);
             actual.TypicalJobTitles.Should().Be(string.Join("|", standard.TypicalJobTitles));
         }
