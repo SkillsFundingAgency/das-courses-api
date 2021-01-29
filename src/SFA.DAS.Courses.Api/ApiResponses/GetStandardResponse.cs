@@ -60,7 +60,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
-                StandardDates = source.StandardDates,
+                StandardDates = (StandardDatesResponse)source.StandardDates,
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description,
                 OtherBodyApprovalRequired = source.OtherBodyApprovalRequired,

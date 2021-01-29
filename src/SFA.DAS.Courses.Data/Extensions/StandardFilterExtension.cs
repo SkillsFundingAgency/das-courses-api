@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
 
@@ -40,8 +43,8 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             var filteredStandards = standards
                 .HasLarsStandard()
-                .IsLatestVersion()
-                .StatusIsOneOf("Approved for delivery");
+                .StatusIsOneOf("Approved for delivery")
+                .IsLatestVersion();
 
             return filteredStandards;
         }
@@ -50,7 +53,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             var filteredStandards = standards.Where(ls => ls.LarsCode == 0)
                                     .StatusIsOneOf("Proposal in development", "In development");
-                
+
             return filteredStandards;
         }
 
@@ -69,12 +72,28 @@ namespace SFA.DAS.Courses.Data.Extensions
 
         private static IQueryable<Standard> StatusIsOneOf(this IQueryable<Standard> standards, params string[] statuses)
         {
-            return standards.Where(ls => statuses.Contains(ls.Status, StringComparer.InvariantCultureIgnoreCase));
+            //Database case insensitive so satisfies the translated SQL IN statement
+            return standards.Where(ls => statuses.Contains(ls.Status));
         }
 
         private static IQueryable<Standard> IsLatestVersion(this IQueryable<Standard> standards)
         {
-            return standards.GroupBy(c => c.LarsCode).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+            //return standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+
+            //var results = standards.OrderByDescending(s => s.Version).Select(t => t.IfateReferenceNumber).Distinct().  GroupBy(s => s.IfateReferenceNumber).Select(c => c.(d => d.Version) ));
+
+            //Above line is the desired query, however it won't be executed in the database due to restrictions in how EF Core works
+            // As a result, the below is a workaround to leverage DB querying
+            // It selects on the IFate Ref number and distinct which would selected the highest version
+            // 
+
+            //var subQuery = standards.OrderByDescending(o => o.Version);
+            //var filteredResults = standards.Select(s => s.IfateReferenceNumber)
+            //    .Distinct()
+            //    .Select(a => subQuery.Where(b => b.IfateReferenceNumber == a).Take(1));
+
+            // current data set doesn't need the filter, need to work on this.
+            return standards;
         }
     }
 }

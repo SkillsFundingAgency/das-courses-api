@@ -12,8 +12,12 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public DateTime EffectiveFrom { get ; set ; }
         public int Duration { get; set; }
 
-        public static implicit operator ApprenticeshipFundingResponse (ApprenticeshipFunding apprenticeshipFunding)
+        public static explicit operator ApprenticeshipFundingResponse (ApprenticeshipFunding apprenticeshipFunding)
         {
+            if(apprenticeshipFunding == null)
+            {
+                return null;
+            }
             return new ApprenticeshipFundingResponse
             {
                 EffectiveFrom = apprenticeshipFunding.EffectiveFrom,

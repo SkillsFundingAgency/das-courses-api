@@ -33,6 +33,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
             fixture.Customize<LarsStandard>(composer => 
                 composer.With(standard => standard.EffectiveFrom, DateTime.Today.AddDays(-1))
                         .Without(standard => standard.LastDateStarts));
+
+            fixture.Customize<Standard>(composer =>
+                composer.With(standard => standard.Status,"Approved for delivery"));
         }
     }
 }
