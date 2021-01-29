@@ -23,12 +23,12 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingReposit
                 new ApprenticeshipFunding
                 {
                     Id = Guid.NewGuid(),
-                    StandardId = 1
+                    LarsCode = 1
                 },
                 new ApprenticeshipFunding
                 {
                     Id = Guid.NewGuid(),
-                    StandardId = 2
+                    LarsCode = 2
                 }
             };
 

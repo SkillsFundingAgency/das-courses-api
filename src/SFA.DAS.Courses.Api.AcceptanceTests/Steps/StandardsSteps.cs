@@ -33,6 +33,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
             model.Standards.Should().BeEquivalentTo(DbUtilities.GetValidTestStandards(), options=> options
+                    .Excluding(std => std.Id)
                     .Excluding(std=>std.Sector)
                     .Excluding(std=>std.ApprenticeshipFunding)
                     .Excluding(std=>std.LarsStandard)
@@ -60,6 +61,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standardsList.AddRange(DbUtilities.GetInValidTestStandards());
 
             model.Standards.Should().BeEquivalentTo(standardsList, options => options
+                    .Excluding(std => std.Id)
                     .Excluding(std => std.Sector)
                     .Excluding(std => std.ApprenticeshipFunding)
                     .Excluding(std => std.LarsStandard)
@@ -89,6 +91,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standardsList.AddRange(DbUtilities.GetNotYetApprovedTestStandards());
 
             model.Standards.Should().BeEquivalentTo(standardsList, options => options
+                    .Excluding(std => std.Id)
                     .Excluding(std => std.Sector)
                     .Excluding(std => std.ApprenticeshipFunding)
                     .Excluding(std => std.LarsStandard)
@@ -115,6 +118,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             model.Standards.Should().BeEquivalentTo(
                 GetExpected(table), options=> options
                     .WithStrictOrdering()
+                    .Excluding(std => std.Id)
                     .Excluding(std=>std.Sector)
                     .Excluding(std=>std.ApprenticeshipFunding)
                     .Excluding(std=>std.LarsStandard)

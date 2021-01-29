@@ -16,9 +16,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             
             actual.Should().BeEquivalentTo(larsStandard, options=> options
                 .Excluding(c=>c.Id)
-                .Excluding(c=>c.StandardId)
+                .Excluding(c=>c.LarsCode)
                 .Excluding(c=>c.Version)
-                .Excluding(c=>c.Standard)
+                .Excluding(c=>c.Standards)
                 .Excluding(c=>c.SectorSubjectArea)
                 .Excluding(c=>c.SectorSubjectAreaTier2)
                 .Excluding(c => c.OtherBodyApprovalRequired)
