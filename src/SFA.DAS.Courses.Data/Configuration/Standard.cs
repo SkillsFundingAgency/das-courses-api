@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Courses.Data.Extensions;
-using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Data.Configuration
 {
@@ -14,6 +12,9 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id).HasColumnName("Id").HasColumnType("int").IsRequired();
+            builder.Property(x => x.LarsCode).HasColumnName("LarsCode").HasColumnType("int");
+            builder.Property(x => x.IfateReferenceNumber).HasColumnName("IfateReferenceNumber").HasColumnType("varchar").HasMaxLength(10).IsRequired();
+            builder.Property(x => x.Status).HasColumnName("Status").HasColumnType("varchar").HasMaxLength(100).IsRequired();
             builder.Property(x => x.Title).HasColumnName("Title").HasColumnType("varchar").HasMaxLength(1000).IsRequired();
             builder.Property(x => x.IntegratedDegree).HasColumnName("IntegratedDegree").HasColumnType("varchar").HasMaxLength(100).IsRequired();
             builder.Property(x => x.Level).HasColumnName("Level").HasColumnType("int").IsRequired();

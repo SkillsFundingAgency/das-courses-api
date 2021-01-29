@@ -7,6 +7,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 {
     public class Standard
     {
+        [JsonProperty("referenceNumber")]
+        public string ReferenceNumber { get; set; }
+
         [JsonProperty("larsCode")]
         public int LarsCode { get; set; }
 
