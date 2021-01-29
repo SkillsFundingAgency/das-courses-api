@@ -1,7 +1,6 @@
 ﻿CREATE TABLE [dbo].[LarsStandard_Import]
 (
 	[LarsCode] INT PRIMARY KEY,
-	[Id] UNIQUEIDENTIFIER ,
 	[Version] INT NOT NULL,
 	[EffectiveFrom] DATETIME NOT NULL,
 	[EffectiveTo] DATETIME NULL,
