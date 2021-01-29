@@ -13,7 +13,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (LarsStandard) larsStandardImport;
             
             actual.Should().BeEquivalentTo(larsStandardImport, options => options
-                .Excluding(c=>c.Id)
                 .Excluding(c=>c.LarsCode)
             );
         }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
@@ -20,11 +20,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardRepository
             {
                 new LarsStandard
                 {
-                    Id = Guid.NewGuid()
+                    LarsCode = 1
                 },
                 new LarsStandard
                 {
-                    Id = Guid.NewGuid()
+                    LarsCode = 2
                 }
             };
             

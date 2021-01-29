@@ -15,7 +15,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             var actual = (StandardDates) larsStandard;
             
             actual.Should().BeEquivalentTo(larsStandard, options=> options
-                .Excluding(c=>c.Id)
                 .Excluding(c=>c.LarsCode)
                 .Excluding(c=>c.Version)
                 .Excluding(c=>c.Standards)

@@ -8,9 +8,8 @@ namespace SFA.DAS.Courses.Data.Configuration
         public void Configure(EntityTypeBuilder<Domain.Entities.LarsStandardImport> builder)
         {
             builder.ToTable("LarsStandard_Import");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.LarsCode);
 
-            builder.Property(x => x.Id).HasColumnName("Id").HasColumnType("uniqueidentifier").IsRequired();
             builder.Property(x => x.LarsCode).HasColumnName("LarsCode").HasColumnType("int").IsRequired();
             builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("int").IsRequired();
             builder.Property(x => x.EffectiveFrom).HasColumnName("EffectiveFrom").HasColumnType("datetime").IsRequired();
