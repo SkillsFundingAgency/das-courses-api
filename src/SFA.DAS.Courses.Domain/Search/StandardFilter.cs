@@ -4,6 +4,7 @@
     {
         None, 
         Active,
-        ActiveAvailable
+        ActiveAvailable,
+        NotYetApproved
     }
 }
