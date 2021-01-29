@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -21,11 +21,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             {
                 new Standard()
                 {
-                    Id = 1
+                    LarsCode = 1
                 },
                 new Standard
                 {
-                    Id = 2
+                    LarsCode = 2
                 }
             };
             

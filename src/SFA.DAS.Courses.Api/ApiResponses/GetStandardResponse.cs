@@ -42,7 +42,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         {
             return new GetStandardResponse
             {
-                Id = source.Id,
                 StandardUId = source.StandardUId,
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 LarsCode = source.LarsCode,
