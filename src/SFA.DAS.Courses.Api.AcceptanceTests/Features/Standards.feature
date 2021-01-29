@@ -74,6 +74,6 @@ Scenario: Get list of standards
 	Given I have an http client
     When I GET the following url: /api/courses/standards
     Then an http status code of 200 is returned
-    And all valid standards are returned
+    And all standards are returned
     
     
