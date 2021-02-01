@@ -41,6 +41,7 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .WithMany(c => c.Standards)
                 .HasForeignKey(s => s.LarsCode)
                 .HasPrincipalKey(l => l.LarsCode)
+                .IsRequired(false)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.HasMany(c => c.ApprenticeshipFunding)

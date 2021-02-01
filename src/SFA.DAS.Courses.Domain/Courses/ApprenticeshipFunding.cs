@@ -11,9 +11,13 @@ namespace SFA.DAS.Courses.Domain.Courses
         public int MaxEmployerLevyCap { get ; set ; }
         public int Duration { get; set; }
 
-        public static implicit operator ApprenticeshipFunding(
-            Domain.Entities.ApprenticeshipFunding apprenticeshipFunding)
+        public static explicit operator ApprenticeshipFunding(Domain.Entities.ApprenticeshipFunding apprenticeshipFunding)
         {
+            if(apprenticeshipFunding == null)
+            {
+                return null;
+            }
+
             return new ApprenticeshipFunding
             {
                 EffectiveFrom = apprenticeshipFunding.EffectiveFrom,
