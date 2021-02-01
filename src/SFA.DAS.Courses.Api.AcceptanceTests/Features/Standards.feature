@@ -3,13 +3,13 @@
     I want to retrieve standards
     So that I can use them in my own application
 
-Scenario: Get list of standards
+Scenario: Get list of active and available standards
 	Given I have an http client
     When I GET the following url: /api/courses/standards?filter=ActiveAvailable
     Then an http status code of 200 is returned
     And all valid standards are returned
 
-    Scenario: Get list of standards by keyword
+    Scenario: Get list of standards by keyword that are active and available
 	Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=beer&filter=ActiveAvailable
     Then an http status code of 200 is returned
@@ -18,7 +18,7 @@ Scenario: Get list of standards
     | Brewer      | 1     | Engineering and manufacturing |
     | Head Brewer | 2     | Engineering and manufacturing |
 
-    Scenario: Get list of standards by levels
+    Scenario: Get list of standards by levels that are active and available
 	Given I have an http client
     When I GET the following url: /api/courses/standards?levels=1&levels=7&filter=ActiveAvailable
     Then an http status code of 200 is returned
@@ -27,7 +27,7 @@ Scenario: Get list of standards
     | Brewer  | 1     | Engineering and manufacturing |
     | Dentist | 7     | Construction                  |
 
-    Scenario: Get list of standards by sectors
+    Scenario: Get list of standards by sectors that are active and available
 	Given I have an http client
     When I GET the following url: /api/courses/standards?routeIds=B30D7750-9ADF-41BA-94BD-E4584128EC76&filter=ActiveAvailable
     Then an http status code of 200 is returned
@@ -36,7 +36,7 @@ Scenario: Get list of standards
     | Dentist                                         | 7     | Construction |
     | Senior / head of facilities management (degree) | 6     | Construction |
 
-    Scenario: Get list of standards by keyword and levels
+    Scenario: Get list of standards by keyword and levels that are active and available
 	Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=beer&levels=1&filter=ActiveAvailable
     Then an http status code of 200 is returned
@@ -44,7 +44,7 @@ Scenario: Get list of standards
     | title       | level | sector                        |
     | Brewer      | 1     | Engineering and manufacturing |
 
-    Scenario: Get list of standards by keyword sorted by relevance
+    Scenario: Get list of standards by keyword sorted by relevance that are active and available
 	Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=score&filter=ActiveAvailable
     Then an http status code of 200 is returned
@@ -54,7 +54,7 @@ Scenario: Get list of standards
     | Photographic assistant SortOrder | 3     | Creative and design |
     | Camera prep technician           | 3     | Creative and design |
 
-    Scenario: Get list of standards by keyword sorted by name
+    Scenario: Get list of standards by keyword sorted by name that are active and available
 	Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=title&filter=ActiveAvailable
     Then an http status code of 200 is returned
@@ -70,10 +70,16 @@ Scenario: Get list of standards
     Then an http status code of 200 is returned
     Then all valid and invalid standards are returned
 
-    Scenario: Get list of active standards with no filter
+    Scenario: Get list of standards with no filter
 	Given I have an http client
     When I GET the following url: /api/courses/standards
     Then an http status code of 200 is returned
     And all standards are returned
+
+    Scenario: Get list of not yet approved standards
+	Given I have an http client
+    When I GET the following url: /api/courses/standards?filter=NotYetApproved
+    Then an http status code of 200 is returned
+    And all not yet approved standards are returned
     
     
