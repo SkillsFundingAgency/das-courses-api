@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -36,10 +37,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             DateTime importStartTime,
             string filePath,
             List<LarsStandardImport> larsStandardImports,
-            List<ApprenticeshipFundingImport> apprenticeshipFundingImports,
             List<SectorSubjectAreaTier2Import> sectorSubjectAreaTier2Imports,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
-            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
             [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
             [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
@@ -48,7 +47,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         {
             //Arrange
             larsStandardImportRepository.Setup(x => x.GetAll()).ReturnsAsync(larsStandardImports);
-            apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);
             sectorSubjectAreaTier2ImportRepository.Setup(x => x.GetAll()).ReturnsAsync(sectorSubjectAreaTier2Imports);
 
             //Act
@@ -56,8 +54,78 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             //Assert
             larsStandardRepository.Verify(x => x.InsertMany(It.Is<List<LarsStandard>>(c => c.Count.Equals(larsStandardImports.Count))), Times.Once);
-            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Count.Equals(apprenticeshipFundingImports.Count))), Times.Once);
-            sectorSubjectAreaTier2Repository.Verify(x => x.InsertMany(It.Is<List<SectorSubjectAreaTier2>>(c => c.Count.Equals(apprenticeshipFundingImports.Count))), Times.Once);
+            sectorSubjectAreaTier2Repository.Verify(x => x.InsertMany(It.Is<List<SectorSubjectAreaTier2>>(c => c.Count.Equals(sectorSubjectAreaTier2Imports.Count))), Times.Once);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_FundingData_Is_Added_From_The_Import_Repository_Along_With_StandardUId(
+            DateTime importStartTime,
+            string filePath,
+            [Frozen] Mock<IStandardImportRepository> standardImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
+            LarsImportService larsImportService)
+        {
+            //Arrange
+            var standardImports = new List<StandardImport> 
+            { 
+                new StandardImport { LarsCode = 1, StandardUId = "ST0001_1.0" },
+                new StandardImport { LarsCode = 2, StandardUId = "ST0002_1.0" },
+                new StandardImport { LarsCode = 2, StandardUId = "ST0002_1.1" }
+            };
+            standardImportRepository.Setup(s => s.GetAll()).ReturnsAsync(standardImports);
+
+            var apprenticeshipFundingImports = new List<ApprenticeshipFundingImport>
+            { 
+                new ApprenticeshipFundingImport { LarsCode = 1, Id = Guid.NewGuid() },
+                new ApprenticeshipFundingImport { LarsCode = 1, Id = Guid.NewGuid() },
+                new ApprenticeshipFundingImport { LarsCode = 2, Id = Guid.NewGuid() },
+                new ApprenticeshipFundingImport { LarsCode = 2, Id = Guid.NewGuid() }
+            };
+            apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);
+
+            //Act
+            await larsImportService.LoadDataFromStaging(importStartTime, filePath);
+
+            //Assert
+            standardImportRepository.Verify(x => x.GetAll(), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Count.Equals(6))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.StandardUId == "ST0001_1.0").Count().Equals(2))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.StandardUId == "ST0002_1.0").Count().Equals(2))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.StandardUId == "ST0002_1.1").Count().Equals(2))), Times.Once);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_FundingData_Is_Added_From_The_Import_Repository_For_Matching_LarsCode_In_Standard(
+            DateTime importStartTime,
+            string filePath,
+            [Frozen] Mock<IStandardImportRepository> standardImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
+            LarsImportService larsImportService)
+        {
+            //Arrange
+            var standardImports = new List<StandardImport>
+            {
+                new StandardImport { LarsCode = 1, StandardUId = "ST0001_1.0" },
+                new StandardImport { LarsCode = 2, StandardUId = "ST0002_1.1" }
+            };
+            standardImportRepository.Setup(s => s.GetAll()).ReturnsAsync(standardImports);
+
+            var apprenticeshipFundingImports = new List<ApprenticeshipFundingImport>
+            {
+                new ApprenticeshipFundingImport { LarsCode = 1, Id = Guid.NewGuid() },
+                new ApprenticeshipFundingImport { LarsCode = 1, Id = Guid.NewGuid() },
+            };
+            apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);
+
+            //Act
+            await larsImportService.LoadDataFromStaging(importStartTime, filePath);
+
+            //Assert
+            standardImportRepository.Verify(x => x.GetAll(), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Count.Equals(2))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.StandardUId == "ST0001_1.0").Count().Equals(2))), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -65,25 +133,28 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             DateTime importStartTime,
             string filePath,
             List<LarsStandardImport> larsStandardImports,
+            List<StandardImport> standards,
             List<ApprenticeshipFundingImport> apprenticeshipFundingImports,
             List<SectorSubjectAreaTier2Import> sectorSubjectAreaTier2Imports,
-            [Frozen] Mock<ILarsPageParser> pageParser,
-            [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> importAuditRepository,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
+            [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             LarsImportService larsImportService)
         {
+            standards.ForEach(s => s.LarsCode = 1);
+            apprenticeshipFundingImports.ForEach(i => i.LarsCode = 1);
             larsStandardImportRepository.Setup(x => x.GetAll()).ReturnsAsync(larsStandardImports);
             apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);
             sectorSubjectAreaTier2ImportRepository.Setup(x => x.GetAll()).ReturnsAsync(sectorSubjectAreaTier2Imports);
+            standardImportRepository.Setup(x => x.GetAll()).ReturnsAsync(standards);
 
             //Act
             await larsImportService.LoadDataFromStaging(importStartTime, filePath);
 
             //Assert
-            var totalRecords = larsStandardImports.Count + apprenticeshipFundingImports.Count + sectorSubjectAreaTier2Imports.Count;
+            var totalRecords = larsStandardImports.Count + (apprenticeshipFundingImports.Count * standards.Count) + sectorSubjectAreaTier2Imports.Count;
             importAuditRepository.Verify(x => x
                 .Insert(It.Is<ImportAudit>(c
                     => c.ImportType.Equals(ImportType.LarsImport)
