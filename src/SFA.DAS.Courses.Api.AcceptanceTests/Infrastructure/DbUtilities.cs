@@ -86,6 +86,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 1,
                     StandardUId = "1",
+                    IfateReferenceNumber = "1",
                     Title = "Head Brewer",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -104,6 +105,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 2,
                     StandardUId = "2",
+                    IfateReferenceNumber = "2",
                     Title = "Brewer",
                     Keywords = "Brewer, Beer",
                     TypicalJobTitles = "Brewery operations",
@@ -122,6 +124,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 3,
                     StandardUId = "3",
+                    IfateReferenceNumber = "3",
                     Title = "Senior / head of facilities management (degree)",
                     Keywords = "Head",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -140,6 +143,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 4,
                     StandardUId = "4",
+                    IfateReferenceNumber = "4",
                     Title = "Dentist",
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
@@ -158,6 +162,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 5,
                     StandardUId = "5",
+                    IfateReferenceNumber = "5",
                     Title = "Photographic assistant SortOrder",
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
@@ -176,6 +181,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 6,
                     StandardUId = "6",
+                    IfateReferenceNumber = "6",
                     Title = "Camera prep technician",
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
@@ -194,6 +200,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 7,
                     StandardUId = "7",
+                    IfateReferenceNumber = "7",
                     Title = "Junior animator SortOrder",
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Junior animator|SortOrder",
@@ -221,6 +228,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 11,
                     StandardUId = "11",
+                    IfateReferenceNumber = "11",
                     Title = "Head Brewer - invalid",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -238,6 +246,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 14,
                     StandardUId = "14",
+                    IfateReferenceNumber = "14",
                     Title = "Dentist - invalid",
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
@@ -264,6 +273,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 15,
                     StandardUId = "15",
+                    IfateReferenceNumber = "15",
                     Title = "Assistant Brewer - Proposal in development",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Assistant of brewery operations",
@@ -276,6 +286,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 {
                     LarsCode = 16,
                     StandardUId = "16",
+                    IfateReferenceNumber = "16",
                     Title = "Metallurgy Engineer - In development",
                     Keywords = "Metallurgy, Engineer, Metal",
                     TypicalJobTitles = "Metallurgy Engineer",
