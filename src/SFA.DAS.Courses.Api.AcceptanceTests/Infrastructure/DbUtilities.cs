@@ -274,7 +274,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                  new Standard
                 {
-                    Id = 16,
+                    LarsCode = 16,
+                    StandardUId = "16",
                     Title = "Metallurgy Engineer - In development",
                     Keywords = "Metallurgy, Engineer, Metal",
                     TypicalJobTitles = "Metallurgy Engineer",
