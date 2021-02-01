@@ -20,6 +20,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             context.Standards.AddRange(GetValidTestStandards());
             context.Standards.AddRange(GetInValidTestStandards());
             context.Standards.AddRange(GetNotYetApprovedTestStandards());
+            context.Standards.AddRange(GetOlderVersionsOfStandards());
+            context.Standards.AddRange(GetWithdrawnStandards());
             context.Frameworks.AddRange(GetFrameworks());
             context.SaveChanges();
         }
@@ -85,8 +87,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 1,
-                    StandardUId = "1",
-                    IfateReferenceNumber = "1",
+                    StandardUId = "ST001_1.3",
+                    IfateReferenceNumber = "ST001",
                     Title = "Head Brewer",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -99,13 +101,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 1,
                         SectorSubjectAreaTier2 = 1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.3m
                 },
                 new Standard
                 {
                     LarsCode = 2,
-                    StandardUId = "2",
-                    IfateReferenceNumber = "2",
+                    StandardUId = "ST002_1.0",
+                    IfateReferenceNumber = "ST002",
                     Title = "Brewer",
                     Keywords = "Brewer, Beer",
                     TypicalJobTitles = "Brewery operations",
@@ -118,13 +121,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 2,
                         SectorSubjectAreaTier2 = 1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.0m
                 },
                 new Standard
                 {
                     LarsCode = 3,
-                    StandardUId = "3",
-                    IfateReferenceNumber = "3",
+                    StandardUId = "ST003_1.0",
+                    IfateReferenceNumber = "ST003",
                     Title = "Senior / head of facilities management (degree)",
                     Keywords = "Head",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -137,13 +141,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 3,
                         SectorSubjectAreaTier2 = 1.1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.0m
                 },
                 new Standard
                 {
                     LarsCode = 4,
-                    StandardUId = "4",
-                    IfateReferenceNumber = "4",
+                    StandardUId = "ST004_1.0",
+                    IfateReferenceNumber = "ST004",
                     Title = "Dentist",
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
@@ -156,13 +161,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 4,
                         SectorSubjectAreaTier2 = 1.1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.0m
                 },
                 new Standard
                 {
                     LarsCode = 5,
-                    StandardUId = "5",
-                    IfateReferenceNumber = "5",
+                    StandardUId = "ST005_1.1",
+                    IfateReferenceNumber = "ST005",
                     Title = "Photographic assistant SortOrder",
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
@@ -175,13 +181,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 5,
                         SectorSubjectAreaTier2 = 1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.1m
                 },
                 new Standard
                 {
                     LarsCode = 6,
-                    StandardUId = "6",
-                    IfateReferenceNumber = "6",
+                    StandardUId = "ST006_1.0",
+                    IfateReferenceNumber = "ST006",
                     Title = "Camera prep technician",
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
@@ -194,13 +201,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 6,
                         SectorSubjectAreaTier2 = 1.1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.0m
                 },
                 new Standard
                 {
                     LarsCode = 7,
-                    StandardUId = "7",
-                    IfateReferenceNumber = "7",
+                    StandardUId = "ST007_1.0",
+                    IfateReferenceNumber = "ST007",
                     Title = "Junior animator SortOrder",
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Junior animator|SortOrder",
@@ -213,7 +221,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 7,
                         SectorSubjectAreaTier2 = 1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.0m
                 }
             };
         }
@@ -221,14 +230,13 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static IEnumerable<Standard> GetInValidTestStandards()
         {
             var sectors = GetTestSectors().ToList();
-            var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
             return new List<Standard>
             {
                 new Standard
                 {
                     LarsCode = 11,
-                    StandardUId = "11",
-                    IfateReferenceNumber = "11",
+                    StandardUId = "ST011_1.0",
+                    IfateReferenceNumber = "ST011",
                     Title = "Head Brewer - invalid",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -240,13 +248,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 11,
                         SectorSubjectAreaTier2 = 1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.0m
                 },
                 new Standard
                 {
                     LarsCode = 14,
-                    StandardUId = "14",
-                    IfateReferenceNumber = "14",
+                    StandardUId = "ST014_1.0",
+                    IfateReferenceNumber = "ST014",
                     Title = "Dentist - invalid",
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
@@ -258,7 +267,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 14,
                         SectorSubjectAreaTier2 = 1m
                     },
-                    Status = "Approved for delivery"
+                    Status = "Approved for delivery",
+                    Version = 1.0m
                 }
             };
         }
@@ -266,34 +276,104 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static IEnumerable<Standard> GetNotYetApprovedTestStandards()
         {
             var sectors = GetTestSectors().ToList();
-            var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
             return new List<Standard>
             {
                 new Standard
                 {
-                    LarsCode = 15,
-                    StandardUId = "15",
-                    IfateReferenceNumber = "15",
+                    LarsCode = 0,
+                    StandardUId = "ST015_1.0",
+                    IfateReferenceNumber = "ST015",
                     Title = "Assistant Brewer - Proposal in development",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Assistant of brewery operations",
                     Level = 1,
                     RouteId = sectors[0].Id,
                     LarsStandard = null,
-                    Status = "Proposal in development"
+                    Status = "Proposal in development",
+                    Version = 1.0m
                 },
                  new Standard
                 {
-                    LarsCode = 16,
-                    StandardUId = "16",
-                    IfateReferenceNumber = "16",
+                    LarsCode = 0,
+                    StandardUId = "ST016_1.0",
+                    IfateReferenceNumber = "ST016",
                     Title = "Metallurgy Engineer - In development",
                     Keywords = "Metallurgy, Engineer, Metal",
                     TypicalJobTitles = "Metallurgy Engineer",
                     Level = 4,
                     RouteId = sectors[0].Id,
                     LarsStandard = null,
-                    Status = "In development"
+                    Status = "In development",
+                    Version = 1.0m
+                }
+            };
+        }
+
+        public static IEnumerable<Standard> GetWithdrawnStandards()
+        {
+            var sectors = GetTestSectors().ToList();
+            return new List<Standard>
+            {
+                new Standard
+                {
+                    LarsCode = 0,
+                    StandardUId = "ST030_1.0",
+                    IfateReferenceNumber = "ST030",
+                    Title = "Assistant Brewer - Withdrawn",
+                    Keywords = "Head, Brewer, Beer",
+                    TypicalJobTitles = "Assistant of brewery operations",
+                    Level = 1,
+                    RouteId = sectors[0].Id,
+                    LarsStandard = null,
+                    Status = "Withdrawn",
+                    Version = 1.0m
+                }
+            };
+        }
+        public static IEnumerable<Standard> GetOlderVersionsOfStandards()
+        {
+            var sectors = GetTestSectors().ToList();
+            var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
+            return new List<Standard>
+            {
+                new Standard
+                {
+                    LarsCode = 1,
+                    StandardUId = "ST001_1.2",
+                    IfateReferenceNumber = "ST001",
+                    Title = "Head Brewer 1.2",
+                    Keywords = "Head, Brewer, Beer",
+                    TypicalJobTitles = "Overseer of brewery operations",
+                    Level = 2,
+                    RouteId = sectors[0].Id,
+                    Status = "Retired",
+                    Version = 1.2m
+                },
+                new Standard
+                {
+                    LarsCode = 1,
+                    StandardUId = "ST001_1.1",
+                    IfateReferenceNumber = "ST001",
+                    Title = "Head Brewer 1.1",
+                    Keywords = "Head, Brewer, Beer",
+                    TypicalJobTitles = "Overseer of brewery operations",
+                    Level = 2,
+                    RouteId = sectors[0].Id,
+                    Status = "Retired",
+                    Version = 1.1m
+                },
+                new Standard
+                {
+                    LarsCode = 5,
+                    StandardUId = "ST005_1.0",
+                    IfateReferenceNumber = "ST005",
+                    Title = "Photographic assistant SortOrder 1.0",
+                    Keywords = null,
+                    TypicalJobTitles = "Assistant Photographer|Photographic Technician",
+                    Level = 3,
+                    RouteId = sectors[2].Id,
+                    Status = "Retired",
+                    Version = 1.0m
                 }
             };
         }
@@ -305,6 +385,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             combinedStandards.AddRange(GetValidTestStandards());
             combinedStandards.AddRange(GetInValidTestStandards());
             combinedStandards.AddRange(GetNotYetApprovedTestStandards());
+            combinedStandards.AddRange(GetOlderVersionsOfStandards());
+            combinedStandards.AddRange(GetWithdrawnStandards());
 
             return combinedStandards;
         }
