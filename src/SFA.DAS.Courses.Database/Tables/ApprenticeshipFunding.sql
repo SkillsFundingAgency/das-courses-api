@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[ApprenticeshipFunding]
 (
     [Id] UNIQUEIDENTIFIER PRIMARY KEY,
-	[StandardUId] VARCHAR(20) NULL,
+	[StandardUId] VARCHAR(20) NOT NULL,
 	[EffectiveFrom] DATETIME NOT NULL,
 	[EffectiveTo] DATETIME NULL,
 	[MaxEmployerLevyCap] INT NOT NULL,

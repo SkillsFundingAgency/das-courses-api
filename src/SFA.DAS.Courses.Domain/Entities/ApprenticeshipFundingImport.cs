@@ -5,6 +5,8 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class ApprenticeshipFundingImport : ApprenticeshipFundingBase
     {
+        public int LarsCode { get; set; }
+
         public static implicit operator ApprenticeshipFundingImport(ApprenticeshipFundingCsv apprenticeshipFundingCsv)
         {
             return new ApprenticeshipFundingImport
