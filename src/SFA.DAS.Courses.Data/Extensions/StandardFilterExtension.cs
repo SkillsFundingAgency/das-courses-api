@@ -12,6 +12,8 @@ namespace SFA.DAS.Courses.Data.Extensions
     {
         public static IQueryable<Standard> FilterStandards(this IQueryable<Standard> standards, StandardFilter filter)
         {
+            // Active and ActiveAvailable Filters require IsLatestVersion filter, but the query is to complex for EF
+            // To convert into an Expression Tree to leverage on the database. So unfortunately it has been split out
             switch (filter)
             {
                 case StandardFilter.Active:
@@ -30,6 +32,21 @@ namespace SFA.DAS.Courses.Data.Extensions
             return standards;
         }
 
+        public static IEnumerable<Standard> InMemoryFilterIsLatestVersion(this IEnumerable<Standard> standards, StandardFilter filter)
+        {
+            switch (filter)
+            {
+                case StandardFilter.Active:
+                case StandardFilter.ActiveAvailable:
+                    return standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+                default:
+                    break;
+            }
+
+            return standards;
+        }
+
+
         private static IQueryable<Standard> FilterActiveAvailableToStart(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards
@@ -43,8 +60,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             var filteredStandards = standards
                 .HasLarsStandard()
-                .StatusIsOneOf("Approved for delivery")
-                .IsLatestVersion();
+                .StatusIsOneOf("Approved for delivery");
 
             return filteredStandards;
         }
@@ -74,26 +90,6 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             //Database case insensitive so satisfies the translated SQL IN statement
             return standards.Where(ls => statuses.Contains(ls.Status));
-        }
-
-        private static IQueryable<Standard> IsLatestVersion(this IQueryable<Standard> standards)
-        {
-            //return standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
-
-            //var results = standards.OrderByDescending(s => s.Version).Select(t => t.IfateReferenceNumber).Distinct().  GroupBy(s => s.IfateReferenceNumber).Select(c => c.(d => d.Version) ));
-
-            //Above line is the desired query, however it won't be executed in the database due to restrictions in how EF Core works
-            // As a result, the below is a workaround to leverage DB querying
-            // It selects on the IFate Ref number and distinct which would selected the highest version
-            // 
-
-            //var subQuery = standards.OrderByDescending(o => o.Version);
-            //var filteredResults = standards.Select(s => s.IfateReferenceNumber)
-            //    .Distinct()
-            //    .Select(a => subQuery.Where(b => b.IfateReferenceNumber == a).Take(1));
-
-            // current data set doesn't need the filter, need to work on this.
-            return standards;
         }
     }
 }
