@@ -5,7 +5,6 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class ApprenticeshipFundingBase
     {
         public Guid Id { get; set; }
-        public int LarsCode { get; set; }
         public DateTime EffectiveFrom { get; set; }
         public DateTime? EffectiveTo { get; set; }
         public int MaxEmployerLevyCap { get; set; }
