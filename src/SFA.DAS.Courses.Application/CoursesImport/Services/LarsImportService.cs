@@ -17,6 +17,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly ILarsStandardRepository _larsStandardRepository;
         private readonly ISectorSubjectAreaTier2ImportRepository _sectorSubjectAreaTier2ImportRepository;
         private readonly ISectorSubjectAreaTier2Repository _sectorSubjectAreaTier2Repository;
+        private readonly IStandardImportRepository _standardImportRepository;
         private readonly ILogger<LarsImportService> _logger;
         private readonly LarsImportStaging _larsImportStaging;
 
@@ -29,6 +30,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             ILarsStandardRepository larsStandardRepository,
             ISectorSubjectAreaTier2ImportRepository sectorSubjectAreaTier2ImportRepository,
             ISectorSubjectAreaTier2Repository sectorSubjectAreaTier2Repository,
+            IStandardImportRepository standardImportRepository,
             IZipArchiveHelper zipArchiveHelper,
             ILogger<LarsImportService> logger)
         {
@@ -40,6 +42,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _larsStandardRepository = larsStandardRepository;
             _sectorSubjectAreaTier2ImportRepository = sectorSubjectAreaTier2ImportRepository;
             _sectorSubjectAreaTier2Repository = sectorSubjectAreaTier2Repository;
+            _standardImportRepository = standardImportRepository;
             _logger = logger;
             _larsImportStaging = new LarsImportStaging(
                 dataDownloadService,
@@ -88,29 +91,28 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 _logger.LogInformation("LARS Import - data load from staging - started");
 
                 var larsStandardImports = _larsStandardImportRepository.GetAll();
-                var apprenticeshipFundingImports = _apprenticeshipFundingImportRepository.GetAll();
+                
                 var sectorSubjectAreaTier2Imports = _sectorSubjectAreaTier2ImportRepository.GetAll();
 
-                await Task.WhenAll(larsStandardImports, apprenticeshipFundingImports, sectorSubjectAreaTier2Imports);
+                await Task.WhenAll(larsStandardImports, sectorSubjectAreaTier2Imports);
 
                 _larsStandardRepository.DeleteAll();
-                _apprenticeshipFundingRepository.DeleteAll();
+                
                 _sectorSubjectAreaTier2Repository.DeleteAll();
 
                 var importLarsStandardResult =
                     _larsStandardRepository.InsertMany(larsStandardImports.Result
                         .Select(c => (LarsStandard)c).ToList());
-                var importApprenticeshipFundingResult =
-                    _apprenticeshipFundingRepository.InsertMany(apprenticeshipFundingImports.Result
-                        .Select(c => (ApprenticeshipFunding)c).ToList());
                 var importSectorSubjectAreaTier2Result =
                     _sectorSubjectAreaTier2Repository.InsertMany(sectorSubjectAreaTier2Imports.Result
                         .Select(c => (SectorSubjectAreaTier2)c).ToList());
 
+                var importApprenticeshipFundingResult = LoadApprenticeshipFunding();
+
                 await Task.WhenAll(importLarsStandardResult, importApprenticeshipFundingResult, importSectorSubjectAreaTier2Result);
 
                 var rowsImported = larsStandardImports.Result.Count() +
-                                   apprenticeshipFundingImports.Result.Count() +
+                                   importApprenticeshipFundingResult.Result +
                                    sectorSubjectAreaTier2Imports.Result.Count();
 
                 await _importAuditRepository.Insert(new ImportAudit(importAuditStartTime,
@@ -123,6 +125,27 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 _logger.LogError("LARS Import - an error occurred while trying to load data from staging tables.", e);
                 throw;
             }
+        }
+
+        private async Task<int> LoadApprenticeshipFunding()
+        {
+            var standardsTask = _standardImportRepository.GetAll();
+            var apprenticeshipFundingImportsTask = _apprenticeshipFundingImportRepository.GetAll();
+
+            await Task.WhenAll(standardsTask, apprenticeshipFundingImportsTask);
+
+            var fundings = standardsTask.Result.Join(
+                apprenticeshipFundingImportsTask.Result,
+                standard => standard.LarsCode,
+                funding => funding.LarsCode,
+                (standard, apprenticeshipFundingImport) => ApprenticeshipFunding.ConvertFrom(apprenticeshipFundingImport, standard.StandardUId))
+                .ToList();
+
+            _apprenticeshipFundingRepository.DeleteAll();
+
+            var importApprenticeshipFundingResult = _apprenticeshipFundingRepository.InsertMany(fundings);
+
+            return fundings.Count();
         }
     }
 }

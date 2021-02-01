@@ -1,16 +1,19 @@
-﻿namespace SFA.DAS.Courses.Domain.Entities
+﻿using System;
+
+namespace SFA.DAS.Courses.Domain.Entities
 {
     public class ApprenticeshipFunding : ApprenticeshipFundingBase
     {
         public string StandardUId { get; set; }
-        public static implicit operator ApprenticeshipFunding(ApprenticeshipFundingImport apprenticeshipFundingImport)
+
+        public static ApprenticeshipFunding ConvertFrom(ApprenticeshipFundingImport apprenticeshipFundingImport, string standardUId)
         {
             return new ApprenticeshipFunding
             {
-                Id = apprenticeshipFundingImport.Id,
+                Id = Guid.NewGuid(),
+                StandardUId = standardUId,
                 EffectiveFrom = apprenticeshipFundingImport.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingImport.EffectiveTo,
-                LarsCode = apprenticeshipFundingImport.LarsCode,
                 MaxEmployerLevyCap = apprenticeshipFundingImport.MaxEmployerLevyCap,
                 Duration = apprenticeshipFundingImport.Duration
             };
