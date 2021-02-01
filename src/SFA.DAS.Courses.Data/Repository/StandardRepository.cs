@@ -81,7 +81,11 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Include(c => c.LarsStandard)
                 .ThenInclude(c => c.SectorSubjectArea);
 
-            return await standards.ToListAsync();
+            var standardResults = await standards.ToListAsync();
+
+            // Secondary filter performed in memory due to limitations in 
+            // EF Core query translation on Group By selecting top row of each.
+            return standardResults.InMemoryFilterIsLatestVersion(filter);
         }
     }
 }
