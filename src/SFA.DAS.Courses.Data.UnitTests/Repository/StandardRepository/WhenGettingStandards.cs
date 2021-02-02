@@ -130,5 +130,128 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             expectedList.AddRange(retiredStandards);
             actualStandards.Should().BeEquivalentTo(expectedList);
         }
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_Standards_Are_Filtered_By_Sector(
+            [StandardsAreLarsValid] List<Standard> activeValidStandards,
+            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
+            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
+            [StandardsWithdrawn] List<Standard> withdrawnStandards,
+            [StandardsRetired] List<Standard> retiredStandards,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeInvalidStandards);
+            allStandards.AddRange(notYetApprovedStandards);
+            allStandards.AddRange(withdrawnStandards);
+            allStandards.AddRange(retiredStandards);
+            mockCoursesDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(allStandards);
+
+            //Act
+            var actual = await repository.GetStandards(
+                new List<Guid> { activeValidStandards[0].RouteId },
+                new List<int>(),
+                StandardFilter.ActiveAvailable);
+
+            //Assert
+            Assert.IsNotNull(actual);
+            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] });
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task And_Standard_Not_Valid_And_Does_Match_Route_Filter_Then_Standard_Not_Returned(
+            [StandardsAreLarsValid] List<Standard> activeValidStandards,
+            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
+            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
+            [StandardsWithdrawn] List<Standard> withdrawnStandards,
+            [StandardsRetired] List<Standard> retiredStandards,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeInvalidStandards);
+            allStandards.AddRange(notYetApprovedStandards);
+            allStandards.AddRange(withdrawnStandards);
+            allStandards.AddRange(retiredStandards);
+            mockCoursesDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(allStandards);
+
+            //Act
+            var actual = await repository.GetStandards(
+                new List<Guid> { activeInvalidStandards[0].RouteId },
+                new List<int>(),
+                StandardFilter.ActiveAvailable);
+
+            //Assert
+            Assert.IsNotNull(actual);
+            actual.Should().BeEquivalentTo(new List<Standard>());
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_Standards_Are_Filtered_By_Level(
+            [StandardsAreLarsValid] List<Standard> activeValidStandards,
+            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
+            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
+            [StandardsWithdrawn] List<Standard> withdrawnStandards,
+            [StandardsRetired] List<Standard> retiredStandards,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeInvalidStandards);
+            allStandards.AddRange(notYetApprovedStandards);
+            allStandards.AddRange(withdrawnStandards);
+            allStandards.AddRange(retiredStandards);
+            mockCoursesDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(allStandards);
+
+            var actual = await repository.GetStandards(
+                new List<Guid>(),
+                new List<int> { activeValidStandards[0].Level },
+                StandardFilter.ActiveAvailable);
+
+            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] });
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_Standards_Are_Filtered_By_Level_And_Include_Not_Available_To_Start(
+            [StandardsAreLarsValid] List<Standard> activeValidStandards,
+            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
+            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
+            [StandardsWithdrawn] List<Standard> withdrawnStandards,
+            [StandardsRetired] List<Standard> retiredStandards,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            activeInvalidStandards[0].Level = activeValidStandards[0].Level;
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeInvalidStandards);
+            allStandards.AddRange(notYetApprovedStandards);
+            allStandards.AddRange(withdrawnStandards);
+            allStandards.AddRange(retiredStandards);
+            mockCoursesDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(allStandards);
+
+            var actual = await repository.GetStandards(
+                new List<Guid>(),
+                new List<int> { activeValidStandards[0].Level },
+                StandardFilter.Active);
+
+            var expectedList = new List<Standard>
+            {
+                activeValidStandards[0],
+                activeInvalidStandards[0]
+            };
+            actual.Should().BeEquivalentTo(expectedList);
+        }
     }
 }
