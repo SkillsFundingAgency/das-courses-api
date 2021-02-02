@@ -17,7 +17,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
         {
             var expectedFields = new List<Field>
             {
-                new Int32Field(nameof(SearchableStandard.Id), source.LarsCode, Field.Store.YES),
+                new StringField(nameof(SearchableStandard.StandardUId), source.StandardUId, Field.Store.YES),
                 // phrase
                 new TextField(SearchableStandard.TitlePhrase, source.Title, Field.Store.NO) {Boost = 1000f},
                 new TextField(SearchableStandard.TypicalJobTitlesPhrase, source.TypicalJobTitles, Field.Store.NO) {Boost = 500f},
@@ -38,12 +38,12 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
         }
 
         [Test, AutoData]
-        public void Then_Indexes_Nulls_To_Empty_String(int id)
+        public void Then_Indexes_Nulls_To_Empty_String(string standardUId)
         {
-            var source = new Standard { LarsCode = id}; 
+            var source = new Standard { StandardUId = standardUId }; 
             var expectedFields = new List<Field>
             {
-                new Int32Field(nameof(SearchableStandard.Id), source.LarsCode, Field.Store.YES),
+                new StringField(nameof(SearchableStandard.StandardUId), source.StandardUId, Field.Store.YES),
                 // phrase
                 new TextField(SearchableStandard.TitlePhrase, "", Field.Store.NO) {Boost = 1000f},
                 new TextField(SearchableStandard.TypicalJobTitlesPhrase, "", Field.Store.NO) {Boost = 500f},
