@@ -100,10 +100,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             searchResult.Standards = new List<StandardSearchResult>
             {
-                new StandardSearchResult{Id = standardsFromRepo[0].LarsCode}
+                new StandardSearchResult{StandardUId = standardsFromRepo[0].StandardUId}
             };
             var standardsFoundInSearch = standardsFromRepo
-                .Where(standard => searchResult.Standards.Select(result => result.Id).Contains(standard.LarsCode))
+                .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
                 .Setup(repository => repository.GetAll(filter))
@@ -143,10 +143,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             searchResult.Standards = new List<StandardSearchResult>
             {
-                new StandardSearchResult{Id = standardsFromRepo[0].LarsCode}
+                new StandardSearchResult{StandardUId = standardsFromRepo[0].StandardUId}
             };
             var standardsFoundInSearch = standardsFromRepo
-                .Where(standard => searchResult.Standards.Select(result => result.Id).Contains(standard.LarsCode))
+                .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
                 .Setup(repository => repository.GetFilteredStandards(routeIds, new List<int>(), filter))
@@ -186,10 +186,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             searchResult.Standards = new List<StandardSearchResult>
             {
-                new StandardSearchResult{Id = standardsFromRepo[0].LarsCode}
+                new StandardSearchResult{StandardUId = standardsFromRepo[0].StandardUId}
             };
             var standardsFoundInSearch = standardsFromRepo
-                .Where(standard => searchResult.Standards.Select(result => result.Id).Contains(standard.LarsCode))
+                .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
                 .Setup(repository => repository.GetFilteredStandards(routeIds, new List<int>(), filter))
