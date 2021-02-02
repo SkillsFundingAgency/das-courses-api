@@ -9,11 +9,11 @@ namespace SFA.DAS.Courses.Domain.Search
         public StandardSearchResult(Document document,
             float score)
         {
-            Id = document.GetField(nameof(Id)).GetInt32Value().GetValueOrDefault();
+            StandardUId = document.GetField(nameof(StandardUId)).GetStringValue();
             Score = score;
         }
 
-        public int Id { get; set; }
+        public string StandardUId { get; set; }
         public float Score { get; set; }
     }
 }
