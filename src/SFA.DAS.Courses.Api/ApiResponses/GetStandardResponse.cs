@@ -6,7 +6,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 {
     public class GetStandardResponse
     {
-        public int Id { get; set; }
         public string StandardUId { get; set; }
         public string IfateReferenceNumber { get; set; }
         public int LarsCode { get; set; }

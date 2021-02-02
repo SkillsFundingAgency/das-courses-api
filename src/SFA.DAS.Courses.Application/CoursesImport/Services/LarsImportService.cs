@@ -100,19 +100,19 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 
                 _sectorSubjectAreaTier2Repository.DeleteAll();
 
-                var importLarsStandardResult =
+                var importLarsStandardTask =
                     _larsStandardRepository.InsertMany(larsStandardImports.Result
                         .Select(c => (LarsStandard)c).ToList());
-                var importSectorSubjectAreaTier2Result =
+                var importSectorSubjectAreaTier2Task =
                     _sectorSubjectAreaTier2Repository.InsertMany(sectorSubjectAreaTier2Imports.Result
                         .Select(c => (SectorSubjectAreaTier2)c).ToList());
 
-                var importApprenticeshipFundingResult = LoadApprenticeshipFunding();
+                var importApprenticeshipFundingTask = LoadApprenticeshipFunding();
 
-                await Task.WhenAll(importLarsStandardResult, importApprenticeshipFundingResult, importSectorSubjectAreaTier2Result);
+                await Task.WhenAll(importLarsStandardTask, importApprenticeshipFundingTask, importSectorSubjectAreaTier2Task);
 
                 var rowsImported = larsStandardImports.Result.Count() +
-                                   importApprenticeshipFundingResult.Result +
+                                   importApprenticeshipFundingTask.Result +
                                    sectorSubjectAreaTier2Imports.Result.Count();
 
                 await _importAuditRepository.Insert(new ImportAudit(importAuditStartTime,
