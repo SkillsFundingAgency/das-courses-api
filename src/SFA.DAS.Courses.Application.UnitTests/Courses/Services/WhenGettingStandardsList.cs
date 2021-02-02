@@ -52,7 +52,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task And_No_Keyword_And_Not_Filtering_By_Available_To_Start_Then_Gets_All_From_Repository(
+        public async Task And_No_Keyword_And_Filtering_By_Active_Then_Gets_Standards_From_Repository(
             List<Standard> standardsFromRepo,
             OrderBy orderBy,
             StandardFilter filter,
@@ -60,6 +60,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            filter = StandardFilter.Active;
             mockStandardsRepository
                 .Setup(repository => repository.GetAll(filter))
                 .ReturnsAsync(standardsFromRepo);
@@ -172,7 +173,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task And_Has_Keyword_And_Sectors_And_Not_Filter_Available_To_Start_Then_Gets_Standards_From_SearchManager_And_Filters(
+        public async Task And_Has_Keyword_And_Sectors_And_Filter_Active_Then_Gets_Standards_From_SearchManager_And_Filters(
             string keyword,
             OrderBy orderBy,
             StandardFilter filter,
@@ -188,6 +189,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             {
                 new StandardSearchResult{StandardUId = standardsFromRepo[0].StandardUId}
             };
+            filter = StandardFilter.Active;
             var standardsFoundInSearch = standardsFromRepo
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
