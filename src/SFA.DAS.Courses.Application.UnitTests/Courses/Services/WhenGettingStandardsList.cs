@@ -26,7 +26,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetAll(filter))
+                .Setup(repository => repository.GetStandards(new List<Guid>(), new List<int>(), filter))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             filter = StandardFilter.Active;
             mockStandardsRepository
-                .Setup(repository => repository.GetAll(filter))
+                .Setup(repository => repository.GetStandards(new List<Guid>(), new List<int>(), filter))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
@@ -107,7 +107,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetAll(filter))
+                .Setup(repository => repository.GetStandards(new List<Guid>(), new List<int>(), filter))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -150,7 +150,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetFilteredStandards(routeIds, new List<int>(), filter))
+                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -194,7 +194,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetFilteredStandards(routeIds, new List<int>(), filter))
+                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -227,7 +227,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetFilteredStandards(new List<Guid>(), levelCodes, filter))
+                .Setup(repository => repository.GetStandards(new List<Guid>(), levelCodes, filter))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
@@ -258,7 +258,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetFilteredStandards(new List<Guid>(), levelCodes, filter))
+                .Setup(repository => repository.GetStandards(new List<Guid>(), levelCodes, filter))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, orderBy, ""))
