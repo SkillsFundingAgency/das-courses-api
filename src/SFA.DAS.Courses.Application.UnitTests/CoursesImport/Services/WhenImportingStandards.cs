@@ -65,20 +65,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             importRepository.Verify(x=>x.InsertMany(It.Is<List<StandardImport>>(std=>std.TrueForAll(c=>c.RouteId != Guid.Empty))));
         }
 
-        //[Test, RecursiveMoqAutoData] TODO
-        public async Task Then_The_Data_Is_Loaded_Into_The_Staging_Table_From_The_Api(
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_All_The_Standards_Are_Loaded_Into_The_Staging_Table_From_The_Api(
             [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<IInstituteOfApprenticeshipService> ifateService,
             List<SFA.DAS.Courses.Domain.ImportTypes.Standard> standardsImport,
             StandardsImportService standardsImportService)
         {
             //Arrange
-            standardsImport.ForEach(c=>
-            {
-                c.Status = "Approved for Delivery";
-                c.LarsCode = 10;
-            });
-            service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
+            ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
             
             //Act
             await standardsImportService.ImportDataIntoStaging();
@@ -86,82 +81,32 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             importRepository.Verify(x=>
                 x.InsertMany(It.Is<List<StandardImport>>(c=>
-                    c.Count.Equals(1))), Times.Once);
+                    c.Count.Equals(standardsImport.Count()))), Times.Once);
         }
 
-        //[Test, RecursiveMoqAutoData] TODO
-        public async Task Then_Only_ImportedStandards_With_A_LarsCode_Are_Imported(
-            int wrongStatusLarsCode,
-            Domain.ImportTypes.Standard apiStandard1,
-            Domain.ImportTypes.Standard apiStandard2,
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_All_The_Standards_Are_Assigned_StandardUId_And_Loaded_Into_The_Staging_Table(
             [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
-            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> apiImportStandards,
+            [Frozen] Mock<IInstituteOfApprenticeshipService> ifateService,
+            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> standardsImport,
             StandardsImportService standardsImportService)
         {
             //Arrange
-            apiImportStandards.ForEach(c=>
-            {
-                c.Status = "Approved for Delivery";
-            });
-            apiStandard1.LarsCode = 0;
-            apiStandard1.Status = "Approved for Delivery";
-            apiImportStandards.Add(apiStandard1);
-            apiStandard2.LarsCode = wrongStatusLarsCode;
-            apiStandard2.Status = "Some Other Status";
-            apiImportStandards.Add(apiStandard2);
-            service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
-            
+            ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
+
             //Act
             await standardsImportService.ImportDataIntoStaging();
-            
+
             //Assert
-            importRepository.Verify(x=>
-                x.InsertMany(It.Is<List<StandardImport>>(c=>
-                    c.Count.Equals(apiImportStandards.Count-1))), Times.Once);
+            importRepository.Verify(x =>
+                x.InsertMany(It.Is<List<StandardImport>>(c =>
+                    c.TrueForAll(s => s.StandardUId.Equals(GetStandardUId(s.IfateReferenceNumber, s.Version))))), Times.Once);
         }
-        
-        //[Test, RecursiveMoqAutoData] TODO
-        public async Task Then_Only_The_Latest_Version_Of_ImportedStandards_With_A_LarsCode_Are_Imported(
-            int wrongStatusLarsCode,
-            Domain.ImportTypes.Standard apiStandard1,
-            Domain.ImportTypes.Standard apiStandard2,
-            Domain.ImportTypes.Standard apiStandard3,
-            Domain.ImportTypes.Standard apiStandard4,
-            [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
-            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> apiImportStandards,
-            StandardsImportService standardsImportService)
+
+        private static string GetStandardUId(string ifateReferenceNumber, decimal? version)
         {
-            //Arrange
-            apiImportStandards.ForEach(c=>
-            {
-                c.Status = "Approved for Delivery";
-                c.Version = 1.1m;
-            });
-            apiStandard1.LarsCode = 0;
-            apiStandard1.Status = "Approved for Delivery";
-            apiImportStandards.Add(apiStandard1);
-            apiStandard2.LarsCode = wrongStatusLarsCode;
-            apiStandard2.Status = "Some Other Status";
-            apiStandard2.Version = 1.1m;
-            apiImportStandards.Add(apiStandard2);
-            apiStandard3.LarsCode = apiStandard4.LarsCode;
-            apiStandard3.Status = "Approved for Delivery";
-            apiStandard4.Status = "Approved for Delivery";
-            apiStandard4.Version = 1.1m;
-            apiStandard3.Version = 1.0m;
-            apiImportStandards.Add(apiStandard3);
-            apiImportStandards.Add(apiStandard4);
-            service.Setup(x => x.GetStandards()).ReturnsAsync(apiImportStandards);
-            
-            //Act
-            await standardsImportService.ImportDataIntoStaging();
-            
-            //Assert
-            importRepository.Verify(x=>
-                x.InsertMany(It.Is<List<StandardImport>>(c=>
-                    c.Count.Equals(apiImportStandards.Count-2) && c.TrueForAll(c=>c.Version.Equals(1.1m)))), Times.Once);
+            var derivedVersion = version.HasValue && version != 0 ? version.Value : 1;
+            return $"{ifateReferenceNumber}_{derivedVersion.ToString("0.0")}";
         }
     }
 }
