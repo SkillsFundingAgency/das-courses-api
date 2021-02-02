@@ -12,31 +12,31 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
 {
     public class WhenSearchingACourseIndex
     {
-        private const int DentalMatchInTitle = 1;
-        private const int DentalMatchInKeywords = 2;
-        private const int DentalMatchInOtherTitles = 3;
-        private const int PortMatchInTitle = 11;
-        private const int PortMatchInOtherTitles = 12;
-        private const int PortMatchInKeywords = 13;
-        private const int OutdoorId = 40;
-        private const int NetworkId = 50;
-        private const int DeveloperId = 60;
+        private const string DentalMatchInTitle = "ST001";
+        private const string DentalMatchInKeywords = "ST002";
+        private const string DentalMatchInOtherTitles = "ST003";
+        private const string PortMatchInTitle = "ST011";
+        private const string PortMatchInOtherTitles = "ST012";
+        private const string PortMatchInKeywords = "ST013";
+        private const string OutdoorId = "ST040";
+        private const string NetworkId = "ST050";
+        private const string DeveloperId = "STO60";
 
         private readonly List<Standard> _standards= new List<Standard>
         {
             // scoring and sorting group 1 - has noise in search fields
-            new Standard{LarsCode = DentalMatchInTitle, Title = "Dental technician", TypicalJobTitles = "something else", Keywords = "something else"},
-            new Standard{LarsCode = DentalMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "something else|Dental technician|something else"},
-            new Standard{LarsCode = DentalMatchInOtherTitles, Title = "something else", TypicalJobTitles = "something else|Dental technician", Keywords = "something else"},
+            new Standard{StandardUId = DentalMatchInTitle, Title = "Dental technician", TypicalJobTitles = "something else", Keywords = "something else"},
+            new Standard{StandardUId = DentalMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "something else|Dental technician|something else"},
+            new Standard{StandardUId = DentalMatchInOtherTitles, Title = "something else", TypicalJobTitles = "something else|Dental technician", Keywords = "something else"},
             // scoring group 2 - no noise in search fields
-            new Standard{LarsCode = PortMatchInTitle, Title = "Port operator", TypicalJobTitles = "something else", Keywords = "something else"},
-            new Standard{LarsCode = PortMatchInOtherTitles, Title = "something else", TypicalJobTitles = "Port operator", Keywords = "something else"},
-            new Standard{LarsCode = PortMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "Port operator"},
+            new Standard{StandardUId = PortMatchInTitle, Title = "Port operator", TypicalJobTitles = "something else", Keywords = "something else"},
+            new Standard{StandardUId = PortMatchInOtherTitles, Title = "something else", TypicalJobTitles = "Port operator", Keywords = "something else"},
+            new Standard{StandardUId = PortMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "Port operator"},
             // control
-            new Standard{LarsCode = OutdoorId, Title = "Outdoor activity instructor", TypicalJobTitles = "", Keywords = "Outdoor activity instructor|canoeing|sailing|climbing|surfing|cycling|hillwalking|archery|bushcraft|rock poolings|geology|plant identification|habitat|wildlife walk"},
-            new Standard{LarsCode = NetworkId, Title = "Network engineer", TypicalJobTitles = "Network Something|Network Engineer", Keywords = "communication|networks"},
+            new Standard{StandardUId = OutdoorId, Title = "Outdoor activity instructor", TypicalJobTitles = "", Keywords = "Outdoor activity instructor|canoeing|sailing|climbing|surfing|cycling|hillwalking|archery|bushcraft|rock poolings|geology|plant identification|habitat|wildlife walk"},
+            new Standard{StandardUId = NetworkId, Title = "Network engineer", TypicalJobTitles = "Network Something|Network Engineer", Keywords = "communication|networks"},
             // text matching
-            new Standard{LarsCode = DeveloperId, Title = "Software developer", TypicalJobTitles = "Web Developer|Application Developer", Keywords = "coding things|technology"}
+            new Standard{StandardUId = DeveloperId, Title = "Software developer", TypicalJobTitles = "Web Developer|Application Developer", Keywords = "coding things|technology"}
         };
 
         private CoursesSearchManager _searchManager;
@@ -64,12 +64,12 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
         [TestCase("softawre ", 1, DeveloperId, TestName = "Ngram trailing whitespace")]
         [TestCase("APPLICATION DEVELOPER", 1, DeveloperId, TestName = "TypicalJobTitles phrase case insensitive")]
         [TestCase("CODING THINGS", 1, DeveloperId, TestName = "Keywords phrase case insensitive")]
-        public void Then_Searches_Test_Cases(string searchTerm, int expectedCount, int expectedId)
+        public void Then_Searches_Test_Cases(string searchTerm, int expectedCount, string expectedStandardUId)
         {
             var result = _searchManager.Query(searchTerm);
 
             result.Standards.Count().Should().Be(expectedCount);
-            result.Standards.ToList().Should().Contain(searchResult => searchResult.Id == expectedId);
+            result.Standards.ToList().Should().Contain(searchResult => searchResult.StandardUId == expectedStandardUId);
         }
 
         [TestCase("dental technician", 3, TestName = "Exact 2 word match")]
@@ -81,9 +81,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             var result = _searchManager.Query(searchTerm);
 
             result.Standards.Count().Should().Be(expectedCount);
-            var matchTitle = result.Standards.SingleOrDefault(searchResult => searchResult.Id == DentalMatchInTitle);
-            var matchKeywords = result.Standards.SingleOrDefault(searchResult => searchResult.Id == DentalMatchInKeywords);
-            var matchOtherTitles = result.Standards.SingleOrDefault(searchResult => searchResult.Id == DentalMatchInOtherTitles);
+            var matchTitle = result.Standards.SingleOrDefault(searchResult => searchResult.StandardUId == DentalMatchInTitle);
+            var matchKeywords = result.Standards.SingleOrDefault(searchResult => searchResult.StandardUId == DentalMatchInKeywords);
+            var matchOtherTitles = result.Standards.SingleOrDefault(searchResult => searchResult.StandardUId == DentalMatchInOtherTitles);
 
             WriteScoresToConsole(new List<Tuple<string, float>>
             {
@@ -105,9 +105,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
             var result = _searchManager.Query(searchTerm);
 
             result.Standards.Count().Should().Be(expectedCount);
-            var matchTitle = result.Standards.SingleOrDefault(searchResult => searchResult.Id == PortMatchInTitle);
-            var matchKeywords = result.Standards.SingleOrDefault(searchResult => searchResult.Id == PortMatchInKeywords);
-            var matchOtherTitles = result.Standards.SingleOrDefault(searchResult => searchResult.Id == PortMatchInOtherTitles);
+            var matchTitle = result.Standards.SingleOrDefault(searchResult => searchResult.StandardUId == PortMatchInTitle);
+            var matchKeywords = result.Standards.SingleOrDefault(searchResult => searchResult.StandardUId == PortMatchInKeywords);
+            var matchOtherTitles = result.Standards.SingleOrDefault(searchResult => searchResult.StandardUId == PortMatchInOtherTitles);
 
             WriteScoresToConsole(new List<Tuple<string, float>>
             {
