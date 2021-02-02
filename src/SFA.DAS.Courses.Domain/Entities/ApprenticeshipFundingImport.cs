@@ -5,6 +5,8 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class ApprenticeshipFundingImport : ApprenticeshipFundingBase
     {
+        public int LarsCode { get; set; }
+
         public static implicit operator ApprenticeshipFundingImport(ApprenticeshipFundingCsv apprenticeshipFundingCsv)
         {
             return new ApprenticeshipFundingImport
@@ -12,11 +14,10 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Id =  Guid.NewGuid(),
                 EffectiveFrom = apprenticeshipFundingCsv.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingCsv.EffectiveTo,
-                StandardId = apprenticeshipFundingCsv.ApprenticeshipCode,
+                LarsCode = apprenticeshipFundingCsv.ApprenticeshipCode,
                 MaxEmployerLevyCap = Convert.ToInt32(apprenticeshipFundingCsv.MaxEmployerLevyCap),
                 Duration = (int)apprenticeshipFundingCsv.Duration
             }; 
-                
         }
     }
 }

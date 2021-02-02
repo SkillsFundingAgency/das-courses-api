@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,13 +22,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardRepository
             {
                 new LarsStandard
                 {
-                    Id = Guid.NewGuid(),
-                    StandardId = 1
+                    LarsCode = 1
                 },
                 new LarsStandard
                 {
-                    Id = Guid.NewGuid(),
-                    StandardId = 2
+                    LarsCode = 2
                 }
             };
 

@@ -8,10 +8,9 @@ namespace SFA.DAS.Courses.Data.Configuration
         public void Configure(EntityTypeBuilder<Domain.Entities.LarsStandard> builder)
         {
             builder.ToTable("LarsStandard");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.LarsCode);
 
-            builder.Property(x => x.Id).HasColumnName("Id").HasColumnType("uniqueidentifier").IsRequired();
-            builder.Property(x => x.StandardId).HasColumnName("StandardId").HasColumnType("int").IsRequired();
+            builder.Property(x => x.LarsCode).HasColumnName("LarsCode").HasColumnType("int").IsRequired();
             builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("int").IsRequired();
             builder.Property(x => x.EffectiveFrom).HasColumnName("EffectiveFrom").HasColumnType("datetime").IsRequired();
             builder.Property(x => x.EffectiveTo).HasColumnName("EffectiveTo").HasColumnType("datetime").IsRequired(false);
@@ -19,10 +18,10 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.SectorSubjectAreaTier2).HasColumnName("SectorSubjectAreaTier2").HasColumnType("decimal");
             builder.Property(x => x.OtherBodyApprovalRequired).HasColumnName("OtherBodyApprovalRequired").HasColumnType("bit").IsRequired();
 
-            builder.HasOne(c => c.Standard)
+            builder.HasMany(c => c.Standards)
                 .WithOne(c => c.LarsStandard)
-                .HasForeignKey<Domain.Entities.LarsStandard>(c => c.StandardId)
-                .HasPrincipalKey<Domain.Entities.Standard>(c => c.Id)
+                .HasForeignKey(s => s.LarsCode)
+                .HasPrincipalKey(l => l.LarsCode)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
             
             builder.HasOne(c=>c.SectorSubjectArea)

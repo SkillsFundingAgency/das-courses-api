@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using AutoFixture.NUnit3;
-using Castle.Core.Internal;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
@@ -26,15 +24,14 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                  .Excluding(c => c.Knowledge)
                  .Excluding(c => c.Behaviours)
                  .Excluding(c => c.JobRoles)
-                 .Excluding(c => c.LarsCode)
-                 .Excluding(c => c.Status)
                  .Excluding(c => c.StandardPageUrl)
                  .Excluding(c => c.TypicalJobTitles)
                  .Excluding(c => c.CoreAndOptions)
+                 .Excluding(c => c.ReferenceNumber)
             );
 
-            actual.Id.Should().Be(standard.LarsCode);
-            actual.StandardPageUrl.Should().Be(standard.StandardPageUrl.AbsoluteUri);            
+            actual.LarsCode.Should().Be(standard.LarsCode);
+            actual.StandardPageUrl.Should().Be(standard.StandardPageUrl.AbsoluteUri);
             actual.TypicalJobTitles.Should().Be(string.Join("|", standard.TypicalJobTitles));
         }
 

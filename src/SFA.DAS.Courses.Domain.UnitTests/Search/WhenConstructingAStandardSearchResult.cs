@@ -1,5 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Lucene.Net.Documents;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
@@ -23,7 +22,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
 
             var result = new StandardSearchResult(document, score);
 
-            result.Id.Should().Be(document.GetField(nameof(Standard.Id)).GetInt32Value().GetValueOrDefault());
+            result.Id.Should().Be(document.GetField(nameof(StandardSearchResult.Id)).GetInt32Value().GetValueOrDefault());
             result.Score.Should().Be(score);
         }
     }

@@ -8,7 +8,10 @@
         {
             return new Standard
             {
-                Id = standard.Id,
+                StandardUId = standard.StandardUId,
+                LarsCode = standard.LarsCode,
+                IfateReferenceNumber = standard.IfateReferenceNumber,
+                Status = standard.Status,
                 IntegratedDegree = standard.IntegratedDegree,
                 Level = standard.Level,
                 OverviewOfRole = standard.OverviewOfRole,

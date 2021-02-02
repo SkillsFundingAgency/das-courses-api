@@ -25,18 +25,18 @@ namespace SFA.DAS.Courses.Data.UnitTests.Search
         private readonly List<Standard> _standards= new List<Standard>
         {
             // scoring and sorting group 1 - has noise in search fields
-            new Standard{Id = DentalMatchInTitle, Title = "Dental technician", TypicalJobTitles = "something else", Keywords = "something else"},
-            new Standard{Id = DentalMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "something else|Dental technician|something else"},
-            new Standard{Id = DentalMatchInOtherTitles, Title = "something else", TypicalJobTitles = "something else|Dental technician", Keywords = "something else"},
+            new Standard{LarsCode = DentalMatchInTitle, Title = "Dental technician", TypicalJobTitles = "something else", Keywords = "something else"},
+            new Standard{LarsCode = DentalMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "something else|Dental technician|something else"},
+            new Standard{LarsCode = DentalMatchInOtherTitles, Title = "something else", TypicalJobTitles = "something else|Dental technician", Keywords = "something else"},
             // scoring group 2 - no noise in search fields
-            new Standard{Id = PortMatchInTitle, Title = "Port operator", TypicalJobTitles = "something else", Keywords = "something else"},
-            new Standard{Id = PortMatchInOtherTitles, Title = "something else", TypicalJobTitles = "Port operator", Keywords = "something else"},
-            new Standard{Id = PortMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "Port operator"},
+            new Standard{LarsCode = PortMatchInTitle, Title = "Port operator", TypicalJobTitles = "something else", Keywords = "something else"},
+            new Standard{LarsCode = PortMatchInOtherTitles, Title = "something else", TypicalJobTitles = "Port operator", Keywords = "something else"},
+            new Standard{LarsCode = PortMatchInKeywords, Title = "something else", TypicalJobTitles = "something else", Keywords = "Port operator"},
             // control
-            new Standard{Id = OutdoorId, Title = "Outdoor activity instructor", TypicalJobTitles = "", Keywords = "Outdoor activity instructor|canoeing|sailing|climbing|surfing|cycling|hillwalking|archery|bushcraft|rock poolings|geology|plant identification|habitat|wildlife walk"},
-            new Standard{Id = NetworkId, Title = "Network engineer", TypicalJobTitles = "Network Something|Network Engineer", Keywords = "communication|networks"},
+            new Standard{LarsCode = OutdoorId, Title = "Outdoor activity instructor", TypicalJobTitles = "", Keywords = "Outdoor activity instructor|canoeing|sailing|climbing|surfing|cycling|hillwalking|archery|bushcraft|rock poolings|geology|plant identification|habitat|wildlife walk"},
+            new Standard{LarsCode = NetworkId, Title = "Network engineer", TypicalJobTitles = "Network Something|Network Engineer", Keywords = "communication|networks"},
             // text matching
-            new Standard{Id = DeveloperId, Title = "Software developer", TypicalJobTitles = "Web Developer|Application Developer", Keywords = "coding things|technology"}
+            new Standard{LarsCode = DeveloperId, Title = "Software developer", TypicalJobTitles = "Web Developer|Application Developer", Keywords = "coding things|technology"}
         };
 
         private CoursesSearchManager _searchManager;

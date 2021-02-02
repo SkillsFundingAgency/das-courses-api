@@ -25,7 +25,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (LarsStandardImport) standardCsv;
             
             actual.Should().BeEquivalentTo(standardCsv, options=>options.Excluding(c=>c.StandardCode).Excluding(c => c.OtherBodyApprovalRequired));
-            actual.StandardId.Should().Be(standardCsv.StandardCode);
+            actual.LarsCode.Should().Be(standardCsv.StandardCode);
             actual.OtherBodyApprovalRequired.Should()
                 .Be(expected);
         }

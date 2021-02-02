@@ -17,15 +17,15 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly ISectorRepository _sectorRepository;
         private readonly ISectorImportRepository _sectorImportRepository;
         private readonly ILogger<StandardsImportService> _logger;
-        private List<SectorImport> _sectors;
 
-        public StandardsImportService (IInstituteOfApprenticeshipService instituteOfApprenticeshipService, 
-                                        IStandardImportRepository standardImportRepository, 
-                                        IStandardRepository standardRepository,
-                                        IImportAuditRepository auditRepository,
-                                        ISectorRepository sectorRepository,
-                                        ISectorImportRepository sectorImportRepository,
-                                        ILogger<StandardsImportService> logger)
+        public StandardsImportService (
+            IInstituteOfApprenticeshipService instituteOfApprenticeshipService, 
+            IStandardImportRepository standardImportRepository, 
+            IStandardRepository standardRepository,
+            IImportAuditRepository auditRepository,
+            ISectorRepository sectorRepository,
+            ISectorImportRepository sectorImportRepository,
+            ILogger<StandardsImportService> logger)
         {
             _instituteOfApprenticeshipService = instituteOfApprenticeshipService;
             _standardImportRepository = standardImportRepository;
@@ -35,14 +35,44 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _sectorImportRepository = sectorImportRepository;
             _logger = logger;
         }
-        public async Task ImportStandards()
+
+        public async Task ImportDataIntoStaging()
         {
             try
             {
-                _logger.LogInformation("Standards import - commencing");
-                var timeStarted = DateTime.UtcNow;
-                await GetStandardsFromApiAndInsertIntoStagingTable();
+                _logger.LogInformation("Standards import - starting");
 
+                var standards = (await _instituteOfApprenticeshipService.GetStandards()).ToList();
+
+                _logger.LogInformation($"Standards import - Retrieved {standards.Count} standards from API");
+
+                var sectors = GetDistinctSectorsFromStandards(standards);
+
+                await LoadSectorsInStaging(sectors);
+
+                UpdateStandardsWithRespectiveSectorId(standards, sectors);
+
+                var standardsImport = standards
+                    .Select(c => (StandardImport)c)
+                    .ToList();
+
+                _standardImportRepository.DeleteAll();
+                await _standardImportRepository.InsertMany(standardsImport);
+
+                _logger.LogInformation("Standards import - starting");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Standards import - an error occurred when trying to import data into staging.", e);
+                throw;
+            }
+        }
+
+        public async Task LoadDataFromStaging(DateTime timeStarted)
+        {
+            try
+            {
+                var sectorsToImport = await _sectorImportRepository.GetAll();
                 var standardsToInsert = (await _standardImportRepository.GetAll()).ToList();
 
                 if (!standardsToInsert.Any())
@@ -51,71 +81,58 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     _logger.LogWarning("Standards import - No standards loaded. No standards retrieved from API");
                     return;
                 }
-            
+
                 _standardRepository.DeleteAll();
                 _sectorRepository.DeleteAll();
-                
+
                 _logger.LogInformation($"Standards import - Adding {standardsToInsert.Count} to Standards table.");
 
-                await _sectorRepository.InsertMany(_sectors.Select(c => (Sector)c).ToList());
-                
-                var standards = standardsToInsert.Select(c=>(Standard)c).ToList();
+                await _sectorRepository.InsertMany(sectorsToImport.Select(c => (Sector)c).ToList());
+
+                var standards = standardsToInsert.Select(c => (Standard)c).ToList();
                 await _standardRepository.InsertMany(standards);
-                
+
                 await AuditImport(timeStarted, standards.Count);
-                _logger.LogInformation("Standards import - Data import of standards commencing");
+                _logger.LogInformation("Standards import - complete");
             }
             catch (Exception e)
             {
-                _logger.LogError("Standards import - failed",e);
+                _logger.LogError("Standards import - an error occurred when trying to load data from staging.", e);
                 throw;
             }
-            
         }
 
-        private async Task AuditImport(DateTime timeStarted, int rowsImported)
+        private static void UpdateStandardsWithRespectiveSectorId(List<Domain.ImportTypes.Standard> standards, IEnumerable<SectorImport> sectors)
         {
-            var auditRecord = new ImportAudit(timeStarted, rowsImported);
-            await _auditRepository.Insert(auditRecord);
-        }
-
-        private async Task GetStandardsFromApiAndInsertIntoStagingTable()
-        {
-            var standards = (await _instituteOfApprenticeshipService.GetStandards()).ToList();
-            _logger.LogInformation($"Standards import - Retrieved {standards.Count} standards from API");
-
-            await GetAndInsertSectors(standards);
-
             foreach (var standard in standards)
             {
-                standard.RouteId = _sectors.Single(c => c.Route.Equals(standard.Route)).Id;
+                standard.RouteId = sectors.Single(c => c.Route.Equals(standard.Route)).Id;
             }
-            
-            _standardImportRepository.DeleteAll();
-            var standardsImport = standards
-                .Where(c => c!=null && c.LarsCode > 0
-                )
-                .GroupBy(c=>c.LarsCode)
-                .Select(c=>c.OrderByDescending(x=>x.Version).FirstOrDefault())
-                .Select(c => (StandardImport) c)
-                .ToList();
-            await _standardImportRepository.InsertMany(
-                standardsImport);
         }
 
-        private async Task GetAndInsertSectors(List<Domain.ImportTypes.Standard> standards)
+        private async Task LoadSectorsInStaging(IEnumerable<SectorImport> sectors)
         {
-            _sectors = standards
+            _sectorImportRepository.DeleteAll();
+            await _sectorImportRepository.InsertMany(sectors);
+        }
+
+        private static List<SectorImport> GetDistinctSectorsFromStandards(List<Domain.ImportTypes.Standard> standards)
+        {
+            return standards
                 .Select(c => c.Route)
                 .Distinct()
                 .Select(c => new SectorImport
                 {
                     Id = Guid.NewGuid(),
                     Route = c
-                }).ToList();
+                })
+                .ToList();
+        }
 
-            _sectorImportRepository.DeleteAll();
-            await _sectorImportRepository.InsertMany(_sectors);
+        private async Task AuditImport(DateTime timeStarted, int rowsImported)
+        {
+            var auditRecord = new ImportAudit(timeStarted, rowsImported);
+            await _auditRepository.Insert(auditRecord);
         }
     }
 }

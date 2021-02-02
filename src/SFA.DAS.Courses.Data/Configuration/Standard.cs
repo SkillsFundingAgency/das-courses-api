@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Courses.Data.Extensions;
-using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Data.Configuration
 {
@@ -11,9 +9,12 @@ namespace SFA.DAS.Courses.Data.Configuration
         public void Configure(EntityTypeBuilder<Domain.Entities.Standard> builder)
         {
             builder.ToTable("Standard");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.StandardUId);
 
-            builder.Property(x => x.Id).HasColumnName("Id").HasColumnType("int").IsRequired();
+            builder.Property(x => x.StandardUId).HasColumnName("StandardUId").HasColumnType("varchar").HasMaxLength(20).IsRequired();
+            builder.Property(x => x.LarsCode).HasColumnName("LarsCode").HasColumnType("int");
+            builder.Property(x => x.IfateReferenceNumber).HasColumnName("IfateReferenceNumber").HasColumnType("varchar").HasMaxLength(10).IsRequired();
+            builder.Property(x => x.Status).HasColumnName("Status").HasColumnType("varchar").HasMaxLength(100).IsRequired();
             builder.Property(x => x.Title).HasColumnName("Title").HasColumnType("varchar").HasMaxLength(1000).IsRequired();
             builder.Property(x => x.IntegratedDegree).HasColumnName("IntegratedDegree").HasColumnType("varchar").HasMaxLength(100).IsRequired();
             builder.Property(x => x.Level).HasColumnName("Level").HasColumnType("int").IsRequired();
@@ -37,19 +38,21 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .HasForeignKey(c => c.RouteId).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.HasOne(c => c.LarsStandard)
-                .WithOne(c => c.Standard)
-                .HasForeignKey<Domain.Entities.LarsStandard>(c => c.StandardId)
-                .HasPrincipalKey<Domain.Entities.Standard>(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .WithMany(c => c.Standards)
+                .HasForeignKey(s => s.LarsCode)
+                .HasPrincipalKey(l => l.LarsCode)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.HasMany(c => c.ApprenticeshipFunding)
                 .WithOne(c => c.Standard)
-                .HasForeignKey(c => c.StandardId)
-                .HasPrincipalKey(c => c.Id).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .HasForeignKey(c => c.StandardUId)
+                .HasPrincipalKey(c => c.StandardUId)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.Ignore(x => x.SearchScore);
             builder.Ignore(x => x.CoreDuties);
 
-            builder.HasIndex(x => x.Id).IsUnique();
+            builder.HasIndex(x => x.StandardUId).IsUnique();
         }
     }
 }

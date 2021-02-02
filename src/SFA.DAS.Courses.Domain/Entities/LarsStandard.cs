@@ -1,17 +1,20 @@
-﻿namespace SFA.DAS.Courses.Domain.Entities
+﻿using System.Collections.Generic;
+
+namespace SFA.DAS.Courses.Domain.Entities
 {
     public class LarsStandard : LarsStandardBase
     {
         public virtual SectorSubjectAreaTier2 SectorSubjectArea { get; set; }
+        public virtual ICollection<Standard> Standards { get; set; }
+
         public static implicit operator LarsStandard(LarsStandardImport larsStandardImport)
         {
             return new LarsStandard
             {
-                Id = larsStandardImport.Id,
                 Version = larsStandardImport.Version,
                 EffectiveFrom = larsStandardImport.EffectiveFrom,
                 EffectiveTo = larsStandardImport.EffectiveTo,
-                StandardId = larsStandardImport.StandardId,
+                LarsCode = larsStandardImport.LarsCode,
                 LastDateStarts = larsStandardImport.LastDateStarts,
                 SectorSubjectAreaTier2 = larsStandardImport.SectorSubjectAreaTier2,
                 OtherBodyApprovalRequired = larsStandardImport.OtherBodyApprovalRequired

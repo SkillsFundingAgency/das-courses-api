@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -21,15 +23,28 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
         }
         public async Task<Unit> Handle(ImportDataCommand request, CancellationToken cancellationToken)
         {
+            var importStartTime = DateTime.Now;
 
-            var standardsImport =  _standardsImportService.ImportStandards();
-            var larsImportResult =  _larsImportService.ImportData();
-            var frameworksResult = _frameworksImportService.ImportData();
+            var standardsImportTask =  _standardsImportService.ImportDataIntoStaging();
+            var larsImportTask =  _larsImportService.ImportDataIntoStaging();
+            var frameworksImportTask = _frameworksImportService.ImportDataIntoStaging();
+
+            await Task.WhenAll(larsImportTask, standardsImportTask, frameworksImportTask);
+
+            var tasks = new List<Task>();
+
+            var frameworkImportResponse = frameworksImportTask.Result;
+            if (frameworkImportResponse.Success) tasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkImportResponse.LatestFile));
+
+            tasks.Add(_standardsImportService.LoadDataFromStaging(importStartTime));
+
+            await Task.WhenAll(tasks);
             
+            var larsImportResponse = larsImportTask.Result;
+            if (larsImportResponse.Success)  await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);
 
-            await Task.WhenAll(larsImportResult, standardsImport, frameworksResult);
             _indexBuilder.Build();
-            
+
             return Unit.Value;
         }
     }
