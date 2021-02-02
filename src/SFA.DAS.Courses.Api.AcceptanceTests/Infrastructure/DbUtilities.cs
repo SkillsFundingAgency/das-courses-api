@@ -237,9 +237,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsCode = 11,
                     StandardUId = "ST011_1.0",
                     IfateReferenceNumber = "ST011",
-                    Title = "Head Brewer - invalid",
-                    Keywords = "Head, Brewer, Beer",
-                    TypicalJobTitles = "Overseer of brewery operations",
+                    Title = "Structural Engineer - invalid",
+                    Keywords = "building, structural, engineer",
+                    TypicalJobTitles = "Structural Engineer",
                     Level = 2,
                     RouteId = sectors[0].Id,
                     LarsStandard = new LarsStandard
@@ -290,7 +290,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteId = sectors[0].Id,
                     LarsStandard = null,
                     Status = "Proposal in development",
-                    Version = 1.0m
+                    Version = 1.1m
                 },
                  new Standard
                 {
@@ -341,7 +341,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsCode = 1,
                     StandardUId = "ST001_1.2",
                     IfateReferenceNumber = "ST001",
-                    Title = "Head Brewer 1.2",
+                    Title = "Head Brewer",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
@@ -354,7 +354,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsCode = 1,
                     StandardUId = "ST001_1.1",
                     IfateReferenceNumber = "ST001",
-                    Title = "Head Brewer 1.1",
+                    Title = "Head Brewer",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
@@ -367,7 +367,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsCode = 5,
                     StandardUId = "ST005_1.0",
                     IfateReferenceNumber = "ST005",
-                    Title = "Photographic assistant SortOrder 1.0",
+                    Title = "Photographic assistant SortOrder",
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
                     Level = 3,
