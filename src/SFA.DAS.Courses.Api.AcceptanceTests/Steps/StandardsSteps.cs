@@ -165,7 +165,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 standards.Add(DbUtilities.GetAllTestStandards().Single(standard => 
                     standard.Title == row["title"] && 
                     standard.RouteId == existingSectors.Single(sector => sector.Route == row["sector"]).Id &&
-                    standard.Level == int.Parse(row["level"])));
+                    standard.Level == int.Parse(row["level"]) &&
+                    standard.Version == decimal.Parse(row["version"]) &&
+                    standard.Status == row["status"]));
             }
 
             return standards;
