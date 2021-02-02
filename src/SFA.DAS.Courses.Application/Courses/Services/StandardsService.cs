@@ -25,16 +25,14 @@ namespace SFA.DAS.Courses.Application.Courses.Services
         }
 
         public async Task<IEnumerable<Standard>> GetStandardsList(
-            string keyword, 
-            IList<Guid> routeIds, 
+            string keyword,
+            IList<Guid> routeIds,
             IList<int> levels,
             OrderBy orderBy,
             StandardFilter filter)
         {
-            var standards = routeIds.Any() || levels.Any()  ?
-                await _standardsRepository.GetFilteredStandards(routeIds, levels, filter) :
-                await _standardsRepository.GetAll(filter);
-           
+            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter);
+
             if (!string.IsNullOrEmpty(keyword))
             {
                 standards = FindByKeyword(standards, keyword);
@@ -66,7 +64,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
                 .Join(queryResult.Standards,
                     standard => standard.StandardUId,
                     searchStandard => searchStandard.StandardUId,
-                    (standard, searchStandard) => new {standard, searchStandard})
+                    (standard, searchStandard) => new { standard, searchStandard })
                 .ToList();
 
             foreach (var tempStandard in tempStandards)

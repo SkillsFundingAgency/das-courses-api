@@ -58,10 +58,10 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<IEnumerable<Standard>> GetAll(StandardFilter filter)
         {
-            return await GetFilteredStandards(new List<Guid>(), new List<int>(), filter);
+            return await GetStandards(new List<Guid>(), new List<int>(), filter);
         }
 
-        public async Task<IEnumerable<Standard>> GetFilteredStandards(IList<Guid> routeIds, IList<int> levels, StandardFilter filter)
+        public async Task<IEnumerable<Standard>> GetStandards(IList<Guid> routeIds, IList<int> levels, StandardFilter filter)
         {
             var standards = _coursesDataContext.Standards.AsQueryable();
 
