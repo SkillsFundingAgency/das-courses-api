@@ -31,9 +31,6 @@ Scenario: Get list of active and available standards
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.2     | Retired                |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.1     | Retired                |
 
-    
-
-
     Scenario: Get list of standards by levels that are active and available
 	Given I have an http client
     When I GET the following url: /api/courses/standards?levels=1&levels=7&filter=ActiveAvailable
