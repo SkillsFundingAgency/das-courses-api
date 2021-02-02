@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Search
 
             var result = new StandardSearchResult(document, score);
 
-            result.Id.Should().Be(document.GetField(nameof(StandardSearchResult.Id)).GetInt32Value().GetValueOrDefault());
+            result.StandardUId.Should().Be(document.GetField(nameof(StandardSearchResult.StandardUId)).GetStringValue());
             result.Score.Should().Be(score);
         }
     }

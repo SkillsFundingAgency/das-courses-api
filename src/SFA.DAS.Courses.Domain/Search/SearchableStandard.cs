@@ -9,13 +9,13 @@ namespace SFA.DAS.Courses.Domain.Search
     {
         public SearchableStandard(Standard standard)
         {
-            Id = standard.LarsCode;
+            StandardUId = standard.StandardUId;
             Title = standard.Title;
             TypicalJobTitles = standard.TypicalJobTitles;
             Keywords = standard.Keywords;
         }
         
-        public int Id { get; }
+        public string StandardUId { get; }
         public string Title { get; }
         public string TypicalJobTitles { get; }
         public string Keywords { get; }
@@ -41,7 +41,7 @@ namespace SFA.DAS.Courses.Domain.Search
         {
             return new Field[]
             {
-                new Int32Field(nameof(Id), Id, Field.Store.YES),
+                new StringField(nameof(StandardUId), StandardUId, Field.Store.YES),
                 // phrase
                 new TextField(TitlePhrase, Title ?? "", Field.Store.NO) {Boost = 1000f},
                 new TextField(TypicalJobTitlesPhrase, TypicalJobTitles ?? "", Field.Store.NO) {Boost = 500f},
