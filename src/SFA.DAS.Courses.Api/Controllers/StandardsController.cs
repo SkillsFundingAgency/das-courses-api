@@ -69,7 +69,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetStandardQuery {StandardId = id});
+                var result = await _mediator.Send(new GetStandardQuery {LarsCode = id});
 
                 var response = (GetStandardResponse)result.Standard;
 

@@ -16,16 +16,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
     {
         [Test, RecursiveMoqAutoData]
         public async Task Then_Gets_A_Standard_From_The_Repository(
-            int standardId,
+            int larsCode,
             Standard standardFromRepo,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.Get(standardId))
+                .Setup(repository => repository.Get(larsCode))
                 .ReturnsAsync(standardFromRepo);
 
-            var standard = await service.GetStandard(standardId);
+            var standard = await service.GetStandard(larsCode);
 
             standard.Should().BeEquivalentTo(standardFromRepo, options=> options
                 .Excluding(c=>c.ApprenticeshipFunding)
