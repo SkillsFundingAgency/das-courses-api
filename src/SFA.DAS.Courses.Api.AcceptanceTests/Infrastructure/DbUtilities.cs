@@ -19,6 +19,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             context.SectorSubjectAreaTier2.AddRange(GetSectorSubjectAreaTier2Items());
             context.Standards.AddRange(GetValidTestStandards());
             context.Standards.AddRange(GetInValidTestStandards());
+            context.Standards.AddRange(GetNotYetApprovedTestStandards());
             context.Frameworks.AddRange(GetFrameworks());
             context.SaveChanges();
         }
@@ -233,6 +234,36 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     }
                 }
             };
+        }
+
+        public static IEnumerable<Standard> GetNotYetApprovedTestStandards()
+        {
+            var sectors = GetTestSectors().ToList();
+            var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
+            return new List<Standard>
+            {
+                new Standard
+                {
+                    Id = 15,
+                    Title = "Assistant Brewer - withdrawn",
+                    Keywords = "Head, Brewer, Beer",
+                    TypicalJobTitles = "Assistant of brewery operations",
+                    Level = 1,
+                    RouteId = sectors[0].Id,
+                    LarsStandard = null
+                }
+            };
+        }
+
+        public static IEnumerable<Standard> GetAllTestStandards()
+        {
+            var combinedStandards = new List<Standard>();
+
+            combinedStandards.AddRange(GetValidTestStandards());
+            combinedStandards.AddRange(GetInValidTestStandards());
+            combinedStandards.AddRange(GetNotYetApprovedTestStandards());
+
+            return combinedStandards;
         }
 
         public static IEnumerable<Framework> GetFrameworks()

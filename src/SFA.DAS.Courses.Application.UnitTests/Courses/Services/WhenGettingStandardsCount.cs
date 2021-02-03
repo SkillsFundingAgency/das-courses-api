@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.Courses.Services;
 using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
@@ -14,15 +15,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         [Test, MoqAutoData]
         public async Task Then_Gets_Count_From_Repo(
             int count,
-            bool filterAvailableToStart,
+            StandardFilter filter,
             [Frozen] Mock<IStandardRepository> mockRepository,
             StandardsService service)
         {
             mockRepository
-                .Setup(repository => repository.Count(filterAvailableToStart))
+                .Setup(repository => repository.Count(filter))
                 .ReturnsAsync(count);
 
-            var actual = await service.Count(filterAvailableToStart);
+            var actual = await service.Count(filter);
 
             actual.Should().Be(count);
         }

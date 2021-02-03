@@ -45,6 +45,63 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 );
         }
 
+        [Then("all valid and invalid standards are returned")]
+        public async Task ThenAllValidAndInvalidStandardsAreReturned()
+        {
+            if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
+            {
+                Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
+            }
+
+            var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
+
+            var standardsList = new List<Standard>();
+            standardsList.AddRange(DbUtilities.GetValidTestStandards());
+            standardsList.AddRange(DbUtilities.GetInValidTestStandards());
+
+            model.Standards.Should().BeEquivalentTo(standardsList, options => options
+                    .Excluding(std => std.Sector)
+                    .Excluding(std => std.ApprenticeshipFunding)
+                    .Excluding(std => std.LarsStandard)
+                    .Excluding(std => std.RouteId)
+                    .Excluding(std => std.SearchScore)
+                    .Excluding(std => std.RegulatedBody)
+                    .Excluding(std => std.Duties)
+                    .Excluding(std => std.CoreAndOptions)
+                    .Excluding(std => std.CoreDuties)
+                );
+            model.Total.Should().Be(standardsList.Count);
+        }
+
+        [Then("all standards are returned")]
+        public async Task ThenAllStandardsAreReturned()
+        {
+            if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
+            {
+                Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
+            }
+
+            var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
+
+            var standardsList = new List<Standard>();
+            standardsList.AddRange(DbUtilities.GetValidTestStandards());
+            standardsList.AddRange(DbUtilities.GetInValidTestStandards());
+            standardsList.AddRange(DbUtilities.GetNotYetApprovedTestStandards());
+
+            model.Standards.Should().BeEquivalentTo(standardsList, options => options
+                    .Excluding(std => std.Sector)
+                    .Excluding(std => std.ApprenticeshipFunding)
+                    .Excluding(std => std.LarsStandard)
+                    .Excluding(std => std.RouteId)
+                    .Excluding(std => std.SearchScore)
+                    .Excluding(std => std.RegulatedBody)
+                    .Excluding(std => std.Duties)
+                    .Excluding(std => std.CoreAndOptions)
+                    .Excluding(std => std.CoreDuties)
+                );
+            model.Total.Should().Be(standardsList.Count);
+        }
+
         [Then("the following valid standards are returned")]
         public async Task ThenTheFollowingValidStandardsReturned(Table table)
         {
@@ -76,7 +133,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var standards =  new List<Standard>();
             foreach (var row in table.Rows)
             {
-                standards.Add(DbUtilities.GetValidTestStandards().Single(standard => 
+                standards.Add(DbUtilities.GetAllTestStandards().Single(standard => 
                     standard.Title == row["title"] && 
                     standard.RouteId == existingSectors.Single(sector => sector.Route == row["sector"]).Id &&
                     standard.Level == int.Parse(row["level"])));

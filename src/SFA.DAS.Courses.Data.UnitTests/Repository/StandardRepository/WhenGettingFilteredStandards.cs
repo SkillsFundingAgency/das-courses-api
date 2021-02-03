@@ -8,6 +8,7 @@ using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.Customisations;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
@@ -27,11 +28,12 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             mockCoursesDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
-
+            
             //Act
             var actual = await repository.GetFilteredStandards(
-                new List<Guid>{validStandards[0].RouteId}, 
-                new List<int>());
+                new List<Guid> { validStandards[0].RouteId },
+                new List<int>(),
+                StandardFilter.ActiveAvailable);
             
             //Assert
             Assert.IsNotNull(actual);
@@ -55,7 +57,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             //Act
             var actual = await repository.GetFilteredStandards(
                 new List<Guid>{invalidStandards[0].RouteId}, 
-                new List<int>());
+                new List<int>(),
+                StandardFilter.ActiveAvailable);
             
             //Assert
             Assert.IsNotNull(actual);
@@ -78,7 +81,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             var actual = await repository.GetFilteredStandards(
                 new List<Guid>(), 
-                new List<int> {validStandards[0].Level});
+                new List<int> {validStandards[0].Level},
+                StandardFilter.ActiveAvailable);
             
             actual.Should().BeEquivalentTo(new List<Standard>{validStandards[0]});
         }
@@ -100,7 +104,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             var actual = await repository.GetFilteredStandards(
                 new List<Guid>(), 
-                new List<int> {validStandards[0].Level},false);
+                new List<int> {validStandards[0].Level}, 
+                StandardFilter.Active);
 
             var expectedList = new List<Standard>
             {
