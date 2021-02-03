@@ -64,12 +64,12 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [Route("{larsCode}")]
+        public async Task<IActionResult> Get(int larsCode)
         {
             try
             {
-                var result = await _mediator.Send(new GetStandardQuery {LarsCode = id});
+                var result = await _mediator.Send(new GetStandardQuery {LarsCode = larsCode});
 
                 var response = (GetStandardResponse)result.Standard;
 
@@ -77,7 +77,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             }
             catch (InvalidOperationException e)
             {
-                _logger.LogError(e, $"Standard not found {id}");
+                _logger.LogError(e, $"Standard not found {larsCode}");
                 return NotFound();
             }
         }

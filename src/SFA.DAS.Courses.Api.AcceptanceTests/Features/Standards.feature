@@ -94,5 +94,13 @@ Scenario: Get list of active and available standards
     When I GET the following url: /api/courses/standards?filter=NotYetApproved
     Then an http status code of 200 is returned
     And all not yet approved standards are returned
+
+    Scenario: Get latest version of a standard by Lars Code
+	Given I have an http client
+    When I GET the following url: /api/courses/standards/1
+    Then an http status code of 200 is returned
+    And the following valid individual standard is returned
+    | title                            | level | sector                        | version | status                |
+    | Head Brewer                      | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
     
     
