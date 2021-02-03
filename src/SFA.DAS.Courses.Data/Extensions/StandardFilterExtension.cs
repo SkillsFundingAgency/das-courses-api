@@ -12,8 +12,6 @@ namespace SFA.DAS.Courses.Data.Extensions
     {
         public static IQueryable<Standard> FilterStandards(this IQueryable<Standard> standards, StandardFilter filter)
         {
-            // Active and ActiveAvailable Filters require IsLatestVersion filter, but the query is to complex for EF
-            // To convert into an Expression Tree to leverage on the database. So unfortunately it has been split out
             switch (filter)
             {
                 case StandardFilter.Active:
