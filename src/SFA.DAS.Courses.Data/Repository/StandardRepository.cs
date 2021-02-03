@@ -38,21 +38,29 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext.SaveChanges();
         }
 
-        public async Task<Standard> Get(int id)
+        public async Task<Standard> Get(int larsCode)
         {
-            var standard = await _coursesDataContext
+            // To maintain backwards compatibility, when retrieving a standard by Lars Code
+            // It is assumed you always want the latest active version of that standard
+            var standards = await _coursesDataContext
                 .Standards
-                .Include(c=>c.Sector)
-                .Include(c=>c.ApprenticeshipFunding)
-                .Include(c=>c.LarsStandard)
-                .ThenInclude(c=>c.SectorSubjectArea)
-                .SingleOrDefaultAsync(c=>c.LarsCode.Equals(id));
+                .FilterStandards(StandardFilter.Active)
+                .Include(c => c.Sector)
+                .Include(c => c.ApprenticeshipFunding)
+                .Include(c => c.LarsStandard)
+                .ThenInclude(c => c.SectorSubjectArea)
+                .Where(c => c.LarsCode.Equals(larsCode))
+                .ToListAsync();
+
+            // In Memory Filter for get latest version due to limitations in EF query translation
+            // into expression tree
+            var standard = standards.InMemoryFilterIsLatestVersion(StandardFilter.Active).SingleOrDefault();
 
             if (standard == null)
             {
-                throw new InvalidOperationException($"Course with id {id} not found in repository");
+                throw new InvalidOperationException($"Course with id {larsCode} not found in repository");
             }
-            
+
             return standard;
         }
 

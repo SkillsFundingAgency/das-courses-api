@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             GetStandardQueryHandler handler)
         {
             mockStandardsService
-                .Setup(service => service.GetStandard(query.StandardId))
+                .Setup(service => service.GetStandard(query.LarsCode))
                 .ReturnsAsync(standardsFromService);
 
             var result = await handler.Handle(query, CancellationToken.None);
