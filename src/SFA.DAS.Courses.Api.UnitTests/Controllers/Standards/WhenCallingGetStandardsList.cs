@@ -30,7 +30,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
         {
-            // Temporary fix to enforce correct filter, will be removed in SV work
+            filter = StandardFilter.None;
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetStandardsListQuery>(query => 
@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                         query.RouteIds.Equals(routeIds) &&
                         query.Levels.Equals(levels) &&
                         query.OrderBy.Equals(orderBy) &&
-                        query.Filter.Equals(StandardFilter.None)), 
+                        query.Filter.Equals(filter)), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
