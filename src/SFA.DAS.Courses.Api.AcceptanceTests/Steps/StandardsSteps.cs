@@ -168,7 +168,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             standard.Should().BeEquivalentTo(
                 GetExpected(table).Single(), options => options
-                    .Excluding(std => std. Sector)
+                    .Excluding(std => std.Sector)
                     .Excluding(std => std.ApprenticeshipFunding)
                     .Excluding(std => std.LarsStandard)
                     .Excluding(std => std.RouteId)
