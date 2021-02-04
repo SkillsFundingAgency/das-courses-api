@@ -36,6 +36,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public bool CoreAndOptions { get; set; }
         public string CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
+        public List<string> Options { get; set; }
 
         public static implicit operator GetStandardResponse(Standard source)
         {
@@ -68,7 +69,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Duties = source.Duties,
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
-                IntegratedApprenticeship = source.IntegratedApprenticeship
+                IntegratedApprenticeship = source.IntegratedApprenticeship,
+                Options = source.Options
             };
         }
     }
