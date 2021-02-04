@@ -14,5 +14,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<Standard> Get(int larsCode);
         Task<Standard> Get(string standardUId);
         Task<IEnumerable<Standard>> GetStandards(IList<Guid> routeIds, IList<int> levels, StandardFilter filter);
+        Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber);
     }
 }

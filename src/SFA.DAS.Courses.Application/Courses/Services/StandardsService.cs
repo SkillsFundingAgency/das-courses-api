@@ -43,7 +43,14 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             return standards.Select(standard => (Standard)standard);
         }
 
-        public async Task<int> Count(StandardFilter filter)
+        public async Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber)
+        {
+            var standards = await _standardsRepository.GetStandards(iFateReferenceNumber);
+
+            return standards.Select(standard => (Standard)standard);
+        }
+
+        public async Task<int> Count(StandardFilter filter = StandardFilter.None)
         {
             var count = await _standardsRepository.Count(filter);
             return count;
