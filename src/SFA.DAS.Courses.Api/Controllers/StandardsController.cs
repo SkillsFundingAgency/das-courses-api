@@ -100,5 +100,29 @@ namespace SFA.DAS.Courses.Api.Controllers
                 return NotFound();
             }
         }
+
+        [HttpGet]
+        [Route("versions/{iFateReferenceNumber}")]
+        public async Task<IActionResult> GetStandardsByIFateReferenceNumber(string iFateReferenceNumber)
+        {
+            try
+            {
+                var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery { IFateReferenceNumber = iFateReferenceNumber });
+
+                var response = new GetStandardsListResponse
+                {
+                    Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard),
+                    Total = queryResult.Total,
+                    TotalFiltered = queryResult.TotalFiltered
+                };
+
+                return Ok(response);
+            }
+            catch (InvalidOperationException e)
+            {
+                _logger.LogError(e, "Error attempting to get list of standards");
+                return BadRequest();
+            }
+        }
     }
 }

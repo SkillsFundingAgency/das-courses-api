@@ -108,5 +108,19 @@ namespace SFA.DAS.Courses.Data.Repository
             // EF Core query translation on Group By selecting top row of each.
             return standardResults.InMemoryFilterIsLatestVersion(filter);
         }
+
+        public async Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber)
+        {
+            var standards = await _coursesDataContext
+                .Standards
+                .Include(c => c.Sector)
+                .Include(c => c.ApprenticeshipFunding)
+                .Include(c => c.LarsStandard)
+                .ThenInclude(c => c.SectorSubjectArea)
+                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber))
+                .ToListAsync();
+
+            return standards;
+        }
     }
 }
