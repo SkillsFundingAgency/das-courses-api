@@ -3,7 +3,7 @@
     I want to retrieve standards
     So that I can use them in my own application
 
-Scenario: Get list of active and available standards
+    Scenario: Get list of active and available standards
 	Given I have an http client
     When I GET the following url: /api/courses/standards?filter=ActiveAvailable
     Then an http status code of 200 is returned
@@ -103,4 +103,10 @@ Scenario: Get list of active and available standards
     | title                            | level | sector                        | version | status                |
     | Head Brewer                      | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
     
-    
+    Scenario: : Get a specific version of a standard by StandardUId
+    Given I have an http client
+    When I GET the following url: /api/courses/standards/ST005_1.0
+    Then an http status code of 200 is returned
+    And the following standard is returned
+    | title                            | level | sector              | version | status  |
+    | Photographic assistant SortOrder | 3     | Creative and design | 1.0     | Retired |

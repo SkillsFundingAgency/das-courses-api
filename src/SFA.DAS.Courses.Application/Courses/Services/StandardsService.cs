@@ -56,6 +56,13 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             return (Standard)standard;
         }
 
+        public async Task<Standard> GetStandard(string standardUId)
+        {
+            var standard = await _standardsRepository.Get(standardUId);
+
+            return (Standard)standard;
+        }
+
         private IEnumerable<Domain.Entities.Standard> FindByKeyword(IEnumerable<Domain.Entities.Standard> standards, string keyword)
         {
             var queryResult = _searchManager.Query(keyword);
