@@ -110,3 +110,13 @@
     And the following standard is returned
     | title                            | level | sector              | version | status  |
     | Photographic assistant SortOrder | 3     | Creative and design | 1.0     | Retired |
+
+    Scenario: : Get a all versions of a standard by IFateReferenceNumber
+    Given I have an http client
+    When I GET the following url: /api/courses/standards/versions/ST001
+    Then an http status code of 200 is returned
+    And the following valid standards are returned
+    | title                                      | level | sector                        | version | status                 |
+    | Head Brewer                                | 2     | Engineering and manufacturing | 1.3     | Approved for delivery  |
+    | Head Brewer                                | 2     | Engineering and manufacturing | 1.2     | Retired                |
+    | Head Brewer                                | 2     | Engineering and manufacturing | 1.1     | Retired                |
