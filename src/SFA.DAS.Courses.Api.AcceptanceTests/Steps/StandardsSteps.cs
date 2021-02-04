@@ -156,8 +156,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             );
         }
 
-        [Then("the following valid individual standard is returned")]
-        public async Task ThenTheFollowingValidIndividualStandardIsReturned(Table table)
+        [Then("the following standard is returned")]
+        public async Task ThenTheFollowingStandardIsReturned(Table table)
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
