@@ -69,8 +69,20 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("integratedApprenticeship")]
         public bool? IntegratedApprenticeship { get ; set ; }
+
+        [JsonProperty("options")]
+        public List<Option> Options { get; set; }
+
+        [JsonProperty("optionsUnstructuredTemplate")]
+        public List<string> OptionsUnstructuredTemplate { get; set; } = new List<string>();
     }
-    
+
+    public class Option
+    {
+        public string OptionId { get; set; }
+        public string Title { get; set; }
+    }
+
     public class Skill
     {
         [JsonProperty("skillId")]
