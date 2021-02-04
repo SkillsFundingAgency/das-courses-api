@@ -99,7 +99,7 @@
 	Given I have an http client
     When I GET the following url: /api/courses/standards/1
     Then an http status code of 200 is returned
-    And the following valid individual standard is returned
+    And the following standard is returned
     | title                            | level | sector                        | version | status                |
     | Head Brewer                      | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
     
