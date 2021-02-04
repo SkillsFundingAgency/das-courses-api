@@ -156,6 +156,30 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             );
         }
 
+        [Then("the following valid individual standard is returned")]
+        public async Task ThenTheFollowingValidIndividualStandardIsReturned(Table table)
+        {
+            if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
+            {
+                Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
+            }
+
+            var standard = await HttpUtilities.ReadContent<GetStandardResponse>(result.Content);
+
+            standard.Should().BeEquivalentTo(
+                GetExpected(table).Single(), options => options
+                    .Excluding(std => std.Sector)
+                    .Excluding(std => std.ApprenticeshipFunding)
+                    .Excluding(std => std.LarsStandard)
+                    .Excluding(std => std.RouteId)
+                    .Excluding(std => std.SearchScore)
+                    .Excluding(std => std.RegulatedBody)
+                    .Excluding(std => std.Duties)
+                    .Excluding(std => std.CoreAndOptions)
+                    .Excluding(std => std.CoreDuties)
+            );
+        }
+
         private IEnumerable<Standard> GetExpected(Table table)
         {
             var existingSectors = DbUtilities.GetTestSectors();
