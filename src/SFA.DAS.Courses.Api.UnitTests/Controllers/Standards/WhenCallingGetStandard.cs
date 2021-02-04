@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
     public class WhenCallingGetStandard
     {
         [Test, MoqAutoData]
-        public async Task Then_Gets_Standards_List_From_Mediator(
+        public async Task Then_Gets_Standard_From_Mediator(
             int larsCode,
             GetStandardResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
