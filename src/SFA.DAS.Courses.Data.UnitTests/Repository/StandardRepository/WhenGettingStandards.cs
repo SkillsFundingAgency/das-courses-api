@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
             
-            var actualStandards = await repository.GetAll(StandardFilter.ActiveAvailable);
+            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.ActiveAvailable);
             
             Assert.IsNotNull(actualStandards);
             actualStandards.Should().BeEquivalentTo(activeValidStandards);
@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetAll(StandardFilter.Active);
+            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.Active);
             
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -91,7 +91,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetAll(StandardFilter.NotYetApproved);
+            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.NotYetApproved);
 
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -119,7 +119,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetAll(StandardFilter.None);
+            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.None);
 
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
