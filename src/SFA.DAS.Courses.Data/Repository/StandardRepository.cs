@@ -64,6 +64,24 @@ namespace SFA.DAS.Courses.Data.Repository
             return standard;
         }
 
+        public async Task<Standard> Get(string standardUId)
+        {
+            var standard = await _coursesDataContext
+                .Standards
+                .Include(c => c.Sector)
+                .Include(c => c.ApprenticeshipFunding)
+                .Include(c => c.LarsStandard)
+                .ThenInclude(c => c.SectorSubjectArea)
+                .SingleOrDefaultAsync(c => c.StandardUId.Equals(standardUId));
+
+            if (standard == null)
+            {
+                throw new InvalidOperationException($"Course with standardUId {standardUId} not found in repository");
+            }
+
+            return standard;
+        }
+
         public async Task<IEnumerable<Standard>> GetAll(StandardFilter filter)
         {
             return await GetStandards(new List<Guid>(), new List<int>(), filter);
