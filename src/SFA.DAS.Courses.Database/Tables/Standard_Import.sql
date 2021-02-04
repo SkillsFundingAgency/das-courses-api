@@ -20,6 +20,8 @@
     [Duties] NVARCHAR(MAX) NULL, 
     [CoreAndOptions] BIT NOT NULL DEFAULT 0,
     [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0,
+    [Options] NVARCHAR(MAX) NULL, 
+    [OptionsUnstructuredTemplate] NVARCHAR(MAX) NULL, 
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO
