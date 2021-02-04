@@ -6,6 +6,8 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class StandardImport : StandardBase
     {
+        public List<string> OptionsUnstructuredTemplate { get; set; }
+
         public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
         {
             string coreDuties = null;
@@ -38,7 +40,9 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Duties = standard.Duties?.Select(x => x.DutyDetail).ToList() ?? new List<string>(),
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = coreDuties,
-                IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard)
+                IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
+                Options = standard.Options?.Select(o => o.Title).ToList() ?? new List<string>(),
+                OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>()
             };
         }
 

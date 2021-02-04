@@ -20,6 +20,7 @@
     [Duties] NVARCHAR(MAX) NULL, 
     [CoreAndOptions] BIT NOT NULL DEFAULT 0, 
     [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0,
+    [Options] NVARCHAR(MAX) NULL, 
     CONSTRAINT [AK_Standard_Column] UNIQUE ([StandardUId])
 )
 GO

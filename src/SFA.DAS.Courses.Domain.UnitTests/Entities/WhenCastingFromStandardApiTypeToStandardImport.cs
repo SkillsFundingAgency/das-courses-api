@@ -17,17 +17,18 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             actual.Should().BeEquivalentTo(standard, options => options
-                 .Excluding(c => c.Route)
-                 .Excluding(c => c.Duties)
-                 .Excluding(c => c.Keywords)
-                 .Excluding(c => c.Skills)
-                 .Excluding(c => c.Knowledge)
-                 .Excluding(c => c.Behaviours)
-                 .Excluding(c => c.JobRoles)
-                 .Excluding(c => c.StandardPageUrl)
-                 .Excluding(c => c.TypicalJobTitles)
-                 .Excluding(c => c.CoreAndOptions)
-                 .Excluding(c => c.ReferenceNumber)
+                .Excluding(c => c.Options)
+                .Excluding(c => c.Route)
+                .Excluding(c => c.Duties)
+                .Excluding(c => c.Keywords)
+                .Excluding(c => c.Skills)
+                .Excluding(c => c.Knowledge)
+                .Excluding(c => c.Behaviours)
+                .Excluding(c => c.JobRoles)
+                .Excluding(c => c.StandardPageUrl)
+                .Excluding(c => c.TypicalJobTitles)
+                .Excluding(c => c.CoreAndOptions)
+                .Excluding(c => c.ReferenceNumber)
             );
 
             actual.LarsCode.Should().Be(standard.LarsCode);
@@ -155,6 +156,55 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Duties.Should().BeEquivalentTo(standard.Duties.Select(c => c.DutyDetail));
+        }
+
+        [Test, AutoData]
+        public void Then_All_Options_Are_Mapped(ImportTypes.Standard standard)
+        {
+            //Arrange
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().BeEquivalentTo(standard.Options.Select(c => c.Title));
+        }
+
+        [Test, AutoData]
+        public void Then_Options_Are_Mapped_To_Empty_List(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Options = null;
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().BeEquivalentTo(new List<string>());
+        }
+
+        [Test, AutoData]
+        public void Then_All_OptionsUnstructuredTemplate_Are_Mapped(ImportTypes.Standard standard)
+        {
+            //Arrange
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.OptionsUnstructuredTemplate.Should().BeEquivalentTo(standard.OptionsUnstructuredTemplate);
+        }
+
+        [Test, AutoData]
+        public void Then_OptionsUnstructuredTemplate_Are_Mapped_To_Empty_List(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.OptionsUnstructuredTemplate = null;
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.OptionsUnstructuredTemplate.Should().BeEquivalentTo(new List<string>());
         }
 
         [Test, AutoData]

@@ -1,4 +1,7 @@
-﻿namespace SFA.DAS.Courses.Domain.Entities
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace SFA.DAS.Courses.Domain.Entities
 {
     public class Standard : StandardBase
     {
@@ -29,7 +32,8 @@
                 Duties = standard.Duties,
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = standard.CoreDuties,
-                IntegratedApprenticeship = standard.IntegratedApprenticeship
+                IntegratedApprenticeship = standard.IntegratedApprenticeship,
+                Options = standard.Options.Any() ? standard.Options : standard.OptionsUnstructuredTemplate.Any() ? standard.OptionsUnstructuredTemplate : new List<string>()
             };
         }
     }
