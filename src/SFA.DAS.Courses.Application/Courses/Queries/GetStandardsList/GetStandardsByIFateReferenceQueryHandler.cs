@@ -23,13 +23,10 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
         public async Task<GetStandardsByIFateReferenceResult> Handle(GetStandardsByIFateReferenceQuery request, CancellationToken cancellationToken)
         {
             var standards = (await _standardsService.GetAllVersionsOfAStandard(request.IFateReferenceNumber)).ToList();
-            var total = await _standardsService.Count();
 
             return new GetStandardsByIFateReferenceResult
             {
                 Standards = standards,
-                Total = total,
-                TotalFiltered = standards.Count
             };
         }
     }
