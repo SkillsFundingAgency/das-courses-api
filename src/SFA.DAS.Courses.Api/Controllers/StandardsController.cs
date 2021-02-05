@@ -109,11 +109,9 @@ namespace SFA.DAS.Courses.Api.Controllers
             {
                 var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery { IFateReferenceNumber = iFateReferenceNumber });
 
-                var response = new GetStandardsListResponse
+                var response = new GetStandardVersionsListResponse
                 {
-                    Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard),
-                    Total = queryResult.Total,
-                    TotalFiltered = queryResult.TotalFiltered
+                    Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard)
                 };
 
                 return Ok(response);
