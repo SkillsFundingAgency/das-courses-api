@@ -33,11 +33,9 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 
             var controllerResult = await controller.GetStandardsByIFateReferenceNumber(iFateReferenceNumber) as ObjectResult;
 
-            var model = controllerResult.Value as GetStandardsListResponse;
+            var model = controllerResult.Value as GetStandardVersionsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             model.Standards.Should().BeEquivalentTo(queryResult.Standards);
-            model.Total.Should().Be(queryResult.Total);
-            model.TotalFiltered.Should().Be(queryResult.TotalFiltered);
         }
 
         [Test, MoqAutoData]
