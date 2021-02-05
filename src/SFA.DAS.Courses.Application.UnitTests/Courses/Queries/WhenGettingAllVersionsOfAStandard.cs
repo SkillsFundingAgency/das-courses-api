@@ -17,7 +17,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_Standards_From_Service(
-            int count,
             GetStandardsByIFateReferenceQuery query,
             List<Standard> standards,
             [Frozen] Mock<IStandardsService> mockStandardsService,
@@ -26,9 +25,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             mockStandardsService
                 .Setup(service => service.GetAllVersionsOfAStandard(query.IFateReferenceNumber))
                 .ReturnsAsync(standards);
-            mockStandardsService
-                .Setup(service => service.Count(StandardFilter.None))
-                .ReturnsAsync(count);
 
             var result = await handler.Handle(query, CancellationToken.None);
 
