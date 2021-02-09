@@ -29,11 +29,18 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.TypicalJobTitles)
                 .Excluding(c => c.CoreAndOptions)
                 .Excluding(c => c.ReferenceNumber)
+                .Excluding(c => c.EqaProvider)
+                .Excluding(c => c.TbMainContact)
             );
 
             actual.LarsCode.Should().Be(standard.LarsCode);
             actual.StandardPageUrl.Should().Be(standard.StandardPageUrl.AbsoluteUri);
             actual.TypicalJobTitles.Should().Be(string.Join("|", standard.TypicalJobTitles));
+            actual.TrailBlazerContact.Should().Be(standard.TbMainContact);
+            actual.EqaProviderName.Should().Be(standard.EqaProvider.ProviderName);
+            actual.EqaProviderContactName.Should().Be(standard.EqaProvider.ContactName);
+            actual.EqaProviderContactEmail.Should().Be(standard.EqaProvider.ContactEmail);
+            actual.EqaProviderWebLink.Should().Be(standard.EqaProvider.WebLink);
         }
 
         [Test, AutoData]

@@ -19,11 +19,26 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("status")]
         public string Status { get; set; }
 
+        [JsonProperty("earliestStartDate")]
+        public DateTime? EarliestStartDate { get; set; }
+
+        [JsonProperty("latestStartDate")]
+        public DateTime? LatestStartDate { get; set; }
+
+        [JsonProperty("latestEndDate")]
+        public DateTime? LatestEndDate { get; set; }
+
         [JsonProperty("overviewOfRole")]
         public string OverviewOfRole { get; set; }
 
         [JsonProperty("level")]
         public int Level { get; set; }
+
+        [JsonProperty("typicalDuration")]
+        public int TypicalDuration { get; set; }
+
+        [JsonProperty("maxFunding")]
+        public int MaxFunding { get; set; }
 
         [JsonProperty("route")]
         public string Route { get; set; }
@@ -37,6 +52,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("jobRoles")]
         public List<string> JobRoles { get; set; }
 
+        [JsonProperty("assessmentPlanUrl")]
+        public string AssessmentPlanUrl { get; set; }
+
         [JsonProperty("version")]
         public decimal? Version { get; set; }
 
@@ -49,8 +67,17 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("behaviours")]
         public List<Behaviour> Behaviours { get; set; } = new List<Behaviour>();
 
+        [JsonProperty("eQAProvider")]
+        public EqaProvider EqaProvider { get; set; }
+
+        [JsonProperty("approvedForDelivery")]
+        public DateTime? ApprovedForDelivery { get; set; }
+
         [JsonProperty("integratedDegree")]
         public string IntegratedDegree { get; set; }
+
+        [JsonProperty("tbMainContact")]
+        public string TbMainContact { get; set; }
 
         [JsonProperty("typicalJobTitles")]
         public List<string> TypicalJobTitles { get; set; }
@@ -77,9 +104,30 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public List<string> OptionsUnstructuredTemplate { get; set; } = new List<string>();
     }
 
+    public class EqaProvider
+    {
+        [JsonProperty("providerName")]
+        public string ProviderName { get; set; }
+
+        [JsonProperty("contactName")]
+        public string ContactName { get; set; }
+
+        [JsonProperty("contactAddress")]
+        public string ContactAddress { get; set; }
+
+        [JsonProperty("contactEmail")]
+        public string ContactEmail { get; set; }
+
+        [JsonProperty("webLink")]
+        public string WebLink { get; set; }
+    }
+
     public class Option
     {
-        public string OptionId { get; set; }
+        [JsonProperty("optionId")]
+        public Guid OptionId { get; set; }
+
+        [JsonProperty("title")]
         public string Title { get; set; }
     }
 
@@ -87,6 +135,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     {
         [JsonProperty("skillId")]
         public string SkillId { get; set; }
+
         [JsonProperty("detail")]
         public string Detail { get; set; }
     }
