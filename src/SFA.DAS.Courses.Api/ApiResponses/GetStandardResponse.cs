@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Domain.Courses;
 
@@ -10,14 +11,25 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string IfateReferenceNumber { get; set; }
         public int LarsCode { get; set; }
         public string Status { get; set; }
+        public DateTime? EarliestStartDate { get; set; }
+        public DateTime? LatestStartDate { get; set; }
+        public DateTime? LatestEndDate { get; set; }
         public float? SearchScore { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
+        public int TypicalDuration { get; set; }
+        public int MaxFunding { get; set; }
         public decimal Version { get; set; }
-        
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public string Route { get; set; }
+        public string AssessmentPlanUrl { get; set; }
+        public DateTime? ApprovedForDelivery { get; set; }
+        public string TrailBlazerContact { get; set; }
+        public string EqaProviderName { get; set; }
+        public string EqaProviderContactName { get; set; }
+        public string EqaProviderContactEmail { get; set; }
+        public string EqaProviderWebLink { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }
         public List<string> Skills { get; set; }
@@ -46,13 +58,25 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 LarsCode = source.LarsCode,
                 Status = source.Status,
+                EarliestStartDate = source.EarliestStartDate,
+                LatestStartDate = source.LatestStartDate,
+                LatestEndDate = source.LatestEndDate,
                 SearchScore = source.SearchScore,
                 Title = source.Title,
                 Level = source.Level,
+                TypicalDuration = source.TypicalDuration,
+                MaxFunding = source.MaxFunding,
                 Version = source.Version,
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 Route = source.Route,
+                AssessmentPlanUrl = source.AssessmentPlanUrl,
+                ApprovedForDelivery = source.ApprovedForDelivery,
+                TrailBlazerContact = source.TrailBlazerContact,
+                EqaProviderName = source.EqaProviderName,
+                EqaProviderContactName = source.EqaProviderContactName,
+                EqaProviderContactEmail = source.EqaProviderContactEmail,
+                EqaProviderWebLink = source.EqaProviderWebLink,
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
                 Skills = source.Skills,
