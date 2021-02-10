@@ -13,7 +13,7 @@ variables:
     value: 'release'
   - group: "ESFA - SonarCloud"
   - name: sonarCloudProjectKey
-    value: "SkillsFundingAgency_das-courses-api"    
+    value: "SkillsFundingAgency_das-courses-api"
 
 resources:
   repositories:
@@ -29,7 +29,7 @@ jobs:
     name: 'DAS - Continuous Integration'
     demands: Agent.OS -equals Linux
   workspace:
-    clean: all  
+    clean: all
   steps:
   - task: gittools.gitversion-preview.gitversion-task.GitVersion@5
     displayName: GitVersion
@@ -39,13 +39,13 @@ jobs:
 
   - task: SonarCloudPrepare@1
     displayName: 'Prepare SonarCloud analysis configuration'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.Reason'], 'PullRequest')))
     inputs:
       SonarCloud: "$(SonarCloudConnectionId)"
       organization: "$(SonarCloudOrganisationKey)"
       scannerMode: 'MSBuild'
       projectName: "$(Build.DefinitionName)"
-      projectKey: "$(sonarCloudProjectKey)"      
+      projectKey: "$(sonarCloudProjectKey)"
 
   - task: DotNetCoreCLI@2
     displayName: Restore
@@ -59,14 +59,14 @@ jobs:
     inputs:
       projects: 'src/**/*.csproj'
       arguments: '--configuration $(buildConfiguration) --no-restore'
-      
+
   - task: DotNetCoreCLI@2
     displayName: Test
     inputs:
       command: test
       projects: '**/*.UnitTests.csproj'
       arguments: '--configuration $(buildConfiguration) --no-build'
-      
+
   - task: DotNetCoreCLI@2
     displayName: 'Acceptance Tests'
     inputs:
@@ -76,11 +76,11 @@ jobs:
 
   - task: SonarCloudAnalyze@1
     displayName: 'Run SonarCloud analysis'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
-      
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.Reason'], 'PullRequest')))
+
   - task: SonarCloudPublish@1
     displayName: 'Publish SonarCloud analysis results on build summary'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'),eq(variables['Build.Reason'], 'PullRequest')))
     inputs:
       pollingTimeoutSec: '300'
 
