@@ -21,7 +21,13 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<int> Count(StandardFilter filter)
         {
-            return await _coursesDataContext.Standards.AsQueryable().FilterStandards(filter).CountAsync();
+            var initialCount = await _coursesDataContext.Standards.FilterStandards(filter).ToListAsync();
+
+            // In Memory Filter for get latest version due to limitations in EF query translation
+            // into expression tree
+            var count = initialCount.InMemoryFilterIsLatestVersion(filter).Count();
+
+            return count;
         }
 
         public void DeleteAll()
