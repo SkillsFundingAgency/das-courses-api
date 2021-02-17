@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var count = await repository.Count(StandardFilter.Active);
 
             
-            count.Should().Be(activeValidStandards.Count + activeInvalidStandards.Count);
+            count.Should().Be(activeValidStandards.Count + activeInvalidStandards.Count + retiredStandards.Count);
         }
 
         [Test, RecursiveMoqAutoData]

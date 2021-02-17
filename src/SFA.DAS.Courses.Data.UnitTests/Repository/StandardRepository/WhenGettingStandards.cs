@@ -68,6 +68,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var expectedList = new List<Standard>();
             expectedList.AddRange(activeValidStandards);
             expectedList.AddRange(activeInvalidStandards);
+            expectedList.AddRange(retiredStandards);
             actualStandards.Should().BeEquivalentTo(expectedList);
         }
 
