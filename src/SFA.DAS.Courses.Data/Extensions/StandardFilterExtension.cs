@@ -58,7 +58,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             var filteredStandards = standards
                 .HasLarsStandard()
-                .StatusIsOneOf("Approved for delivery");
+                .StatusIsOneOf("Approved for delivery", "Retired");
 
             return filteredStandards;
         }
