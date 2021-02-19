@@ -32,6 +32,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
+            model.Total.Should().Be(DbUtilities.GetValidTestStandards().Count());
+
             model.Standards.Should().BeEquivalentTo(DbUtilities.GetValidTestStandards(), options=> options
                     .Excluding(std=>std.Sector)
                     .Excluding(std=>std.ApprenticeshipFunding)
