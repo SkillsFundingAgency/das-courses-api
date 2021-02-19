@@ -36,7 +36,27 @@ namespace SFA.DAS.Courses.Data.Extensions
             {
                 case StandardFilter.Active:
                 case StandardFilter.ActiveAvailable:
-                    return standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+                    {
+                        // There are two exception cases where standard with same IfateRefNum 
+                        // has two records each, one in `retired` and other in `approved for delivery` status. 
+                        // However each version has a distinct LarsCode as seen below.
+                        // RefNum  LarsCode    Version  Status
+                        // ST0096  288         1.0      Retired
+                        // ST0096  529         2.0      Approved for delivery
+                        // ST0313  73          1.0      Retired
+                        // ST0313  222         2.0      Approved for delivery
+                        // Going forward this should never happen.
+                        // All versions of standards should have the same LarsCode.
+                        // To include all of the above we need to create a list that is grouped by LarsCode (otherwise unnecessary)
+                        // and union it with the `actual` list which is grouped by IFateReferenceNumber 
+
+                        var standardsByLarsCode = standards.GroupBy(s => s.LarsCode).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+
+                        var standardsByIfateReferenceNumber = standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+
+                        var union = standardsByLarsCode.Union(standardsByIfateReferenceNumber).ToList();
+                        return union;
+                    }
                 default:
                     break;
             }
