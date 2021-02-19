@@ -27,18 +27,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var standard = await service.GetStandard(larsCode);
 
-            standard.Should().BeEquivalentTo(standardFromRepo, options=> options
-                .Excluding(c=>c.ApprenticeshipFunding)
-                .Excluding(c=>c.LarsStandard)
-                .Excluding(c=>c.Sector)
-                .Excluding(c=>c.RouteId)
-                .Excluding(c=>c.SearchScore)
-                .Excluding(c => c.RegulatedBody)
-                .Excluding(c => c.CoreDuties)
-            );
+            standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
 
             standard.Route.Should().Be(standardFromRepo.Sector.Route);
-                
         }
     }
 }

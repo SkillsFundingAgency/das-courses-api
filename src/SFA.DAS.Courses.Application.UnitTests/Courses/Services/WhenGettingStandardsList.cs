@@ -34,16 +34,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var result = (await service.GetStandardsList("", new List<Guid>(), new List<int>(), orderBy, filter)).ToList();
 
-            result.Should().BeEquivalentTo(standardsFromRepo,
-                config => config
-                    .Excluding(standard => standard.LarsStandard)
-                    .Excluding(standard => standard.ApprenticeshipFunding)
-                    .Excluding(standard => standard.SearchScore)
-                    .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId)
-                    .Excluding(standard => standard.RegulatedBody)
-                    .Excluding(standard => standard.CoreDuties)
-                );
+            result.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
 
             foreach (var standard in result)
             {
@@ -70,16 +61,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var result = (await service.GetStandardsList("", new List<Guid>(), new List<int>(), orderBy, filter)).ToList();
 
-            result.Should().BeEquivalentTo(standardsFromRepo,
-                config => config
-                    .Excluding(standard => standard.LarsStandard)
-                    .Excluding(standard => standard.ApprenticeshipFunding)
-                    .Excluding(standard => standard.SearchScore)
-                    .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId)
-                    .Excluding(standard => standard.RegulatedBody)
-                    .Excluding(standard => standard.CoreDuties)
-            );
+            result.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
 
             foreach (var standard in result)
             {
@@ -118,15 +100,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var standards = await service.GetStandardsList(keyword, new List<Guid>(), new List<int>(), orderBy, filter);
 
-            standards.Should().BeEquivalentTo(standardsFoundInSearch,
-                config => config
-                    .Excluding(standard => standard.LarsStandard)
-                    .Excluding(standard => standard.ApprenticeshipFunding)
-                    .Excluding(standard => standard.SearchScore)
-                    .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId)
-                    .Excluding(standard => standard.RegulatedBody)
-                    .Excluding(standard => standard.CoreDuties));
+            standards.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -161,15 +135,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter);
 
-            getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch,
-                config => config
-                    .Excluding(standard => standard.SearchScore)
-                    .Excluding(standard => standard.ApprenticeshipFunding)
-                    .Excluding(standard => standard.LarsStandard)
-                    .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId)
-                    .Excluding(standard => standard.RegulatedBody)
-                    .Excluding(standard => standard.CoreDuties));
+            getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -205,15 +171,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter);
 
-            getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch,
-                config => config
-                    .Excluding(standard => standard.SearchScore)
-                    .Excluding(standard => standard.ApprenticeshipFunding)
-                    .Excluding(standard => standard.LarsStandard)
-                    .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId)
-                    .Excluding(standard => standard.RegulatedBody)
-                    .Excluding(standard => standard.CoreDuties));
+            getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -235,15 +193,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var getStandardsListResult = await service.GetStandardsList("", new List<Guid>(), levelCodes, orderBy, filter);
 
-            getStandardsListResult.Should().BeEquivalentTo(standardsFromRepo,
-                config => config
-                    .Excluding(standard => standard.SearchScore)
-                    .Excluding(standard => standard.ApprenticeshipFunding)
-                    .Excluding(standard => standard.LarsStandard)
-                    .Excluding(standard => standard.Sector)
-                    .Excluding(standard => standard.RouteId)
-                    .Excluding(standard => standard.RegulatedBody)
-                    .Excluding(standard => standard.CoreDuties));
+            getStandardsListResult.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -267,16 +217,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var getStandardsListResult = await service.GetStandardsList("", new List<Guid>(), levelCodes, orderBy, filter);
 
             getStandardsListResult
-                .Should().BeEquivalentTo(standardsFromSortService.OrderBy(standard => standard.SearchScore),
-            config => config
-                .Excluding(standard => standard.SearchScore)
-                .Excluding(standard => standard.ApprenticeshipFunding)
-                .Excluding(standard => standard.LarsStandard)
-                .Excluding(standard => standard.Sector)
-                .Excluding(standard => standard.RouteId)
-                .Excluding(standard => standard.RegulatedBody)
-                .Excluding(standard => standard.CoreDuties)
-                .WithStrictOrdering());
+                .Should().BeEquivalentTo(standardsFromSortService.OrderBy(standard => standard.SearchScore), StandardEquivalencyAssertionOptions.ExcludingFieldsWithStrictOrdering);
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using SFA.DAS.Courses.Api.ApiResponses;
@@ -34,17 +34,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             model.Total.Should().Be(DbUtilities.GetValidTestStandards().Count());
 
-            model.Standards.Should().BeEquivalentTo(DbUtilities.GetValidTestStandards(), options=> options
-                    .Excluding(std=>std.Sector)
-                    .Excluding(std=>std.ApprenticeshipFunding)
-                    .Excluding(std=>std.LarsStandard)
-                    .Excluding(std=>std.RouteId)
-                    .Excluding(std=>std.SearchScore)
-                    .Excluding(std => std.RegulatedBody)
-                    .Excluding(std => std.Duties)
-                    .Excluding(std => std.CoreAndOptions)
-                    .Excluding(std => std.CoreDuties)
-                );
+            model.Standards.Should().BeEquivalentTo(DbUtilities.GetValidTestStandards(), StandardEquivalencyAssertionOptions);
         }
 
         [Then("all valid and invalid standards are returned")]
@@ -61,17 +51,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standardsList.AddRange(DbUtilities.GetValidTestStandards());
             standardsList.AddRange(DbUtilities.GetInValidTestStandards());
 
-            model.Standards.Should().BeEquivalentTo(standardsList, options => options
-                    .Excluding(std => std.Sector)
-                    .Excluding(std => std.ApprenticeshipFunding)
-                    .Excluding(std => std.LarsStandard)
-                    .Excluding(std => std.RouteId)
-                    .Excluding(std => std.SearchScore)
-                    .Excluding(std => std.RegulatedBody)
-                    .Excluding(std => std.Duties)
-                    .Excluding(std => std.CoreAndOptions)
-                    .Excluding(std => std.CoreDuties)
-                );
+            model.Standards.Should().BeEquivalentTo(standardsList, StandardEquivalencyAssertionOptions);
             model.Total.Should().Be(standardsList.Count);
         }
 
@@ -92,17 +72,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standardsList.AddRange(DbUtilities.GetWithdrawnStandards());
             standardsList.AddRange(DbUtilities.GetOlderVersionsOfStandards());
 
-            model.Standards.Should().BeEquivalentTo(standardsList, options => options
-                    .Excluding(std => std.Sector)
-                    .Excluding(std => std.ApprenticeshipFunding)
-                    .Excluding(std => std.LarsStandard)
-                    .Excluding(std => std.RouteId)
-                    .Excluding(std => std.SearchScore)
-                    .Excluding(std => std.RegulatedBody)
-                    .Excluding(std => std.Duties)
-                    .Excluding(std => std.CoreAndOptions)
-                    .Excluding(std => std.CoreDuties)
-                );
+            model.Standards.Should().BeEquivalentTo(standardsList, StandardEquivalencyAssertionOptions);
             model.Total.Should().Be(standardsList.Count);
         }
 
@@ -119,17 +89,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var standardsList = new List<Standard>();
             standardsList.AddRange(DbUtilities.GetNotYetApprovedTestStandards());
 
-            model.Standards.Should().BeEquivalentTo(standardsList, options => options
-                    .Excluding(std => std.Sector)
-                    .Excluding(std => std.ApprenticeshipFunding)
-                    .Excluding(std => std.LarsStandard)
-                    .Excluding(std => std.RouteId)
-                    .Excluding(std => std.SearchScore)
-                    .Excluding(std => std.RegulatedBody)
-                    .Excluding(std => std.Duties)
-                    .Excluding(std => std.CoreAndOptions)
-                    .Excluding(std => std.CoreDuties)
-                );
+            model.Standards.Should().BeEquivalentTo(standardsList, StandardEquivalencyAssertionOptions);
             model.Total.Should().Be(standardsList.Count);
         }
 
@@ -144,18 +104,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
             model.Standards.Should().BeEquivalentTo(
-                GetExpected(table), options=> options
-                    .WithStrictOrdering()
-                    .Excluding(std=>std.Sector)
-                    .Excluding(std=>std.ApprenticeshipFunding)
-                    .Excluding(std=>std.LarsStandard)
-                    .Excluding(std=>std.RouteId)
-                    .Excluding(std=>std.SearchScore)
-                    .Excluding(std => std.RegulatedBody)
-                    .Excluding(std => std.Duties)
-                    .Excluding(std => std.CoreAndOptions)
-                    .Excluding(std => std.CoreDuties)
-            );
+                GetExpected(table), StandardEquivalencyAssertionOptions);
         }
 
         [Then("the following standard is returned")]
@@ -169,17 +118,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var standard = await HttpUtilities.ReadContent<GetStandardResponse>(result.Content);
 
             standard.Should().BeEquivalentTo(
-                GetExpected(table).Single(), options => options
-                    .Excluding(std => std.Sector)
-                    .Excluding(std => std.ApprenticeshipFunding)
-                    .Excluding(std => std.LarsStandard)
-                    .Excluding(std => std.RouteId)
-                    .Excluding(std => std.SearchScore)
-                    .Excluding(std => std.RegulatedBody)
-                    .Excluding(std => std.Duties)
-                    .Excluding(std => std.CoreAndOptions)
-                    .Excluding(std => std.CoreDuties)
-            );
+                GetExpected(table).Single(), StandardEquivalencyAssertionOptions);
         }
 
         private IEnumerable<Standard> GetExpected(Table table)
@@ -198,5 +137,25 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             return standards;
         }
+
+        private EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>
+            config
+                .Excluding(c => c.LarsStandard)
+                .Excluding(c => c.ApprenticeshipFunding)
+                .Excluding(c => c.SearchScore)
+                .Excluding(c => c.Sector)
+                .Excluding(c => c.RouteId)
+                .Excluding(c => c.RegulatedBody)
+                .Excluding(c => c.CoreDuties)
+                .Excluding(c => c.EarliestStartDate)
+                .Excluding(c => c.LatestStartDate)
+                .Excluding(c => c.LatestEndDate)
+                .Excluding(c => c.ApprovedForDelivery)
+                .Excluding(c => c.TypicalDuration)
+                .Excluding(c => c.MaxFunding)
+                .Excluding(c => c.EqaProviderContactEmail)
+                .Excluding(c => c.EqaProviderContactName)
+                .Excluding(c => c.EqaProviderName)
+                .Excluding(c => c.EqaProviderWebLink);
     }
 }
