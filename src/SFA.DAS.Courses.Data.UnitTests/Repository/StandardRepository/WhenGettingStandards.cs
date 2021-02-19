@@ -72,6 +72,48 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             actualStandards.Should().BeEquivalentTo(expectedList);
         }
 
+        [Test, RecursiveMoqAutoData] 
+        public async Task Then_Active_Standards_Are_Returned_Including_Retired_With_Distinct_LarsCode(
+            [StandardsAreLarsValid] List<Standard> activeValidStandards,
+            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
+            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
+            [StandardsWithdrawn] List<Standard> withdrawnStandards,
+            [StandardsRetired] List<Standard> retiredStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeInvalidStandards);
+            allStandards.AddRange(notYetApprovedStandards);
+            allStandards.AddRange(withdrawnStandards);
+            allStandards.AddRange(retiredStandards);
+
+            //set up active version 
+            var newActiveVersion = activeValidStandards.First();
+            newActiveVersion.IfateReferenceNumber = "ST0001";
+            newActiveVersion.Version = 2;
+            newActiveVersion.LarsCode = 100002;
+
+            //add a retired version to have same IfateReferenceNumber and different LarsCode
+            var retiredStandardWithDistinctLarsCode = activeValidStandards.Select(x => new Standard { IfateReferenceNumber = x.IfateReferenceNumber, Status = "Retired", LarsCode = 100001, Version = 1, LarsStandard = newActiveVersion.LarsStandard }).First();
+            allStandards.Add(retiredStandardWithDistinctLarsCode);
+
+            mockDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(allStandards);
+
+            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.Active);
+
+            Assert.IsNotNull(actualStandards);
+            var expectedList = new List<Standard>();
+            expectedList.AddRange(activeValidStandards);
+            expectedList.AddRange(activeInvalidStandards);
+            expectedList.AddRange(retiredStandards);
+            expectedList.Add(retiredStandardWithDistinctLarsCode);
+            actualStandards.Should().BeEquivalentTo(expectedList);
+        }
+
         [Test, RecursiveMoqAutoData]
         public async Task Then_NotYetApproved_Standards_Are_Returned_When_NotYetApprovedFilter_Specified(
             [StandardsAreLarsValid] List<Standard> activeValidStandards,
