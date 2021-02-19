@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SFA.DAS.Courses.Domain.Courses
@@ -27,6 +26,10 @@ namespace SFA.DAS.Courses.Domain.Courses
 
         public IEnumerable<ApprenticeshipFunding> ApprenticeshipFunding { get ; set ; }
 
+        public StandardVersionDetail VersionDetail { get; set; }
+
+        public EqaProvider EqaProvider { get; set; }
+
         public StandardDates StandardDates { get ; set ; }
         public decimal SectorSubjectAreaTier2 { get ; set ; }
         public string SectorSubjectAreaTier2Description { get ; set ; }
@@ -37,18 +40,8 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
         public List<string> Options { get; set; }
-        public DateTime? EarliestStartDate { get; private set; }
-        public DateTime? LatestStartDate { get; private set; }
-        public DateTime? LatestEndDate { get; private set; }
-        public int TypicalDuration { get; private set; }
-        public int MaxFunding { get; private set; }
         public string AssessmentPlanUrl { get; private set; }
-        public DateTime? ApprovedForDelivery { get; private set; }
         public string TrailBlazerContact { get; private set; }
-        public string EqaProviderName { get; private set; }
-        public string EqaProviderContactName { get; private set; }
-        public string EqaProviderContactEmail { get; private set; }
-        public string EqaProviderWebLink { get; private set; }
 
         public static explicit operator Standard(Entities.Standard source)
         {
@@ -58,25 +51,17 @@ namespace SFA.DAS.Courses.Domain.Courses
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 LarsCode = source.LarsCode,
                 Status = source.Status,
-                EarliestStartDate = source.EarliestStartDate,
-                LatestStartDate = source.LatestStartDate,
-                LatestEndDate = source.LatestEndDate,
+                VersionDetail = (StandardVersionDetail)source,
                 SearchScore = source.SearchScore,
                 Title = source.Title,
                 Level = source.Level,
-                TypicalDuration = source.TypicalDuration,
-                MaxFunding = source.MaxFunding,
                 Version = source.Version,
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 Route = source.Sector.Route,
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
-                ApprovedForDelivery = source.ApprovedForDelivery,
                 TrailBlazerContact = source.TrailBlazerContact,
-                EqaProviderName = source.EqaProviderName,
-                EqaProviderContactName = source.EqaProviderContactName,
-                EqaProviderContactEmail = source.EqaProviderContactEmail,
-                EqaProviderWebLink = source.EqaProviderWebLink,
+                EqaProvider = (EqaProvider)source,
                 TypicalJobTitles = source.TypicalJobTitles,
                 Skills = source.Skills,
                 Knowledge = source.Knowledge,
