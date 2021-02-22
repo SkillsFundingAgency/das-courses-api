@@ -17,8 +17,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public string Route { get; set; }
-        public string AssessmentPlanUrl { get; set; }
-        public string TrailBlazerContact { get; set; }
         public string TypicalJobTitles { get; set; }
         public string CoreSkillsCount { get; set; }
         public List<string> Skills { get; set; }
@@ -33,17 +31,12 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public StandardDatesResponse StandardDates { get ; set ; }
 
-        public StandardVersionDetailResponse VersionDetail { get; set; }
-
-        public EqaProviderResponse EqaProvider { get; set; }
-
         public bool OtherBodyApprovalRequired { get; set; }
         public string ApprovalBody { get; set; }
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public string CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        public List<string> Options { get; set; }
 
         public static implicit operator GetStandardResponse(Standard source)
         {
@@ -60,8 +53,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 Route = source.Route,
-                AssessmentPlanUrl = source.AssessmentPlanUrl,
-                TrailBlazerContact = source.TrailBlazerContact,
                 TypicalJobTitles = source.TypicalJobTitles,
                 CoreSkillsCount = source.CoreSkillsCount,
                 Skills = source.Skills,
@@ -71,8 +62,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
                 StandardDates = (StandardDatesResponse)source.StandardDates,
-                VersionDetail = (StandardVersionDetailResponse) source.VersionDetail,
-                EqaProvider = (EqaProviderResponse) source.EqaProvider,
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description,
                 OtherBodyApprovalRequired = source.OtherBodyApprovalRequired,
@@ -80,8 +69,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Duties = source.Duties,
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
-                IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options
+                IntegratedApprenticeship = source.IntegratedApprenticeship
             };
         }
     }

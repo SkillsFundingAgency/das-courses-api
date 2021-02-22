@@ -156,6 +156,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.EqaProviderContactEmail)
                 .Excluding(c => c.EqaProviderContactName)
                 .Excluding(c => c.EqaProviderName)
-                .Excluding(c => c.EqaProviderWebLink);
+                .Excluding(c => c.EqaProviderWebLink)
+                .Excluding(c => c.AssessmentPlanUrl)
+                .Excluding(c => c.TrailBlazerContact)
+                .Excluding(c => c.Options);
     }
 }

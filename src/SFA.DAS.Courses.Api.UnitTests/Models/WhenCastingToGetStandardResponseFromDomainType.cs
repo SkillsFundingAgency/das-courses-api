@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.ApiResponses;
+using SFA.DAS.Courses.Api.UnitTests.Controllers.Standards;
 using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Api.UnitTests.Models
@@ -14,7 +15,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Models
         {
             var response = (GetStandardResponse)source;
 
-            response.Should().BeEquivalentTo(source);
+            response.Should().BeEquivalentTo(source, StandardToGetStandardResponseOptions.Exclusions);
         }
     }
 }
