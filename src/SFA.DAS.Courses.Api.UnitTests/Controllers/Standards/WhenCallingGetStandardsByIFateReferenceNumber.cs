@@ -35,7 +35,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 
             var model = controllerResult.Value as GetStandardVersionsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            model.Standards.Should().BeEquivalentTo(queryResult.Standards);
+            model.Standards.Should().BeEquivalentTo(queryResult.Standards, StandardToGetStandardResponseOptions.Exclusions);
         }
 
         [Test, MoqAutoData]
