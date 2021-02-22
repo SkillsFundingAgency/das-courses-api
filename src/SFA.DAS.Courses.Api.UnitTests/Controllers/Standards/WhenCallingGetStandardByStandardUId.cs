@@ -32,7 +32,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 
             var controllerResult = await controller.Get(standardUId) as ObjectResult;
 
-            var model = controllerResult.Value as GetStandardResponse;
+            var model = controllerResult.Value as GetStandardDetailResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             model.Should().BeEquivalentTo(queryResult.Standard, StandardToGetStandardResponseOptions.Exclusions);
         }

@@ -90,7 +90,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             {
                 var result = await _mediator.Send(new GetStandardByStandardUIdQuery { StandardUId = standardUId });
 
-                var response = (GetStandardResponse)result.Standard;
+                var response = (GetStandardDetailResponse)result.Standard;
 
                 return Ok(response);
             }
@@ -111,7 +111,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
                 var response = new GetStandardVersionsListResponse
                 {
-                    Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard)
+                    Standards = queryResult.Standards.Select(standard => (GetStandardDetailResponse)standard)
                 };
 
                 return Ok(response);
