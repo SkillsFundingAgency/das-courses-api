@@ -34,7 +34,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             [FromQuery] IList<Guid> routeIds, 
             [FromQuery] IList<int> levels,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
-            [FromQuery] StandardFilter filter = StandardFilter.None)
+            [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
         {
             try
             {
