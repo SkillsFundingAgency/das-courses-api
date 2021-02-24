@@ -18,9 +18,9 @@
     | Brewer      | 1     | Engineering and manufacturing | 1.0     | Approved for delivery |
     | Head Brewer | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
 
-    Scenario: Get list of standards by keyword 
+    Scenario: Get list of standards by keyword with none filter
 	Given I have an http client
-    When I GET the following url: /api/courses/standards?keyword=beer
+    When I GET the following url: /api/courses/standards?filter=None&keyword=beer
     Then an http status code of 200 is returned
     And the following valid standards are returned
     | title                                      | level | sector                        | version | status                 |
@@ -31,6 +31,15 @@
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.2     | Retired                |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.1     | Retired                |
 
+    Scenario: Get list of standards by keyword
+	Given I have an http client
+    When I GET the following url: /api/courses/standards?keyword=beer
+    Then an http status code of 200 is returned
+    And the following valid standards are returned
+    | title                                      | level | sector                        | version | status                 |
+    | Brewer                                     | 1     | Engineering and manufacturing | 1.0     | Approved for delivery  |
+    | Head Brewer                                | 2     | Engineering and manufacturing | 1.3     | Approved for delivery  |
+    
     Scenario: Get list of standards by levels that are active and available
 	Given I have an http client
     When I GET the following url: /api/courses/standards?levels=1&levels=7&filter=ActiveAvailable
@@ -83,11 +92,17 @@
     Then an http status code of 200 is returned
     Then all valid and invalid standards are returned
 
-    Scenario: Get list of standards with no filter
+    Scenario: Get list of all standards
+	Given I have an http client
+    When I GET the following url: /api/courses/standards?Filter=None
+    Then an http status code of 200 is returned
+    And all standards are returned
+
+    Scenario: Get list the default list of standards
 	Given I have an http client
     When I GET the following url: /api/courses/standards
     Then an http status code of 200 is returned
-    And all standards are returned
+    And all valid standards are returned
 
     Scenario: Get list of not yet approved standards
 	Given I have an http client
