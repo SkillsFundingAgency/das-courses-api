@@ -37,8 +37,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standardsList.AddRange(DbUtilities.GetInValidTestStandards());
 
             model.Total.Should().Be(standardsList.Count);
-
             model.Standards.Should().BeEquivalentTo(standardsList, StandardEquivalencyAssertionOptions);
+
+            var standardWithOptions = model.Standards.Single(standard => standard.StandardUId == "ST001_1.3");
+            standardWithOptions.Options.Count.Should().Be(2);
+            standardWithOptions.Options.Contains("Beer").Should().Be(true);
+            standardWithOptions.Options.Contains("Cider").Should().Be(true);
         }
 
         private EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>
