@@ -126,7 +126,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.3m
+                    Version = 1.3m,
+                    Options = new List<string>
+                    {
+                        "Beer",
+                        "Cider"
+                    }
                 },
                 new Standard
                 {
