@@ -32,10 +32,18 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardOptionsListResponse>(result.Content);
 
-            var expectedList = new[] { "ST002_1.0", "ST001_1.3", "ST014_1.0", "ST0099_1.0" };
+            var approvedNewerVersionWithOption = "ST002_1.0";
+            var approvedWithNoOption = "ST001_1.3";
+            var approvedNotAvailableWithOption = "ST014_1.0";
+            var retiredWithNoNewerVersion = "ST0099_1.0";
+            var expectedList = new[] { approvedNewerVersionWithOption, approvedWithNoOption, approvedNotAvailableWithOption, retiredWithNoNewerVersion };
             model.Standards.Any(s => expectedList.Contains(s.StandardUId)).Should().BeTrue();
 
-            var excludedList = new[] { "ST001_1.2", "ST001_1.1", "ST030_1.0", "ST016_1.0" };
+            var retiredWithNewerVersionWithOption = "ST001_1.2";
+            var retiredWithNewerVersionWithNoOption = "ST001_1.1";
+            var withdrawn = "ST030_1.0";
+            var inDevelopment = "ST016_1.0";
+            var excludedList = new[] { retiredWithNewerVersionWithOption, retiredWithNewerVersionWithNoOption, withdrawn, inDevelopment };
             model.Standards.Any(s => !excludedList.Contains(s.StandardUId)).Should().BeTrue();
         }
 
