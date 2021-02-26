@@ -78,9 +78,15 @@ namespace SFA.DAS.Courses.Data
             var connection = new SqlConnection
             {
                 ConnectionString = _configuration.ConnectionString,
-                AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result
+                AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result,
             };
-            optionsBuilder.UseSqlServer(connection);
+            
+            optionsBuilder.UseSqlServer(connection,options=>
+                options.EnableRetryOnFailure(
+                    5,
+                    TimeSpan.FromSeconds(20),
+                    null
+                ));
 
         }
 
