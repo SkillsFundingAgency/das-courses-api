@@ -406,7 +406,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     Status = "Retired",
-                    Version = 1.2m
+                    Version = 1.2m,
+                    Options = new List<string>
+                    {
+                        "Beer",
+                        "Cider"
+                    }
                 },
                 new Standard
                 {
@@ -433,6 +438,24 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Level = 3,
                     RouteId = sectors[2].Id,
                     RouteCode = routes[2].Id,
+                    Status = "Retired",
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Studio",
+                        "Landscape"
+                    }
+                },
+                new Standard
+                {
+                    LarsCode = 99,
+                    StandardUId = "ST0099_1.0",
+                    IfateReferenceNumber = "ST0099",
+                    Title = "Photographic assistant",
+                    Keywords = null,
+                    TypicalJobTitles = "Assistant Photographer|Photographic Technician",
+                    Level = 3,
+                    RouteId = sectors[2].Id,
                     Status = "Retired",
                     Version = 1.0m,
                     Options = new List<string>
