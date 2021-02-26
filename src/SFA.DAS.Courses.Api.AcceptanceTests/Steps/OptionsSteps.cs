@@ -36,50 +36,27 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standardsList.AddRange(DbUtilities.GetValidTestStandards());
             standardsList.AddRange(DbUtilities.GetInValidTestStandards());
 
-            model.Total.Should().Be(standardsList.Count);
-            model.Standards.Should().BeEquivalentTo(standardsList, StandardEquivalencyAssertionOptions);
+            model.Standards.Should().BeEquivalentTo(standardsList.Select(standard => new GetStandardOptionsResponse
+            {
+                StandardUId = standard.StandardUId,
+                IfateReferenceNumber = standard.IfateReferenceNumber,
+                LarsCode = standard.LarsCode,
+                Options = standard.Options
+            }).ToList());
 
-            var standardWithOptions = model.Standards.Single(standard => standard.StandardUId == "ST001_1.3");
-            standardWithOptions.Options.Count.Should().Be(2);
-            standardWithOptions.Options.Contains("Beer").Should().Be(true);
-            standardWithOptions.Options.Contains("Cider").Should().Be(true);
+            var activeStandardWithOptions = model.Standards.Single(standard => standard.StandardUId == "ST001_1.3");
+            activeStandardWithOptions.Options.Count.Should().Be(2);
+            activeStandardWithOptions.Options.Contains("Beer").Should().BeTrue();
+            activeStandardWithOptions.Options.Contains("Cider").Should().BeTrue();
+
+            var retiredStandardWithOptions = model.Standards.Single(Standard => Standard.StandardUId == "");
+            retiredStandardWithOptions.Options.Count.Should().Be(2);
+            retiredStandardWithOptions.Options.Contains("Studio").Should().BeTrue();
+            retiredStandardWithOptions.Options.Contains("Landscape").Should().BeTrue();
+
+            model.Standards.Where(standard => (standard.Options != null) && standard.Options.Contains("Wine")).Should().BeEmpty();
+            model.Standards.Where(standard => (standard.Options != null) && standard.Options.Contains("Ferrous")).Should().BeEmpty();
         }
 
-        private EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>
-            config
-                .Excluding(c => c.LarsStandard)
-                .Excluding(c => c.ApprenticeshipFunding)
-                .Excluding(c => c.SearchScore)
-                .Excluding(c => c.Sector)
-                .Excluding(c => c.RouteId)
-                .Excluding(c => c.RegulatedBody)
-                .Excluding(c => c.CoreDuties)
-                .Excluding(c => c.EarliestStartDate)
-                .Excluding(c => c.LatestStartDate)
-                .Excluding(c => c.LatestEndDate)
-                .Excluding(c => c.ApprovedForDelivery)
-                .Excluding(c => c.TypicalDuration)
-                .Excluding(c => c.MaxFunding)
-                .Excluding(c => c.EqaProviderContactEmail)
-                .Excluding(c => c.EqaProviderContactName)
-                .Excluding(c => c.EqaProviderName)
-                .Excluding(c => c.EqaProviderWebLink)
-                .Excluding(c => c.AssessmentPlanUrl)
-                .Excluding(c => c.TrailBlazerContact)
-                .Excluding(c => c.Status)
-                .Excluding(c => c.Title)
-                .Excluding(c => c.Level)
-                .Excluding(c => c.Version)
-                .Excluding(c => c.OverviewOfRole)
-                .Excluding(c => c.Keywords)
-                .Excluding(c => c.TypicalJobTitles)
-                .Excluding(c => c.StandardPageUrl)
-                .Excluding(c => c.IntegratedDegree)
-                .Excluding(c => c.Skills)
-                .Excluding(c => c.Knowledge)
-                .Excluding(c => c.Behaviours)
-                .Excluding(c => c.Duties)
-                .Excluding(c => c.CoreAndOptions)
-                .Excluding(c => c.IntegratedApprenticeship);
     }
 }
