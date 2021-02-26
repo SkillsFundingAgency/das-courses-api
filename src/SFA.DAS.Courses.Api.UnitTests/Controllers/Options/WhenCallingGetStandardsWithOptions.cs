@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,9 +37,13 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Options
 
             controllerResponse.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-            model.Standards.Should().BeEquivalentTo(queryResult.Standards, StandardToGetStandardOptionsResponseOptions.Exclusions);
-            model.Total.Should().Be(queryResult.Total);
-            model.TotalFiltered.Should().Be(queryResult.TotalFiltered);
+            model.Standards.Should().BeEquivalentTo(queryResult.Standards.Select(standard => new GetStandardOptionsResponse
+            {
+                StandardUId = standard.StandardUId,
+                IfateReferenceNumber = standard.IfateReferenceNumber,
+                LarsCode = standard.LarsCode,
+                Options = standard.Options
+            }).ToList());
         }
 
         [Test, MoqAutoData]

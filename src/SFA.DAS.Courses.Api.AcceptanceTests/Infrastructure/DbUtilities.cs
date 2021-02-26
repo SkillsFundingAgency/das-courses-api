@@ -306,7 +306,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Cosmetic",
+                        "Orthodontist"
+                    }
                 }
             };
         }
@@ -345,7 +350,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "In development",
-                    Version = 1.0m
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Ferrous",
+                        "Non-ferroes"
+                    }
                 }
             };
         }
@@ -369,7 +379,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Withdrawn",
-                    Version = 1.0m
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Wine",
+                        "Spirits"
+                    }
                 }
             };
         }
@@ -419,7 +434,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteId = sectors[2].Id,
                     RouteCode = routes[2].Id,
                     Status = "Retired",
-                    Version = 1.0m
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Studio",
+                        "Landscape"
+                    }
                 }
             };
         }

@@ -42,16 +42,14 @@ namespace SFA.DAS.Courses.Api.Controllers
 
                 var response = new GetStandardOptionsListResponse
                 {
-                    Standards = queryResult.Standards.Select(standard => (GetStandardOptionsResponse)standard),
-                    Total = queryResult.Total,
-                    TotalFiltered = queryResult.TotalFiltered
+                    Standards = queryResult.Standards.Select(standard => (GetStandardOptionsResponse)standard)
                 };
 
                 return Ok(response);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error attempting to get list of standards");
+                _logger.LogError(e, "Error attempting to get list of standards and options");
                 return BadRequest();
             }
         }
