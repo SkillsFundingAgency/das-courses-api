@@ -33,10 +33,6 @@ namespace SFA.DAS.Courses.Api.Controllers
             {
                 var queryResult = await _mediator.Send(new GetStandardsListQuery
                 {
-                    Keyword = string.Empty,
-                    RouteIds = new List<Guid>(),
-                    Levels = new List<int>(),
-                    OrderBy = OrderBy.Score,
                     Filter = StandardFilter.Active
                 });
 
