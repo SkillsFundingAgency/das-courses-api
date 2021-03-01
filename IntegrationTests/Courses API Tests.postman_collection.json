@@ -1,0 +1,335 @@
+{
+	"info": {
+		"_postman_id": "2e08b8ab-b6c2-4422-8b45-caf1190e20d3",
+		"name": "Courses API Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "IFATE - Get Standards",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful GET standards from IFATE\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var total = jsonData.length;\r",
+							"var approvedStandards = jsonData.filter(obj => obj.status == 'Approved for delivery');\r",
+							"var retiredStandards = jsonData.filter(obj => obj.status == 'Retired');\r",
+							"var withdrawnStandards = jsonData.filter(obj => obj.status == 'Withdrawn');\r",
+							"var inDevelopmentStandards = jsonData.filter(obj => obj.status == 'In development');\r",
+							"var proposalStandards = jsonData.filter(obj => obj.status == 'Proposal in development')\r",
+							"\r",
+							"pm.environment.set(\"totalStandardsCountFromIfate\", total);\r",
+							"pm.environment.set(\"approvedStandardsCountFromIfate\", approvedStandards.length);\r",
+							"pm.environment.set(\"retiredStandardsCountFromIfate\", retiredStandards.length);\r",
+							"pm.environment.set(\"withdrawnStandardsCountFromIfate\", withdrawnStandards.length);\r",
+							"pm.environment.set(\"inDevelopmentStandardsCountFromIfate\", inDevelopmentStandards.length);\r",
+							"pm.environment.set(\"proposalStandardsCountFromIfate\", proposalStandards.length);\r",
+							"\r",
+							"// Save a standard with two versions\r",
+							"var adultCareWorkerStandards = jsonData.filter(obj => obj.referenceNumber == 'ST0005');\r",
+							"pm.environment.set(\"adultCareWorkerStandards\", adultCareWorkerStandards);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.instituteforapprenticeships.org/api/apprenticeshipstandards/",
+					"protocol": "https",
+					"host": [
+						"www",
+						"instituteforapprenticeships",
+						"org"
+					],
+					"path": [
+						"api",
+						"apprenticeshipstandards",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Courses - Authenticate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"authToken\", jsonData.access_token);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{courses-api-client-id}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{courses-api-client-secret}}",
+							"type": "text"
+						},
+						{
+							"key": "resource",
+							"value": "{{courses-api-resource}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://login.microsoftonline.com/{{courses-api-tenant}}/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"login",
+						"microsoftonline",
+						"com"
+					],
+					"path": [
+						"{{courses-api-tenant}}",
+						"oauth2",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Courses - Get List - Filter:None",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful GET request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var standards = jsonData.standards;\r",
+							"\r",
+							"var approvedStandards = standards.filter(obj => obj.status == 'Approved for delivery');\r",
+							"var retiredStandards = standards.filter(obj => obj.status == 'Retired');\r",
+							"var withdrawnStandards = standards.filter(obj => obj.status == 'Withdrawn'); \r",
+							"var inDevelopmentStandards = standards.filter(obj => obj.status == 'In development');\r",
+							"var proposalStandards = standards.filter(obj => obj.status == 'Proposal in development');\r",
+							"\r",
+							"pm.test(\"Total standards from courses api with no filter matches count from ifate api\", function () {\r",
+							"    var expectedValueTotal = pm.variables.get(\"totalStandardsCountFromIfate\")\r",
+							"    pm.expect(standards.length).to.equal(expectedValueTotal);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Approved for delivery standards from courses api with no filter matches count from ifate api\", function () {\r",
+							"    var expectedValueApproved = pm.variables.get(\"approvedStandardsCountFromIfate\")\r",
+							"    pm.expect(approvedStandards.length).to.equal(expectedValueApproved);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Retired standards from courses api matches count from ifate api\", function () {\r",
+							"    var expectedValueRetired = pm.variables.get(\"retiredStandardsCountFromIfate\")\r",
+							"    pm.expect(retiredStandards.length).to.equal(expectedValueRetired);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"In development standards from courses api with no filter matches count from ifate api\", function () {\r",
+							"    var expectedValueInDevelopment = pm.variables.get(\"inDevelopmentStandardsCountFromIfate\")\r",
+							"    pm.expect(inDevelopmentStandards.length).to.equal(expectedValueInDevelopment);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Withdrawn standards from courses api with no filter matches count from ifate api\", function () {\r",
+							"    var expectedValueWithdrawn = pm.variables.get(\"withdrawnStandardsCountFromIfate\")\r",
+							"    pm.expect(withdrawnStandards.length).to.equal(expectedValueWithdrawn);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Proposed standards from courses api with no filter matches count from ifate api\", function () {\r",
+							"    var expectedValuePropsed = pm.variables.get(\"proposalStandardsCountFromIfate\")\r",
+							"    pm.expect(proposalStandards.length).to.equal(expectedValuePropsed);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"user-agent": true,
+					"accept-encoding": true,
+					"connection": true,
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Version",
+						"value": "1.0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{courses-api-base-url}}/Standards?filter=None",
+					"host": [
+						"{{courses-api-base-url}}"
+					],
+					"path": [
+						"Standards"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "None"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Courses - Get Standard by StandardUId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful GET request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var adultCareWorkerFromIfate = pm.environment.get(\"adultCareWorkerStandards\");\r",
+							"var expectedStandard = adultCareWorkerFromIfate.filter(obj => obj.version == '1.1')[0];\r",
+							"\r",
+							"pm.test(\"Get by StandardUId returns the correct standard\", function () {\r",
+							"    pm.expect(jsonData.title).to.equal(expectedStandard.title);\r",
+							"    pm.expect(jsonData.version.toString()).to.equal(expectedStandard.version);\r",
+							"    pm.expect(jsonData.ifateReferenceNumber).to.equal(expectedStandard.referenceNumber);\r",
+							"    pm.expect(jsonData.larsCode).to.equal(expectedStandard.larsCode);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Version",
+						"value": "1.0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{courses-api-base-url}}/standards/{{adultCareWorkerStandardUId}}",
+					"host": [
+						"{{courses-api-base-url}}"
+					],
+					"path": [
+						"standards",
+						"{{adultCareWorkerStandardUId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Courses - Get Standard Versions by IFATE reference",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful GET request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var adultCareWorkerFromIfate = pm.environment.get(\"adultCareWorkerStandards\");\r",
+							"\r",
+							"var adultCareWorkerFromCourses = jsonData.standards;\r",
+							"\r",
+							"pm.test(\"Get by ifate reference returns all standard versions\", function () {\r",
+							"    pm.expect(adultCareWorkerFromCourses.length).to.equal(adultCareWorkerFromIfate.length);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Version",
+						"value": "1.0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{courses-api-base-url}}/standards/versions/{{adultCareWorkerIfateReference}}",
+					"host": [
+						"{{courses-api-base-url}}"
+					],
+					"path": [
+						"standards",
+						"versions",
+						"{{adultCareWorkerIfateReference}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
