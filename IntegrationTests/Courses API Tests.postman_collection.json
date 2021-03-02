@@ -23,18 +23,18 @@
 							"var retiredStandards = jsonData.filter(obj => obj.status == 'Retired');\r",
 							"var withdrawnStandards = jsonData.filter(obj => obj.status == 'Withdrawn');\r",
 							"var inDevelopmentStandards = jsonData.filter(obj => obj.status == 'In development');\r",
-							"var proposalStandards = jsonData.filter(obj => obj.status == 'Proposal in development')\r",
+							"var proposalStandards = jsonData.filter(obj => obj.status == 'Proposal in development');\r",
 							"\r",
-							"pm.environment.set(\"totalStandardsCountFromIfate\", total);\r",
-							"pm.environment.set(\"approvedStandardsCountFromIfate\", approvedStandards.length);\r",
-							"pm.environment.set(\"retiredStandardsCountFromIfate\", retiredStandards.length);\r",
-							"pm.environment.set(\"withdrawnStandardsCountFromIfate\", withdrawnStandards.length);\r",
-							"pm.environment.set(\"inDevelopmentStandardsCountFromIfate\", inDevelopmentStandards.length);\r",
-							"pm.environment.set(\"proposalStandardsCountFromIfate\", proposalStandards.length);\r",
+							"pm.environment.set(\"m_totalStandardsCountFromIfate\", total);\r",
+							"pm.environment.set(\"m_approvedStandardsCountFromIfate\", approvedStandards.length);\r",
+							"pm.environment.set(\"m_retiredStandardsCountFromIfate\", retiredStandards.length);\r",
+							"pm.environment.set(\"m_withdrawnStandardsCountFromIfate\", withdrawnStandards.length);\r",
+							"pm.environment.set(\"m_inDevelopmentStandardsCountFromIfate\", inDevelopmentStandards.length);\r",
+							"pm.environment.set(\"m_proposalStandardsCountFromIfate\", proposalStandards.length);\r",
 							"\r",
-							"// Save a standard with two versions\r",
-							"var adultCareWorkerStandards = jsonData.filter(obj => obj.referenceNumber == 'ST0005');\r",
-							"pm.environment.set(\"adultCareWorkerStandards\", adultCareWorkerStandards);"
+							"// Save a standard known to have two versions\r",
+							"var adultCareWorkerStandards = jsonData.filter(obj => obj.referenceNumber == pm.variables.get(\"c_adultCareWorkerIfateReference\"));\r",
+							"pm.environment.set(\"m_adultCareWorkerStandards\", adultCareWorkerStandards);"
 						],
 						"type": "text/javascript"
 					}
@@ -118,7 +118,7 @@
 					]
 				},
 				"url": {
-					"raw": "https://login.microsoftonline.com/{{courses-api-tenant}}/oauth2/token",
+					"raw": "https://login.microsoftonline.com/{{e_courses-api-tenant}}/oauth2/token",
 					"protocol": "https",
 					"host": [
 						"login",
@@ -126,7 +126,7 @@
 						"com"
 					],
 					"path": [
-						"{{courses-api-tenant}}",
+						"{{e_courses-api-tenant}}",
 						"oauth2",
 						"token"
 					]
@@ -156,34 +156,41 @@
 							"var proposalStandards = standards.filter(obj => obj.status == 'Proposal in development');\r",
 							"\r",
 							"pm.test(\"Total standards from courses api with no filter matches count from ifate api\", function () {\r",
-							"    var expectedValueTotal = pm.variables.get(\"totalStandardsCountFromIfate\")\r",
+							"    var expectedValueTotal = pm.variables.get(\"m_totalStandardsCountFromIfate\");\r",
 							"    pm.expect(standards.length).to.equal(expectedValueTotal);\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Approved for delivery standards from courses api with no filter matches count from ifate api\", function () {\r",
-							"    var expectedValueApproved = pm.variables.get(\"approvedStandardsCountFromIfate\")\r",
+							"    var expectedValueApproved = pm.variables.get(\"m_approvedStandardsCountFromIfate\");\r",
 							"    pm.expect(approvedStandards.length).to.equal(expectedValueApproved);\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Retired standards from courses api matches count from ifate api\", function () {\r",
-							"    var expectedValueRetired = pm.variables.get(\"retiredStandardsCountFromIfate\")\r",
+							"    var expectedValueRetired = pm.variables.get(\"m_retiredStandardsCountFromIfate\");\r",
 							"    pm.expect(retiredStandards.length).to.equal(expectedValueRetired);\r",
 							"});\r",
 							"\r",
 							"pm.test(\"In development standards from courses api with no filter matches count from ifate api\", function () {\r",
-							"    var expectedValueInDevelopment = pm.variables.get(\"inDevelopmentStandardsCountFromIfate\")\r",
+							"    var expectedValueInDevelopment = pm.variables.get(\"m_inDevelopmentStandardsCountFromIfate\");\r",
 							"    pm.expect(inDevelopmentStandards.length).to.equal(expectedValueInDevelopment);\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Withdrawn standards from courses api with no filter matches count from ifate api\", function () {\r",
-							"    var expectedValueWithdrawn = pm.variables.get(\"withdrawnStandardsCountFromIfate\")\r",
+							"    var expectedValueWithdrawn = pm.variables.get(\"m_withdrawnStandardsCountFromIfate\");\r",
 							"    pm.expect(withdrawnStandards.length).to.equal(expectedValueWithdrawn);\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Proposed standards from courses api with no filter matches count from ifate api\", function () {\r",
-							"    var expectedValuePropsed = pm.variables.get(\"proposalStandardsCountFromIfate\")\r",
+							"    var expectedValuePropsed = pm.variables.get(\"m_proposalStandardsCountFromIfate\");\r",
 							"    pm.expect(proposalStandards.length).to.equal(expectedValuePropsed);\r",
-							"});"
+							"});\r",
+							"\r",
+							"pm.environment.unset(\"m_totalStandardsCountFromIfate\");\r",
+							"pm.environment.unset(\"m_approvedStandardsCountFromIfate\");\r",
+							"pm.environment.unset(\"m_retiredStandardsCountFromIfate\");\r",
+							"pm.environment.unset(\"m_withdrawnStandardsCountFromIfate\");\r",
+							"pm.environment.unset(\"m_inDevelopmentStandardsCountFromIfate\");\r",
+							"pm.environment.unset(\"m_proposalStandardsCountFromIfate\");"
 						],
 						"type": "text/javascript"
 					}
@@ -217,9 +224,9 @@
 					}
 				],
 				"url": {
-					"raw": "{{courses-api-base-url}}/Standards?filter=None",
+					"raw": "{{e_courses-api-base-url}}/Standards?filter=None",
 					"host": [
-						"{{courses-api-base-url}}"
+						"{{e_courses-api-base-url}}"
 					],
 					"path": [
 						"Standards"
@@ -247,7 +254,7 @@
 							"\r",
 							"var jsonData = pm.response.json();\r",
 							"\r",
-							"var adultCareWorkerFromIfate = pm.environment.get(\"adultCareWorkerStandards\");\r",
+							"var adultCareWorkerFromIfate = pm.environment.get(\"m_adultCareWorkerStandards\");\r",
 							"var expectedStandard = adultCareWorkerFromIfate.filter(obj => obj.version == '1.1')[0];\r",
 							"\r",
 							"pm.test(\"Get by StandardUId returns the correct standard\", function () {\r",
@@ -271,13 +278,13 @@
 					}
 				],
 				"url": {
-					"raw": "{{courses-api-base-url}}/standards/{{adultCareWorkerStandardUId}}",
+					"raw": "{{e_courses-api-base-url}}/standards/{{c_adultCareWorkerStandardUId}}",
 					"host": [
-						"{{courses-api-base-url}}"
+						"{{e_courses-api-base-url}}"
 					],
 					"path": [
 						"standards",
-						"{{adultCareWorkerStandardUId}}"
+						"{{c_adultCareWorkerStandardUId}}"
 					]
 				}
 			},
@@ -296,13 +303,15 @@
 							"\r",
 							"var jsonData = pm.response.json();\r",
 							"\r",
-							"var adultCareWorkerFromIfate = pm.environment.get(\"adultCareWorkerStandards\");\r",
+							"var adultCareWorkerFromIfate = pm.environment.get(\"m_adultCareWorkerStandards\");\r",
 							"\r",
 							"var adultCareWorkerFromCourses = jsonData.standards;\r",
 							"\r",
 							"pm.test(\"Get by ifate reference returns all standard versions\", function () {\r",
 							"    pm.expect(adultCareWorkerFromCourses.length).to.equal(adultCareWorkerFromIfate.length);\r",
-							"});"
+							"});\r",
+							"\r",
+							"pm.environment.unset(\"m_adultCareWorkerStandards\");"
 						],
 						"type": "text/javascript"
 					}
@@ -318,18 +327,48 @@
 					}
 				],
 				"url": {
-					"raw": "{{courses-api-base-url}}/standards/versions/{{adultCareWorkerIfateReference}}",
+					"raw": "{{e_courses-api-base-url}}/standards/versions/{{c_adultCareWorkerIfateReference}}",
 					"host": [
-						"{{courses-api-base-url}}"
+						"{{e_courses-api-base-url}}"
 					],
 					"path": [
 						"standards",
 						"versions",
-						"{{adultCareWorkerIfateReference}}"
+						"{{c_adultCareWorkerIfateReference}}"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "c_adultCareWorkerStandardUId",
+			"value": "ST0005_1.1"
+		},
+		{
+			"key": "c_adultCareWorkerIfateReference",
+			"value": "ST0005"
 		}
 	]
 }
