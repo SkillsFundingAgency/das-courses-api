@@ -19,11 +19,11 @@
 							"var jsonData = pm.response.json();\r",
 							"\r",
 							"var total = jsonData.length;\r",
-							"var approvedStandards = jsonData.filter(obj => obj.status == 'Approved for delivery');\r",
-							"var retiredStandards = jsonData.filter(obj => obj.status == 'Retired');\r",
-							"var withdrawnStandards = jsonData.filter(obj => obj.status == 'Withdrawn');\r",
-							"var inDevelopmentStandards = jsonData.filter(obj => obj.status == 'In development');\r",
-							"var proposalStandards = jsonData.filter(obj => obj.status == 'Proposal in development');\r",
+							"var approvedStandards = jsonData.filter(obj => obj.status == pm.variables.get(\"c_ApprovedStatus\"));\r",
+							"var retiredStandards = jsonData.filter(obj => obj.status == pm.variables.get(\"c_RetiredStatus\"));\r",
+							"var withdrawnStandards = jsonData.filter(obj => obj.status == pm.variables.get(\"c_WithdrawnStatus\"));\r",
+							"var inDevelopmentStandards = jsonData.filter(obj => obj.status == pm.variables.get(\"c_InDevelopmentStatus\"));\r",
+							"var proposalStandards = jsonData.filter(obj => obj.status == pm.variables.get(\"c_ProposalStatus\"));\r",
 							"\r",
 							"pm.environment.set(\"m_totalStandardsCountFromIfate\", total);\r",
 							"pm.environment.set(\"m_approvedStandardsCountFromIfate\", approvedStandards.length);\r",
@@ -149,11 +149,11 @@
 							"\r",
 							"var standards = jsonData.standards;\r",
 							"\r",
-							"var approvedStandards = standards.filter(obj => obj.status == 'Approved for delivery');\r",
-							"var retiredStandards = standards.filter(obj => obj.status == 'Retired');\r",
-							"var withdrawnStandards = standards.filter(obj => obj.status == 'Withdrawn'); \r",
-							"var inDevelopmentStandards = standards.filter(obj => obj.status == 'In development');\r",
-							"var proposalStandards = standards.filter(obj => obj.status == 'Proposal in development');\r",
+							"var approvedStandards = standards.filter(obj => obj.status == pm.variables.get(\"c_ApprovedStatus\"));\r",
+							"var retiredStandards = standards.filter(obj => obj.status == pm.variables.get(\"c_RetiredStatus\"));\r",
+							"var withdrawnStandards = standards.filter(obj => obj.status == pm.variables.get(\"c_WithdrawnStatus\")); \r",
+							"var inDevelopmentStandards = standards.filter(obj => obj.status == pm.variables.get(\"c_InDevelopmentStatus\"));\r",
+							"var proposalStandards = standards.filter(obj => obj.status == pm.variables.get(\"c_ProposalStatus\"));\r",
 							"\r",
 							"pm.test(\"Total standards from courses api with no filter matches count from ifate api\", function () {\r",
 							"    var expectedValueTotal = pm.variables.get(\"m_totalStandardsCountFromIfate\");\r",
@@ -369,6 +369,26 @@
 		{
 			"key": "c_adultCareWorkerIfateReference",
 			"value": "ST0005"
+		},
+		{
+			"key": "c_ApprovedStatus",
+			"value": "Approved for delivery"
+		},
+		{
+			"key": "c_RetiredStatus",
+			"value": "Retired"
+		},
+		{
+			"key": "c_WithdrawnStatus",
+			"value": "Withdrawn"
+		},
+		{
+			"key": "c_InDevelopmentStatus",
+			"value": "In development"
+		},
+		{
+			"key": "c_ProposalStatus",
+			"value": "Proposal in development"
 		}
 	]
 }
