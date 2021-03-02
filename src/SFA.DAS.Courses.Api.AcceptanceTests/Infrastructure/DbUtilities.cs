@@ -283,7 +283,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             };
         }
 
-        public static IEnumerable<Standard> GetNotYetApprovedTestStandards()
+        public static IEnumerable<Standard> GetWithdrawnStandards()
         {
             var sectors = GetTestSectors().ToList();
             return new List<Standard>
