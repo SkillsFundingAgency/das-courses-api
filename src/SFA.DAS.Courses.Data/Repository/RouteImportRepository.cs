@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Data.Repository
 {
-    public class RouteImportRepository
+    public class RouteImportRepository : IRouteImportRepository
     {
         private readonly ICoursesDataContext _coursesDataContext;
 
