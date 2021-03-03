@@ -64,6 +64,31 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             sectorImportRepository.Verify(x => x.InsertMany(It.Is<List<SectorImport>>(c => c.Count.Equals(sectors.Count()))), Times.Once);
             importRepository.Verify(x=>x.InsertMany(It.Is<List<StandardImport>>(std=>std.TrueForAll(c=>c.RouteId != Guid.Empty))));
         }
+        
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_Distinct_Routes_Are_Loaded_Into_The_Import_Table(
+            [Frozen] Mock<IRouteImportRepository> routeImportRepository,
+            [Frozen] Mock<IStandardImportRepository> importRepository,
+            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> standardsImport,
+            StandardsImportService standardsImportService)
+        {
+            //Arrange
+            standardsImport.ForEach(c=>
+            {
+                c.Status = "Approved for Delivery";
+                c.LarsCode = 10;
+            });
+            var routes = standardsImport.Select(s=>s.Route).Distinct().ToList();
+            service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
+
+            //Act
+            await standardsImportService.ImportDataIntoStaging();
+
+            //Assert
+            routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(c => c.Count.Equals(routes.Count()))), Times.Once);
+            importRepository.Verify(x=>x.InsertMany(It.Is<List<StandardImport>>(std=>std.TrueForAll(c=>c.RouteCode != 0))));
+        }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_All_The_Standards_Are_Loaded_Into_The_Staging_Table_From_The_Api(
