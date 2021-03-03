@@ -14,6 +14,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(c => c.SearchScore)
                 .Excluding(c => c.Sector)
                 .Excluding(c => c.RouteId)
+                .Excluding(c => c.Route)
+                .Excluding(c => c.RouteCode)
                 .Excluding(c => c.RegulatedBody)
                 .Excluding(c => c.CoreDuties)
                 .Excluding(c => c.EarliestStartDate)

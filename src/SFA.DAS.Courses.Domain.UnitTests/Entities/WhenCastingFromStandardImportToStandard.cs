@@ -17,6 +17,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.OptionsUnstructuredTemplate)
                 .Excluding(c => c.ApprenticeshipFunding)
                 .Excluding(c => c.LarsStandard)
+                .Excluding(c => c.Route)
             );
         }
 

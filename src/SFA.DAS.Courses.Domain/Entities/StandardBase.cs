@@ -21,6 +21,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public virtual Sector Sector {get; set; }
         public virtual Route Route { get ; set ; }
         public Guid RouteId { get; set; }
+        public int RouteCode { get; set; }
         public string AssessmentPlanUrl { get; set; }
         public string Keywords { get; set; }
         public string TypicalJobTitles { get; set; }

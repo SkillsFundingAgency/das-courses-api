@@ -102,7 +102,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
         }
 
-        private static void UpdateStandardsWithRespectiveSectorId(List<Domain.ImportTypes.Standard> standards, IEnumerable<SectorImport> sectors)
+        private static void UpdateStandardsWithRespectiveSectorId(IEnumerable<Domain.ImportTypes.Standard> standards, IList<SectorImport> sectors)
         {
             foreach (var standard in standards)
             {
@@ -116,7 +116,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             await _sectorImportRepository.InsertMany(sectors);
         }
 
-        private static List<SectorImport> GetDistinctSectorsFromStandards(List<Domain.ImportTypes.Standard> standards)
+        private static List<SectorImport> GetDistinctSectorsFromStandards(IEnumerable<Domain.ImportTypes.Standard> standards)
         {
             return standards
                 .Select(c => c.Route)
