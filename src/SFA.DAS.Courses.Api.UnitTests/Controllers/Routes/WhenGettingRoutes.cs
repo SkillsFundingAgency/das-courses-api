@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Routes
     public class WhenGettingRoutes
     {
         [Test, MoqAutoData]
-        public async Task Then_Gets_Standards_List_From_Mediator(
+        public async Task Then_Gets_Routes_List_From_Mediator(
             GetRoutesQueryResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] RoutesController controller)
@@ -37,7 +37,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Routes
         }
 
         [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Bad_Request(
+        public async Task And_Exception_Then_Returns_Internal_Server_Error(
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] RoutesController controller)
         {
