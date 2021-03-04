@@ -37,7 +37,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Options
 
             controllerResponse.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-            model.Standards.Should().BeEquivalentTo(queryResult.Standards.Select(standard => new GetStandardOptionsResponse
+            model.StandardOptions.Should().BeEquivalentTo(queryResult.Standards.Select(standard => new GetStandardOptionsResponse
             {
                 StandardUId = standard.StandardUId,
                 IfateReferenceNumber = standard.IfateReferenceNumber,
