@@ -21,11 +21,26 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<int> Count(StandardFilter filter)
         {
-            var initialCount = await _coursesDataContext.Standards.FilterStandards(filter).ToListAsync();
-
-            // In Memory Filter for get latest version due to limitations in EF query translation
-            // into expression tree
-            var count = initialCount.InMemoryFilterIsLatestVersion(filter).Count();
+            //Tweak to the count query to perform a count rather than query actual fields.
+            // The in memory filter causes this query to become more resource intensive
+            // To get around that for the Active and Active Available filters
+            // We perform the normal filter that we can, then select distinct lars code to get latest version count
+            int count;
+            switch (filter)
+            {
+                case StandardFilter.Active:
+                    count = await _coursesDataContext.Standards.FilterActive().Select(c => c.LarsCode).Distinct().CountAsync();
+                    break;
+                case StandardFilter.ActiveAvailable:
+                    count = await _coursesDataContext.Standards.FilterActiveAvailableToStart().Select(c => c.LarsCode).Distinct().CountAsync();
+                    break;
+                case StandardFilter.NotYetApproved:
+                    count = await _coursesDataContext.Standards.FilterNotYetApproved().CountAsync();
+                    break;
+                default:
+                    count = await _coursesDataContext.Standards.CountAsync();
+                    break;
+            }
 
             return count;
         }

@@ -8,4 +8,5 @@
 )
 GO
 
- 
+CREATE NONCLUSTERED INDEX [IDX_LarsStandard_SectorSubjectAreaTier2] ON [dbo].[LarsStandard] (SectorSubjectAreaTier2) 
+GO 

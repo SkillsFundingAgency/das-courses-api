@@ -8,3 +8,6 @@
     [Duration] INT NOT NULL DEFAULT 0
 )
 GO
+
+CREATE NONCLUSTERED INDEX [IDX_ApprenticeshipFunding_StandardUId] ON [dbo].[ApprenticeshipFunding] (StandardUId) 
+GO 

@@ -65,7 +65,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         }
 
 
-        private static IQueryable<Standard> FilterActiveAvailableToStart(this IQueryable<Standard> standards)
+        public static IQueryable<Standard> FilterActiveAvailableToStart(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards
                 .FilterActive()
@@ -74,7 +74,7 @@ namespace SFA.DAS.Courses.Data.Extensions
             return filteredStandards;
         }
 
-        private static IQueryable<Standard> FilterActive(this IQueryable<Standard> standards)
+        public static IQueryable<Standard> FilterActive(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards
                 .HasLarsStandard()
@@ -83,7 +83,7 @@ namespace SFA.DAS.Courses.Data.Extensions
             return filteredStandards;
         }
 
-        private static IQueryable<Standard> FilterNotYetApproved(this IQueryable<Standard> standards)
+        public static IQueryable<Standard> FilterNotYetApproved(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards.Where(ls => ls.LarsCode == 0)
                                     .StatusIsOneOf("Proposal in development", "In development");
