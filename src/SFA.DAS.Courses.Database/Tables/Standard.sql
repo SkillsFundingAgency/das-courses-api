@@ -43,7 +43,8 @@ GO
 CREATE NONCLUSTERED INDEX [IDX_Standard_LarsCode] ON [dbo].[Standard] (LarsCode) where LarsCode is not null
 GO
 
-CREATE NONCLUSTERED INDEX [IDX_Standard_Status] ON [dbo].[Standard] (Status) 
+CREATE NONCLUSTERED INDEX [IDX_Standard_Status] ON [dbo].[Standard] (Status)
+INCLUDE([StandardUId],[IFateReferenceNumber],[LarsCode],[EarliestStartDate],[LatestStartDate],[LatestEndDate],[Title],[Level],[TypicalDuration],[MaxFunding],[IntegratedDegree],[OverviewOfRole],[RouteId],[AssessmentPlanUrl],[ApprovedForDelivery],[TrailBlazerContact],[EqaProviderName],[EqaProviderContactName],[EqaProviderContactEmail],[EqaProviderWebLink],[Keywords],[TypicalJobTitles],[StandardPageUrl],[Version],[RegulatedBody],[Skills],[Knowledge],[Behaviours],[Duties],[CoreAndOptions],[IntegratedApprenticeship],[Options])
 GO
 
 CREATE NONCLUSTERED INDEX [IDX_Standard_IfateReferenceNumber] ON [dbo].[Standard] (IfateReferenceNumber) 
