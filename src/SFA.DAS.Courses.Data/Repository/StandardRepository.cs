@@ -26,19 +26,15 @@ namespace SFA.DAS.Courses.Data.Repository
             // To get around that for the Active and Active Available filters
             // We perform the normal filter that we can, then select distinct lars code to get latest version count
             int count;
+            var standards = _coursesDataContext.Standards.FilterStandards(filter);
             switch (filter)
             {
                 case StandardFilter.Active:
-                    count = await _coursesDataContext.Standards.FilterActive().Select(c => c.LarsCode).Distinct().CountAsync();
-                    break;
                 case StandardFilter.ActiveAvailable:
-                    count = await _coursesDataContext.Standards.FilterActiveAvailableToStart().Select(c => c.LarsCode).Distinct().CountAsync();
-                    break;
-                case StandardFilter.NotYetApproved:
-                    count = await _coursesDataContext.Standards.FilterNotYetApproved().CountAsync();
+                    count = await standards.Select(c => c.LarsCode).Distinct().CountAsync();
                     break;
                 default:
-                    count = await _coursesDataContext.Standards.CountAsync();
+                    count = await standards.Select(c => c.StandardUId).CountAsync();
                     break;
             }
 
