@@ -37,14 +37,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var approvedNotAvailableWithOption = "ST014_1.0";
             var retiredWithNoNewerVersion = "ST0099_1.0";
             var expectedList = new[] { approvedNewerVersionWithOption, approvedWithNoOption, approvedNotAvailableWithOption, retiredWithNoNewerVersion };
-            model.Standards.Any(s => expectedList.Contains(s.StandardUId)).Should().BeTrue();
+            model.StandardOptions.Any(s => expectedList.Contains(s.StandardUId)).Should().BeTrue();
 
             var retiredWithNewerVersionWithOption = "ST001_1.2";
             var retiredWithNewerVersionWithNoOption = "ST001_1.1";
             var withdrawn = "ST030_1.0";
             var inDevelopment = "ST016_1.0";
             var excludedList = new[] { retiredWithNewerVersionWithOption, retiredWithNewerVersionWithNoOption, withdrawn, inDevelopment };
-            model.Standards.Any(s => !excludedList.Contains(s.StandardUId)).Should().BeTrue();
+            model.StandardOptions.Any(s => !excludedList.Contains(s.StandardUId)).Should().BeTrue();
         }
 
     }

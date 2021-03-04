@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
                 var response = new GetStandardOptionsListResponse
                 {
-                    Standards = queryResult.Standards.Select(standard => (GetStandardOptionsResponse)standard)
+                    StandardOptions = queryResult.Standards.Select(standard => (GetStandardOptionsResponse)standard)
                 };
 
                 return Ok(response);
