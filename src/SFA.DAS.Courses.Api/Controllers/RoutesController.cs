@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             {
                 _logger.LogError(e, "Error attempting to get list of routes");
                 return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
-            };
+            }
         }
     }
 }
