@@ -283,7 +283,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             };
         }
 
-        public static IEnumerable<Standard> GetWithdrawnStandards()
+        public static IEnumerable<Standard> GetNotYetApprovedTestStandards()
         {
             var sectors = GetTestSectors().ToList();
             return new List<Standard>
@@ -300,7 +300,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteId = sectors[0].Id,
                     LarsStandard = null,
                     Status = "Proposal in development",
-                    Version = 1.1m
+                    Version = 1.1m,
+                    Options = new List<string>
+                    {
+                        "Wine",
+                        "Spirits"
+                    }
                 },
                  new Standard
                 {
@@ -350,6 +355,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 }
             };
         }
+
+
         public static IEnumerable<Standard> GetOlderVersionsOfStandards()
         {
             var sectors = GetTestSectors().ToList();
