@@ -13,6 +13,7 @@
     [MaxFunding] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
 	[OverviewOfRole] VARCHAR(MAX) NOT NULL,
+	[RouteCode] INT NOT NULL DEFAULT 0,
 	[RouteId] UNIQUEIDENTIFIER NOT NULL,
     [AssessmentPlanUrl] VARCHAR(500) NULL,
     [ApprovedForDelivery] DATETIME NULL,

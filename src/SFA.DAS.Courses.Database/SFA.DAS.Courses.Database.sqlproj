@@ -68,6 +68,8 @@
     <Build Include="Tables\ImportAudit.sql" />
     <Build Include="Tables\LarsStandard.sql" />
     <Build Include="Tables\LarsStandard_Import.sql" />
+    <Build Include="Tables\Route.sql" />
+    <Build Include="Tables\Route_Import.sql" />
     <Build Include="Tables\Sector.sql" />
     <Build Include="Tables\SectorSubjectAreaTier2.sql" />
     <Build Include="Tables\SectorSubjectAreaTier2_Import.sql" />

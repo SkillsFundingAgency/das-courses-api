@@ -21,6 +21,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("decimal");
             builder.Property(x => x.OverviewOfRole).HasColumnName("OverviewOfRole").IsRequired();
             builder.Property(x => x.RouteId).HasColumnName("RouteId").HasColumnType("uniqueidentifier").IsRequired();
+            builder.Property(x => x.RouteCode).HasColumnName("RouteCode").HasColumnType("int").IsRequired();
             builder.Property(x => x.TypicalJobTitles).HasColumnName("TypicalJobTitles");
             builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
             builder.Property(x => x.Keywords).HasColumnName("Keywords");
@@ -38,6 +39,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Ignore(x => x.ApprenticeshipFunding);
             builder.Ignore(x => x.LarsStandard);
             builder.Ignore(x => x.CoreDuties);
+            builder.Ignore(x => x.Route);
 
             builder.HasIndex(x => x.StandardUId).IsUnique();
         }

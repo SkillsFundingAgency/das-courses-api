@@ -31,6 +31,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IFrameworksImportService, FrameworksImportService>();
             services.AddTransient<IJsonFileHelper, JsonFileHelper>();   
             services.AddTransient<IFrameworksService, FrameworksService>();
+            services.AddTransient<IRouteService, RouteService>();
             services.AddHttpClient<IQualificationSectorSubjectAreaService, QualificationSectorSubjectAreaService>();
             
             AddDatabaseRegistrations(services);
@@ -53,6 +54,8 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IFrameworkFundingRepository, FrameworkFundingRepository>();
             services.AddTransient<ISectorSubjectAreaTier2Repository, SectorSubjectAreaTier2Repository>();
             services.AddTransient<ISectorSubjectAreaTier2ImportRepository, SectorSubjectAreaTier2ImportRepository>();
+            services.AddTransient<IRouteRepository, RouteRepository>();
+            services.AddTransient<IRouteImportRepository, RouteImportRepository>();
         }
     }
 }
