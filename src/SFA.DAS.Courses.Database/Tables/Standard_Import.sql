@@ -14,6 +14,7 @@
 	[IntegratedDegree] VARCHAR(100) NULL,
 	[OverviewOfRole] VARCHAR(MAX) NOT NULL,
     [RouteId] UNIQUEIDENTIFIER NOT NULL,
+    [RouteCode] INT NOT NULL DEFAULT 0,
     [AssessmentPlanUrl] VARCHAR(500) NULL,
     [ApprovedForDelivery] DATETIME NULL,
     [TrailBlazerContact] VARCHAR(200) NULL,

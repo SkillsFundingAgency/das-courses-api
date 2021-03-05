@@ -16,6 +16,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         {
             var testSectors = GetTestSectors().ToList();
             context.Sectors.AddRange(testSectors);
+            context.Routes.AddRange(GetTestRoutes().ToList());
             context.SectorSubjectAreaTier2.AddRange(GetSectorSubjectAreaTier2Items());
             context.Standards.AddRange(GetValidTestStandards());
             context.Standards.AddRange(GetInValidTestStandards());
@@ -77,10 +78,32 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 }
             };
         }
+        public static IEnumerable<Route> GetTestRoutes()
+        {
+            return new List<Route>
+            {
+                new Route
+                {
+                    Name = "Engineering and manufacturing",
+                    Id = 1
+                },
+                new Route
+                {
+                    Name = "Construction",
+                    Id = 2
+                },
+                new Route
+                {
+                    Name = "Creative and design",
+                    Id = 3
+                }
+            };
+        }
 
         public static IEnumerable<Standard> GetValidTestStandards()
         {
             var sectors = GetTestSectors().ToList();
+            var routes = GetTestRoutes().ToList();
             var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
             return new List<Standard>
             {
@@ -94,6 +117,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
                     RouteId = sectors[0].Id,
+                    RouteCode = routes[0].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
@@ -114,6 +138,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Brewery operations",
                     Level = 1,
                     RouteId = sectors[0].Id,
+                    RouteCode = routes[0].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
@@ -134,6 +159,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 6,
                     RouteId = sectors[1].Id,
+                    RouteCode = routes[1].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
@@ -154,6 +180,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Dentist",
                     Level = 7,
                     RouteId = sectors[1].Id,
+                    RouteCode = routes[1].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
@@ -174,6 +201,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
                     Level = 3,
                     RouteId = sectors[2].Id,
+                    RouteCode = routes[2].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
@@ -194,6 +222,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
                     Level = 3,
                     RouteId = sectors[2].Id,
+                    RouteCode = routes[2].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
@@ -214,6 +243,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Junior animator|SortOrder",
                     Level = 4,
                     RouteId = sectors[2].Id,
+                    RouteCode = routes[2].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
@@ -230,6 +260,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static IEnumerable<Standard> GetInValidTestStandards()
         {
             var sectors = GetTestSectors().ToList();
+            var routes = GetTestRoutes().ToList();
             return new List<Standard>
             {
                 new Standard
@@ -242,6 +273,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Structural Engineer",
                     Level = 2,
                     RouteId = sectors[0].Id,
+                    RouteCode = routes[0].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
@@ -261,6 +293,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Dentist",
                     Level = 7,
                     RouteId = sectors[1].Id,
+                    RouteCode = routes[1].Id,
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
@@ -276,6 +309,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static IEnumerable<Standard> GetNotYetApprovedTestStandards()
         {
             var sectors = GetTestSectors().ToList();
+            var routes = GetTestRoutes().ToList();
             return new List<Standard>
             {
                 new Standard
@@ -288,6 +322,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Assistant of brewery operations",
                     Level = 1,
                     RouteId = sectors[0].Id,
+                    RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Proposal in development",
                     Version = 1.1m
@@ -302,6 +337,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Metallurgy Engineer",
                     Level = 4,
                     RouteId = sectors[0].Id,
+                    RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "In development",
                     Version = 1.0m
@@ -312,6 +348,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static IEnumerable<Standard> GetWithdrawnStandards()
         {
             var sectors = GetTestSectors().ToList();
+            var routes = GetTestRoutes().ToList();
             return new List<Standard>
             {
                 new Standard
@@ -324,6 +361,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Assistant of brewery operations",
                     Level = 1,
                     RouteId = sectors[0].Id,
+                    RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Withdrawn",
                     Version = 1.0m
@@ -333,7 +371,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static IEnumerable<Standard> GetOlderVersionsOfStandards()
         {
             var sectors = GetTestSectors().ToList();
-            var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
+            var routes = GetTestRoutes().ToList();
             return new List<Standard>
             {
                 new Standard
@@ -346,6 +384,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
                     RouteId = sectors[0].Id,
+                    RouteCode = routes[0].Id,
                     Status = "Retired",
                     Version = 1.2m
                 },
@@ -359,6 +398,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
                     RouteId = sectors[0].Id,
+                    RouteCode = routes[0].Id,
                     Status = "Retired",
                     Version = 1.1m
                 },
@@ -372,6 +412,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
                     Level = 3,
                     RouteId = sectors[2].Id,
+                    RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = 1.0m
                 }

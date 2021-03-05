@@ -25,6 +25,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 OverviewOfRole = standard.OverviewOfRole,
                 StandardPageUrl = standard.StandardPageUrl,
                 RouteId = standard.RouteId,
+                RouteCode = standard.RouteCode,
                 AssessmentPlanUrl = standard.AssessmentPlanUrl,
                 ApprovedForDelivery = standard.ApprovedForDelivery,
                 TrailBlazerContact = standard.TrailBlazerContact,

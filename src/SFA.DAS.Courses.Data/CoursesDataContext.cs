@@ -26,6 +26,8 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
+        DbSet<Domain.Entities.Route> Routes { get; set; }
+        DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         int SaveChanges();
     }
     
@@ -48,6 +50,8 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
+        public DbSet<Domain.Entities.Route> Routes { get; set; }
+        public DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
 
         private readonly CoursesConfiguration _configuration;
         private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
@@ -107,6 +111,8 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new FrameworkFundingImport());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2Import());
+            modelBuilder.ApplyConfiguration(new Route());
+            modelBuilder.ApplyConfiguration(new RouteImport());
             base.OnModelCreating(modelBuilder);
         }
     }

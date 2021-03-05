@@ -32,7 +32,10 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             var standards = await apprenticeshipService.GetStandards();
             
             //Assert
-            standards.Should().BeEquivalentTo(importStandards, options => options.Excluding(c=>c.RouteId));
+            standards.Should().BeEquivalentTo(importStandards, options => options
+                .Excluding(c=>c.RouteId)
+                .Excluding(c=>c.RouteCode)
+            );
         }
         
         [Test]
