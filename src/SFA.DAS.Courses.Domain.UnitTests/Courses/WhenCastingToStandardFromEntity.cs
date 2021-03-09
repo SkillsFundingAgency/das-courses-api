@@ -26,8 +26,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.LatestStartDate)
                 .Excluding(c => c.LatestEndDate)
                 .Excluding(c => c.ApprovedForDelivery)
-                .Excluding(c => c.TypicalDuration)
-                .Excluding(c => c.MaxFunding)
+                .Excluding(c => c.ProposedTypicalDuration)
+                .Excluding(c => c.ProposedMaxFunding)
                 .Excluding(c => c.EqaProviderContactEmail)
                 .Excluding(c => c.EqaProviderContactName)
                 .Excluding(c => c.EqaProviderName)
@@ -47,8 +47,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.VersionDetail.LatestStartDate.Should().Be(source.LatestStartDate);
             response.VersionDetail.LatestEndDate.Should().Be(source.LatestEndDate);
             response.VersionDetail.ApprovedForDelivery.Should().Be(source.ApprovedForDelivery);
-            response.VersionDetail.TypicalDuration.Should().Be(source.TypicalDuration);
-            response.VersionDetail.MaxFunding.Should().Be(source.MaxFunding);
+            response.VersionDetail.ProposedTypicalDuration.Should().Be(source.ProposedTypicalDuration);
+            response.VersionDetail.ProposedMaxFunding.Should().Be(source.ProposedMaxFunding);
 
             response.EqaProvider.Name.Should().Be(source.EqaProviderName);
             response.EqaProvider.ContactName.Should().Be(source.EqaProviderContactName);
