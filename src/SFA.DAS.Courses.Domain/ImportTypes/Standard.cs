@@ -35,10 +35,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public int Level { get; set; }
 
         [JsonProperty("typicalDuration")]
-        public int TypicalDuration { get; set; }
+        public int ProposedTypicalDuration { get; set; }
 
         [JsonProperty("maxFunding")]
-        public int MaxFunding { get; set; }
+        public int ProposedMaxFunding { get; set; }
 
         [JsonProperty("route")]
         public string Route { get; set; }

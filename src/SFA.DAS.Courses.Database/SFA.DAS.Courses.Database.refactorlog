@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="5bc1772e-c4a4-4282-9935-0ee80ebfed00" ChangeDateTime="03/09/2021 10:54:57">
+    <Property Name="ElementName" Value="[dbo].[Standard_Import].[TypicalDuration]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard_Import]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProposedTypicalDuration" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0d4fac1a-69a0-413c-b957-f774fd35da1d" ChangeDateTime="03/09/2021 10:55:01">
+    <Property Name="ElementName" Value="[dbo].[Standard_Import].[MaxFunding]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard_Import]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProposedMaxFunding" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9ad1773c-5337-4af9-b0fa-7c003497dbdb" ChangeDateTime="03/09/2021 10:59:26">
+    <Property Name="ElementName" Value="[dbo].[Standard].[MaxFunding]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProposedMaxFunding" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7486732e-30c9-4320-b452-9ace8070f375" ChangeDateTime="03/09/2021 10:59:37">
+    <Property Name="ElementName" Value="[dbo].[Standard].[TypicalDuration]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProposedTypicalDuration" />
+  </Operation>
+</Operations>

@@ -20,8 +20,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 LatestStartDate = source.LatestStartDate,
                 LatestEndDate = source.LatestEndDate,
                 ApprovedForDelivery = source.ApprovedForDelivery,
-                ProposedTypicalDuration = source.TypicalDuration,
-                ProposedMaxFunding = source.MaxFunding
+                ProposedTypicalDuration = source.ProposedTypicalDuration,
+                ProposedMaxFunding = source.ProposedMaxFunding
             };
         }
     }

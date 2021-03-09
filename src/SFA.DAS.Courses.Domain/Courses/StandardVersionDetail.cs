@@ -8,8 +8,8 @@ namespace SFA.DAS.Courses.Domain.Courses
         public DateTime? LatestStartDate { get; set; }
         public DateTime? LatestEndDate { get; set; }
         public DateTime? ApprovedForDelivery { get; set; }
-        public int TypicalDuration { get; set; }
-        public int MaxFunding { get; set; }
+        public int ProposedTypicalDuration { get; set; }
+        public int ProposedMaxFunding { get; set; }
 
         public static explicit operator StandardVersionDetail(Entities.Standard source)
         {
@@ -19,8 +19,8 @@ namespace SFA.DAS.Courses.Domain.Courses
                 LatestStartDate = source.LatestStartDate,
                 LatestEndDate = source.LatestEndDate,
                 ApprovedForDelivery = source.ApprovedForDelivery,
-                TypicalDuration = source.TypicalDuration,
-                MaxFunding = source.MaxFunding
+                ProposedTypicalDuration = source.ProposedTypicalDuration,
+                ProposedMaxFunding = source.ProposedMaxFunding
             };
         }
     }

@@ -9,8 +9,8 @@
     [LatestEndDate] DATETIME NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
-    [TypicalDuration] INT NOT NULL,
-    [MaxFunding] INT NOT NULL,
+    [ProposedTypicalDuration] INT NOT NULL,
+    [ProposedMaxFunding] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
 	[OverviewOfRole] VARCHAR(MAX) NOT NULL,
 	[RouteCode] INT NOT NULL DEFAULT 0,
@@ -45,7 +45,7 @@ CREATE NONCLUSTERED INDEX [IDX_Standard_LarsCode] ON [dbo].[Standard] (LarsCode)
 GO
 
 CREATE NONCLUSTERED INDEX [IDX_Standard_Status] ON [dbo].[Standard] (Status)
-INCLUDE([StandardUId],[IFateReferenceNumber],[LarsCode],[EarliestStartDate],[LatestStartDate],[LatestEndDate],[Title],[Level],[TypicalDuration],[MaxFunding],[IntegratedDegree],[OverviewOfRole],[RouteId],[AssessmentPlanUrl],[ApprovedForDelivery],[TrailBlazerContact],[EqaProviderName],[EqaProviderContactName],[EqaProviderContactEmail],[EqaProviderWebLink],[Keywords],[TypicalJobTitles],[StandardPageUrl],[Version],[RegulatedBody],[Skills],[Knowledge],[Behaviours],[Duties],[CoreAndOptions],[IntegratedApprenticeship],[Options])
+INCLUDE([StandardUId],[IFateReferenceNumber],[LarsCode],[EarliestStartDate],[LatestStartDate],[LatestEndDate],[Title],[Level],[ProposedTypicalDuration],[ProposedMaxFunding],[IntegratedDegree],[OverviewOfRole],[RouteId],[AssessmentPlanUrl],[ApprovedForDelivery],[TrailBlazerContact],[EqaProviderName],[EqaProviderContactName],[EqaProviderContactEmail],[EqaProviderWebLink],[Keywords],[TypicalJobTitles],[StandardPageUrl],[Version],[RegulatedBody],[Skills],[Knowledge],[Behaviours],[Duties],[CoreAndOptions],[IntegratedApprenticeship],[Options])
 GO
 
 CREATE NONCLUSTERED INDEX [IDX_Standard_IfateReferenceNumber] ON [dbo].[Standard] (IfateReferenceNumber) 
