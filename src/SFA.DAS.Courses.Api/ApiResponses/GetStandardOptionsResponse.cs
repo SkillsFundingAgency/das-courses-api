@@ -11,6 +11,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string StandardUId { get; set; }
         public int LarsCode { get; set; }
         public string IfateReferenceNumber { get; set; }
+        public decimal Version { get; set; }
         public List<string> Options { get; set; }
 
         public static implicit operator GetStandardOptionsResponse(Standard source)
@@ -20,6 +21,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 StandardUId = source.StandardUId,
                 LarsCode = source.LarsCode,
                 IfateReferenceNumber = source.IfateReferenceNumber,
+                Version = source.Version,
                 Options = source.Options
             };
         }

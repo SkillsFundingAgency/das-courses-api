@@ -42,6 +42,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Options
                 StandardUId = standard.StandardUId,
                 IfateReferenceNumber = standard.IfateReferenceNumber,
                 LarsCode = standard.LarsCode,
+                Version = standard.Version,
                 Options = standard.Options
             }).ToList());
         }
