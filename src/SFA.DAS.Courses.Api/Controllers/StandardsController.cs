@@ -31,7 +31,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetList(
             [FromQuery] string keyword,
-            [FromQuery] IList<Guid> routeIds, 
+            [FromQuery] IList<Guid> routeIds,
             [FromQuery] IList<int> levels,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
             [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
@@ -40,7 +40,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             {
                 var queryResult = await _mediator.Send(new GetStandardsListQuery
                 {
-                    Keyword = keyword, 
+                    Keyword = keyword,
                     RouteIds = routeIds,
                     Levels = levels,
                     OrderBy = orderBy,
@@ -64,39 +64,40 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{larsCode:int}")]
-        public async Task<IActionResult> Get(int larsCode)
+        [Route("{id}")]
+        public async Task<IActionResult> Get(string id)
         {
             try
             {
-                var result = await _mediator.Send(new GetStandardQuery {LarsCode = larsCode});
+                // If int -> LarsCode
+                // If Length == 6 -> IFate Ref Number
+                // Else assume StandardUId
+                GetLatestActiveStandardQuery query = null;
+                if (int.TryParse(id, out var larsCode))
+                {
+                    query = new GetLatestActiveStandardQuery { LarsCode = larsCode };
+                }
+                else if (id.Length == 6)
+                {
+                    query = new GetLatestActiveStandardQuery { IfateRefNumber = id };
+                }
 
-                var response = (GetStandardResponse)result.Standard;
-
-                return Ok(response);
+                if (query != null)
+                {
+                    var result = await _mediator.Send(query);
+                    var response = (GetStandardResponse)result.Standard;
+                    return Ok(response);
+                }
+                else
+                {
+                    var result = await _mediator.Send(new GetStandardByStandardUIdQuery { StandardUId = id });
+                    var response = (GetStandardDetailResponse)result.Standard;
+                    return Ok(response);
+                }
             }
             catch (InvalidOperationException e)
             {
-                _logger.LogError(e, $"Standard not found {larsCode}");
-                return NotFound();
-            }
-        }
-
-        [HttpGet]
-        [Route("{standardUId}")]
-        public async Task<IActionResult> Get(string standardUId)
-        {
-            try
-            {
-                var result = await _mediator.Send(new GetStandardByStandardUIdQuery { StandardUId = standardUId });
-
-                var response = (GetStandardDetailResponse)result.Standard;
-
-                return Ok(response);
-            }
-            catch (InvalidOperationException e)
-            {
-                _logger.LogError(e, $"Standard not found for StandardUId: {standardUId}");
+                _logger.LogError(e, $"Standard not found {id}");
                 return NotFound();
             }
         }
