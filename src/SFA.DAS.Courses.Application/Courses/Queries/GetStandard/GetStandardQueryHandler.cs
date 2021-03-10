@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -23,6 +24,10 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
             else if (!string.IsNullOrWhiteSpace(request.IfateRefNumber))
             {
                 standard = await _standardsService.GetLatestActiveStandard(request.IfateRefNumber);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Must specify LarsCode or IFateRefNumber when retrieving active standard.");
             }
 
             return new GetLatestActiveStandardResult { Standard = standard };
