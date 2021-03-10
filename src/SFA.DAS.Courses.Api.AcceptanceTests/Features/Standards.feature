@@ -128,7 +128,7 @@
     
     Scenario: : Get a specific version of a standard by StandardUId
     Given I have an http client
-    When I GET the following url: /api/courses/standards/ST005_1.0
+    When I GET the following url: /api/courses/standards/ST0005_1.0
     Then an http status code of 200 is returned
     And the following standard is returned
     | title                            | level | sector              | version | status  |
@@ -136,7 +136,7 @@
 
     Scenario: : Get a all versions of a standard by IFateReferenceNumber
     Given I have an http client
-    When I GET the following url: /api/courses/standards/versions/ST001
+    When I GET the following url: /api/courses/standards/versions/ST0001
     Then an http status code of 200 is returned
     And the following valid standards are returned
     | title                                      | level | sector                        | version | status                 |
