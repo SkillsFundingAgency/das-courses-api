@@ -11,7 +11,8 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<int> Count(StandardFilter filter);
         void DeleteAll();
         Task InsertMany(IEnumerable<Standard> standards);
-        Task<Standard> Get(int larsCode);
+        Task<Standard> GetLatestActiveStandard(int larsCode);
+        Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber);
         Task<Standard> Get(string standardUId);
         Task<IEnumerable<Standard>> GetStandards(IList<Guid> routeIds, IList<int> levels, StandardFilter filter);
         Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber);

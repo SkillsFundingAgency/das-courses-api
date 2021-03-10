@@ -117,6 +117,14 @@
     And the following standard is returned
     | title                            | level | sector                        | version | status                |
     | Head Brewer                      | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
+
+    Scenario: Get latest version of a standard by IfateReferenceNumber
+	Given I have an http client
+    When I GET the following url: /api/courses/standards/ST0001
+    Then an http status code of 200 is returned
+    And the following standard is returned
+    | title                            | level | sector                        | version | status                |
+    | Head Brewer                      | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
     
     Scenario: : Get a specific version of a standard by StandardUId
     Given I have an http client
