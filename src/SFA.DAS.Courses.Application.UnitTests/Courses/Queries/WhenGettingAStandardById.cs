@@ -5,25 +5,24 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
-using SFA.DAS.Courses.Application.UnitTests.Customisations;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 {
-    public class WhenGettingALatestActiveStandard
+    public class WhenGettingAStandardById
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_Standard_From_Service_By_LarsCode(
-            [GetLatestActiveStandardQueryByLarsCode] GetLatestActiveStandardQuery query,
+            GetStandardByIdQuery query,
             Standard standardFromService,
             [Frozen] Mock<IStandardsService> mockStandardsService,
-            GetStandardQueryHandler handler)
+            GetStandardByIdQueryHandler handler)
         {
-            query.IfateRefNumber = string.Empty;
+            query.Id = "123";
             mockStandardsService
-                .Setup(service => service.GetLatestActiveStandard(query.LarsCode))
+                .Setup(service => service.GetLatestActiveStandard(query.Id))
                 .ReturnsAsync(standardFromService);
 
             var result = await handler.Handle(query, CancellationToken.None);
@@ -33,14 +32,31 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 
         [Test, MoqAutoData]
         public async Task Then_Gets_Standard_From_Service_By_IFateReferenceNumber(
-            [GetLatestActiveStandardQueryByIFateReference] GetLatestActiveStandardQuery query,
+            GetStandardByIdQuery query,
             Standard standardFromService,
             [Frozen] Mock<IStandardsService> mockStandardsService,
-            GetStandardQueryHandler handler)
+            GetStandardByIdQueryHandler handler)
         {
-            query.LarsCode = 0;
+            query.Id = "ST0012";
             mockStandardsService
-                .Setup(service => service.GetLatestActiveStandard(query.IfateRefNumber))
+                .Setup(service => service.GetLatestActiveStandard(query.Id))
+                .ReturnsAsync(standardFromService);
+
+            var result = await handler.Handle(query, CancellationToken.None);
+
+            result.Standard.Should().BeEquivalentTo(standardFromService);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Then_Gets_Standard_From_Service_By_StandardUId(
+            GetStandardByIdQuery query,
+            Standard standardFromService,
+            [Frozen] Mock<IStandardsService> mockStandardsService,
+            GetStandardByIdQueryHandler handler)
+        {
+            query.Id = "ST0012_1.2";
+            mockStandardsService
+                .Setup(service => service.GetStandard(query.Id))
                 .ReturnsAsync(standardFromService);
 
             var result = await handler.Handle(query, CancellationToken.None);
