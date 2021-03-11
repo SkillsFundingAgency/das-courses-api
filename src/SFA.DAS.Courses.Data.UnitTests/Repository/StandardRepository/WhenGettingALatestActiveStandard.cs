@@ -104,13 +104,14 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         }
 
         [Test]
-        public void Then_An_Entity_Not_Found_Exception_Is_Thrown()
+        public async Task Then_Standard_Should_Be_Null()
         {
             //Arrange
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(new List<Standard>());
-            
+
             //Act Assert
-            Assert.ThrowsAsync<InvalidOperationException>(() => _standardRepository.GetLatestActiveStandard(ExpectedLarsCode));
+            var result = await _standardRepository.GetLatestActiveStandard(ExpectedLarsCode);
+            result.Should().BeNull();
         }
     }
 }
