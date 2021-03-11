@@ -70,20 +70,10 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             try
             {
-                GetStandardDetailResponse response;
-                if (GetLatestActiveStandardQuery.IsLarsCodeOrIFateRefNumber(id))
-                {
-                    var query = new GetLatestActiveStandardQuery(id);
-                    var result = await _mediator.Send(query);
-                    response = (GetStandardDetailResponse)result.Standard;
-                }
-                else
-                {
-                    var result = await _mediator.Send(new GetStandardByStandardUIdQuery { StandardUId = id });
-                    response = (GetStandardDetailResponse)result.Standard;
-                }
+                var result = await _mediator.Send(new GetStandardByIdQuery { Id = id });
+                var response = (GetStandardDetailResponse)result.Standard;
 
-                if(response == null) return NotFound();
+                if (response == null) return NotFound();
 
                 return Ok(response);
             }
