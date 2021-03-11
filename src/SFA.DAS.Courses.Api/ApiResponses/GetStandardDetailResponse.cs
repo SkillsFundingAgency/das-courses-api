@@ -45,8 +45,10 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public bool IntegratedApprenticeship { get ; set ; }
         public List<string> Options { get; set; }
 
-        public static implicit operator GetStandardDetailResponse(Standard source)
+        public static explicit operator GetStandardDetailResponse(Standard source)
         {
+            if (source == null) return null;
+
             return new GetStandardDetailResponse
             {
                 StandardUId = source.StandardUId,

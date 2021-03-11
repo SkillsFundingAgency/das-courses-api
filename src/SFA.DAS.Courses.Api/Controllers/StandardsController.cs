@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
@@ -69,36 +70,27 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             try
             {
-                // If int -> LarsCode
-                // If Length == 6 -> IFate Ref Number
-                // Else assume StandardUId
-                GetLatestActiveStandardQuery query = null;
-                if (int.TryParse(id, out var larsCode))
+                GetStandardDetailResponse response;
+                if (GetLatestActiveStandardQuery.IsLarsCodeOrIFateRefNumber(id))
                 {
-                    query = new GetLatestActiveStandardQuery { LarsCode = larsCode };
-                }
-                else if (id.Length == 6)
-                {
-                    query = new GetLatestActiveStandardQuery { IfateRefNumber = id };
-                }
-
-                if (query != null)
-                {
+                    var query = new GetLatestActiveStandardQuery(id);
                     var result = await _mediator.Send(query);
-                    var response = (GetStandardResponse)result.Standard;
-                    return Ok(response);
+                    response = (GetStandardDetailResponse)result.Standard;
                 }
                 else
                 {
                     var result = await _mediator.Send(new GetStandardByStandardUIdQuery { StandardUId = id });
-                    var response = (GetStandardDetailResponse)result.Standard;
-                    return Ok(response);
+                    response = (GetStandardDetailResponse)result.Standard;
                 }
+
+                if(response == null) return NotFound();
+
+                return Ok(response);
             }
             catch (InvalidOperationException e)
             {
-                _logger.LogError(e, $"Standard not found {id}");
-                return NotFound();
+                _logger.LogError(e, $"Error retrieving standard with {id}");
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -115,12 +107,14 @@ namespace SFA.DAS.Courses.Api.Controllers
                     Standards = queryResult.Standards.Select(standard => (GetStandardDetailResponse)standard)
                 };
 
+                if (response == null) return NotFound();
+
                 return Ok(response);
             }
             catch (InvalidOperationException e)
             {
                 _logger.LogError(e, "Error attempting to get list of standards");
-                return BadRequest();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

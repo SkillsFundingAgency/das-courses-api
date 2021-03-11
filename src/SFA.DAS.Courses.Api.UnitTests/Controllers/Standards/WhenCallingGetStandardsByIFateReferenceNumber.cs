@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
         }
 
         [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Bad_Request(
+        public async Task And_Exception_Then_Returns_InternalServerError(
             string iFateReferenceNumber,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
@@ -52,7 +52,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 
             var controllerResult = await controller.GetStandardsByIFateReferenceNumber(iFateReferenceNumber) as StatusCodeResult;
 
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
         }
     }
 }

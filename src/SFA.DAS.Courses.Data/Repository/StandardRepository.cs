@@ -65,11 +65,6 @@ namespace SFA.DAS.Courses.Data.Repository
             // into expression tree
             var standard = standards.InMemoryFilterIsLatestVersion(StandardFilter.Active).SingleOrDefault();
 
-            if (standard == null)
-            {
-                throw new InvalidOperationException($"Course with IFateReferenceNumber {iFateReferenceNumber} not found in repository");
-            }
-
             return standard;
         }
 
@@ -83,24 +78,13 @@ namespace SFA.DAS.Courses.Data.Repository
             // into expression tree
             var standard = standards.InMemoryFilterIsLatestVersion(StandardFilter.Active).SingleOrDefault();
 
-            if (standard == null)
-            {
-                throw new InvalidOperationException($"Course with larsCode {larsCode} not found in repository");
-            }
-
             return standard;
-
         }
 
         public async Task<Standard> Get(string standardUId)
         {
             var standard = await GetBaseStandardQuery()
                 .SingleOrDefaultAsync(c => c.StandardUId.Equals(standardUId));
-
-            if (standard == null)
-            {
-                throw new InvalidOperationException($"Course with standardUId {standardUId} not found in repository");
-            }
 
             return standard;
         }
