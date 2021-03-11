@@ -22,9 +22,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.SearchScore)
                 .Excluding(c => c.RegulatedBody)
                 .Excluding(c => c.CoreDuties)
-                .Excluding(c => c.EarliestStartDate)
-                .Excluding(c => c.LatestStartDate)
-                .Excluding(c => c.LatestEndDate)
+                .Excluding(c => c.VersionEarliestStartDate)
+                .Excluding(c => c.VersionLatestStartDate)
+                .Excluding(c => c.VersionLatestEndDate)
                 .Excluding(c => c.ApprovedForDelivery)
                 .Excluding(c => c.ProposedTypicalDuration)
                 .Excluding(c => c.ProposedMaxFunding)
@@ -43,9 +43,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.SectorSubjectAreaTier2Description.Should().Be(source.LarsStandard.SectorSubjectArea.Name);
             response.OtherBodyApprovalRequired.Should().Be(source.LarsStandard.OtherBodyApprovalRequired);
 
-            response.VersionDetail.EarliestStartDate.Should().Be(source.EarliestStartDate);
-            response.VersionDetail.LatestStartDate.Should().Be(source.LatestStartDate);
-            response.VersionDetail.LatestEndDate.Should().Be(source.LatestEndDate);
+            response.VersionDetail.EarliestStartDate.Should().Be(source.VersionEarliestStartDate);
+            response.VersionDetail.LatestStartDate.Should().Be(source.VersionLatestStartDate);
+            response.VersionDetail.LatestEndDate.Should().Be(source.VersionLatestEndDate);
             response.VersionDetail.ApprovedForDelivery.Should().Be(source.ApprovedForDelivery);
             response.VersionDetail.ProposedTypicalDuration.Should().Be(source.ProposedTypicalDuration);
             response.VersionDetail.ProposedMaxFunding.Should().Be(source.ProposedMaxFunding);

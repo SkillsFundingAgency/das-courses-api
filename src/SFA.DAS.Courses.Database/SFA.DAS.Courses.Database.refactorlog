@@ -28,4 +28,46 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="ProposedTypicalDuration" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="2417cd06-f4fd-42ee-bc9a-8c4f7a97432c" ChangeDateTime="03/11/2021 12:13:02">
+    <Property Name="ElementName" Value="[dbo].[Standard_Import].[EarliestStartDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard_Import]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VersionEarliestStartDate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c82077eb-8a88-4e43-a469-162049e128ab" ChangeDateTime="03/11/2021 12:13:06">
+    <Property Name="ElementName" Value="[dbo].[Standard_Import].[LatestStartDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard_Import]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VersionLatestStartDate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="41f19483-6015-42f5-b050-e14f7f7d11f5" ChangeDateTime="03/11/2021 12:13:13">
+    <Property Name="ElementName" Value="[dbo].[Standard_Import].[LatestEndDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard_Import]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VersionLatestEndDate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="92727401-f841-44bc-ade6-1b45dbf75e74" ChangeDateTime="03/11/2021 12:14:28">
+    <Property Name="ElementName" Value="[dbo].[Standard].[EarliestStartDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VersionEarliestStartDate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1051302d-4ea5-45aa-afc8-5b341948415a" ChangeDateTime="03/11/2021 12:14:31">
+    <Property Name="ElementName" Value="[dbo].[Standard].[LatestStartDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VersionLatestStartDate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="47929231-1457-4900-ab4b-e0742e915e47" ChangeDateTime="03/11/2021 12:14:37">
+    <Property Name="ElementName" Value="[dbo].[Standard].[LatestEndDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Standard]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VersionLatestEndDate" />
+  </Operation>
 </Operations>

@@ -9,9 +9,9 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string IfateReferenceNumber { get; set; }
         public int LarsCode { get; set; }
         public string Status { get; set; }
-        public DateTime? EarliestStartDate { get; set; }
-        public DateTime? LatestStartDate { get; set; }
-        public DateTime? LatestEndDate { get; set; }
+        public DateTime? VersionEarliestStartDate { get; set; }
+        public DateTime? VersionLatestStartDate { get; set; }
+        public DateTime? VersionLatestEndDate { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
         public int ProposedTypicalDuration { get; set; }

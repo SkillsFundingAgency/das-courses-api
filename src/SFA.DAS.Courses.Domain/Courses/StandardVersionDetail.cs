@@ -15,9 +15,9 @@ namespace SFA.DAS.Courses.Domain.Courses
         {
             return new StandardVersionDetail
             {
-                EarliestStartDate = source.EarliestStartDate,
-                LatestStartDate = source.LatestStartDate,
-                LatestEndDate = source.LatestEndDate,
+                EarliestStartDate = source.VersionEarliestStartDate,
+                LatestStartDate = source.VersionLatestStartDate,
+                LatestEndDate = source.VersionLatestEndDate,
                 ApprovedForDelivery = source.ApprovedForDelivery,
                 ProposedTypicalDuration = source.ProposedTypicalDuration,
                 ProposedMaxFunding = source.ProposedMaxFunding
