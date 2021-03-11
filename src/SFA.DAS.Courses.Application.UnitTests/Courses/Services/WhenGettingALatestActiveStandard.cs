@@ -28,8 +28,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var standard = await service.GetLatestActiveStandard(larsCode);
 
             standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
-
-            standard.Route.Should().Be(standardFromRepo.Sector.Route);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -46,8 +44,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var standard = await service.GetLatestActiveStandard(iFateReferenceNumber);
 
             standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
-
-            standard.Route.Should().Be(standardFromRepo.Sector.Route);
         }
     }
 }

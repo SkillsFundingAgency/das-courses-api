@@ -87,7 +87,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
                 return Ok(response);
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
                 _logger.LogError(e, $"Error retrieving standard with {id}");
                 return StatusCode(StatusCodes.Status500InternalServerError);
@@ -111,7 +111,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
                 return Ok(response);
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error attempting to get list of standards");
                 return StatusCode(StatusCodes.Status500InternalServerError);
