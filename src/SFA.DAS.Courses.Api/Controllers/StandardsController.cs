@@ -37,74 +37,50 @@ namespace SFA.DAS.Courses.Api.Controllers
             [FromQuery] OrderBy orderBy = OrderBy.Score,
             [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
         {
-            try
+            var queryResult = await _mediator.Send(new GetStandardsListQuery
             {
-                var queryResult = await _mediator.Send(new GetStandardsListQuery
-                {
-                    Keyword = keyword,
-                    RouteIds = routeIds,
-                    Levels = levels,
-                    OrderBy = orderBy,
-                    Filter = filter
-                });
+                Keyword = keyword,
+                RouteIds = routeIds,
+                Levels = levels,
+                OrderBy = orderBy,
+                Filter = filter
+            });
 
-                var response = new GetStandardsListResponse
-                {
-                    Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard),
-                    Total = queryResult.Total,
-                    TotalFiltered = queryResult.TotalFiltered
-                };
-
-                return Ok(response);
-            }
-            catch (Exception e)
+            var response = new GetStandardsListResponse
             {
-                _logger.LogError(e, "Error attempting to get list of standards");
-                return BadRequest();
-            }
+                Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard),
+                Total = queryResult.Total,
+                TotalFiltered = queryResult.TotalFiltered
+            };
+
+            return Ok(response);
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            try
-            {
-                var result = await _mediator.Send(new GetStandardByIdQuery { Id = id });
+            var result = await _mediator.Send(new GetStandardByIdQuery { Id = id });
 
-                if (result.Standard == null) return NotFound();
+            if (result.Standard == null) return NotFound();
 
-                return Ok((GetStandardDetailResponse)result.Standard);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Error retrieving standard with {id}");
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return Ok((GetStandardDetailResponse)result.Standard);
         }
 
         [HttpGet]
         [Route("versions/{iFateReferenceNumber}")]
         public async Task<IActionResult> GetStandardsByIFateReferenceNumber(string iFateReferenceNumber)
         {
-            try
+            var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery { IFateReferenceNumber = iFateReferenceNumber });
+
+            var response = new GetStandardVersionsListResponse
             {
-                var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery { IFateReferenceNumber = iFateReferenceNumber });
+                Standards = queryResult.Standards.Select(standard => (GetStandardDetailResponse)standard)
+            };
 
-                var response = new GetStandardVersionsListResponse
-                {
-                    Standards = queryResult.Standards.Select(standard => (GetStandardDetailResponse)standard)
-                };
+            if (response == null) return NotFound();
 
-                if (response == null) return NotFound();
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error attempting to get list of standards");
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return Ok(response);
         }
     }
 }
