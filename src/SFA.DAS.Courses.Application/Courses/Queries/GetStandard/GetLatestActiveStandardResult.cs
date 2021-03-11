@@ -1,4 +1,4 @@
-using SFA.DAS.Courses.Domain.Courses;
+﻿using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
 {
