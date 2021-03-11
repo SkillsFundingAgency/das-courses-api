@@ -5,6 +5,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
+using SFA.DAS.Courses.Application.UnitTests.Customisations;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
@@ -15,7 +16,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_Standard_From_Service_By_LarsCode(
-            GetLatestActiveStandardQuery query,
+            [GetLatestActiveStandardQueryByLarsCode] GetLatestActiveStandardQuery query,
             Standard standardFromService,
             [Frozen] Mock<IStandardsService> mockStandardsService,
             GetStandardQueryHandler handler)
@@ -32,7 +33,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 
         [Test, MoqAutoData]
         public async Task Then_Gets_Standard_From_Service_By_IFateReferenceNumber(
-            GetLatestActiveStandardQuery query,
+            [GetLatestActiveStandardQueryByIFateReference] GetLatestActiveStandardQuery query,
             Standard standardFromService,
             [Frozen] Mock<IStandardsService> mockStandardsService,
             GetStandardQueryHandler handler)
