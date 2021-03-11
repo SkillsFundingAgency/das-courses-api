@@ -71,11 +71,10 @@ namespace SFA.DAS.Courses.Api.Controllers
             try
             {
                 var result = await _mediator.Send(new GetStandardByIdQuery { Id = id });
-                var response = (GetStandardDetailResponse)result.Standard;
 
-                if (response == null) return NotFound();
+                if (result.Standard == null) return NotFound();
 
-                return Ok(response);
+                return Ok((GetStandardDetailResponse)result.Standard);
             }
             catch (Exception e)
             {
