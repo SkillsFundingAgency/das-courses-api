@@ -20,9 +20,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             [Frozen] Mock<IStandardsService> mockStandardsService,
             GetStandardByIdQueryHandler handler)
         {
-            query.Id = "123";
+            query.Id = standardFromService.LarsCode.ToString();
             mockStandardsService
-                .Setup(service => service.GetLatestActiveStandard(query.Id))
+                .Setup(service => service.GetLatestActiveStandard(standardFromService.LarsCode))
                 .ReturnsAsync(standardFromService);
 
             var result = await handler.Handle(query, CancellationToken.None);
