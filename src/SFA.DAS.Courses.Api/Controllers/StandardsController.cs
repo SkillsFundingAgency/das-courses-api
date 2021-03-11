@@ -73,12 +73,12 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery { IFateReferenceNumber = iFateReferenceNumber });
 
+            if (queryResult.Standards.Any() == false) return NotFound();
+
             var response = new GetStandardVersionsListResponse
             {
                 Standards = queryResult.Standards.Select(standard => (GetStandardDetailResponse)standard)
             };
-
-            if (response == null) return NotFound();
 
             return Ok(response);
         }
