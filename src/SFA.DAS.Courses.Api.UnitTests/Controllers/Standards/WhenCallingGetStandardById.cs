@@ -53,22 +53,5 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
-
-        [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_InternalServerError(
-            string Id,
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] StandardsController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.Is<GetStandardByIdQuery>(x => x.Id == Id),
-                    It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
-
-            var controllerResult = await controller.Get(Id) as StatusCodeResult;
-
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
-        }
     }
 }
