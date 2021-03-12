@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -28,40 +28,26 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            try
-            {
-                var result = await _mediator.Send(new GetFrameworkQuery {FrameworkId = id});
+            var result = await _mediator.Send(new GetFrameworkQuery {FrameworkId = id});
 
-                var response = (GetFrameworkResponse)result.Framework;
+            if (result.Framework == null) return NotFound();
 
-                return Ok(response);
-            }
-            catch (InvalidOperationException e)
-            {
-                _logger.LogError(e, $"Framework not found {id}");
-                return NotFound();
-            }
+            var response = (GetFrameworkResponse)result.Framework;
+
+            return Ok(response);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetList()
         {
-            try
-            {
-                var queryResult = await _mediator.Send(new GetFrameworksQuery());
+            var queryResult = await _mediator.Send(new GetFrameworksQuery());
 
-                var response = new GetFrameworksResponse
-                {
-                    Frameworks = queryResult.Frameworks.Select(framework => (GetFrameworkResponse)framework),
-                };
-
-                return Ok(response);
-            }
-            catch (Exception e)
+            var response = new GetFrameworksResponse
             {
-                _logger.LogError(e, "Error attempting to get list of standards");
-                return BadRequest();
-            }
+                Frameworks = queryResult.Frameworks.Select(framework => (GetFrameworkResponse)framework),
+            };
+
+            return Ok(response);
         }
     }
 }
