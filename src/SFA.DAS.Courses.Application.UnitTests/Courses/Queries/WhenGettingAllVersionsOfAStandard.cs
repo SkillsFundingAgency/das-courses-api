@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             GetStandardsByIFateReferenceQuery query,
             List<Standard> standards,
             [Frozen] Mock<IStandardsService> mockStandardsService,
-            GetStandardsByIFateReferenceHandler handler)
+            GetStandardsByIFateReferenceQueryHandler handler)
         {
             mockStandardsService
                 .Setup(service => service.GetAllVersionsOfAStandard(query.IFateReferenceNumber))
