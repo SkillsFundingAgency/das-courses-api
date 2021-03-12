@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Api.AppStart
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                     if (contextFeature != null)
                     {
-                        logger.LogError(contextFeature.Error, $"Something went wrong");
+                        logger.LogError(contextFeature.Error, $"Unexpected error occurred");
                     }
                 });
             });
