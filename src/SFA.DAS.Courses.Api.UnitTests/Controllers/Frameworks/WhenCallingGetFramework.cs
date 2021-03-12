@@ -38,16 +38,18 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Frameworks
         }
 
         [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Not_Found(
+        public async Task And_No_Result_Then_Returns_Not_Found(
             string frameworkId,
+            GetFrameworkResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] FrameworksController controller)
         {
+            queryResult.Framework = null;
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.IsAny<GetFrameworkQuery>(),
                     It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
+                .ReturnsAsync(queryResult);
 
             var controllerResult = await controller.Get(frameworkId) as StatusCodeResult;
 

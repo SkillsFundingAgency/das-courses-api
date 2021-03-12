@@ -34,12 +34,6 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Frameworks
                 .Include(c=>c.FundingPeriods)
                 .SingleOrDefaultAsync(c=>c.Id.Equals(id));
-
-            if (framework == null)
-            {
-                throw new InvalidOperationException($"Framework with id {id} not found in repository");
-            }
-
             return framework;
         }
 
