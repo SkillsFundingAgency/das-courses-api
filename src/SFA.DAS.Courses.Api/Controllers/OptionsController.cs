@@ -29,25 +29,17 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetStandardOptionsList()
         {
-            try
+            var queryResult = await _mediator.Send(new GetStandardsListQuery
             {
-                var queryResult = await _mediator.Send(new GetStandardsListQuery
-                {
-                    Filter = StandardFilter.Active
-                });
+                Filter = StandardFilter.Active
+            });
 
-                var response = new GetStandardOptionsListResponse
-                {
-                    StandardOptions = queryResult.Standards.Select(standard => (GetStandardOptionsResponse)standard)
-                };
-
-                return Ok(response);
-            }
-            catch (Exception e)
+            var response = new GetStandardOptionsListResponse
             {
-                _logger.LogError(e, "Error attempting to get list of standards and options");
-                return BadRequest();
-            }
+                StandardOptions = queryResult.Standards.Select(standard => (GetStandardOptionsResponse)standard)
+            };
+
+            return Ok(response);
         }
     }
 }
