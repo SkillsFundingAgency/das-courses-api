@@ -27,18 +27,10 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("")]
         public async Task<IActionResult> Index()
         {
-            try
-            {
-                _logger.LogInformation("Data import request received");
-                await _mediator.Send(new ImportDataCommand());
-                _logger.LogInformation("Data import completed successfully");
-                return NoContent();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Data import failed");
-                return BadRequest();
-            }
+            _logger.LogInformation("Data import request received");
+            await _mediator.Send(new ImportDataCommand());
+            _logger.LogInformation("Data import completed successfully");
+            return NoContent();
         }
     }
 }

@@ -27,21 +27,5 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
             Assert.IsNotNull(controllerResult);
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.NoContent);
         }
-
-        [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Bad_Request(
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] DataLoadController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.IsAny<ImportDataCommand>(),
-                    It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
-
-            var controllerResult = await controller.Index() as StatusCodeResult;
-
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        }
     }
 }
