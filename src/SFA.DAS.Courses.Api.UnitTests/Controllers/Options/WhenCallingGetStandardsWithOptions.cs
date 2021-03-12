@@ -46,19 +46,5 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Options
                 Options = standard.Options
             }).ToList());
         }
-
-        [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Bad_Request([Frozen] Mock<IMediator> mockMediator, [Greedy] OptionsController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.IsAny<GetStandardsListQuery>(),
-                    It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
-
-            var controllerResult = await controller.GetStandardOptionsList() as StatusCodeResult;
-
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        }
     }
 }
