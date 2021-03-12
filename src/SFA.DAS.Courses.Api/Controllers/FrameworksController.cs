@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetFramework;
 using SFA.DAS.Courses.Application.Courses.Queries.GetFrameworks;
@@ -16,12 +14,10 @@ namespace SFA.DAS.Courses.Api.Controllers
     public class FrameworksController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<FrameworksController> _logger;
 
-        public FrameworksController (IMediator mediator, ILogger<FrameworksController> logger)
+        public FrameworksController (IMediator mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
             
         [HttpGet]

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetSectors;
 
@@ -13,12 +12,10 @@ namespace SFA.DAS.Courses.Api.Controllers
     [Route("api/courses/[controller]/")]
     public class SectorsController : ControllerBase
     {
-        private readonly ILogger<SectorsController> _logger;
         private readonly IMediator _mediator;
 
-        public SectorsController(ILogger<SectorsController> logger, IMediator mediator)
+        public SectorsController(IMediator mediator)
         {
-            _logger = logger;
             _mediator = mediator;
         }
 

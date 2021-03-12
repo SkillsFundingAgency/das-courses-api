@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetLevels;
 
@@ -14,14 +12,10 @@ namespace SFA.DAS.Courses.Api.Controllers
     [Route("api/courses/[controller]")]
     public class LevelsController : ControllerBase
     {
-        private readonly ILogger<LevelsController> _logger;
         private readonly IMediator _mediator;
 
-        public LevelsController(
-            ILogger<LevelsController> logger,
-            IMediator mediator)
+        public LevelsController(IMediator mediator)
         {
-            _logger = logger;
             _mediator = mediator;
         }
 

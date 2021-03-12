@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetRoutes;
 
@@ -14,12 +13,10 @@ namespace SFA.DAS.Courses.Api.Controllers
     public class RoutesController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<RoutesController> _logger;
 
-        public RoutesController (IMediator mediator, ILogger<RoutesController> logger)
+        public RoutesController (IMediator mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
         
         [HttpGet]

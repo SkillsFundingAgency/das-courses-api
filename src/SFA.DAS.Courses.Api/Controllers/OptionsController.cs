@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Domain.Search;
@@ -16,12 +13,10 @@ namespace SFA.DAS.Courses.Api.Controllers
     [Route("api/courses/standards/[controller]/")]
     public class OptionsController : ControllerBase
     {
-        private readonly ILogger<OptionsController> _logger;
         private readonly IMediator _mediator;
 
-        public OptionsController(ILogger<OptionsController> logger, IMediator mediator)
+        public OptionsController(IMediator mediator)
         {
-            _logger = logger;
             _mediator = mediator;
         }
 

@@ -18,13 +18,10 @@ namespace SFA.DAS.Courses.Api.Controllers
     [Route("api/courses/[controller]/")]
     public class StandardsController : ControllerBase
     {
-        private readonly ILogger<StandardsController> _logger;
         private readonly IMediator _mediator;
 
-        public StandardsController(ILogger<StandardsController> logger,
-            IMediator mediator)
+        public StandardsController(IMediator mediator)
         {
-            _logger = logger;
             _mediator = mediator;
         }
 
