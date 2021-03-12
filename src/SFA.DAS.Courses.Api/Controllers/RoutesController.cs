@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,22 +26,14 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetList()
         {
-            try
-            {
-                var queryResult = await _mediator.Send(new GetRoutesQuery());
+            var queryResult = await _mediator.Send(new GetRoutesQuery());
                 
-                var response = new GetRoutesListResponse
-                {
-                    Routes = queryResult.Routes.Select(c=>(GetRouteResponse)c)
-                };
-                
-                return Ok(response);
-            }
-            catch (Exception e)
+            var response = new GetRoutesListResponse
             {
-                _logger.LogError(e, "Error attempting to get list of routes");
-                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
-            }
+                Routes = queryResult.Routes.Select(c=>(GetRouteResponse)c)
+            };
+                
+            return Ok(response);
         }
     }
 }
