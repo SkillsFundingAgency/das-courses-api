@@ -29,23 +29,14 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetList()
         {
-            try
-            {
-                var queryResult = await _mediator.Send(new GetLevelsListQuery());
+            var queryResult = await _mediator.Send(new GetLevelsListQuery());
 
-                var response = new GetLevelsListResponse
-                {
-                    Levels = queryResult.Levels.Select(level => (GetLevelResponse)level)
-                };
-
-                return Ok(response);
-            }
-            catch (Exception e)
+            var response = new GetLevelsListResponse
             {
-                _logger.LogError(e, "Error attempting to get list of levels");
-                return BadRequest();
-            }
+                Levels = queryResult.Levels.Select(level => (GetLevelResponse)level)
+            };
+
+            return Ok(response);
         }
-
     }
 }

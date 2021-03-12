@@ -35,21 +35,5 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Levels
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             model.Levels.Should().BeEquivalentTo(queryResult.Levels);
         }
-
-        [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Bad_Request(
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] LevelsController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.IsAny<GetLevelsListQuery>(), 
-                    It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
-
-            var controllerResult = await controller.GetList() as StatusCodeResult;
-
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        }
     }
 }
