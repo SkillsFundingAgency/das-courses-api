@@ -35,21 +35,5 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Routes
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             model.Routes.Should().BeEquivalentTo(queryResult.Routes);
         }
-
-        [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Internal_Server_Error(
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] RoutesController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.IsAny<GetRoutesQuery>(),
-                    It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
-
-            var controllerResult = await controller.GetList() as StatusCodeResult;
-
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
-        }
     }
 }
