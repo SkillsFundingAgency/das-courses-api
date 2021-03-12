@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -34,22 +33,6 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Sectors
             var model = controllerResult.Value as GetSectorsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             model.Sectors.Should().BeEquivalentTo(queryResult.Sectors);
-        }
-
-        [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Bad_Request(
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] SectorsController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.IsAny<GetSectorsListQuery>(),
-                    It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
-
-            var controllerResult = await controller.GetList() as StatusCodeResult;
-
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         }
     }
 }
