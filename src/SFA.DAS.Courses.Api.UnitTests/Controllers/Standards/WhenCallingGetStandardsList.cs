@@ -50,25 +50,5 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             model.Total.Should().Be(queryResult.Total);
             model.TotalFiltered.Should().Be(queryResult.TotalFiltered);
         }
-
-        [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Bad_Request(
-            List<Guid> routeIds,
-            List<int> levels,
-            string keyword,
-            OrderBy orderBy,
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] StandardsController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.IsAny<GetStandardsListQuery>(),
-                    It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
-
-            var controllerResult = await controller.GetList(keyword, routeIds, levels, orderBy) as StatusCodeResult;
-
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        }
     }
 }

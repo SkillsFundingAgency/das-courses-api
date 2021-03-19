@@ -2,8 +2,8 @@
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
 {
-    public class GetStandardByStandardUIdResult
+    public class GetStandardByIdResult
     {
-        public Standard Standard { get; set; }
+        public Standard Standard { get ; set ; }
     }
 }

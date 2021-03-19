@@ -20,13 +20,13 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public string Status { get; set; }
 
         [JsonProperty("earliestStartDate")]
-        public DateTime? EarliestStartDate { get; set; }
+        public DateTime? VersionEarliestStartDate { get; set; }
 
         [JsonProperty("latestStartDate")]
-        public DateTime? LatestStartDate { get; set; }
+        public DateTime? VersionLatestStartDate { get; set; }
 
         [JsonProperty("latestEndDate")]
-        public DateTime? LatestEndDate { get; set; }
+        public DateTime? VersionLatestEndDate { get; set; }
 
         [JsonProperty("overviewOfRole")]
         public string OverviewOfRole { get; set; }
@@ -35,10 +35,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public int Level { get; set; }
 
         [JsonProperty("typicalDuration")]
-        public int TypicalDuration { get; set; }
+        public int ProposedTypicalDuration { get; set; }
 
         [JsonProperty("maxFunding")]
-        public int MaxFunding { get; set; }
+        public int ProposedMaxFunding { get; set; }
 
         [JsonProperty("route")]
         public string Route { get; set; }

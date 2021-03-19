@@ -7,13 +7,13 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
 {
-    public class GetStandardsByIFateReferenceHandler : IRequestHandler<GetStandardsByIFateReferenceQuery, GetStandardsByIFateReferenceResult>
+    public class GetStandardsByIFateReferenceQueryHandler : IRequestHandler<GetStandardsByIFateReferenceQuery, GetStandardsByIFateReferenceResult>
     {
-        private readonly ILogger<GetStandardsByIFateReferenceHandler> _logger;
+        private readonly ILogger<GetStandardsByIFateReferenceQueryHandler> _logger;
         private readonly IStandardsService _standardsService;
 
-        public GetStandardsByIFateReferenceHandler(
-            ILogger<GetStandardsByIFateReferenceHandler> logger,
+        public GetStandardsByIFateReferenceQueryHandler(
+            ILogger<GetStandardsByIFateReferenceQueryHandler> logger,
             IStandardsService standardsService)
         {
             _logger = logger;

@@ -37,22 +37,5 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             model.Standards.Should().BeEquivalentTo(queryResult.Standards, StandardToGetStandardResponseOptions.Exclusions);
         }
-
-        [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Bad_Request(
-            string iFateReferenceNumber,
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] StandardsController controller)
-        {
-            mockMediator
-                .Setup(mediator => mediator.Send(
-                    It.IsAny<GetStandardsByIFateReferenceQuery>(),
-                    It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
-
-            var controllerResult = await controller.GetStandardsByIFateReferenceNumber(iFateReferenceNumber) as StatusCodeResult;
-
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        }
     }
 }

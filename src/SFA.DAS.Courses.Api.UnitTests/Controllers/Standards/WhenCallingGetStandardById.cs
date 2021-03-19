@@ -15,41 +15,41 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 {
-    public partial class WhenCallingGetStandard
+    public class WhenCallingGetStandardById
     {
         [Test, MoqAutoData]
-        public async Task Then_Gets_Standard_From_Mediator(
-            int larsCode,
-            GetStandardResult queryResult,
+        public async Task Then_Gets_Standard_From_Mediator_With_Id(
+            string Id,
+            GetStandardByIdResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
-                    It.IsAny<GetStandardQuery>(),
+                    It.Is<GetStandardByIdQuery>(x => x.Id == Id),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            var controllerResult = await controller.Get(larsCode) as ObjectResult;
+            var controllerResult = await controller.Get(Id) as ObjectResult;
 
-            var model = controllerResult.Value as GetStandardResponse;
+            var model = controllerResult.Value as GetStandardDetailResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             model.Should().BeEquivalentTo(queryResult.Standard, StandardToGetStandardResponseOptions.Exclusions);
         }
 
         [Test, MoqAutoData]
-        public async Task And_Exception_Then_Returns_Not_Found(
-            int larsCode,
+        public async Task And_No_Standard_Found_Then_Returns_Not_Found(
+            string Id,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
-                    It.IsAny<GetStandardQuery>(),
+                    It.Is<GetStandardByIdQuery>(x => x.Id == Id),
                     It.IsAny<CancellationToken>()))
-                .Throws<InvalidOperationException>();
+                .ReturnsAsync(new GetStandardByIdResult { Standard = null });
 
-            var controllerResult = await controller.Get(larsCode) as StatusCodeResult;
+            var controllerResult = await controller.Get(Id) as StatusCodeResult;
 
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }

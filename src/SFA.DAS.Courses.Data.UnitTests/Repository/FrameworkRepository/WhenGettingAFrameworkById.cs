@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,16 +47,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkRepository
             //Assert
             Assert.IsNotNull(standards);
             standards.Should().BeEquivalentTo(_frameworks.SingleOrDefault(c=>c.Id.Equals(ExpectedFrameworkId)));
-        }
-        
-        [Test]
-        public void Then_An_Entity_Not_Found_Exception_Is_Thrown()
-        {
-            //Arrange
-            _coursesDataContext.Setup(x => x.Frameworks).ReturnsDbSet(new List<Framework>());
-            
-            //Act Assert
-            Assert.ThrowsAsync<InvalidOperationException>(() => _frameworkRepository.Get(ExpectedFrameworkId));
         }
     }
 }

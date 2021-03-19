@@ -56,9 +56,16 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             return count;
         }
 
-        public async Task<Standard> GetStandard(int larsCode)
+        public async Task<Standard> GetLatestActiveStandard(int larsCode)
         {
-            var standard = await _standardsRepository.Get(larsCode);
+            var standard = await _standardsRepository.GetLatestActiveStandard(larsCode);
+
+            return (Standard)standard;
+        }
+
+        public async Task<Standard> GetLatestActiveStandard(string ifateReferenceNumber)
+        {
+            var standard = await _standardsRepository.GetLatestActiveStandard(ifateReferenceNumber);
 
             return (Standard)standard;
         }

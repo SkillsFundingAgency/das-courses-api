@@ -17,7 +17,6 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string Keywords { get; set; }
         public string Route { get; set; }
         public string TypicalJobTitles { get; set; }
-        public string CoreSkillsCount { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Knowledge { get; set; }
         public List<string> Behaviours { get; set; }
@@ -45,6 +44,8 @@ namespace SFA.DAS.Courses.Domain.Courses
 
         public static explicit operator Standard(Entities.Standard source)
         {
+            if (source == null) return null;
+
             return new Standard
             {
                 StandardUId = source.StandardUId,

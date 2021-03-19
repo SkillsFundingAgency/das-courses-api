@@ -110,8 +110,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 1,
-                    StandardUId = "ST001_1.3",
-                    IfateReferenceNumber = "ST001",
+                    StandardUId = "ST0001_1.3",
+                    IfateReferenceNumber = "ST0001",
                     Title = "Head Brewer",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -126,13 +126,18 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.3m
+                    Version = 1.3m,
+                    Options = new List<string>
+                    {
+                        "Beer",
+                        "Cider"
+                    }
                 },
                 new Standard
                 {
                     LarsCode = 2,
-                    StandardUId = "ST002_1.0",
-                    IfateReferenceNumber = "ST002",
+                    StandardUId = "ST0002_1.0",
+                    IfateReferenceNumber = "ST0002",
                     Title = "Brewer",
                     Keywords = "Brewer, Beer",
                     TypicalJobTitles = "Brewery operations",
@@ -152,8 +157,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 3,
-                    StandardUId = "ST003_1.0",
-                    IfateReferenceNumber = "ST003",
+                    StandardUId = "ST0003_1.0",
+                    IfateReferenceNumber = "ST0003",
                     Title = "Senior / head of facilities management (degree)",
                     Keywords = "Head",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -173,8 +178,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 4,
-                    StandardUId = "ST004_1.0",
-                    IfateReferenceNumber = "ST004",
+                    StandardUId = "ST0004_1.0",
+                    IfateReferenceNumber = "ST0004",
                     Title = "Dentist",
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
@@ -194,8 +199,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 5,
-                    StandardUId = "ST005_1.1",
-                    IfateReferenceNumber = "ST005",
+                    StandardUId = "ST0005_1.1",
+                    IfateReferenceNumber = "ST0005",
                     Title = "Photographic assistant SortOrder",
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
@@ -215,8 +220,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 6,
-                    StandardUId = "ST006_1.0",
-                    IfateReferenceNumber = "ST006",
+                    StandardUId = "ST0006_1.0",
+                    IfateReferenceNumber = "ST0006",
                     Title = "Camera prep technician",
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
@@ -236,8 +241,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 7,
-                    StandardUId = "ST007_1.0",
-                    IfateReferenceNumber = "ST007",
+                    StandardUId = "ST0007_1.0",
+                    IfateReferenceNumber = "ST0007",
                     Title = "Junior animator SortOrder",
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Junior animator|SortOrder",
@@ -266,8 +271,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 11,
-                    StandardUId = "ST011_1.0",
-                    IfateReferenceNumber = "ST011",
+                    StandardUId = "ST0011_1.0",
+                    IfateReferenceNumber = "ST0011",
                     Title = "Structural Engineer - invalid",
                     Keywords = "building, structural, engineer",
                     TypicalJobTitles = "Structural Engineer",
@@ -286,8 +291,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 14,
-                    StandardUId = "ST014_1.0",
-                    IfateReferenceNumber = "ST014",
+                    StandardUId = "ST0014_1.0",
+                    IfateReferenceNumber = "ST0014",
                     Title = "Dentist - invalid",
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
@@ -301,7 +306,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Cosmetic",
+                        "Orthodontist"
+                    }
                 }
             };
         }
@@ -315,8 +325,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 0,
-                    StandardUId = "ST015_1.0",
-                    IfateReferenceNumber = "ST015",
+                    StandardUId = "ST0015_1.0",
+                    IfateReferenceNumber = "ST0015",
                     Title = "Assistant Brewer - Proposal in development",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Assistant of brewery operations",
@@ -330,8 +340,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                  new Standard
                 {
                     LarsCode = 0,
-                    StandardUId = "ST016_1.0",
-                    IfateReferenceNumber = "ST016",
+                    StandardUId = "ST0016_1.0",
+                    IfateReferenceNumber = "ST0016",
                     Title = "Metallurgy Engineer - In development",
                     Keywords = "Metallurgy, Engineer, Metal",
                     TypicalJobTitles = "Metallurgy Engineer",
@@ -340,7 +350,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "In development",
-                    Version = 1.0m
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Ferrous",
+                        "Non-ferroes"
+                    }
                 }
             };
         }
@@ -354,8 +369,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 0,
-                    StandardUId = "ST030_1.0",
-                    IfateReferenceNumber = "ST030",
+                    StandardUId = "ST0030_1.0",
+                    IfateReferenceNumber = "ST0030",
                     Title = "Assistant Brewer - Withdrawn",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Assistant of brewery operations",
@@ -364,7 +379,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Withdrawn",
-                    Version = 1.0m
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Wine",
+                        "Spirits"
+                    }
                 }
             };
         }
@@ -377,8 +397,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 1,
-                    StandardUId = "ST001_1.2",
-                    IfateReferenceNumber = "ST001",
+                    StandardUId = "ST0001_1.2",
+                    IfateReferenceNumber = "ST0001",
                     Title = "Head Brewer",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -386,13 +406,18 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     Status = "Retired",
-                    Version = 1.2m
+                    Version = 1.2m,
+                    Options = new List<string>
+                    {
+                        "Beer",
+                        "Cider"
+                    }
                 },
                 new Standard
                 {
                     LarsCode = 1,
-                    StandardUId = "ST001_1.1",
-                    IfateReferenceNumber = "ST001",
+                    StandardUId = "ST0001_1.1",
+                    IfateReferenceNumber = "ST0001",
                     Title = "Head Brewer",
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
@@ -405,8 +430,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Standard
                 {
                     LarsCode = 5,
-                    StandardUId = "ST005_1.0",
-                    IfateReferenceNumber = "ST005",
+                    StandardUId = "ST0005_1.0",
+                    IfateReferenceNumber = "ST0005",
                     Title = "Photographic assistant SortOrder",
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
@@ -414,7 +439,30 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteId = sectors[2].Id,
                     RouteCode = routes[2].Id,
                     Status = "Retired",
-                    Version = 1.0m
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Studio",
+                        "Landscape"
+                    }
+                },
+                new Standard
+                {
+                    LarsCode = 99,
+                    StandardUId = "ST0099_1.0",
+                    IfateReferenceNumber = "ST0099",
+                    Title = "Photographic assistant",
+                    Keywords = null,
+                    TypicalJobTitles = "Assistant Photographer|Photographic Technician",
+                    Level = 3,
+                    RouteId = sectors[2].Id,
+                    Status = "Retired",
+                    Version = 1.0m,
+                    Options = new List<string>
+                    {
+                        "Studio",
+                        "Landscape"
+                    }
                 }
             };
         }
