@@ -30,7 +30,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
 
-            standard.Route.Should().Be(standardFromRepo.Sector.Route);
+            standard.Route.Should().Be(standardFromRepo.Route.Name);
             standard.EqaProvider.Should().BeEquivalentTo(expectedEqaProvider);
             standard.VersionDetail.Should().BeEquivalentTo(expectedVersionDetail);
         }

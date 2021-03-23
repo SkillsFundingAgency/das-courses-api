@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
             
-            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.ActiveAvailable);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable);
             
             Assert.IsNotNull(actualStandards);
             actualStandards.Should().BeEquivalentTo(activeValidStandards);
@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.Active);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active);
             
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -103,7 +103,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.Active);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active);
 
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -134,7 +134,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.NotYetApproved);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.NotYetApproved);
 
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -162,7 +162,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetStandards(new List<Guid>(), new List<int>(), StandardFilter.None);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.None);
 
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -195,7 +195,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             //Act
             var actual = await repository.GetStandards(
-                new List<Guid> { activeValidStandards[0].RouteId },
+                new List<int> { activeValidStandards[0].RouteCode },
                 new List<int>(),
                 StandardFilter.ActiveAvailable);
 
@@ -226,7 +226,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             //Act
             var actual = await repository.GetStandards(
-                new List<Guid> { activeInvalidStandards[0].RouteId },
+                new List<int> { activeInvalidStandards[0].RouteCode },
                 new List<int>(),
                 StandardFilter.ActiveAvailable);
 
@@ -256,7 +256,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .ReturnsDbSet(allStandards);
 
             var actual = await repository.GetStandards(
-                new List<Guid>(),
+                new List<int>(),
                 new List<int> { activeValidStandards[0].Level },
                 StandardFilter.ActiveAvailable);
 
@@ -285,7 +285,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .ReturnsDbSet(allStandards);
 
             var actual = await repository.GetStandards(
-                new List<Guid>(),
+                new List<int>(),
                 new List<int> { activeValidStandards[0].Level },
                 StandardFilter.Active);
 

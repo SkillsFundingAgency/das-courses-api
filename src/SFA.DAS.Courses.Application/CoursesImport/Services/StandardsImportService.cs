@@ -14,8 +14,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly IStandardImportRepository _standardImportRepository;
         private readonly IStandardRepository _standardRepository;
         private readonly IImportAuditRepository _auditRepository;
-        private readonly ISectorRepository _sectorRepository;
-        private readonly ISectorImportRepository _sectorImportRepository;
         private readonly IRouteRepository _routeRepository;
         private readonly IRouteImportRepository _routeImportRepository;
         private readonly ILogger<StandardsImportService> _logger;
@@ -25,8 +23,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             IStandardImportRepository standardImportRepository, 
             IStandardRepository standardRepository,
             IImportAuditRepository auditRepository,
-            ISectorRepository sectorRepository,
-            ISectorImportRepository sectorImportRepository,
             IRouteRepository routeRepository,
             IRouteImportRepository routeImportRepository,
             ILogger<StandardsImportService> logger)
@@ -35,8 +31,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _standardImportRepository = standardImportRepository;
             _standardRepository = standardRepository;
             _auditRepository = auditRepository;
-            _sectorRepository = sectorRepository;
-            _sectorImportRepository = sectorImportRepository;
             _routeRepository = routeRepository;
             _routeImportRepository = routeImportRepository;
             _logger = logger;
@@ -52,13 +46,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 _logger.LogInformation($"Standards import - Retrieved {standards.Count} standards from API");
 
-                var sectors = GetDistinctSectorsFromStandards(standards);
                 var routes = GetDistinctRoutesFromStandards(standards);
 
-                await LoadSectorsInStaging(sectors);
                 await LoadRoutesInStaging(routes);
 
-                UpdateStandardsWithRespectiveSectorId(standards, sectors, routes);
+                UpdateStandardsWithRespectiveSectorId(standards, routes);
 
                 var standardsImport = standards
                     .Select(c => (StandardImport)c)
@@ -80,7 +72,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             try
             {
-                var sectorsToImport = await _sectorImportRepository.GetAll();
                 var routesToImport = await _routeImportRepository.GetAll();
                 var standardsToInsert = (await _standardImportRepository.GetAll()).ToList();
 
@@ -93,11 +84,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 _standardRepository.DeleteAll();
                 _routeRepository.DeleteAll();
-                _sectorRepository.DeleteAll();
-
+                
                 _logger.LogInformation($"Standards import - Adding {standardsToInsert.Count} to Standards table.");
 
-                await _sectorRepository.InsertMany(sectorsToImport.Select(c => (Sector)c).ToList());
                 await _routeRepository.InsertMany(routesToImport.Select(c => (Route) c).ToList());
 
                 var standards = standardsToInsert.Select(c => (Standard)c).ToList();
@@ -114,38 +103,20 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         }
 
         private static void UpdateStandardsWithRespectiveSectorId( IEnumerable<Domain.ImportTypes.Standard> standards,
-            IList<SectorImport> sectors, List<RouteImport> routes)
+             List<RouteImport> routes)
         {
             foreach (var standard in standards)
             {
-                standard.RouteId = sectors.Single(c => c.Route.Equals(standard.Route)).Id;
                 standard.RouteCode = routes.Single(c => c.Name.Equals(standard.Route)).Id;
             }
         }
 
-        private async Task LoadSectorsInStaging(IEnumerable<SectorImport> sectors)
-        {
-            _sectorImportRepository.DeleteAll();
-            await _sectorImportRepository.InsertMany(sectors);
-        }
         private async Task LoadRoutesInStaging(List<RouteImport> routes)
         {
             _routeImportRepository.DeleteAll();
             await _routeImportRepository.InsertMany(routes);
         }
 
-        private static List<SectorImport> GetDistinctSectorsFromStandards(IEnumerable<Domain.ImportTypes.Standard> standards)
-        {
-            return standards
-                .Select(c => c.Route)
-                .Distinct()
-                .Select(c => new SectorImport
-                {
-                    Id = Guid.NewGuid(),
-                    Route = c
-                })
-                .ToList();
-        }
         private static List<RouteImport> GetDistinctRoutesFromStandards(List<Domain.ImportTypes.Standard> standards)
         {
             var routeId = 1;

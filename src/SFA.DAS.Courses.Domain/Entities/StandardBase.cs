@@ -18,9 +18,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public int ProposedMaxFunding { get; set; }
         public decimal Version { get; set; }
         public string OverviewOfRole { get; set; }
-        public virtual Sector Sector {get; set; }
         public virtual Route Route { get ; set ; }
-        public Guid RouteId { get; set; }
         public int RouteCode { get; set; }
         public string AssessmentPlanUrl { get; set; }
         public string Keywords { get; set; }

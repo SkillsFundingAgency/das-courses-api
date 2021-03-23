@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 Version = source.Version,
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
-                Route = source.Sector.Route,
+                Route = source.Route.Name,
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
                 TrailBlazerContact = source.TrailBlazerContact,
                 EqaProvider = (EqaProvider)source,

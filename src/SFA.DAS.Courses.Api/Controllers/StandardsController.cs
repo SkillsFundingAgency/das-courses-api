@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetList(
             [FromQuery] string keyword,
-            [FromQuery] IList<Guid> routeIds,
+            [FromQuery] IList<int> routeIds,
             [FromQuery] IList<int> levels,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
             [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)

@@ -22,7 +22,6 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IStandardsImportService, StandardsImportService>();
             services.AddTransient<IStandardsService, StandardsService>();
             services.AddTransient<IStandardsSortOrderService, StandardsSortOrderService>();
-            services.AddTransient<ISectorService, SectorService>();
             services.AddTransient<ILarsPageParser, LarsPageParser>();
             services.AddTransient<ILevelsService, LevelsService>();
             services.AddHttpClient<IDataDownloadService, DataDownloadService>();
@@ -42,8 +41,6 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IStandardImportRepository, StandardImportRepository>();
             services.AddTransient<IStandardRepository, StandardRepository>();
             services.AddTransient<IImportAuditRepository, ImportAuditRepository>();
-            services.AddTransient<ISectorRepository, SectorRepository>();
-            services.AddTransient<ISectorImportRepository, SectorImportRepository>();
             services.AddTransient<IApprenticeshipFundingImportRepository, ApprenticeshipFundingImportRepository>();
             services.AddTransient<IApprenticeshipFundingRepository, ApprenticeshipFundingRepository>();
             services.AddTransient<ILarsStandardImportRepository, LarsStandardImportRepository>();

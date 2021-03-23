@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_Standards_List_From_Mediator(
-            List<Guid> routeIds,
+            List<int> routeIds,
             List<int> levels,
             string keyword,
             OrderBy orderBy,

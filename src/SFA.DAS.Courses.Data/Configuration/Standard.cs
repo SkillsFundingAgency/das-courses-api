@@ -20,7 +20,6 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.Level).HasColumnName("Level").HasColumnType("int").IsRequired();
             builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("decimal");
             builder.Property(x => x.OverviewOfRole).HasColumnName("OverviewOfRole").IsRequired();
-            builder.Property(x => x.RouteId).HasColumnName("RouteId").HasColumnType("uniqueidentifier").IsRequired();
             builder.Property(x => x.RouteCode).HasColumnName("RouteCode").HasColumnType("int").IsRequired();
             builder.Property(x => x.TypicalJobTitles).HasColumnName("TypicalJobTitles");
             builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
@@ -33,11 +32,6 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.IntegratedApprenticeship).HasColumnName("IntegratedApprenticeship").HasColumnType("bit").IsRequired();
             builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
             builder.Property(x => x.Options).HasJsonConversion();
-
-            builder.HasOne(c => c.Sector)
-                .WithMany(c => c.Standards)
-                .HasPrincipalKey(c => c.Id)
-                .HasForeignKey(c => c.RouteId).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.HasOne(c => c.Route)
                 .WithMany(c => c.Standards)
