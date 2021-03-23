@@ -44,7 +44,10 @@ namespace SFA.DAS.Courses.Domain.Courses
 
         public static explicit operator Standard(Entities.Standard source)
         {
-            if (source == null) return null;
+            if (source == null)
+            {
+                return null;
+            }
 
             return new Standard
             {

@@ -16,16 +16,12 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
         }
         public async Task<GetStandardByIdResult> Handle(GetStandardByIdQuery request, CancellationToken cancellationToken)
         {
-            // Id can be Lars Code which is int
-            // Ifate Reference Number which length is 6 -> ST0001
-            // Otherwise should be StandardUId -> ST0001_1.1
-            // If Lars Code or IFateRef -> Will return latest active version
             Standard standard;
-            if (int.TryParse(request.Id, out var larsCode))
+            if (IsLarsCode(request, out var larsCode))
             {
                 standard = await _standardsService.GetLatestActiveStandard(larsCode);
             }
-            else if (request.Id.Length == 6)
+            else if (IsIfateReference(request))
             {
                 standard = await _standardsService.GetLatestActiveStandard(request.Id);
             }
@@ -35,6 +31,16 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
             }
 
             return new GetStandardByIdResult { Standard = standard };
+        }
+
+        private static bool IsIfateReference(GetStandardByIdQuery request)
+        {
+            return request.Id.Length == 6;
+        }
+
+        private static bool IsLarsCode(GetStandardByIdQuery request, out int larsCode)
+        {
+            return int.TryParse(request.Id, out larsCode);
         }
     }
 }
