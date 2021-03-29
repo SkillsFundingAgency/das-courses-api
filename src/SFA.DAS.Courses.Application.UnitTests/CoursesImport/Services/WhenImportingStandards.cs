@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Staging_Tables_Are_Emptied(
             [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<ISectorImportRepository> importSectorRepository,
+            [Frozen] Mock<IRouteImportRepository> importRouteRepository,
             StandardsImportService standardsImportService)
         {
             //Act
@@ -37,33 +37,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             
             //Assert
             importRepository.Verify(x=>x.DeleteAll(), Times.Once);
-            importSectorRepository.Verify(x=>x.DeleteAll(), Times.Once);
+            importRouteRepository.Verify(x=>x.DeleteAll(), Times.Once);
         }
 
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_The_Distinct_Sectors_Are_Loaded_Into_The_Import_Table(
-            [Frozen] Mock<ISectorImportRepository> sectorImportRepository,
-            [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
-            List<SFA.DAS.Courses.Domain.ImportTypes.Standard> standardsImport,
-            StandardsImportService standardsImportService)
-        {
-            //Arrange
-            standardsImport.ForEach(c=>
-            {
-                c.Status = "Approved for Delivery";
-                c.LarsCode = 10;
-            });
-            var sectors = standardsImport.Select(s=>s.Route).Distinct().ToList();
-            service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
-
-            //Act
-            await standardsImportService.ImportDataIntoStaging();
-
-            //Assert
-            sectorImportRepository.Verify(x => x.InsertMany(It.Is<List<SectorImport>>(c => c.Count.Equals(sectors.Count()))), Times.Once);
-            importRepository.Verify(x=>x.InsertMany(It.Is<List<StandardImport>>(std=>std.TrueForAll(c=>c.RouteId != Guid.Empty))));
-        }
         
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Distinct_Routes_Are_Loaded_Into_The_Import_Table(

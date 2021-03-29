@@ -89,13 +89,13 @@ namespace SFA.DAS.Courses.Data.Repository
             return standard;
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards(IList<Guid> routeIds, IList<int> levels, StandardFilter filter)
+        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter)
         {
             var standards = GetBaseStandardQuery().FilterStandards(filter);
 
             if (routeIds.Count > 0)
             {
-                standards = standards.Where(standard => routeIds.Contains(standard.RouteId));
+                standards = standards.Where(standard => routeIds.Contains(standard.RouteCode));
             }
             if (levels.Count > 0)
             {
@@ -122,7 +122,7 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             return _coursesDataContext
                 .Standards
-                .Include(c => c.Sector)
+                .Include(c => c.Route)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
                 .ThenInclude(c => c.SectorSubjectArea);

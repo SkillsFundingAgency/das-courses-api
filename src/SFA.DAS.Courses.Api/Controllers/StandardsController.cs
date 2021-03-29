@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("")]
         public async Task<IActionResult> GetList(
             [FromQuery] string keyword,
-            [FromQuery] IList<Guid> routeIds,
+            [FromQuery] IList<int> routeIds,
             [FromQuery] IList<int> levels,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
             [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
@@ -59,7 +59,10 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             var result = await _mediator.Send(new GetStandardByIdQuery { Id = id });
 
-            if (result.Standard == null) return NotFound();
+            if (result.Standard == null)
+            {
+                return NotFound();
+            }
 
             return Ok((GetStandardDetailResponse)result.Standard);
         }
@@ -68,9 +71,15 @@ namespace SFA.DAS.Courses.Api.Controllers
         [Route("versions/{iFateReferenceNumber}")]
         public async Task<IActionResult> GetStandardsByIFateReferenceNumber(string iFateReferenceNumber)
         {
-            var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery { IFateReferenceNumber = iFateReferenceNumber });
+            var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery
+            {
+                IFateReferenceNumber = iFateReferenceNumber
+            });
 
-            if (queryResult.Standards.Any() == false) return NotFound();
+            if (queryResult.Standards.Any() == false)
+            {
+                return NotFound();
+            }
 
             var response = new GetStandardVersionsListResponse
             {

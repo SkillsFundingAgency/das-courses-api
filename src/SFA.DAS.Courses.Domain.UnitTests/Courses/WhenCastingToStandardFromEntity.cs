@@ -15,8 +15,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.Should().BeEquivalentTo(source,options=>options
                 .Excluding(c => c.ApprenticeshipFunding)
                 .Excluding(c => c.LarsStandard)
-                .Excluding(c => c.RouteId)
-                .Excluding(c => c.Sector)
                 .Excluding(c => c.Route)
                 .Excluding(c => c.RouteCode)
                 .Excluding(c => c.SearchScore)
@@ -34,7 +32,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.EqaProviderWebLink)
             );
 
-            response.Route.Should().Be(source.Sector.Route);
+            response.Route.Should().Be(source.Route.Name);
             response.ApprenticeshipFunding.Should().NotBeNull();
             response.StandardDates.Should().NotBeNull();
             response.VersionDetail.Should().NotBeNull();

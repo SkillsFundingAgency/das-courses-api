@@ -55,11 +55,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
         {
             var standards = new List<Standard>();
             query.Levels = new List<int>();
-            query.RouteIds = new List<Guid>();
+            query.RouteIds = new List<int>();
             mockStandardsService
                 .Setup(service => service.GetStandardsList(
                     query.Keyword, 
-                    It.Is<List<Guid>>(c=>c.Count == 0),
+                    It.Is<List<int>>(c=>c.Count == 0),
                     It.Is<List<int>>(c=>c.Count == 0),
                     query.OrderBy,
                     query.Filter))

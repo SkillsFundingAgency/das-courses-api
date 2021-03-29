@@ -8,7 +8,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
     public class GetStandardsListQuery : IRequest<GetStandardsListResult>
     {
         public string Keyword { get; set; }
-        public IList<Guid> RouteIds { get; set; } = new List<Guid>();
+        public IList<int> RouteIds { get; set; } = new List<int>();
         public IList<int> Levels { get; set; } = new List<int>();
         public OrderBy OrderBy { get; set; }
         public StandardFilter Filter { get; set; }

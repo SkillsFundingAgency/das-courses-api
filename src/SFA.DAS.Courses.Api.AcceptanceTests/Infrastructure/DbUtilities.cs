@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Entities;
-using Sector = SFA.DAS.Courses.Domain.Entities.Sector;
 using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
 using LarsStandard = SFA.DAS.Courses.Domain.Entities.LarsStandard;
 using Framework = SFA.DAS.Courses.Domain.Entities.Framework;
@@ -14,8 +13,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
     {
         public static void LoadTestData(CoursesDataContext context)
         {
-            var testSectors = GetTestSectors().ToList();
-            context.Sectors.AddRange(testSectors);
             context.Routes.AddRange(GetTestRoutes().ToList());
             context.SectorSubjectAreaTier2.AddRange(GetSectorSubjectAreaTier2Items());
             context.Standards.AddRange(GetValidTestStandards());
@@ -30,7 +27,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static void ClearTestData(CoursesDataContext context)
         {
             context.Standards.RemoveRange(context.Standards.ToList());
-            context.Sectors.RemoveRange(context.Sectors.ToList());
             context.SectorSubjectAreaTier2.RemoveRange(context.SectorSubjectAreaTier2.ToList());
             context.Frameworks.RemoveRange(context.Frameworks.ToList());
             context.SaveChanges();
@@ -57,27 +53,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             };
         }
 
-        public static IEnumerable<Sector> GetTestSectors()
-        {
-            return new List<Sector>
-            {
-                new Sector
-                {
-                    Route = "Engineering and manufacturing",
-                    Id = Guid.Parse("54A073E7-F2BA-4C04-9868-1EC3AB3A89D4")
-                },
-                new Sector
-                {
-                    Route = "Construction",
-                    Id = Guid.Parse("B30D7750-9ADF-41BA-94BD-E4584128EC76")
-                },
-                new Sector
-                {
-                    Route = "Creative and design",
-                    Id = Guid.Parse("7ECB9D82-47A0-45EB-94FE-2F9E2161A55F")
-                }
-            };
-        }
         public static IEnumerable<Route> GetTestRoutes()
         {
             return new List<Route>
@@ -102,7 +77,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 
         public static IEnumerable<Standard> GetValidTestStandards()
         {
-            var sectors = GetTestSectors().ToList();
             var routes = GetTestRoutes().ToList();
             var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
             return new List<Standard>
@@ -116,7 +90,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
-                    RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -142,7 +115,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Brewer, Beer",
                     TypicalJobTitles = "Brewery operations",
                     Level = 1,
-                    RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -163,7 +135,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Head",
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 6,
-                    RouteId = sectors[1].Id,
                     RouteCode = routes[1].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -184,7 +155,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
                     Level = 7,
-                    RouteId = sectors[1].Id,
                     RouteCode = routes[1].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -205,7 +175,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
                     Level = 3,
-                    RouteId = sectors[2].Id,
                     RouteCode = routes[2].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -226,7 +195,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
                     Level = 3,
-                    RouteId = sectors[2].Id,
                     RouteCode = routes[2].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -247,7 +215,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "SortOrder",
                     TypicalJobTitles = "Junior animator|SortOrder",
                     Level = 4,
-                    RouteId = sectors[2].Id,
                     RouteCode = routes[2].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -264,7 +231,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 
         public static IEnumerable<Standard> GetInValidTestStandards()
         {
-            var sectors = GetTestSectors().ToList();
             var routes = GetTestRoutes().ToList();
             return new List<Standard>
             {
@@ -277,7 +243,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "building, structural, engineer",
                     TypicalJobTitles = "Structural Engineer",
                     Level = 2,
-                    RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -297,7 +262,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Dentist|Dentistry",
                     TypicalJobTitles = "Dentist",
                     Level = 7,
-                    RouteId = sectors[1].Id,
                     RouteCode = routes[1].Id,
                     LarsStandard = new LarsStandard
                     {
@@ -318,7 +282,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 
         public static IEnumerable<Standard> GetNotYetApprovedTestStandards()
         {
-            var sectors = GetTestSectors().ToList();
             var routes = GetTestRoutes().ToList();
             return new List<Standard>
             {
@@ -331,7 +294,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Assistant of brewery operations",
                     Level = 1,
-                    RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Proposal in development",
@@ -346,7 +308,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Metallurgy, Engineer, Metal",
                     TypicalJobTitles = "Metallurgy Engineer",
                     Level = 4,
-                    RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "In development",
@@ -362,7 +323,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 
         public static IEnumerable<Standard> GetWithdrawnStandards()
         {
-            var sectors = GetTestSectors().ToList();
             var routes = GetTestRoutes().ToList();
             return new List<Standard>
             {
@@ -375,7 +335,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Assistant of brewery operations",
                     Level = 1,
-                    RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Withdrawn",
@@ -390,7 +349,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         }
         public static IEnumerable<Standard> GetOlderVersionsOfStandards()
         {
-            var sectors = GetTestSectors().ToList();
             var routes = GetTestRoutes().ToList();
             return new List<Standard>
             {
@@ -403,7 +361,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
-                    RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     Status = "Retired",
                     Version = 1.2m,
@@ -422,7 +379,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = "Head, Brewer, Beer",
                     TypicalJobTitles = "Overseer of brewery operations",
                     Level = 2,
-                    RouteId = sectors[0].Id,
                     RouteCode = routes[0].Id,
                     Status = "Retired",
                     Version = 1.1m
@@ -436,7 +392,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
                     Level = 3,
-                    RouteId = sectors[2].Id,
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = 1.0m,
@@ -455,7 +410,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Keywords = null,
                     TypicalJobTitles = "Assistant Photographer|Photographic Technician",
                     Level = 3,
-                    RouteId = sectors[2].Id,
+                    RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = 1.0m,
                     Options = new List<string>

@@ -70,10 +70,8 @@
     <Build Include="Tables\LarsStandard_Import.sql" />
     <Build Include="Tables\Route.sql" />
     <Build Include="Tables\Route_Import.sql" />
-    <Build Include="Tables\Sector.sql" />
     <Build Include="Tables\SectorSubjectAreaTier2.sql" />
     <Build Include="Tables\SectorSubjectAreaTier2_Import.sql" />
-    <Build Include="Tables\Sector_Import.sql" />
     <Build Include="Tables\Standard.sql" />
     <Build Include="Tables\Standard_Import.sql" />
   </ItemGroup>

@@ -37,7 +37,6 @@ namespace SFA.DAS.Courses.Domain.Entities
                 TypicalJobTitles = string.Join("|", standard.TypicalJobTitles),
                 Version = standard.Version ?? 0,
                 Keywords = standard.Keywords.Any() ? string.Join("|", standard.Keywords) : null,
-                RouteId = standard.RouteId,
                 AssessmentPlanUrl = standard.AssessmentPlanUrl,
                 ApprovedForDelivery = standard.ApprovedForDelivery,
                 TrailBlazerContact = standard.TbMainContact,

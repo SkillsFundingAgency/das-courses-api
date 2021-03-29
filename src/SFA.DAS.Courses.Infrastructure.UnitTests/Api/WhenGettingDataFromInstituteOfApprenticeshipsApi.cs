@@ -33,7 +33,6 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             
             //Assert
             standards.Should().BeEquivalentTo(importStandards, options => options
-                .Excluding(c=>c.RouteId)
                 .Excluding(c=>c.RouteCode)
             );
         }

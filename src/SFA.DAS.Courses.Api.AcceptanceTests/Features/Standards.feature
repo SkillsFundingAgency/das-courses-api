@@ -14,7 +14,7 @@
     When I GET the following url: /api/courses/standards?keyword=beer&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title       | level | sector                        | version | status                |
+    | title       | level | route                        | version | status                |
     | Brewer      | 1     | Engineering and manufacturing | 1.0     | Approved for delivery |
     | Head Brewer | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
 
@@ -23,7 +23,7 @@
     When I GET the following url: /api/courses/standards?filter=None&keyword=beer
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title                                      | level | sector                        | version | status                 |
+    | title                                      | level | route                        | version | status                 |
     | Brewer                                     | 1     | Engineering and manufacturing | 1.0     | Approved for delivery  |
     | Assistant Brewer - Proposal in development | 1     | Engineering and manufacturing | 1.1     | Proposal in development|
     | Assistant Brewer - Withdrawn               | 1     | Engineering and manufacturing | 1.0     | Withdrawn              |
@@ -36,7 +36,7 @@
     When I GET the following url: /api/courses/standards?keyword=beer
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title                                      | level | sector                        | version | status                 |
+    | title                                      | level | route                        | version | status                 |
     | Brewer                                     | 1     | Engineering and manufacturing | 1.0     | Approved for delivery  |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.3     | Approved for delivery  |
     
@@ -45,16 +45,16 @@
     When I GET the following url: /api/courses/standards?levels=1&levels=7&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title   | level | sector                        | version | status                |
+    | title   | level | route                        | version | status                |
     | Brewer  | 1     | Engineering and manufacturing | 1.0     | Approved for delivery |
     | Dentist | 7     | Construction                  | 1.0     | Approved for delivery |
 
-    Scenario: Get list of standards by sectors that are active and available
+    Scenario: Get list of standards by routes that are active and available
 	Given I have an http client
-    When I GET the following url: /api/courses/standards?routeIds=B30D7750-9ADF-41BA-94BD-E4584128EC76&filter=ActiveAvailable
+    When I GET the following url: /api/courses/standards?routeIds=2&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title                                           | level | sector       | version | status                |
+    | title                                           | level | route       | version | status                |
     | Dentist                                         | 7     | Construction | 1.0     | Approved for delivery |
     | Senior / head of facilities management (degree) | 6     | Construction | 1.0     | Approved for delivery |
 
@@ -63,7 +63,7 @@
     When I GET the following url: /api/courses/standards?keyword=beer&levels=1&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title       | level | sector                        | version | status                |
+    | title       | level | route                        | version | status                |
     | Brewer      | 1     | Engineering and manufacturing | 1.0     | Approved for delivery |
 
     Scenario: Get list of standards by keyword sorted by relevance that are active and available
@@ -71,7 +71,7 @@
     When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=score&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title                            | level | sector              | version | status                |
+    | title                            | level | route              | version | status                |
     | Junior animator SortOrder        | 4     | Creative and design | 1.0     | Approved for delivery |
     | Photographic assistant SortOrder | 3     | Creative and design | 1.1     | Approved for delivery |
     | Camera prep technician           | 3     | Creative and design | 1.0     | Approved for delivery |
@@ -81,7 +81,7 @@
     When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=title&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title                            | level | sector              | version | status                |
+    | title                            | level | route              | version | status                |
     | Camera prep technician           | 3     | Creative and design | 1.0     | Approved for delivery |
     | Junior animator SortOrder        | 4     | Creative and design | 1.0     | Approved for delivery |
     | Photographic assistant SortOrder | 3     | Creative and design | 1.1     | Approved for delivery |
@@ -115,7 +115,7 @@
     When I GET the following url: /api/courses/standards/1
     Then an http status code of 200 is returned
     And the following standard is returned
-    | title                            | level | sector                        | version | status                |
+    | title                            | level | route                        | version | status                |
     | Head Brewer                      | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
 
     Scenario: Get latest version of a standard by IfateReferenceNumber
@@ -123,7 +123,7 @@
     When I GET the following url: /api/courses/standards/ST0001
     Then an http status code of 200 is returned
     And the following standard is returned
-    | title                            | level | sector                        | version | status                |
+    | title                            | level | route                        | version | status                |
     | Head Brewer                      | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
     
     Scenario: : Get a specific version of a standard by StandardUId
@@ -131,7 +131,7 @@
     When I GET the following url: /api/courses/standards/ST0005_1.0
     Then an http status code of 200 is returned
     And the following standard is returned
-    | title                            | level | sector              | version | status  |
+    | title                            | level | route              | version | status  |
     | Photographic assistant SortOrder | 3     | Creative and design | 1.0     | Retired |
 
     Scenario: : Get a all versions of a standard by IFateReferenceNumber
@@ -139,7 +139,7 @@
     When I GET the following url: /api/courses/standards/versions/ST0001
     Then an http status code of 200 is returned
     And the following valid standards are returned
-    | title                                      | level | sector                        | version | status                 |
+    | title                                      | level | route                        | version | status                 |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.3     | Approved for delivery  |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.2     | Retired                |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.1     | Retired                |

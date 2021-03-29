@@ -17,7 +17,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         public async Task Then_The_Data_Is_Deleted_From_The_Standards_And_Sector_And_Route_Tables(
             DateTime importStartTime,
             [Frozen] Mock<IStandardRepository> repository,
-            [Frozen] Mock<ISectorRepository> sectorRepository,
             [Frozen] Mock<IRouteRepository> routeRepository,
             [Frozen] Mock<IInstituteOfApprenticeshipService> service,
             List<SFA.DAS.Courses.Domain.ImportTypes.Standard> standardsImport,
@@ -31,7 +30,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             //Assert
             repository.Verify(x => x.DeleteAll(), Times.Once);
-            sectorRepository.Verify(x => x.DeleteAll(), Times.Once);
             routeRepository.Verify(x => x.DeleteAll(), Times.Once);
         }
 
@@ -39,19 +37,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         public async Task Then_The_Data_Is_Loaded_From_The_Staging_Tables(
             DateTime importStartTime,
             List<StandardImport> standardImportsEntity,
-            List<SectorImport> sectorImportsEntity,
             List<RouteImport> routeImportsEntity,
             [Frozen] Mock<IStandardRepository> repository,
-            [Frozen] Mock<ISectorRepository> sectorRepository,
             [Frozen] Mock<IRouteRepository> routeRepository,
             [Frozen] Mock<IStandardImportRepository> importRepository,
-            [Frozen] Mock<ISectorImportRepository> sectorImportRepository,
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             StandardsImportService standardsImportService)
         {
             //Arrange
             importRepository.Setup(x => x.GetAll()).ReturnsAsync(standardImportsEntity);
-            sectorImportRepository.Setup(x => x.GetAll()).ReturnsAsync(sectorImportsEntity);
             routeImportRepository.Setup(x => x.GetAll()).ReturnsAsync(routeImportsEntity);
 
             //Act
@@ -59,7 +53,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             //Assert
             repository.Verify(x => x.InsertMany(It.Is<List<Standard>>(c => c.Count.Equals(standardImportsEntity.Count))), Times.Once);
-            sectorRepository.Verify(x => x.InsertMany(It.Is<List<Sector>>(c => c.Count.Equals(sectorImportsEntity.Count))), Times.Once);
             routeRepository.Verify(x => x.InsertMany(It.Is<List<Route>>(c => c.Count.Equals(routeImportsEntity.Count))), Times.Once);
         }
 
@@ -69,7 +62,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             List<StandardImport> standardImportsEntity,
             [Frozen] Mock<IImportAuditRepository> auditRepository,
             [Frozen] Mock<IStandardRepository> repository,
-            [Frozen] Mock<ISectorRepository> sectorRepository,
             [Frozen] Mock<IStandardImportRepository> importRepository,
             [Frozen] Mock<IRouteRepository> routeRepository,
             StandardsImportService standardsImportService)
@@ -82,9 +74,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             //Assert
             repository.Verify(x => x.DeleteAll(), Times.Never);
-            sectorRepository.Verify(x => x.DeleteAll(), Times.Never);
             repository.Verify(x => x.InsertMany(It.IsAny<List<Standard>>()), Times.Never);
-            sectorRepository.Verify(x => x.InsertMany(It.IsAny<List<Sector>>()), Times.Never);
             routeRepository.Verify(x => x.InsertMany(It.IsAny<List<Route>>()), Times.Never);
             auditRepository.Verify(x =>
                 x.Insert(It.Is<ImportAudit>(c => c.RowsImported.Equals(0))), Times.Once);

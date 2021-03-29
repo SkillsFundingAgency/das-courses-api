@@ -21,10 +21,6 @@
     <ProjectReference Include="..\SFA.DAS.Courses.Api\SFA.DAS.Courses.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <SpecFlowFeatureFiles Update="Features\Sectors.feature">
-      <LastGenOutput>Sectors.feature.cs</LastGenOutput>
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-    </SpecFlowFeatureFiles>
     <SpecFlowFeatureFiles Update="Features\Levels.feature">
       <LastGenOutput>Levels.feature.cs</LastGenOutput>
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -39,6 +35,10 @@
     </SpecFlowFeatureFiles>
     <SpecFlowFeatureFiles Update="Features\Routes.feature">
       <LastGenOutput>Routes.feature.cs</LastGenOutput>
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\Options.feature">
+      <LastGenOutput>Options.feature.cs</LastGenOutput>
       <Generator>SpecFlowSingleFileGenerator</Generator>
     </SpecFlowFeatureFiles>
   </ItemGroup>

@@ -26,7 +26,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 
         public async Task<IEnumerable<Standard>> GetStandardsList(
             string keyword,
-            IList<Guid> routeIds,
+            IList<int> routeIds,
             IList<int> levels,
             OrderBy orderBy,
             StandardFilter filter)
