@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public int Level { get; set; }
         public int ProposedTypicalDuration { get; set; }
         public int ProposedMaxFunding { get; set; }
-        public decimal Version { get; set; }
+        public string Version { get; set; }
         public string OverviewOfRole { get; set; }
         public virtual Route Route { get ; set ; }
         public int RouteCode { get; set; }

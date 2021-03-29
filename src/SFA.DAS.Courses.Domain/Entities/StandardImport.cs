@@ -35,7 +35,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 StandardPageUrl = standard.StandardPageUrl.AbsoluteUri,
                 Title = standard.Title.Trim(),
                 TypicalJobTitles = string.Join("|", standard.TypicalJobTitles),
-                Version = standard.Version ?? 0,
+                Version = !string.IsNullOrEmpty(standard.Version) ? standard.Version : "0",
                 Keywords = standard.Keywords.Any() ? string.Join("|", standard.Keywords) : null,
                 AssessmentPlanUrl = standard.AssessmentPlanUrl,
                 ApprovedForDelivery = standard.ApprovedForDelivery,
@@ -58,10 +58,11 @@ namespace SFA.DAS.Courses.Domain.Entities
             };
         }
 
-        private static string GetStandardUId(string ifateReferenceNumber, decimal? version)
+        private static string GetStandardUId(string ifateReferenceNumber, string version)
         {
-            var derivedVersion = version.HasValue && version != 0 ? version.Value : 1;
-            return $"{ifateReferenceNumber}_{derivedVersion.ToString("0.0")}";
+            var derivedVersion = !string.IsNullOrEmpty(version) ? version : "1.0";
+
+            return $"{ifateReferenceNumber}_{derivedVersion}";
         }
 
         private static bool SetIsIntegratedApprenticeship(Domain.ImportTypes.Standard standard)

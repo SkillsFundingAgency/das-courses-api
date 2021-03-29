@@ -24,7 +24,7 @@
 	[Keywords] VARCHAR(MAX) NULL,
 	[TypicalJobTitles] VARCHAR(MAX) NULL,
 	[StandardPageUrl] VARCHAR(500) NOT NULL,
-	[Version] DECIMAL(18, 1) NULL,
+	[Version] VARCHAR(10) NULL,
     [RegulatedBody] VARCHAR(1000) NULL,
     [Skills] NVARCHAR(MAX) NULL, 
     [Knowledge] NVARCHAR(MAX) NULL, 

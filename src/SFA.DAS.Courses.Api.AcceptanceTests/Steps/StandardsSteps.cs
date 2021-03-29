@@ -131,7 +131,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                     standard.Title == row["title"] && 
                     standard.RouteCode == testRoutes.Single(sector => sector.Name == row["route"]).Id &&
                     standard.Level == int.Parse(row["level"]) &&
-                    standard.Version == decimal.Parse(row["version"]) &&
+                    standard.Version == row["version"] &&
                     standard.Status == row["status"]));
             }
 

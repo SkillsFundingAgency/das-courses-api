@@ -114,7 +114,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Version.Should().Be(0);
+            actual.Version.Should().Be("0");
         }
 
         [Test, AutoData]
@@ -273,5 +273,16 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.IntegratedApprenticeship.Should().Be(expected);
         }
         
+        [Test]
+        [InlineAutoData("ST0001", "1.0", "ST0001_1.0")]
+        public void Then_StandardUIdIsBuilt(string standardReference, string version, string expectedStandardUId, ImportTypes.Standard standard)
+        {
+            standard.ReferenceNumber = standardReference;
+            standard.Version = version;
+
+            var actual = (StandardImport) standard;
+
+            actual.StandardUId.Should().Be(expectedStandardUId);
+        }
     }
 }
