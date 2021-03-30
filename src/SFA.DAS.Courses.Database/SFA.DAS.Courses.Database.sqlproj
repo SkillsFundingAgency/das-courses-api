@@ -78,4 +78,7 @@
   <ItemGroup>
     <RefactorLog Include="SFA.DAS.Courses.Database.refactorlog" />
   </ItemGroup>
+  <ItemGroup>
+    <PreDeploy Include="Script.PreDeployment1.sql" />
+  </ItemGroup>
 </Project>
