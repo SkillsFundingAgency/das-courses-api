@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.Title).HasColumnName("Title").HasColumnType("varchar").HasMaxLength(1000).IsRequired();
             builder.Property(x => x.IntegratedDegree).HasColumnName("IntegratedDegree").HasColumnType("varchar").HasMaxLength(100).IsRequired();
             builder.Property(x => x.Level).HasColumnName("Level").HasColumnType("int").IsRequired();
-            builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("decimal");
+            builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("varchar").HasMaxLength(10);
             builder.Property(x => x.OverviewOfRole).HasColumnName("OverviewOfRole").IsRequired();
             builder.Property(x => x.RouteCode).HasColumnName("RouteCode").HasColumnType("int").IsRequired();
             builder.Property(x => x.TypicalJobTitles).HasColumnName("TypicalJobTitles");

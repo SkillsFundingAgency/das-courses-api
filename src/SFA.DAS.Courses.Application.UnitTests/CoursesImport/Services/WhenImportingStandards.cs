@@ -104,10 +104,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     c.TrueForAll(s => s.StandardUId.Equals(GetStandardUId(s.IfateReferenceNumber, s.Version))))), Times.Once);
         }
 
-        private static string GetStandardUId(string ifateReferenceNumber, decimal? version)
+        private static string GetStandardUId(string ifateReferenceNumber, string version)
         {
-            var derivedVersion = version.HasValue && version != 0 ? version.Value : 1;
-            return $"{ifateReferenceNumber}_{derivedVersion.ToString("0.0")}";
+            var derivedVersion = !string.IsNullOrEmpty(version) ? version : "1.0";
+
+            return $"{ifateReferenceNumber}_{derivedVersion}";
         }
     }
 }
