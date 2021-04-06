@@ -10,7 +10,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
         {
-            string coreDuties = null;
+            var coreDuties = new List<string>();
 
             if (standard.Duties.Any() && standard.Skills.Any())
             {
@@ -87,11 +87,11 @@ namespace SFA.DAS.Courses.Domain.Entities
                 .Select(s => s.ToString());
         }
 
-        private static string GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<string> mappedSkillsList)
+        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<string> mappedSkillsList)
         {
-            return string.Join("|", standard.Skills
+            return standard.Skills
                 .Where(s => mappedSkillsList.Contains(s.SkillId))
-                .Select(s => s.Detail));
+                .Select(s => s.Detail).ToList();
         }
     }
 }
