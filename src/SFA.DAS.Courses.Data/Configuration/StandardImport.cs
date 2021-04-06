@@ -29,6 +29,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.Knowledge).HasJsonConversion();
             builder.Property(x => x.Behaviours).HasJsonConversion();
             builder.Property(x => x.Duties).HasJsonConversion();
+            builder.Property(x => x.CoreDuties).HasJsonConversion();
             builder.Property(x => x.IntegratedApprenticeship).HasColumnName("IntegratedApprenticeship").HasColumnType("bit").IsRequired();
             builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
             builder.Property(x => x.Options).HasJsonConversion();
@@ -36,7 +37,6 @@ namespace SFA.DAS.Courses.Data.Configuration
 
             builder.Ignore(x => x.ApprenticeshipFunding);
             builder.Ignore(x => x.LarsStandard);
-            builder.Ignore(x => x.CoreDuties);
             builder.Ignore(x => x.Route);
 
             builder.HasIndex(x => x.StandardUId).IsUnique();
