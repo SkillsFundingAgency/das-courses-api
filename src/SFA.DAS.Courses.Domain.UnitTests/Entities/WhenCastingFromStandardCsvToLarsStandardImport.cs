@@ -24,8 +24,13 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standardCsv.OtherBodyApprovalRequired = approvalRequired;
             var actual = (LarsStandardImport) standardCsv;
             
-            actual.Should().BeEquivalentTo(standardCsv, options=>options.Excluding(c=>c.StandardCode).Excluding(c => c.OtherBodyApprovalRequired));
+            actual.Should().BeEquivalentTo(standardCsv, options=>options
+                .Excluding(c=>c.StandardCode)
+                .Excluding(c => c.OtherBodyApprovalRequired)
+                .Excluding(c=>c.StandardSectorCode)
+            );
             actual.LarsCode.Should().Be(standardCsv.StandardCode);
+            actual.SectorCode.Should().Be(standardCsv.StandardSectorCode);
             actual.OtherBodyApprovalRequired.Should()
                 .Be(expected);
         }

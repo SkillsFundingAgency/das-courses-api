@@ -11,5 +11,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public DateTime? LastDateStarts { get; set; }
         public decimal SectorSubjectAreaTier2 { get; set; }
         public string OtherBodyApprovalRequired { get; set; }
+        public int StandardSectorCode { get; set; }
     }
 }
