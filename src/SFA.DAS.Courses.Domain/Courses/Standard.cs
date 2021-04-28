@@ -41,6 +41,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public List<string> Options { get; set; }
         public string AssessmentPlanUrl { get; private set; }
         public string TrailBlazerContact { get; private set; }
+        public int SectorCode { get ; set ; }
 
         public static explicit operator Standard(Entities.Standard source)
         {
@@ -82,7 +83,8 @@ namespace SFA.DAS.Courses.Domain.Courses
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options
+                Options = source.Options,
+                SectorCode = source.LarsStandard?.SectorCode ?? 0
             };
         }
     }
