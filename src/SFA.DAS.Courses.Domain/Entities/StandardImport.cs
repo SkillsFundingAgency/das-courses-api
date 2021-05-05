@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -20,7 +21,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             return new StandardImport
             {
-                StandardUId = GetStandardUId(standard.ReferenceNumber, standard.Version),
+                StandardUId = standard.ReferenceNumber.ToStandardVersionId(standard.Version),
                 LarsCode = standard.LarsCode,
                 IfateReferenceNumber = standard.ReferenceNumber,
                 Status = standard.Status,
@@ -56,12 +57,6 @@ namespace SFA.DAS.Courses.Domain.Entities
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
                 RouteCode = standard.RouteCode
             };
-        }
-
-        private static string GetStandardUId(string ifateReferenceNumber, decimal? version)
-        {
-            var derivedVersion = version.HasValue && version != 0 ? version.Value : 1;
-            return $"{ifateReferenceNumber}_{derivedVersion.ToString("0.0")}";
         }
 
         private static bool SetIsIntegratedApprenticeship(Domain.ImportTypes.Standard standard)
