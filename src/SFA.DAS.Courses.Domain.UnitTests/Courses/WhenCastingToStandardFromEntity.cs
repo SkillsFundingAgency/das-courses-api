@@ -40,6 +40,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.SectorSubjectAreaTier2.Should().Be(source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2);
             response.SectorSubjectAreaTier2Description.Should().Be(source.LarsStandard.SectorSubjectArea.Name);
             response.OtherBodyApprovalRequired.Should().Be(source.LarsStandard.OtherBodyApprovalRequired);
+            response.SectorCode.Should().Be(source.LarsStandard.SectorCode);
 
             response.VersionDetail.EarliestStartDate.Should().Be(source.VersionEarliestStartDate);
             response.VersionDetail.LatestStartDate.Should().Be(source.VersionLatestStartDate);

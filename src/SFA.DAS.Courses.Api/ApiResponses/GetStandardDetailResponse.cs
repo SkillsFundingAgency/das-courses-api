@@ -43,6 +43,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
         public List<string> Options { get; set; }
+        public int SectorCode { get ; set ; }
 
         public static explicit operator GetStandardDetailResponse(Standard source)
         {
@@ -81,7 +82,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options
+                Options = source.Options,
+                SectorCode = source.SectorCode
             };
         }
     }

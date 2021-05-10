@@ -17,6 +17,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.LastDateStarts).HasColumnName("LastDateStarts").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.SectorSubjectAreaTier2).HasColumnName("SectorSubjectAreaTier2").HasColumnType("decimal");
             builder.Property(x => x.OtherBodyApprovalRequired).HasColumnName("OtherBodyApprovalRequired").HasColumnType("bit").IsRequired();
+            builder.Property(x => x.SectorCode).HasColumnName("SectorCode").HasColumnType("int").IsRequired();
         }
     }
 }
