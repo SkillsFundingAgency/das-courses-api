@@ -15,15 +15,14 @@ namespace SFA.DAS.Courses.Domain.Entities
                 LastDateStarts = standardCsv.LastDateStarts,
                 LarsCode = standardCsv.StandardCode,
                 SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2,
-                OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(standardCsv.OtherBodyApprovalRequired)
+                OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(standardCsv.OtherBodyApprovalRequired),
+                SectorCode = standardCsv.StandardSectorCode
             };
         }
 
         private static bool MapOtherBodyApprovalRequired(string source)
         {
-            if (String.Equals(source, "y", StringComparison.OrdinalIgnoreCase))
-                return true;
-            return false;
+            return string.Equals(source, "y", StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

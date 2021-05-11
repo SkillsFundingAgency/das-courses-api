@@ -11,5 +11,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public DateTime? LastDateStarts { get; set; }
         public decimal SectorSubjectAreaTier2 { get; set; }
         public bool OtherBodyApprovalRequired { get; set; }
+        public int SectorCode { get; set; }
     }
 }
