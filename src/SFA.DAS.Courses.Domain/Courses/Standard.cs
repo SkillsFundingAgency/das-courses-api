@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string ApprovalBody { get; set; }
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
-        public string CoreDuties { get; set; }
+        public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
         public List<string> Options { get; set; }
         public string AssessmentPlanUrl { get; private set; }

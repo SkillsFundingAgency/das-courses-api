@@ -76,7 +76,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert	
-            actual.CoreDuties.Should().Be(detail);
+            actual.CoreDuties.Should().BeEquivalentTo(new List<string>{detail});
         }
 
         [Test, AutoData]

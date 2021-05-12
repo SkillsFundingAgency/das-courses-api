@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -10,7 +11,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
         {
-            string coreDuties = null;
+            var coreDuties = new List<string>();
 
             if (standard.Duties.Any() && standard.Skills.Any())
             {
@@ -20,7 +21,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             return new StandardImport
             {
-                StandardUId = GetStandardUId(standard.ReferenceNumber, standard.Version),
+                StandardUId = standard.ReferenceNumber.ToStandardVersionId(standard.Version),
                 LarsCode = standard.LarsCode,
                 IfateReferenceNumber = standard.ReferenceNumber,
                 Status = standard.Status,
@@ -58,12 +59,6 @@ namespace SFA.DAS.Courses.Domain.Entities
             };
         }
 
-        private static string GetStandardUId(string ifateReferenceNumber, decimal? version)
-        {
-            var derivedVersion = version.HasValue && version != 0 ? version.Value : 1;
-            return $"{ifateReferenceNumber}_{derivedVersion.ToString("0.0")}";
-        }
-
         private static bool SetIsIntegratedApprenticeship(Domain.ImportTypes.Standard standard)
         {
             if (standard.Level >= 6)
@@ -87,11 +82,11 @@ namespace SFA.DAS.Courses.Domain.Entities
                 .Select(s => s.ToString());
         }
 
-        private static string GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<string> mappedSkillsList)
+        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<string> mappedSkillsList)
         {
-            return string.Join("|", standard.Skills
+            return standard.Skills
                 .Where(s => mappedSkillsList.Contains(s.SkillId))
-                .Select(s => s.Detail));
+                .Select(s => s.Detail).ToList();
         }
     }
 }

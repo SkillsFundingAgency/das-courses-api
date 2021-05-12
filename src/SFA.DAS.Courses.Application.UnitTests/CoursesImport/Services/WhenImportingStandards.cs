@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -101,13 +102,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             importRepository.Verify(x =>
                 x.InsertMany(It.Is<List<StandardImport>>(c =>
-                    c.TrueForAll(s => s.StandardUId.Equals(GetStandardUId(s.IfateReferenceNumber, s.Version))))), Times.Once);
+                    c.TrueForAll(s => s.StandardUId.Equals(s.IfateReferenceNumber.ToStandardVersionId(s.Version))))), Times.Once);
         }
 
-        private static string GetStandardUId(string ifateReferenceNumber, decimal? version)
-        {
-            var derivedVersion = version.HasValue && version != 0 ? version.Value : 1;
-            return $"{ifateReferenceNumber}_{derivedVersion.ToString("0.0")}";
-        }
     }
 }
