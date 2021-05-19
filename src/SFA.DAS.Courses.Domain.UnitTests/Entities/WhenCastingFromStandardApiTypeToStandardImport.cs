@@ -31,6 +31,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.ReferenceNumber)
                 .Excluding(c => c.EqaProvider)
                 .Excluding(c => c.TbMainContact)
+                .Excluding(c => c.Change)
             );
 
             actual.LarsCode.Should().Be(standard.LarsCode);
@@ -272,6 +273,57 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Assert
             actual.IntegratedApprenticeship.Should().Be(expected);
         }
-        
+
+        [Test, AutoData]
+        public void Then_If_Change_Is_Empty_Then_EPAChanged_Is_False(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Change = string.Empty;
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.EPAChanged.Should().Be(false);
+        }
+
+        [Test, AutoData]
+        public void Then_If_Change_Does_Not_Contain_Magic_Value_Then_EPAChanged_Is_False(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Change = "Approved for delivery";
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.EPAChanged.Should().Be(false);
+        }
+
+        [Test, AutoData]
+        public void Then_If_Change_Equals_Magic_Value_Then_EPAChanged_Is_True(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Change = "End-point assessment plan revised";
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.EPAChanged.Should().Be(true);
+        }
+
+        [Test, AutoData]
+        public void Then_If_Change_Contains_Magic_Value_Then_EPAChanged_Is_True(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Change = "Approved for delivery. End-point assessment plan revised";
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.EPAChanged.Should().Be(true);
+        }
     }
 }
