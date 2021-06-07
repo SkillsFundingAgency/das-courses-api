@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp;
@@ -16,9 +16,9 @@ namespace SFA.DAS.Courses.Infrastructure.PageParsing
             var document = await context.OpenAsync(Constants.LarsDownloadPageUrl);
 
             var downloadHref = document
-                .QuerySelectorAll("span:contains('LARS CSV')")
+                .QuerySelectorAll("a:contains('Download CSV')")
                 .First()
-                .ParentElement.GetAttribute("Href");
+                .GetAttribute("Href");
             
             var uri = new Uri(new Uri(Constants.LarsBasePageUrl),downloadHref);
 
