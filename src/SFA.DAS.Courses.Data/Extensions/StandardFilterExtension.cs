@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
 
@@ -22,6 +20,9 @@ namespace SFA.DAS.Courses.Data.Extensions
                     break;
                 case StandardFilter.NotYetApproved:
                     standards = standards.FilterNotYetApproved();
+                    break;
+                case StandardFilter.ClosedToNewStarts:
+                    standards = standards.FilterClosedToNewStarts();
                     break;
                 case StandardFilter.None:
                     break;
@@ -91,12 +92,26 @@ namespace SFA.DAS.Courses.Data.Extensions
             return filteredStandards;
         }
 
+        private static IQueryable<Standard> FilterClosedToNewStarts(this IQueryable<Standard> standards)
+        {
+            var filteredStandards = standards
+                .IsPastLastStartDate();
+
+            return filteredStandards;
+        }
+
         private static IQueryable<Standard> IsAvailableToStart(this IQueryable<Standard> standards)
         {
             return standards.Where(ls => (ls.LarsStandard.LastDateStarts == null
                                                           || ls.LarsStandard.LastDateStarts >= DateTime.UtcNow)
                                                           && ls.LarsStandard.LastDateStarts != ls.LarsStandard.EffectiveFrom
                                                           && ls.LarsStandard.EffectiveFrom <= DateTime.UtcNow);
+        }
+
+        private static IQueryable<Standard> IsPastLastStartDate(this IQueryable<Standard> standards)
+        {
+            return standards.Where(ls => (ls.LarsStandard.LastDateStarts.HasValue
+                                          && ls.LarsStandard.LastDateStarts < DateTime.UtcNow));
         }
 
         private static IQueryable<Standard> HasLarsStandard(this IQueryable<Standard> standards)

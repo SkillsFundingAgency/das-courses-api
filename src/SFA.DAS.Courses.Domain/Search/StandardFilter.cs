@@ -5,6 +5,7 @@
         None, 
         Active,
         ActiveAvailable,
-        NotYetApproved
+        NotYetApproved,
+        ClosedToNewStarts
     }
 }
