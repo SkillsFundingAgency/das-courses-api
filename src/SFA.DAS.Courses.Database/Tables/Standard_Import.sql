@@ -35,7 +35,8 @@
     [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0,
     [Options] NVARCHAR(MAX) NULL, 
     [OptionsUnstructuredTemplate] NVARCHAR(MAX) NULL, 
-    [CreatedDate] DATETIME NULL
+    [CreatedDate] DATETIME NULL,
+    [EPAChanged] BIT NOT NULL DEFAULT 0,
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO

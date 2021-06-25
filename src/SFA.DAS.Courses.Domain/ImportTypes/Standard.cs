@@ -105,6 +105,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonIgnore]
         public int RouteCode { get ; set ; }
+
+        [JsonProperty("change")]
+        public string Change { get; set; }
+
     }
 
     public class EqaProvider
