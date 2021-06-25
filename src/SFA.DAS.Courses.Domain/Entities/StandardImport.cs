@@ -8,6 +8,7 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class StandardImport : StandardBase
     {
         public List<string> OptionsUnstructuredTemplate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
         {
@@ -55,7 +56,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
                 Options = standard.Options?.Select(o => o.Title).ToList() ?? new List<string>(),
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
-                RouteCode = standard.RouteCode
+                RouteCode = standard.RouteCode,
+                CreatedDate = standard.CreatedDate
             };
         }
 
