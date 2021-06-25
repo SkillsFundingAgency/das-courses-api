@@ -64,7 +64,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 foreach (var duplicate in duplicates)
                 {
-                    var latestStandard = duplicate.Standards.OrderByDescending(d => d.CreatedDate).FirstOrDefault();
+                    var latestStandard = duplicate.Standards.OrderByDescending(d => d.CreatedDate.GetValueOrDefault()).FirstOrDefault();
                     standardsImport.RemoveAll(s => duplicate.StandardUId == s.StandardUId);
                     standardsImport.Add(latestStandard);
                 }
