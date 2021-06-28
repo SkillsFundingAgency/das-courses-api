@@ -105,5 +105,32 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     c.TrueForAll(s => s.StandardUId.Equals(s.IfateReferenceNumber.ToStandardVersionId(s.Version))))), Times.Once);
         }
 
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Duplicate_Standards_Are_Removed_And_LatestStandard_Is_Kept(
+            [Frozen] Mock<IStandardImportRepository> importRepository,
+            [Frozen] Mock<IInstituteOfApprenticeshipService> ifateService,
+            List<Domain.ImportTypes.Standard> standardsImport,
+            Domain.ImportTypes.Standard standard,
+            Domain.ImportTypes.Standard standardDuplicate,
+            StandardsImportService standardsImportService)
+        {
+            //Arrange
+            standardDuplicate.ReferenceNumber = standard.ReferenceNumber;
+            standardDuplicate.Version = standard.Version;
+            standard.CreatedDate = DateTime.Now;
+            standardDuplicate.CreatedDate = DateTime.Now.AddHours(-1);
+            standardsImport.Add(standard);
+            standardsImport.Add(standardDuplicate);          
+            ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
+
+            //Act
+            await standardsImportService.ImportDataIntoStaging();
+
+            //Assert
+            importRepository.Verify(x =>
+                x.InsertMany(It.Is<List<StandardImport>>(c =>
+                    c.TrueForAll(s => s.StandardUId.Equals(s.IfateReferenceNumber.ToStandardVersionId(s.Version))))), Times.Once);
+        }
+
     }
 }
