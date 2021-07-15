@@ -57,6 +57,18 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     .ToList();
 
                 _standardImportRepository.DeleteAll();
+
+                var duplicates = standardsImport.GroupBy(s => s.StandardUId)
+                    .Where(g => g.Count() > 1)
+                    .Select(t => new { StandardUId = t.Key, Standards = t.ToList() });
+
+                foreach (var duplicate in duplicates)
+                {
+                    var latestStandard = duplicate.Standards.OrderByDescending(d => d.CreatedDate.GetValueOrDefault()).FirstOrDefault();
+                    standardsImport.RemoveAll(s => duplicate.StandardUId == s.StandardUId);
+                    standardsImport.Add(latestStandard);
+                }
+
                 await _standardImportRepository.InsertMany(standardsImport);
 
                 _logger.LogInformation("Standards import - starting");

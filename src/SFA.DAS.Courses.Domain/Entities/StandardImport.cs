@@ -8,6 +8,7 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class StandardImport : StandardBase
     {
         public List<string> OptionsUnstructuredTemplate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
         {
@@ -55,7 +56,9 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
                 Options = standard.Options?.Select(o => o.Title).ToList() ?? new List<string>(),
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
-                RouteCode = standard.RouteCode
+                RouteCode = standard.RouteCode,
+                CreatedDate = standard.CreatedDate,
+                EPAChanged = IsEPAChanged(standard)
             };
         }
 
@@ -87,6 +90,13 @@ namespace SFA.DAS.Courses.Domain.Entities
             return standard.Skills
                 .Where(s => mappedSkillsList.Contains(s.SkillId))
                 .Select(s => s.Detail).ToList();
+        }
+
+        private static bool IsEPAChanged(ImportTypes.Standard standard)
+        {
+            if (string.IsNullOrWhiteSpace(standard.Change)) return false;
+
+            return standard.Change.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

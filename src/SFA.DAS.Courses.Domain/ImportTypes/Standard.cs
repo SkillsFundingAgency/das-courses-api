@@ -100,8 +100,15 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("optionsUnstructuredTemplate")]
         public List<string> OptionsUnstructuredTemplate { get; set; } = new List<string>();
 
+        [JsonProperty("createdDate")]
+        public DateTime CreatedDate { get; set; }
+
         [JsonIgnore]
         public int RouteCode { get ; set ; }
+
+        [JsonProperty("change")]
+        public string Change { get; set; }
+
     }
 
     public class EqaProvider
