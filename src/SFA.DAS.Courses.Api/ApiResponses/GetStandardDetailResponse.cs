@@ -13,7 +13,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public float? SearchScore { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
-        public decimal Version { get; set; }
+        public string Version { get; set; }
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public string Route { get; set; }
@@ -45,6 +45,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public List<string> Options { get; set; }
         public int SectorCode { get ; set ; }
         public bool EPAChanged { get; set; }
+        public int VersionMajor { get; set; }
+        public int VersionMinor { get; set; }
 
         public static explicit operator GetStandardDetailResponse(Standard source)
         {
@@ -85,7 +87,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
                 Options = source.Options,
                 SectorCode = source.SectorCode,
-                EPAChanged = source.EPAChanged
+                EPAChanged = source.EPAChanged,
+                VersionMajor = source.VersionMajor,
+                VersionMinor = source.VersionMinor,
             };
         }
     }

@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string Status { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
-        public decimal Version { get; set; }
+        public string Version { get; set; }
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public string Route { get; set; }
@@ -43,6 +43,8 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string TrailBlazerContact { get; private set; }
         public int SectorCode { get ; set ; }
         public bool EPAChanged { get; set; }
+        public int VersionMajor { get; set; }
+        public int VersionMinor { get; set; }
 
         public static explicit operator Standard(Entities.Standard source)
         {
@@ -86,7 +88,9 @@ namespace SFA.DAS.Courses.Domain.Courses
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
                 Options = source.Options,
                 SectorCode = source.LarsStandard?.SectorCode ?? 0,
-                EPAChanged = source.EPAChanged
+                EPAChanged = source.EPAChanged,
+                VersionMajor = source.VersionMajor,
+                VersionMinor = source.VersionMinor,
             };
         }
     }

@@ -29,12 +29,12 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var iFateReferenceNumber = "ST001";
             var active = activeValidStandards[0];
             active.IfateReferenceNumber = iFateReferenceNumber;
-            active.Version = 1.1m;
+            active.Version = "1.1";
             active.StandardUId = "ST001_1.1";
 
             var retired = retiredStandards[0];
             retired.IfateReferenceNumber = iFateReferenceNumber;
-            retired.Version = 1.0m;
+            retired.Version = "1.0";
             retired.StandardUId = "ST001_1.0";
 
 

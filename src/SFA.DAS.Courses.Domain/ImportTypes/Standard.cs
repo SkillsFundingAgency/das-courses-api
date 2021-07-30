@@ -53,7 +53,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public string AssessmentPlanUrl { get; set; }
 
         [JsonProperty("version")]
-        public decimal? Version { get; set; }
+        public string Version { get; set; }
 
         [JsonProperty("skills")]
         public List<Skill> Skills { get; set; }

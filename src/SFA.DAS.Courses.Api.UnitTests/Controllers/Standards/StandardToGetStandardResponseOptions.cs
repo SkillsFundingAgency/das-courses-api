@@ -10,6 +10,9 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             .Excluding(s => s.EqaProvider)
             .Excluding(s => s.Options)
             .Excluding(s => s.TrailBlazerContact)
-            .Excluding(s => s.EPAChanged);
+            .Excluding(s => s.EPAChanged)
+            .Excluding(s => s.VersionMajor)
+            .Excluding(s => s.VersionMinor);
+
     }
 }

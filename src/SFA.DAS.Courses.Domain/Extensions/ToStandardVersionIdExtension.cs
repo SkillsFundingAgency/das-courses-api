@@ -2,10 +2,14 @@
 {
     public static class ToStandardVersionIdExtension
     {
-        public static string ToStandardVersionId(this string ifateReferenceNumber, decimal? version)
+        public static string ToStandardVersionId(this string ifateReferenceNumber, string version)
         {
-            var derivedVersion = version.HasValue && version != 0 ? version.Value : 1;
-            return $"{ifateReferenceNumber.Trim()}_{derivedVersion:0.0}";
+            if(string.IsNullOrWhiteSpace(version) || !decimal.TryParse(version, out var decimalVersion) || decimalVersion < 1)
+            {
+                return $"{ifateReferenceNumber.Trim()}_1.0";
+            }
+
+            return $"{ifateReferenceNumber.Trim()}_{version}";
         }
     }
 }

@@ -99,7 +99,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.3m,
+                    Version = "1.3",
                     Options = new List<string>
                     {
                         "Beer",
@@ -124,7 +124,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m
+                    Version = "1.0",
                 },
                 new Standard
                 {
@@ -144,7 +144,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1.1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m
+                    Version = "1.0",
                 },
                 new Standard
                 {
@@ -164,7 +164,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1.1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m
+                    Version = "1.0",
                 },
                 new Standard
                 {
@@ -184,7 +184,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.1m
+                    Version = "1.1",
                 },
                 new Standard
                 {
@@ -204,7 +204,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1.1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m
+                    Version = "1.0",
                 },
                 new Standard
                 {
@@ -224,7 +224,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m
+                    Version = "1.0",
                 }
             };
         }
@@ -251,7 +251,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m
+                    Version = "1.0",
                 },
                 new Standard
                 {
@@ -270,12 +270,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m
                     },
                     Status = "Approved for delivery",
-                    Version = 1.0m,
+                    Version = "1.0",
                     Options = new List<string>
                     {
                         "Cosmetic",
                         "Orthodontist"
-                    }
+                    },
                 }
             };
         }
@@ -297,7 +297,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Proposal in development",
-                    Version = 1.1m
+                    Version = "1.1"
                 },
                  new Standard
                 {
@@ -311,7 +311,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "In development",
-                    Version = 1.0m,
+                    Version = "1.0",
                     Options = new List<string>
                     {
                         "Ferrous",
@@ -338,7 +338,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Withdrawn",
-                    Version = 1.0m,
+                    Version = "1.0",
                     Options = new List<string>
                     {
                         "Wine",
@@ -363,7 +363,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Level = 2,
                     RouteCode = routes[0].Id,
                     Status = "Retired",
-                    Version = 1.2m,
+                    Version = "1.2",
                     Options = new List<string>
                     {
                         "Beer",
@@ -381,7 +381,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Level = 2,
                     RouteCode = routes[0].Id,
                     Status = "Retired",
-                    Version = 1.1m
+                    Version = "1.1"
                 },
                 new Standard
                 {
@@ -394,7 +394,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Level = 3,
                     RouteCode = routes[2].Id,
                     Status = "Retired",
-                    Version = 1.0m,
+                    Version = "1.0",
                     Options = new List<string>
                     {
                         "Studio",
@@ -412,7 +412,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Level = 3,
                     RouteCode = routes[2].Id,
                     Status = "Retired",
-                    Version = 1.0m,
+                    Version = "1.0",
                     Options = new List<string>
                     {
                         "Studio",

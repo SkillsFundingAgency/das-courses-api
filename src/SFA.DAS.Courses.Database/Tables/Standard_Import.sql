@@ -24,7 +24,7 @@
 	[Keywords] VARCHAR(MAX) NULL,
 	[TypicalJobTitles] VARCHAR(MAX) NULL,
 	[StandardPageUrl] VARCHAR(500) NOT NULL,
-	[Version] DECIMAL(18, 1) NULL,
+	[Version] VARCHAR(50) NULL,
     [RegulatedBody] VARCHAR(1000) NULL,
     [Skills] NVARCHAR(MAX) NULL, 
     [Knowledge] NVARCHAR(MAX) NULL, 
@@ -37,6 +37,8 @@
     [OptionsUnstructuredTemplate] NVARCHAR(MAX) NULL, 
     [CreatedDate] DATETIME NULL,
     [EPAChanged] BIT NOT NULL DEFAULT 0,
+    [VersionMajor] INT NOT NULL DEFAULT 0,
+    [VersionMinor] INT NOT NULL DEFAULT 0,    
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO

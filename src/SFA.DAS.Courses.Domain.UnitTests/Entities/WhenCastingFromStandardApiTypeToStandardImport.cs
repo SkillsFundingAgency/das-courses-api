@@ -106,7 +106,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_If_The_Version_Is_Null_It_Is_Set_As_Zero(ImportTypes.Standard standard)
+        public void Then_If_The_Version_Is_Null_It_Is_Set_To_Null(ImportTypes.Standard standard)
         {
             //Arrange
             standard.Version = null;            
@@ -115,7 +115,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Version.Should().Be(0);
+            actual.Version.Should().BeNull();
         }
 
         [Test, AutoData]
