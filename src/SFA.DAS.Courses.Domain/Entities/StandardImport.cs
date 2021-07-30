@@ -37,7 +37,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 StandardPageUrl = standard.StandardPageUrl.AbsoluteUri,
                 Title = standard.Title.Trim(),
                 TypicalJobTitles = string.Join("|", standard.TypicalJobTitles),
-                Version = standard.Version,
+                Version = standard.Version.ToBaselineVersion(),
                 VersionMajor = GetVersionPart(standard.Version, VersionPart.Major),
                 VersionMinor = GetVersionPart(standard.Version, VersionPart.Minor),
                 Keywords = standard.Keywords.Any() ? string.Join("|", standard.Keywords) : null,
