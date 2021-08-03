@@ -120,6 +120,17 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
+        public void Then_Major_and_Minor_versions_are_mapped(ImportTypes.Standard standard)
+        {
+            standard.Version = "1.2";
+
+            var actual = (StandardImport)standard;
+
+            actual.VersionMajor.Should().Be(1);
+            actual.VersionMinor.Should().Be(2);
+        }
+
+        [Test, AutoData]
         public void Then_All_Skills_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
