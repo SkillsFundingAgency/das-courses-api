@@ -59,23 +59,13 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             {
                 _logger.LogInformation("LARS Import - data into staging - started");
 
-                var lastFilePath = _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
-                var filePath = _larsPageParser.GetCurrentLarsDataDownloadFilePath();
+                var filePath = await _larsPageParser.GetCurrentLarsDataDownloadFilePath();
 
-                await Task.WhenAll(lastFilePath, filePath);
-
-                if (lastFilePath.Result != null && filePath.Result.Equals(
-                    lastFilePath.Result.FileName, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    _logger.LogInformation("LARS Import - no new data to import");
-                    return (false, null);
-                }
-
-                await _larsImportStaging.Import(filePath.Result);
+                await _larsImportStaging.Import(filePath);
 
                 _logger.LogInformation("LARS Import - data into staging - finished");
 
-                return (true, filePath.Result);
+                return (true, filePath);
             }
             catch (Exception e)
             {

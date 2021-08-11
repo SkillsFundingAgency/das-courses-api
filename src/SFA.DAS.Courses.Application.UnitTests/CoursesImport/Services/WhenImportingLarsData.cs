@@ -19,20 +19,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
     public class WhenImportingLarsData
     {
         [Test, RecursiveMoqAutoData]
-        public async Task Then_The_Download_Path_Is_Parsed_From_The_Url_And_The_Current_File_Is_Checked_Against_The_Existing_And_If_Same_Then_No_Download(
+        public async Task Then_The_Download_Path_Is_Parsed_From_The_Url_And_The_Current_File_Is_Checked_Against_The_Existing_And_If_Same_Then_Download(
             string filePath,
+            string content,
             [Frozen] Mock<ILarsPageParser> pageParser,
             [Frozen] Mock<IDataDownloadService> service,
             [Frozen] Mock<IImportAuditRepository> repository,
-            [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
-            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
-            [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
-            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
-            [Frozen] Mock<ISectorSubjectAreaTier2Repository> sectorSubjectAreaRepository,
-            [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaImportRepository,
             LarsImportService larsImportService)
         {
             //Arrange
+            service.Setup(x => x.GetFileStream(filePath))
+                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
             pageParser.Setup(x => x.GetCurrentLarsDataDownloadFilePath()).ReturnsAsync(filePath);
             repository.Setup(x => x.GetLastImportByType(ImportType.LarsImport))
                 .ReturnsAsync(new ImportAudit(DateTime.Now, 100, ImportType.LarsImport, filePath));
@@ -42,13 +39,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             
             //Assert
             pageParser.Verify(x=>x.GetCurrentLarsDataDownloadFilePath(), Times.Once);
-            service.Verify(x=>x.GetFileStream(It.IsAny<string>()), Times.Never);
-            larsStandardImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
-            apprenticeshipFundingImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
-            sectorSubjectAreaImportRepository.Verify(x=>x.DeleteAll(), Times.Never);
-            larsStandardRepository.Verify(x=>x.DeleteAll(), Times.Never);
-            apprenticeshipFundingRepository.Verify(x=>x.DeleteAll(), Times.Never);
-            sectorSubjectAreaRepository.Verify(x=>x.DeleteAll(), Times.Never);
+            service.Verify(x=>x.GetFileStream(filePath), Times.Once);
         }
         
         [Test, RecursiveMoqAutoData]
