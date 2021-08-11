@@ -14,7 +14,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Extensions
             if (version < 0) version *= -1;
 
             //Act
-            var actual = reference.ToStandardVersionId(version.ToString());
+            var actual = reference.ToStandardUId(version.ToString());
             
             //Assert
             actual.Should().Be($"{reference}_{version}");
@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Extensions
             var modified = $"  {reference} ";
             
             //Act
-            var actual = modified.ToStandardVersionId(version.ToString());
+            var actual = modified.ToStandardUId(version.ToString());
             
             //Assert
             actual.Should().Be($"{reference}_{version}");
@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Extensions
         public void Then_If_No_Version_Then_Set_To_One(string reference)
         {
             //Act
-            var actual = reference.ToStandardVersionId(null);
+            var actual = reference.ToStandardUId(null);
             
             //Assert
             actual.Should().Be($"{reference}_1.0");
@@ -48,7 +48,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Extensions
         public void Then_If_No_Version_Value_Then_Set_To_One(string reference)
         {
             //Act
-            var actual = reference.ToStandardVersionId("0");
+            var actual = reference.ToStandardUId("0");
             
             //Assert
             actual.Should().Be($"{reference}_1.0");
@@ -58,7 +58,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Extensions
         public void Then_If_No_Version_Decimal_Value_Then_Set_To_One(string reference)
         {
             //Act
-            var actual = reference.ToStandardVersionId("textVersion");
+            var actual = reference.ToStandardUId("textVersion");
 
             //Assert
             actual.Should().Be($"{reference}_1.0");

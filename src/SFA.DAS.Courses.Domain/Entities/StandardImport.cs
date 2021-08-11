@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             return new StandardImport
             {
-                StandardUId = standard.ReferenceNumber.ToStandardVersionId(standard.Version),
+                StandardUId = standard.ReferenceNumber.ToStandardUId(standard.Version),
                 LarsCode = standard.LarsCode,
                 IfateReferenceNumber = standard.ReferenceNumber,
                 Status = standard.Status,

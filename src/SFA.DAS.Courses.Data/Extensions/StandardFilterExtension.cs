@@ -53,7 +53,7 @@ namespace SFA.DAS.Courses.Data.Extensions
 
                         var standardsByLarsCode = standards.GroupBy(s => s.LarsCode).Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault());
 
-                        var standardsByIfateReferenceNumber = standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+                        var standardsByIfateReferenceNumber = standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault());
 
                         var union = standardsByLarsCode.Union(standardsByIfateReferenceNumber).ToList();
                         return union;

@@ -1,8 +1,8 @@
 ﻿namespace SFA.DAS.Courses.Domain.Extensions
 {
-    public static class ToStandardVersionIdExtension
+    public static class ToStandarUIdExtension
     {
-        public static string ToStandardVersionId(this string ifateReferenceNumber, string version)
+        public static string ToStandardUId(this string ifateReferenceNumber, string version)
         {
             version = version.ToBaselineVersion();
             return $"{ifateReferenceNumber.Trim()}_{version}";
