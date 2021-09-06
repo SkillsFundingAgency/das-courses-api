@@ -37,9 +37,5 @@
       <LastGenOutput>Routes.feature.cs</LastGenOutput>
       <Generator>SpecFlowSingleFileGenerator</Generator>
     </SpecFlowFeatureFiles>
-    <SpecFlowFeatureFiles Update="Features\Options.feature">
-      <LastGenOutput>Options.feature.cs</LastGenOutput>
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-    </SpecFlowFeatureFiles>
   </ItemGroup>
 </Project>

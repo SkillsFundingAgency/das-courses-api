@@ -14,6 +14,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [Test, AutoData]
         public void Then_Maps_The_Fields(ImportTypes.Standard standard)
         {
+            standard.Version = "1.0";
             var actual = (StandardImport)standard;
 
             actual.Should().BeEquivalentTo(standard, options => options
@@ -106,7 +107,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_If_The_Version_Is_Null_It_Is_Set_As_Zero(ImportTypes.Standard standard)
+        public void Then_If_The_Version_Is_Null_It_Is_Set_To_DefaultVersion(ImportTypes.Standard standard)
         {
             //Arrange
             standard.Version = null;            
@@ -115,7 +116,18 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Version.Should().Be(0);
+            actual.Version.Should().Be("1.0");
+        }
+
+        [Test, AutoData]
+        public void Then_Major_and_Minor_versions_are_mapped(ImportTypes.Standard standard)
+        {
+            standard.Version = "1.2";
+
+            var actual = (StandardImport)standard;
+
+            actual.VersionMajor.Should().Be(1);
+            actual.VersionMinor.Should().Be(2);
         }
 
         [Test, AutoData]

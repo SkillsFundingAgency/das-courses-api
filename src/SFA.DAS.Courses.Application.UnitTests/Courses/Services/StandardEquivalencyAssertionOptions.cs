@@ -7,7 +7,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
     {
         public static EquivalencyAssertionOptions<Standard> ExcludingFieldsWithStrictOrdering(EquivalencyAssertionOptions<Standard> config) => ExcludingFields(config).WithStrictOrdering();
 
-        public static EquivalencyAssertionOptions<Standard> ExcludingFields (EquivalencyAssertionOptions<Standard> config) =>
+        public static EquivalencyAssertionOptions<Standard> ExcludingFields(EquivalencyAssertionOptions<Standard> config) =>
             config
                 .Excluding(c => c.LarsStandard)
                 .Excluding(c => c.ApprenticeshipFunding)
@@ -25,6 +25,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(c => c.EqaProviderContactEmail)
                 .Excluding(c => c.EqaProviderContactName)
                 .Excluding(c => c.EqaProviderName)
-                .Excluding(c => c.EqaProviderWebLink);
+                .Excluding(c => c.EqaProviderWebLink)
+                .Excluding(c => c.VersionMajor)
+                .Excluding(c => c.VersionMinor);
+
     }
 }

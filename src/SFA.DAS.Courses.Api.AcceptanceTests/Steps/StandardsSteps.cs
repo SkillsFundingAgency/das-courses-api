@@ -124,14 +124,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         private IEnumerable<Standard> GetExpected(Table table)
         {
             var testRoutes = DbUtilities.GetTestRoutes();
-            var standards =  new List<Standard>();
+            var standards = new List<Standard>();
             foreach (var row in table.Rows)
             {
-                standards.Add(DbUtilities.GetAllTestStandards().Single(standard => 
-                    standard.Title == row["title"] && 
+                standards.Add(DbUtilities.GetAllTestStandards().Single(standard =>
+                    standard.Title == row["title"] &&
                     standard.RouteCode == testRoutes.Single(sector => sector.Name == row["route"]).Id &&
                     standard.Level == int.Parse(row["level"]) &&
-                    standard.Version == decimal.Parse(row["version"]) &&
+                    standard.Version == row["version"] &&
                     standard.Status == row["status"]));
             }
 
@@ -160,6 +160,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.AssessmentPlanUrl)
                 .Excluding(c => c.TrailBlazerContact)
                 .Excluding(c => c.Options)
-                .Excluding(c => c.EPAChanged);
+                .Excluding(c => c.EPAChanged)
+                .Excluding(c => c.VersionMajor)
+                .Excluding(c => c.VersionMinor);
     }
 }

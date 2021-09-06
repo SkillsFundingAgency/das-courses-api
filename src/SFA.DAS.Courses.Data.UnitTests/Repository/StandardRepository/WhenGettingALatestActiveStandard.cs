@@ -31,7 +31,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                     StandardUId = "ST001_1.0",
                     LarsCode = 1,
                     Status = "Approved for delivery",
-                    Version = 1.0m,
+                    Version = "1.0",
+                    VersionMajor = 1,
+                    VersionMinor = 0,
                     LarsStandard = new LarsStandard
                     {
                         LarsCode = 1
@@ -43,7 +45,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                     StandardUId = "ST002_1.1",
                     LarsCode = 2,
                     Status = "Approved for delivery",
-                    Version = 1.1m,
+                    Version = "1.1",
+                    VersionMajor = 1,
+                    VersionMinor = 1,
                     LarsStandard = new LarsStandard
                     {
                         LarsCode = 2
@@ -55,7 +59,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                     StandardUId = ExpectedStandardUId,
                     LarsCode = 2,
                     Status = "Approved for delivery",
-                    Version = 1.2m,
+                    Version = "1.2",
+                    VersionMajor = 1,
+                    VersionMinor = 2,
                     LarsStandard = new LarsStandard
                     {
                         LarsCode = 2
@@ -67,7 +73,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                     StandardUId = "ST002_1.0",
                     LarsCode = 2,
                     Status = "Retired",
-                    Version = 1.0m,
+                    Version = "1.0",
+                    VersionMajor = 1,
+                    VersionMinor = 0,
                     LarsStandard = new LarsStandard
                     {
                         LarsCode = 2

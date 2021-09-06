@@ -51,9 +51,9 @@ namespace SFA.DAS.Courses.Data.Extensions
                         // To include all of the above we need to create a list that is grouped by LarsCode (otherwise unnecessary)
                         // and union it with the `actual` list which is grouped by IFateReferenceNumber 
 
-                        var standardsByLarsCode = standards.GroupBy(s => s.LarsCode).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+                        var standardsByLarsCode = standards.GroupBy(s => s.LarsCode).Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault());
 
-                        var standardsByIfateReferenceNumber = standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.Version).FirstOrDefault());
+                        var standardsByIfateReferenceNumber = standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault());
 
                         var union = standardsByLarsCode.Union(standardsByIfateReferenceNumber).ToList();
                         return union;

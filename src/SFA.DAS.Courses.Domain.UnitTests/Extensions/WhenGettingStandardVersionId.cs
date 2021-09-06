@@ -5,49 +5,58 @@ using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Extensions
 {
-    public class WhenGettingStandardVersionId
+    public class WhenGettingVersion
     {
         [Test, AutoData]
-        public void Then_the_Reference_And_Version_Are_Combined(string reference, decimal version)
-        {
-            //Act
-            var actual = reference.ToStandardVersionId(version);
-            
-            //Assert
-            actual.Should().Be($"{reference}_{version:0.0}");
-        }
-
-        [Test, AutoData]
-        public void Then_Whitespace_Is_Trimmed_From_The_Reference(string reference, decimal version)
+        public void AndVersionIsNull_Then_Return_Default_Version_Value()
         {
             //Arrange
-            var modified = $"  {reference} ";
-            
+            string version = null;
+
             //Act
-            var actual = modified.ToStandardVersionId(version);
-            
+            var actual = version.ToBaselineVersion();
+
             //Assert
-            actual.Should().Be($"{reference}_{version:0.0}");
+            actual.Should().Be("1.0");
         }
 
         [Test, AutoData]
-        public void Then_If_No_Version_Then_Set_To_One(string reference)
+        public void AndVersionIsWhitespace_Then_Return_Default_Version_Value()
         {
+            //Arrange
+            var version = "   ";
+
             //Act
-            var actual = reference.ToStandardVersionId(null);
-            
+            var actual = version.ToBaselineVersion();
+
             //Assert
-            actual.Should().Be($"{reference}_1.0");
+            actual.Should().Be("1.0");
         }
-        
+
         [Test, AutoData]
-        public void Then_If_No_Version_Value_Then_Set_To_One(string reference)
+        public void AndVersionIsNotADecimal_Then_Return_Default_Version_Value()
         {
+            //Arrange
+            var version = "notaversion";
+
             //Act
-            var actual = reference.ToStandardVersionId(0);
-            
+            var actual = version.ToBaselineVersion();
+
             //Assert
-            actual.Should().Be($"{reference}_1.0");
+            actual.Should().Be("1.0");
+        }
+
+        [Test, AutoData]
+        public void AndVersionIsLessThanOne_Then_Return_Default_Version_Value()
+        {
+            //Arrange
+            var version = "-12";
+
+            //Act
+            var actual = version.ToBaselineVersion();
+
+            //Assert
+            actual.Should().Be("1.0");
         }
     }
 }

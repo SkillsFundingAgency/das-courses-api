@@ -46,7 +46,9 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreDuties = standard.CoreDuties,
                 IntegratedApprenticeship = standard.IntegratedApprenticeship,
                 Options = standard.Options.Any() ? standard.Options : standard.OptionsUnstructuredTemplate.Any() ? standard.OptionsUnstructuredTemplate : new List<string>(),
-                EPAChanged = standard.EPAChanged
+                EPAChanged = standard.EPAChanged,
+                VersionMajor = standard.VersionMajor,
+                VersionMinor = standard.VersionMinor,
             };
         }
     }

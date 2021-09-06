@@ -102,7 +102,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             importRepository.Verify(x =>
                 x.InsertMany(It.Is<List<StandardImport>>(c =>
-                    c.TrueForAll(s => s.StandardUId.Equals(s.IfateReferenceNumber.ToStandardVersionId(s.Version))))), Times.Once);
+                    c.TrueForAll(s => s.StandardUId.Equals(s.IfateReferenceNumber.ToStandardUId(s.Version))))), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -129,7 +129,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             importRepository.Verify(x =>
                 x.InsertMany(It.Is<List<StandardImport>>(c =>
-                    c.TrueForAll(s => s.StandardUId.Equals(s.IfateReferenceNumber.ToStandardVersionId(s.Version))))), Times.Once);
+                    c.TrueForAll(s => s.StandardUId.Equals(s.IfateReferenceNumber.ToStandardUId(s.Version))))), Times.Once);
         }
 
     }

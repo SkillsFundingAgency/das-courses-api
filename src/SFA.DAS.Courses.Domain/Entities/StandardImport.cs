@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             return new StandardImport
             {
-                StandardUId = standard.ReferenceNumber.ToStandardVersionId(standard.Version),
+                StandardUId = standard.ReferenceNumber.ToStandardUId(standard.Version),
                 LarsCode = standard.LarsCode,
                 IfateReferenceNumber = standard.ReferenceNumber,
                 Status = standard.Status,
@@ -37,7 +37,9 @@ namespace SFA.DAS.Courses.Domain.Entities
                 StandardPageUrl = standard.StandardPageUrl.AbsoluteUri,
                 Title = standard.Title.Trim(),
                 TypicalJobTitles = string.Join("|", standard.TypicalJobTitles),
-                Version = standard.Version ?? 0,
+                Version = standard.Version.ToBaselineVersion(),
+                VersionMajor = GetVersionPart(standard.Version, VersionPart.Major),
+                VersionMinor = GetVersionPart(standard.Version, VersionPart.Minor),
                 Keywords = standard.Keywords.Any() ? string.Join("|", standard.Keywords) : null,
                 AssessmentPlanUrl = standard.AssessmentPlanUrl,
                 ApprovedForDelivery = standard.ApprovedForDelivery,
@@ -60,6 +62,37 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CreatedDate = standard.CreatedDate,
                 EPAChanged = IsEPAChanged(standard)
             };
+        }
+
+        private static int GetVersionPart(string version, VersionPart part)
+        {
+            if (string.IsNullOrWhiteSpace(version))
+            {
+                return 0;
+            }
+
+            var versionParts = version.Split('.', StringSplitOptions.RemoveEmptyEntries);
+            var versionPart = string.Empty;
+
+            if (versionParts.Length != 2)
+            {
+                return 0;
+            }
+            else if (part == VersionPart.Major)
+            {
+                versionPart = versionParts[0];
+            }
+            else if (part == VersionPart.Minor)
+            {
+                versionPart = versionParts[1];
+            }
+
+            if(int.TryParse(versionPart, out var intVersion))
+            {
+                return intVersion;
+            }
+
+            return 0;
         }
 
         private static bool SetIsIntegratedApprenticeship(Domain.ImportTypes.Standard standard)
