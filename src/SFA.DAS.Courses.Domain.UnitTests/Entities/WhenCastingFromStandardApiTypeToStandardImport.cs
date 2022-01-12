@@ -38,10 +38,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.LarsCode.Should().Be(standard.LarsCode);
             actual.StandardPageUrl.Should().Be(standard.StandardPageUrl.AbsoluteUri);
             actual.TypicalJobTitles.Should().Be(string.Join("|", standard.TypicalJobTitles));
-            actual.TrailBlazerContact.Should().Be(standard.TbMainContact);
-            actual.EqaProviderName.Should().Be(standard.EqaProvider.ProviderName);
-            actual.EqaProviderContactName.Should().Be(standard.EqaProvider.ContactName);
-            actual.EqaProviderContactEmail.Should().Be(standard.EqaProvider.ContactEmail);
             actual.EqaProviderWebLink.Should().Be(standard.EqaProvider.WebLink);
         }
 
@@ -336,6 +332,104 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.EPAChanged.Should().Be(true);
+        }
+
+        [Test]
+        [InlineAutoData("ST0001")]
+        [InlineAutoData(" ST0001")]
+        [InlineAutoData("  ST0001")]
+        [InlineAutoData("ST0001 ")]
+        public void Then_ifate_reference_is_trimmed_and_mapped(string ifateReference, ImportTypes.Standard standard)
+        {
+            standard.ReferenceNumber = ifateReference;
+
+            var actual = (StandardImport)standard;
+
+            actual.IfateReferenceNumber.Should().Be("ST0001");
+        }
+
+        [Test]
+        [InlineAutoData("Live", "Live")]
+        [InlineAutoData(" Approved for delivery", "Approved for delivery")]
+        [InlineAutoData("  Retired ", "Retired")]
+        [InlineAutoData("Withdrawn ", "Withdrawn")]
+        public void Then_status_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        {
+            standard.Status = source;
+
+            var actual = (StandardImport)standard;
+
+            actual.Status.Should().Be(expected);
+        }
+
+        [Test]
+        [InlineAutoData("trailblazer@contact.com", "trailblazer@contact.com")]
+        [InlineAutoData(" trailblazer@contact.com", "trailblazer@contact.com")]
+        [InlineAutoData("  trailblazer@contact.com ", "trailblazer@contact.com")]
+        [InlineAutoData(null, null)]
+        public void Then_trail_blazer_contact_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        {
+            standard.TbMainContact = source;
+
+            var actual = (StandardImport)standard;
+
+            actual.TrailBlazerContact.Should().Be(expected);
+        }
+
+        [Test]
+        [InlineAutoData("Provider name", "Provider name")]
+        [InlineAutoData(" Provider name", "Provider name")]
+        [InlineAutoData("  Provider name ", "Provider name")]
+        [InlineAutoData(null, null)]
+        public void Then_provider_name_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        {
+            standard.EqaProvider.ProviderName = source;
+
+            var actual = (StandardImport)standard;
+
+            actual.EqaProviderName.Should().Be(expected);
+        }
+
+        [Test]
+        [InlineAutoData("Contact name", "Contact name")]
+        [InlineAutoData(" Contact name", "Contact name")]
+        [InlineAutoData("  Contact name ", "Contact name")]
+        [InlineAutoData(null, null)]
+        public void Then_provider_contact_name_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        {
+            standard.EqaProvider.ContactName = source;
+
+            var actual = (StandardImport)standard;
+
+            actual.EqaProviderContactName.Should().Be(expected);
+        }
+
+        [Test]
+        [InlineAutoData("contact@email.com", "contact@email.com")]
+        [InlineAutoData(" contact@email.com", "contact@email.com")]
+        [InlineAutoData("  contact@email.com ", "contact@email.com")]
+        [InlineAutoData(null, null)]
+        public void Then_provider_contact_email_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        {
+            standard.EqaProvider.ContactEmail = source;
+
+            var actual = (StandardImport)standard;
+
+            actual.EqaProviderContactEmail.Should().Be(expected);
+        }
+
+        [Test]
+        [InlineAutoData("Regulated body", "Regulated body")]
+        [InlineAutoData(" Regulated body", "Regulated body")]
+        [InlineAutoData("  Regulated body ", "Regulated body")]
+        [InlineAutoData(null, null)]
+        public void Then_regulated_body_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        {
+            standard.RegulatedBody = source;
+
+            var actual = (StandardImport)standard;
+
+            actual.RegulatedBody.Should().Be(expected);
         }
     }
 }
