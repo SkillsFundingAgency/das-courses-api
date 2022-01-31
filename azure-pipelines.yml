@@ -10,6 +10,8 @@ pr:
 variables:
   - name: SolutionBaseName
     value: SFA.DAS.Courses
+  - name: BuildConfiguration
+    value: release
   - group: "ESFA - SonarCloud"
 
 resources:
@@ -26,7 +28,7 @@ stages:
   - template: pipeline-templates/job/code-build.yml
     parameters:
       SolutionBaseName: $(SolutionBaseName)
-      BuildConfiguration: release
+      BuildConfiguration: $(BuildConfiguration)
   - template: azure-pipelines-templates/build/job/dacpac-template.yml@das-platform-building-blocks
     parameters:
       SolutionBaseName: $(SolutionBaseName).dacpac
