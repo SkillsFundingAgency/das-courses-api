@@ -12,7 +12,7 @@ variables:
     value: SFA.DAS.Courses
   - name: BuildConfiguration
     value: release
-  - group: "ESFA - SonarCloud"
+  - group: "BUILD Management Resources"
 
 resources:
   repositories:
