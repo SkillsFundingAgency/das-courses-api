@@ -187,6 +187,31 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
+        public void Then_Leading_And_Trailing_Whitespace_Is_Removed_From_All_Options(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Options = new List<Option>
+            {
+                new Option{Title = " Number 1 option"},
+                new Option{Title = "Number 2 option "},
+                new Option{Title = " Number 2 option "},
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            var expectedResult = new List<string>
+            {
+                "Number 1 option",
+                "Number 2 option",
+                "Number 2 option",
+            };
+
+            actual.Options.Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Test, AutoData]
         public void Then_Options_Are_Mapped_To_Empty_List(ImportTypes.Standard standard)
         {
             //Arrange
