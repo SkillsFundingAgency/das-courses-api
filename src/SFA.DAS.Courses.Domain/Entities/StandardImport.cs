@@ -56,7 +56,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = coreDuties,
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
-                Options = standard.Options?.Select(o => o.Title).ToList() ?? new List<string>(),
+                Options = standard.Options?.Select(o => o.Title.Trim()).ToList() ?? new List<string>(),
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
                 RouteCode = standard.RouteCode,
                 CreatedDate = standard.CreatedDate,
