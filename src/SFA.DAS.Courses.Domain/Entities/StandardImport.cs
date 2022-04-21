@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 coreDuties = GetSkillDetailFromMappedCoreSkill(standard, mappedSkillsList);
             }
 
-            return new StandardImport
+            var ret = new StandardImport
             {
                 StandardUId = standard.ReferenceNumber.ToStandardUId(standard.Version),
                 LarsCode = standard.LarsCode,
@@ -56,12 +56,16 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = coreDuties,
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
-                Options = standard.Options?.Select(o => o.Title.Trim()).ToList() ?? new List<string>(),
+                Options = standard.Options?.Select(o => o.Title?.Trim()).ToList() ?? new List<string>(),
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
                 RouteCode = standard.RouteCode,
                 CreatedDate = standard.CreatedDate,
                 EPAChanged = IsEPAChanged(standard)
             };
+
+            ret.Options2(CreateStructuredOptionsList(standard));
+
+            return ret;
         }
 
         private static int GetVersionPart(string version, VersionPart part)
@@ -87,7 +91,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 versionPart = versionParts[1];
             }
 
-            if(int.TryParse(versionPart, out var intVersion))
+            if (int.TryParse(versionPart, out var intVersion))
             {
                 return intVersion;
             }
@@ -130,6 +134,25 @@ namespace SFA.DAS.Courses.Domain.Entities
             if (string.IsNullOrWhiteSpace(standard.Change)) return false;
 
             return standard.Change.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
+        {
+            var od = standard.Options?.Select(x => (x.OptionId, standard.Duties.Where(y => y.MappedOptions.Contains(x.OptionId))));
+
+            return standard.Options?.Select(x => new StandardOption
+            {
+                OptionId = x.OptionId,
+                Knowledge = standard.Knowledge?
+                    .Where(y => od
+                                .Where(z => z.OptionId == x.OptionId)
+                                .SelectMany(z => z.Item2)
+                                .SelectMany(z => z.MappedKnowledge)
+                                .Contains(y.KnowledgeId))
+                    .Select(x => x.Detail)
+                    .ToList(),
+                    
+            }).ToList();
         }
     }
 }

@@ -165,7 +165,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public List<Guid> MappedKnowledge { get; set; }
 
         [JsonProperty("mappedOptions")]
-        public object MappedOptions { get; set; }
+        public List<Guid> MappedOptions { get; set; }
 
         [JsonProperty("mappedSkills")]
         public List<Guid> MappedSkills { get; set; }
@@ -186,7 +186,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     public class Knowledge
     {
         [JsonProperty("knowledgeId")]
-        public string KnowledgeId { get; set; }
+        public Guid KnowledgeId { get; set; }
 
         [JsonProperty("detail")]
         public string Detail { get; set; }

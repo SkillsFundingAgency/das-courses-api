@@ -127,6 +127,41 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
+        public void Then_All_Knowledge_Is_Mapped_To_Options(ImportTypes.Standard standard)
+        {
+            //Arrange
+            var optionId = Guid.NewGuid();
+
+            standard.Knowledge = new List<Knowledge>
+            {
+                new Knowledge { KnowledgeId = Guid.NewGuid(), Detail = "k1" },
+                new Knowledge { KnowledgeId = Guid.NewGuid(), Detail = "k2" },
+                new Knowledge { KnowledgeId = Guid.NewGuid(), Detail = "k3" },
+                new Knowledge { KnowledgeId = Guid.NewGuid(), Detail = "k4" },
+            };
+            standard.Duties = new List<Duty>
+            {
+                new Duty
+                {
+                    DutyId = Guid.NewGuid(),
+                    MappedKnowledge = standard.Knowledge.Take(2).Select(x => x.KnowledgeId).ToList(),
+                    MappedOptions = new List<Guid> { optionId },
+                }
+            };
+            standard.Options = new List<ImportTypes.Option>
+            {
+                new ImportTypes.Option { OptionId = optionId }
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options2().Should().Contain(x => x.OptionId == optionId)
+                .Which.Knowledge.Should().BeEquivalentTo( "k1", "k2");
+        }
+
+        [Test, AutoData]
         public void Then_All_Skills_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
