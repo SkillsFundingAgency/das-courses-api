@@ -212,6 +212,48 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
+        public void Then_Null_MappedOptions_Are_OK(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Duties = new List<Duty>
+            {
+                new Duty
+                {
+                    DutyId = Guid.NewGuid(),
+                    MappedOptions = null,
+                }
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options2().Should().Contain(x => x.OptionId == standard.Options.First().OptionId)
+                .Which.Behaviours.Should().BeEmpty();
+        }
+
+        [Test, AutoData]
+        public void Then_Null_KSBs_For_Options_Are_OK(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Duties = new List<Duty>
+            {
+                new Duty
+                {
+                    DutyId = Guid.NewGuid(),
+                    MappedOptions = standard.Options.Select(x => x.OptionId).ToList(),
+                }
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options2().Should().Contain(x => x.OptionId == standard.Options.First().OptionId)
+                .Which.Behaviours.Should().BeEmpty();
+        }
+
+        [Test, AutoData]
         public void Then_All_Skills_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange

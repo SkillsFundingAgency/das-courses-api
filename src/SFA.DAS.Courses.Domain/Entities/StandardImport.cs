@@ -138,7 +138,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
-            var od = standard.Options?.Select(x => (x.OptionId, standard.Duties.Where(y => y.MappedOptions.Contains(x.OptionId))));
+            var od = standard.Options?.Select(x => (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)));
 
             return standard.Options?.Select(x => new StandardOption
             {

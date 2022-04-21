@@ -56,7 +56,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public string Version { get; set; }
 
         [JsonProperty("skills")]
-        public List<Skill> Skills { get; set; }
+        public List<Skill> Skills { get; set; } = new List<Skill>();
 
         [JsonProperty("knowledges")]
         public List<Knowledge> Knowledge { get; set; } = new List<Knowledge>();
@@ -159,10 +159,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public long IsThisACoreDuty { get; set; }
 
         [JsonProperty("mappedBehaviour")]
-        public List<Guid> MappedBehaviour { get; set; }
+        public List<Guid> MappedBehaviour { get; set; } = new List<Guid>();
 
         [JsonProperty("mappedKnowledge")]
-        public List<Guid> MappedKnowledge { get; set; }
+        public List<Guid> MappedKnowledge { get; set; } = new List<Guid>();
 
         [JsonProperty("mappedOptions")]
         public List<Guid> MappedOptions { get; set; }
