@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Domain.ImportTypes;
@@ -29,6 +29,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Data
             MappedOptions = _options.Select(x => x.OptionId).ToList(),
             MappedKnowledge = _options.SelectMany(x => x.Knowledge).Select(x => x.KnowledgeId).ToList(),
             MappedSkills = _options.SelectMany(x => x.Skills).Select(x => Guid.Parse(x.SkillId)).ToList(),
+            MappedBehaviour = _options.SelectMany(x => x.Behaviours).Select(x => Guid.Parse(x.BehaviourId)).ToList(),
         };
     }
 }

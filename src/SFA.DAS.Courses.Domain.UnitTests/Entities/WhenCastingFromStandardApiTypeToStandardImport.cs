@@ -182,6 +182,36 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
+        public void Then_All_Behaviours_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Behaviours = BehavioursBuilder.Create("b1", "b2", "b3", "b4", "b5", "b6");
+            var options = new[]
+            {
+                new OptionBuilder().WithBehaviours(standard.Behaviours.Take(1)),
+                new OptionBuilder().WithBehaviours(standard.Behaviours.Skip(2).Take(3)),
+                new OptionBuilder().WithBehaviours(standard.Behaviours.Skip(3)),
+            };
+            standard.Options = options.Select(x => x.Build()).ToList();
+            standard.Duties = new List<Duty>
+            {
+                new DutyBuilder().ForOptions(options[0], options[1]).Build(),
+                new DutyBuilder().ForOptions(options[2]).Build(),
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options2().Should().Contain(x => x.OptionId == options[0].OptionId)
+                .Which.Behaviours.Should().BeEquivalentTo("b1", "b3", "b4", "b5");
+            actual.Options2().Should().Contain(x => x.OptionId == options[1].OptionId)
+                .Which.Behaviours.Should().BeEquivalentTo("b1", "b3", "b4", "b5");
+            actual.Options2().Should().Contain(x => x.OptionId == options[2].OptionId)
+                .Which.Behaviours.Should().BeEquivalentTo("b4", "b5", "b6");
+        }
+
+        [Test, AutoData]
         public void Then_All_Skills_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange

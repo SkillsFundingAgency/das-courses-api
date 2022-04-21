@@ -159,6 +159,14 @@ namespace SFA.DAS.Courses.Domain.Entities
                                 .Contains(y.SkillId))
                     .Select(x => x.Detail)
                     .ToList(),
+                Behaviours = standard.Behaviours?
+                    .Where(y => od
+                                .Where(z => z.OptionId == x.OptionId)
+                                .SelectMany(z => z.Item2)
+                                .SelectMany(z => z.MappedBehaviour, (_, id) => id.ToString())
+                                .Contains(y.BehaviourId))
+                    .Select(x => x.Detail)
+                    .ToList(),
                     
             }).ToList();
         }
