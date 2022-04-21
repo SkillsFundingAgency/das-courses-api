@@ -168,7 +168,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public List<Guid> MappedOptions { get; set; }
 
         [JsonProperty("mappedSkills")]
-        public List<Guid> MappedSkills { get; set; }
+        public List<Guid> MappedSkills { get; set; } = new List<Guid>();
 
         [JsonProperty("criteriaForMeasuringPerformance")]
         public string CriteriaForMeasuringPerformance { get; set; }

@@ -6,6 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;
+using SFA.DAS.Courses.Domain.UnitTests.Data;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 {
@@ -127,38 +128,57 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Knowledge_Is_Mapped_To_Options(ImportTypes.Standard standard)
+        public void Then_All_Knowledge_Is_Mapped_To_Correct_Options(ImportTypes.Standard standard)
         {
             //Arrange
-            var optionId = Guid.NewGuid();
-
-            standard.Knowledge = new List<Knowledge>
+            standard.Knowledge = KnowledgeBuilder.Create("k1", "k2", "k3", "k4");
+            var options = new[]
             {
-                new Knowledge { KnowledgeId = Guid.NewGuid(), Detail = "k1" },
-                new Knowledge { KnowledgeId = Guid.NewGuid(), Detail = "k2" },
-                new Knowledge { KnowledgeId = Guid.NewGuid(), Detail = "k3" },
-                new Knowledge { KnowledgeId = Guid.NewGuid(), Detail = "k4" },
+                new OptionBuilder().WithKnowledge(standard.Knowledge.Take(2)),
+                new OptionBuilder().WithKnowledge(standard.Knowledge.Skip(2)),
             };
+            standard.Options = options.Select(x => x.Build()).ToList();
             standard.Duties = new List<Duty>
             {
-                new Duty
-                {
-                    DutyId = Guid.NewGuid(),
-                    MappedKnowledge = standard.Knowledge.Take(2).Select(x => x.KnowledgeId).ToList(),
-                    MappedOptions = new List<Guid> { optionId },
-                }
-            };
-            standard.Options = new List<ImportTypes.Option>
-            {
-                new ImportTypes.Option { OptionId = optionId }
+                new DutyBuilder().ForOptions(options[0]).Build(),
+                new DutyBuilder().ForOptions(options[1]).Build(),
             };
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options2().Should().Contain(x => x.OptionId == optionId)
-                .Which.Knowledge.Should().BeEquivalentTo( "k1", "k2");
+            actual.Options2().Should().Contain(x => x.OptionId == options[0].OptionId)
+                .Which.Knowledge.Should().BeEquivalentTo("k1", "k2");
+            actual.Options2().Should().Contain(x => x.OptionId == options[1].OptionId)
+                .Which.Knowledge.Should().BeEquivalentTo("k3", "k4");
+        }
+
+        [Test, AutoData]
+        public void Then_All_Skills_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Skills = SkillsBuilder.Create("s1", "s2", "s3", "s4", "s5");
+            var options = new[]
+            {
+                new OptionBuilder().WithSkills(standard.Skills.Take(2)),
+                new OptionBuilder().WithSkills(standard.Skills.Skip(2)),
+            };
+            standard.Options = options.Select(x => x.Build()).ToList();
+            standard.Duties = new List<Duty>
+            {
+                new DutyBuilder().ForOptions(options[0]).Build(),
+                new DutyBuilder().ForOptions(options[1]).Build(),
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options2().Should().Contain(x => x.OptionId == options[0].OptionId)
+                .Which.Skills.Should().BeEquivalentTo("s1", "s2");
+            actual.Options2().Should().Contain(x => x.OptionId == options[1].OptionId)
+                .Which.Skills.Should().BeEquivalentTo("s3", "s4", "s5");
         }
 
         [Test, AutoData]

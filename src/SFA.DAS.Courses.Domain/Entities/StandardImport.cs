@@ -151,6 +151,14 @@ namespace SFA.DAS.Courses.Domain.Entities
                                 .Contains(y.KnowledgeId))
                     .Select(x => x.Detail)
                     .ToList(),
+                Skills = standard.Skills?
+                    .Where(y => od
+                                .Where(z => z.OptionId == x.OptionId)
+                                .SelectMany(z => z.Item2)
+                                .SelectMany(z => z.MappedSkills, (_, id) => id.ToString())
+                                .Contains(y.SkillId))
+                    .Select(x => x.Detail)
+                    .ToList(),
                     
             }).ToList();
         }

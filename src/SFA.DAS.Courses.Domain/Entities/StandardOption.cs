@@ -7,5 +7,6 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         public Guid OptionId { get; set; }
         public List<string> Knowledge { get; set; }
+        public List<string> Skills { get; set; }
     }
 }
