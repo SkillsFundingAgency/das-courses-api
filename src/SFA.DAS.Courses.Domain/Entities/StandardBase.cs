@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -43,10 +44,10 @@ namespace SFA.DAS.Courses.Domain.Entities
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        public List<string> Options { get; set; }
+        public List<string> Options => _options2?.Select(x => x.Title).ToList();
         // WIP - public properties and fields affect lots of tests
         private List<StandardOption> _options2;
-        public void Options2(List<StandardOption> value) => _options2 = value;
+        public List<StandardOption> Options2Setter { set { _options2 = value; } }
         public List<StandardOption> Options2() => _options2;
         //  /WIP
         public bool EPAChanged { get; set; }

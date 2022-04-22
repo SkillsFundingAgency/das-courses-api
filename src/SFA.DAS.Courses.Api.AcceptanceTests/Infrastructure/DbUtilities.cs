@@ -100,10 +100,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.3",
-                    Options = new List<string>
+                    Options2Setter = new List<StandardOption>
                     {
-                        "Beer",
-                        "Cider"
+                        new StandardOption{ Title = "Beer" },
+                        new StandardOption{ Title = "Cider" },
                     }
                 },
                 new Standard
@@ -271,10 +271,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options2Setter = new List<StandardOption>
                     {
-                        "Cosmetic",
-                        "Orthodontist"
+                        new StandardOption{ Title = "Cosmetic" },
+                        new StandardOption{ Title = "Orthodontist" }
                     },
                 }
             };
@@ -312,10 +312,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = null,
                     Status = "In development",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options2Setter = new List<StandardOption>
                     {
-                        "Ferrous",
-                        "Non-ferroes"
+                        new StandardOption{ Title = "Ferrous" },
+                        new StandardOption{ Title = "Non-ferroes" },
                     }
                 }
             };
@@ -339,10 +339,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = null,
                     Status = "Withdrawn",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options2Setter = new List<StandardOption>
                     {
-                        "Wine",
-                        "Spirits"
+                        new StandardOption{ Title = "Wine" },
+                        new StandardOption{ Title = "Spirits" },
                     }
                 }
             };
@@ -364,10 +364,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     Status = "Retired",
                     Version = "1.2",
-                    Options = new List<string>
+                    Options2Setter = new List<StandardOption>
                     {
-                        "Beer",
-                        "Cider"
+                        new StandardOption{ Title = "Beer" },
+                        new StandardOption{ Title = "Cider" },
                     }
                 },
                 new Standard
@@ -395,10 +395,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options2Setter = new List<StandardOption>
                     {
-                        "Studio",
-                        "Landscape"
+                        new StandardOption{ Title = "Studio" },
+                        new StandardOption{ Title = "Landscape" },
                     }
                 },
                 new Standard
@@ -413,10 +413,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options2Setter = new List<StandardOption>
                     {
-                        "Studio",
-                        "Landscape"
+                        new StandardOption{ Title = "Studio" },
+                        new StandardOption{ Title = "Landscape" },
                     }
                 }
             };

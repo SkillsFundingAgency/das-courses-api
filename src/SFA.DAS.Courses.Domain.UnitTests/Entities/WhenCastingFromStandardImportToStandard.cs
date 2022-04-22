@@ -33,8 +33,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [Test, RecursiveMoqAutoData]
         public void Then_If_Options_Do_Not_Exists_Then_OptionsUnstructuredTemplate_Are_Mapped_To_Options(StandardImport standardImport)
         {
-            standardImport.Options = new List<string>(); 
-
+            standardImport.Options2Setter = new List<StandardOption>();
+            
             var actual = (Standard)standardImport;
 
             actual.Options.Should().BeEquivalentTo(standardImport.OptionsUnstructuredTemplate);
@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [Test, RecursiveMoqAutoData]
         public void Then_If_No_Options_Exists_Then_Empty_List_is_Mapped_To_Options(StandardImport standardImport)
         {
-            standardImport.Options = new List<string>();
+            standardImport.Options2Setter = new List<StandardOption>();
             standardImport.OptionsUnstructuredTemplate = new List<string>();
 
             var actual = (Standard)standardImport;

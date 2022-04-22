@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 coreDuties = GetSkillDetailFromMappedCoreSkill(standard, mappedSkillsList);
             }
 
-            var ret = new StandardImport
+            return new StandardImport
             {
                 StandardUId = standard.ReferenceNumber.ToStandardUId(standard.Version),
                 LarsCode = standard.LarsCode,
@@ -56,16 +56,12 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = coreDuties,
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
-                Options = standard.Options?.Select(o => o.Title?.Trim()).ToList() ?? new List<string>(),
+                Options2Setter = CreateStructuredOptionsList(standard),
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
                 RouteCode = standard.RouteCode,
                 CreatedDate = standard.CreatedDate,
                 EPAChanged = IsEPAChanged(standard)
             };
-
-            ret.Options2(CreateStructuredOptionsList(standard));
-
-            return ret;
         }
 
         private static int GetVersionPart(string version, VersionPart part)
@@ -138,11 +134,13 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
-            var od = standard.Options?.Select(x => (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)));
+            var options = standard.Options ?? new List<ImportTypes.Option>();
+            var od = options.Select(x => (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)));
 
-            return standard.Options?.Select(x => new StandardOption
+            return options?.Select(x => new StandardOption
             {
                 OptionId = x.OptionId,
+                Title = x.Title?.Trim(),
                 Knowledge = standard.Knowledge?
                     .Where(y => od
                                 .Where(z => z.OptionId == x.OptionId)
@@ -167,7 +165,6 @@ namespace SFA.DAS.Courses.Domain.Entities
                                 .Contains(y.BehaviourId))
                     .Select(x => x.Detail)
                     .ToList(),
-                    
             }).ToList();
         }
     }
