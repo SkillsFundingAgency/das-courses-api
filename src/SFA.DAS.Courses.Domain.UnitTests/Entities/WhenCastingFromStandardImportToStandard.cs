@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
@@ -27,7 +28,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             var actual = (Standard)standardImport;
 
-            actual.Options.Should().BeEquivalentTo(standardImport.Options);
+            actual.Options2().Should().BeEquivalentTo(standardImport.Options2());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -37,7 +38,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             
             var actual = (Standard)standardImport;
 
-            actual.Options.Should().BeEquivalentTo(standardImport.OptionsUnstructuredTemplate);
+            actual.Options2().Select(c => c.Title).Should().BeEquivalentTo(standardImport.OptionsUnstructuredTemplate);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -48,7 +49,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             var actual = (Standard)standardImport;
 
-            actual.Options.Should().BeEquivalentTo(new List<string>());
+            actual.Options2().Should().BeEmpty();
         }
 
     }

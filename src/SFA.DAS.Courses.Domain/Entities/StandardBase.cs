@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        public List<string> Options => _options2?.Select(x => x.Title).ToList();
+        //public List<StandardOption> Options { get => _options2; }
         // WIP - public properties and fields affect lots of tests
         private List<StandardOption> _options2;
         public List<StandardOption> Options2Setter { set { _options2 = value; } }

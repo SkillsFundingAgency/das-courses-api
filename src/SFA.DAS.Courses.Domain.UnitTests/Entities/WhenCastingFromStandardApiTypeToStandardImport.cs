@@ -313,7 +313,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options.Should().BeEquivalentTo(standard.Options.Select(c => c.Title));
+            actual.Options2().Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Select(c => c.Title));
         }
 
         [Test]
@@ -343,7 +343,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options.Should().BeEquivalentTo(new List<string>());
+            actual.Options2().Should().BeEmpty();
         }
 
         [Test, AutoData]
