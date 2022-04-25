@@ -37,18 +37,18 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string RegulatedBody { get; set; }
         public virtual LarsStandard LarsStandard { get; set; }
         public virtual ICollection<ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
-        public List<string> Skills => _options2?.SelectMany(x => x.Skills ?? new List<string>()).ToList() ?? new List<string>();
-        public List<string> Knowledge => _options2?.SelectMany(x => x.Knowledge ?? new List<string>()).ToList() ?? new List<string>();
-        public List<string> Behaviours => _options2?.SelectMany(x => x.Behaviours ?? new List<string>()).ToList() ?? new List<string>();
+        public List<string> Skills => Options?.SelectMany(x => x.Skills ?? new List<string>()).ToList() ?? new List<string>();
+        public List<string> Knowledge => Options?.SelectMany(x => x.Knowledge ?? new List<string>()).ToList() ?? new List<string>();
+        public List<string> Behaviours => Options?.SelectMany(x => x.Behaviours ?? new List<string>()).ToList() ?? new List<string>();
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        //public List<StandardOption> Options { get => _options2; }
+        public List<StandardOption> Options { get; set; }
         // WIP - public properties and fields affect lots of tests
-        private List<StandardOption> _options2;
-        public List<StandardOption> Options2Setter { set { _options2 = value; } }
-        public List<StandardOption> Options2() => _options2;
+        //private List<StandardOption> Options;
+        public List<StandardOption> Options2Setter { set { Options = value; } }
+        public List<StandardOption> Options2() => Options;
         //  /WIP
         public bool EPAChanged { get; set; }
     }

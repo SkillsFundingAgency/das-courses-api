@@ -13,7 +13,14 @@ namespace SFA.DAS.Courses.Domain.Courses
 
         public static explicit operator StandardOption(Entities.StandardOption source)
         {
-            return new StandardOption();
+            return new StandardOption
+            {
+                OptionId = source.OptionId,
+                Title = source.Title,
+                Knowledge = source.Knowledge,
+                Skills = source.Skills,
+                Behaviours = source.Behaviours,
+            };
         }
     }
 
