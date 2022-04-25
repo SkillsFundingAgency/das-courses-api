@@ -148,9 +148,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options2().Should().Contain(x => x.OptionId == options[0].OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
                 .Which.Knowledge.Should().BeEquivalentTo("k1", "k2");
-            actual.Options2().Should().Contain(x => x.OptionId == options[1].OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
                 .Which.Knowledge.Should().BeEquivalentTo("k3", "k4");
         }
 
@@ -175,9 +175,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options2().Should().Contain(x => x.OptionId == options[0].OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
                 .Which.Skills.Should().BeEquivalentTo("s1", "s2");
-            actual.Options2().Should().Contain(x => x.OptionId == options[1].OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
                 .Which.Skills.Should().BeEquivalentTo("s3", "s4", "s5");
         }
 
@@ -203,11 +203,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options2().Should().Contain(x => x.OptionId == options[0].OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
                 .Which.Behaviours.Should().BeEquivalentTo("b1", "b3", "b4", "b5");
-            actual.Options2().Should().Contain(x => x.OptionId == options[1].OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
                 .Which.Behaviours.Should().BeEquivalentTo("b1", "b3", "b4", "b5");
-            actual.Options2().Should().Contain(x => x.OptionId == options[2].OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == options[2].OptionId)
                 .Which.Behaviours.Should().BeEquivalentTo("b4", "b5", "b6");
         }
 
@@ -228,7 +228,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options2().Should().Contain(x => x.OptionId == standard.Options.First().OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == standard.Options.First().OptionId)
                 .Which.Behaviours.Should().BeEmpty();
         }
 
@@ -249,7 +249,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options2().Should().Contain(x => x.OptionId == standard.Options.First().OptionId)
+            actual.Options.Should().Contain(x => x.OptionId == standard.Options.First().OptionId)
                 .Which.Behaviours.Should().BeEmpty();
         }
 
@@ -313,7 +313,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options2().Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Select(c => c.Title));
+            actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Select(c => c.Title));
         }
 
         [Test]
@@ -343,7 +343,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options2().Should().BeEmpty();
+            actual.Options.Should().BeEmpty();
         }
 
         [Test, AutoData]

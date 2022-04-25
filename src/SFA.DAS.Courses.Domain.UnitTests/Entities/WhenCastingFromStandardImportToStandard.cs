@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             var actual = (Standard)standardImport;
 
-            actual.Options2().Should().BeEquivalentTo(standardImport.Options2());
+            actual.Options.Should().BeEquivalentTo(standardImport.Options);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             
             var actual = (Standard)standardImport;
 
-            actual.Options2().Select(c => c.Title).Should().BeEquivalentTo(standardImport.OptionsUnstructuredTemplate);
+            actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standardImport.OptionsUnstructuredTemplate);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -49,7 +49,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             var actual = (Standard)standardImport;
 
-            actual.Options2().Should().BeEmpty();
+            actual.Options.Should().BeEmpty();
         }
 
     }

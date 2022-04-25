@@ -48,7 +48,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         // WIP - public properties and fields affect lots of tests
         //private List<StandardOption> Options;
         public List<StandardOption> Options2Setter { set { Options = value; } }
-        public List<StandardOption> Options2() => Options;
         //  /WIP
         public bool EPAChanged { get; set; }
     }

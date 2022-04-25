@@ -86,7 +86,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options2()?.Select(x => (StandardOption)x).ToList(),
+                Options = source.Options?.Select(x => (StandardOption)x).ToList(),
                 SectorCode = source.LarsStandard?.SectorCode ?? 0,
                 EPAChanged = source.EPAChanged,
                 VersionMajor = source.VersionMajor,
