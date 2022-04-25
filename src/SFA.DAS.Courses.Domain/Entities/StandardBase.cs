@@ -45,10 +45,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
         public List<StandardOption> Options { get; set; }
-        // WIP - public properties and fields affect lots of tests
-        //private List<StandardOption> Options;
-        public List<StandardOption> Options2Setter { set { Options = value; } }
-        //  /WIP
         public bool EPAChanged { get; set; }
     }
 }
