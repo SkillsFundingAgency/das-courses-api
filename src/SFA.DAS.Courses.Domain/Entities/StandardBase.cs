@@ -37,9 +37,9 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string RegulatedBody { get; set; }
         public virtual LarsStandard LarsStandard { get; set; }
         public virtual ICollection<ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
-        public List<string> Skills { get; set; }
-        public List<string> Knowledge { get; set; }
-        public List<string> Behaviours { get; set; }
+        public List<string> Skills => _options2?.SelectMany(x => x.Skills ?? new List<string>()).ToList() ?? new List<string>();
+        public List<string> Knowledge => _options2?.SelectMany(x => x.Knowledge ?? new List<string>()).ToList() ?? new List<string>();
+        public List<string> Behaviours => _options2?.SelectMany(x => x.Behaviours ?? new List<string>()).ToList() ?? new List<string>();
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }

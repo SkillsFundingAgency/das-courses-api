@@ -49,9 +49,6 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EqaProviderContactEmail = standard.EqaProvider?.ContactEmail?.Trim(),
                 EqaProviderWebLink = standard.EqaProvider?.WebLink,
                 RegulatedBody = standard.RegulatedBody?.Trim(),
-                Skills = standard.Skills?.Select(x => x.Detail).ToList() ?? new List<string>(),
-                Knowledge = standard.Knowledge?.Select(x => x.Detail).ToList() ?? new List<string>(),
-                Behaviours = standard.Behaviours?.Select(x => x.Detail).ToList() ?? new List<string>(),
                 Duties = standard.Duties?.Select(x => x.DutyDetail).ToList() ?? new List<string>(),
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = coreDuties,
@@ -134,6 +131,11 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
+            if(!standard.CoreAndOptions)
+            {
+                return CreateStructuredOptionsListWithoutMapping(standard);
+            }
+
             var options = standard.Options ?? new List<ImportTypes.Option>();
             var od = options.Select(x => (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)));
 
@@ -166,6 +168,19 @@ namespace SFA.DAS.Courses.Domain.Entities
                     .Select(x => x.Detail)
                     .ToList(),
             }).ToList();
+        }
+
+        private static List<StandardOption> CreateStructuredOptionsListWithoutMapping(ImportTypes.Standard standard)
+        {
+            return new List<StandardOption>
+            {
+                new StandardOption
+                {
+                    Knowledge = standard.Knowledge.Select(x => x.Detail).ToList(),
+                    Skills = standard.Skills.Select(x => x.Detail).ToList(),
+                    Behaviours = standard.Behaviours.Select(x => x.Detail).ToList(),
+                }
+            };
         }
     }
 }

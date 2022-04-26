@@ -257,6 +257,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_Skills_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = false;
 
             //Act
             var actual = (StandardImport)standard;
@@ -269,6 +270,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_Knowledge_Is_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = false;
 
             //Act
             var actual = (StandardImport)standard;
@@ -281,6 +283,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_Behaviours_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = false;
 
             //Act
             var actual = (StandardImport)standard;

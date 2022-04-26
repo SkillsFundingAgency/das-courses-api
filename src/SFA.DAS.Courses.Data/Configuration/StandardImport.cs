@@ -25,9 +25,6 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
             builder.Property(x => x.Keywords).HasColumnName("Keywords");
             builder.Property(x => x.RegulatedBody).HasColumnName("RegulatedBody").HasColumnType("varchar").HasMaxLength(1000).IsRequired(false);
-            builder.Property(x => x.Skills).HasJsonConversion();
-            builder.Property(x => x.Knowledge).HasJsonConversion();
-            builder.Property(x => x.Behaviours).HasJsonConversion();
             builder.Property(x => x.Duties).HasJsonConversion();
             builder.Property(x => x.CoreDuties).HasJsonConversion();
             builder.Property(x => x.IntegratedApprenticeship).HasColumnName("IntegratedApprenticeship").HasColumnType("bit").IsRequired();
