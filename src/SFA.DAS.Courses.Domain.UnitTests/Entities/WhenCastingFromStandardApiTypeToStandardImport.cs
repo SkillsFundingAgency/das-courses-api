@@ -141,8 +141,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.Options = options.Select(x => x.Build()).ToList();
             standard.Duties = new List<Duty>
             {
-                new DutyBuilder().ForOptions(options[0]).Build(),
-                new DutyBuilder().ForOptions(options[1]).Build(),
+                new OptionDutyBuilder().ForOptions(options[0]).Build(),
+                new OptionDutyBuilder().ForOptions(options[1]).Build(),
             };
 
             //Act
@@ -168,12 +168,12 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.Options = new List<Option> { option.Build() };
             standard.Duties = new List<Duty>
             {
-                new DutyBuilder().ForOptions(option).Build(),
-                new DutyBuilder().ForCore()
-                .WithKnowledge(standard.Knowledge.Skip(1))
-                .WithSkills(standard.Skills.Skip(1))
-                .WithBehaviour(standard.Behaviours)
-                .Build(),
+                new OptionDutyBuilder().ForOptions(option).Build(),
+                new CoreDutyBuilder()
+                    .WithKnowledge(standard.Knowledge.Skip(1))
+                    .WithSkills(standard.Skills.Skip(1))
+                    .WithBehaviour(standard.Behaviours)
+                    .Build(),
             };
 
             //Act
@@ -199,8 +199,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.Options = options.Select(x => x.Build()).ToList();
             standard.Duties = new List<Duty>
             {
-                new DutyBuilder().ForOptions(options[0]).Build(),
-                new DutyBuilder().ForOptions(options[1]).Build(),
+                new OptionDutyBuilder().ForOptions(options[0]).Build(),
+                new OptionDutyBuilder().ForOptions(options[1]).Build(),
             };
 
             //Act
@@ -227,8 +227,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.Options = options.Select(x => x.Build()).ToList();
             standard.Duties = new List<Duty>
             {
-                new DutyBuilder().ForOptions(options[0], options[1]).Build(),
-                new DutyBuilder().ForOptions(options[2]).Build(),
+                new OptionDutyBuilder().ForOptions(options[0], options[1]).Build(),
+                new OptionDutyBuilder().ForOptions(options[2]).Build(),
             };
 
             //Act
@@ -241,6 +241,33 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Which.Behaviours.Should().BeEquivalentTo("b1", "b3", "b4", "b5");
             actual.Options.Should().Contain(x => x.OptionId == options[2].OptionId)
                 .Which.Behaviours.Should().BeEquivalentTo("b4", "b5", "b6");
+        }
+
+        [Test, AutoData]
+        public void Then_KSBs_Are_Unique(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Knowledge = KnowledgeBuilder.Create("k1", "k2");
+            standard.Skills = SkillsBuilder.Create("s1", "s2");
+            standard.Behaviours = BehavioursBuilder.Create("b1");
+            var options = new[]
+            {
+                new OptionBuilder().WithKnowledge(standard.Knowledge),
+                new OptionBuilder().WithKnowledge(standard.Knowledge),
+            };
+            standard.Options = options.Select(x => x.Build()).ToList();
+            standard.Duties = new List<Duty>
+            {
+                new OptionDutyBuilder().ForOptions(options).Build(),
+                new CoreDutyBuilder().WithKnowledge(standard.Knowledge).Build(),
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+                .Which.Knowledge.Should().OnlyHaveUniqueItems();
         }
 
         [Test, AutoData]
