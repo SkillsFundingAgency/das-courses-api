@@ -147,7 +147,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                     .Where(y => od
                                 .Where(z => z.OptionId == x.OptionId)
                                 .SelectMany(z => z.Item2)
-                                .SelectMany(z => z.MappedKnowledge)
+                                .SelectMany(z => z.MappedKnowledge.EmptyEnumerableIfNull())
                                 .Contains(y.KnowledgeId))
                     .Select(x => x.Detail)
                     .ToList(),
@@ -155,7 +155,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                     .Where(y => od
                                 .Where(z => z.OptionId == x.OptionId)
                                 .SelectMany(z => z.Item2)
-                                .SelectMany(z => z.MappedSkills, (_, id) => id.ToString())
+                                .SelectMany(z => z.MappedSkills.EmptyEnumerableIfNull(), (_, id) => id.ToString())
                                 .Contains(y.SkillId))
                     .Select(x => x.Detail)
                     .ToList(),
@@ -163,7 +163,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                     .Where(y => od
                                 .Where(z => z.OptionId == x.OptionId)
                                 .SelectMany(z => z.Item2)
-                                .SelectMany(z => z.MappedBehaviour, (_, id) => id.ToString())
+                                .SelectMany(z => z.MappedBehaviour.EmptyEnumerableIfNull(), (_, id) => id.ToString())
                                 .Contains(y.BehaviourId))
                     .Select(x => x.Detail)
                     .ToList(),

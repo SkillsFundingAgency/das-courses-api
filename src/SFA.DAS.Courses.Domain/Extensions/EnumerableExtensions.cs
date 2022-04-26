@@ -10,7 +10,7 @@ namespace SFA.DAS.Courses.Domain.Extensions
             this IEnumerable<TSource> source, Func<TSource, List<TDest>> mapper)
             => source.EmptyEnumerableIfNull().SelectMany(SelectOrEmptyList(mapper)).ToList();
 
-        private static IEnumerable<TSource>
+        public static IEnumerable<TSource>
         EmptyEnumerableIfNull<TSource>(this IEnumerable<TSource> source)
             => source ?? Enumerable.Empty<TSource>();
 

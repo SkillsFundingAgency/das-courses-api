@@ -219,7 +219,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             {
                 new Duty
                 {
-                    DutyId = Guid.NewGuid(),
                     MappedOptions = null,
                 }
             };
@@ -240,8 +239,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             {
                 new Duty
                 {
-                    DutyId = Guid.NewGuid(),
                     MappedOptions = standard.Options.Select(x => x.OptionId).ToList(),
+                    MappedKnowledge = null,
+                    MappedSkills = null,
+                    MappedBehaviour = null,
                 }
             };
 
