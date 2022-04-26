@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;
@@ -152,6 +153,27 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Which.Knowledge.Should().BeEquivalentTo("k1", "k2");
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
                 .Which.Knowledge.Should().BeEquivalentTo("k3", "k4");
+        }
+
+        [Test, AutoData]
+        public void Then_Core_Knowledge_Is_Mapped_To_All_Options(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Knowledge = KnowledgeBuilder.Create("k1", "k2", "k3");
+            var option = new OptionBuilder().WithKnowledge(standard.Knowledge.Take(1));
+            standard.Options = new List<Option> { option.Build() };
+            standard.Duties = new List<Duty>
+            {
+                new DutyBuilder().ForOptions(option).Build(),
+                new DutyBuilder().ForCore().WithKnowledge(standard.Knowledge.Skip(1)).Build(),
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().Contain(x => x.OptionId == option.OptionId)
+                .Which.Knowledge.Should().BeEquivalentTo("k1", "k2", "k3");
         }
 
         [Test, AutoData]

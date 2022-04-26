@@ -138,6 +138,10 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             var options = standard.Options ?? new List<ImportTypes.Option>();
             var od = options.Select(x => (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)));
+            var coreDuties = standard.Duties.Where(x => x.IsThisACoreDuty == 1);
+
+            var coreKnowledge = standard.Knowledge?
+                .Where(y => coreDuties.SelectMany(x => x.MappedKnowledge.EmptyEnumerableIfNull()).Contains(y.KnowledgeId));
 
             return options?.Select(x => new StandardOption
             {
@@ -149,6 +153,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                                 .SelectMany(z => z.Item2)
                                 .SelectMany(z => z.MappedKnowledge.EmptyEnumerableIfNull())
                                 .Contains(y.KnowledgeId))
+                    .Union(coreKnowledge)
                     .Select(x => x.Detail)
                     .ToList(),
                 Skills = standard.Skills?
