@@ -9,7 +9,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Data
     {
         public static List<Behaviour> Create(params string[] knowledge) =>
             knowledge
-                .Select(x => new Behaviour { BehaviourId = Guid.NewGuid().ToString(), Detail = x })
+                .Select(x => new Behaviour { BehaviourId = Guid.NewGuid(), Detail = x })
                 .ToList();
     }
 }

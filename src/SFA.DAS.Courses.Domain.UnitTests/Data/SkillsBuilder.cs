@@ -9,7 +9,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Data
     {
         public static List<Skill> Create(params string[] knowledge) =>
             knowledge
-                .Select(x => new Skill { SkillId = Guid.NewGuid().ToString(), Detail = x })
+                .Select(x => new Skill { SkillId = Guid.NewGuid(), Detail = x })
                 .ToList();
     }
 }

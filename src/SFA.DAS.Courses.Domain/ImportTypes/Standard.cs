@@ -141,7 +141,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     public class Skill
     {
         [JsonProperty("skillId")]
-        public string SkillId { get; set; }
+        public Guid SkillId { get; set; }
 
         [JsonProperty("detail")]
         public string Detail { get; set; }
@@ -177,7 +177,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     public class Behaviour
     {
         [JsonProperty("behaviourId")]
-        public string BehaviourId { get; set; }
+        public Guid BehaviourId { get; set; }
 
         [JsonProperty("detail")]
         public string Detail { get; set; }

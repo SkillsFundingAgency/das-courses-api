@@ -58,17 +58,17 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown(ImportTypes.Standard standard, string detail, string skillId, Duty duty)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown(ImportTypes.Standard standard, string detail, Guid skillId, Duty duty)
         {
             // Arrange	
             standard.Skills.Add(new Skill
             {
                 Detail = detail,
-                SkillId = skillId.Substring(7),
+                SkillId = skillId,
             }
             );
 
-            duty.MappedSkills = new List<Guid> { Guid.Parse(skillId.Substring(7)) };
+            duty.MappedSkills = new List<Guid> { skillId };
             duty.IsThisACoreDuty = 1;
             standard.Duties.Add(duty);
 
@@ -91,7 +91,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     if (random.Next(2) == 1)
                     {
                         duty.IsThisACoreDuty = 1;
-                        duty.MappedSkills.Add(Guid.Parse(skill.SkillId.Substring(7)));
+                        duty.MappedSkills.Add(skill.SkillId);
                     }
                 }
             }
@@ -156,24 +156,34 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_Core_Knowledge_Is_Mapped_To_All_Options(ImportTypes.Standard standard)
+        public void Then_Core_KSBs_Are_Mapped_To_All_Options(ImportTypes.Standard standard)
         {
             //Arrange
             standard.Knowledge = KnowledgeBuilder.Create("k1", "k2", "k3");
-            var option = new OptionBuilder().WithKnowledge(standard.Knowledge.Take(1));
+            standard.Skills = SkillsBuilder.Create("s1", "s2");
+            standard.Behaviours = BehavioursBuilder.Create("b1");
+            var option = new OptionBuilder()
+                .WithKnowledge(standard.Knowledge.Take(1))
+                .WithSkills(standard.Skills.Take(1));
             standard.Options = new List<Option> { option.Build() };
             standard.Duties = new List<Duty>
             {
                 new DutyBuilder().ForOptions(option).Build(),
-                new DutyBuilder().ForCore().WithKnowledge(standard.Knowledge.Skip(1)).Build(),
+                new DutyBuilder().ForCore()
+                .WithKnowledge(standard.Knowledge.Skip(1))
+                .WithSkills(standard.Skills.Skip(1))
+                .WithBehaviour(standard.Behaviours)
+                .Build(),
             };
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options.Should().Contain(x => x.OptionId == option.OptionId)
-                .Which.Knowledge.Should().BeEquivalentTo("k1", "k2", "k3");
+            var mappedOption = actual.Options.Should().Contain(x => x.OptionId == option.OptionId).Which;
+            mappedOption.Knowledge.Should().BeEquivalentTo("k1", "k2", "k3");
+            mappedOption.Skills.Should().BeEquivalentTo("s1", "s2");
+            mappedOption.Behaviours.Should().BeEquivalentTo("b1");
         }
 
         [Test, AutoData]

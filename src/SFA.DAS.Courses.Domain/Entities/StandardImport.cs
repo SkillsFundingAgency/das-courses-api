@@ -107,15 +107,15 @@ namespace SFA.DAS.Courses.Domain.Entities
             return false;
         }
 
-        private static IEnumerable<string> GetMappedSkillsList(Domain.ImportTypes.Standard standard)
+        private static IEnumerable<Guid> GetMappedSkillsList(Domain.ImportTypes.Standard standard)
         {
             return standard.Duties
                 .Where(d => d.IsThisACoreDuty.Equals(1) && d.MappedSkills != null)
                 .SelectMany(d => d.MappedSkills)
-                .Select(s => s.ToString());
+                .Select(s => s);
         }
 
-        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<string> mappedSkillsList)
+        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<Guid> mappedSkillsList)
         {
             return standard.Skills
                 .Where(s => mappedSkillsList.Contains(s.SkillId))
@@ -142,6 +142,10 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             var coreKnowledge = standard.Knowledge?
                 .Where(y => coreDuties.SelectMany(x => x.MappedKnowledge.EmptyEnumerableIfNull()).Contains(y.KnowledgeId));
+            var coreSkills = standard.Skills?
+                .Where(y => coreDuties.SelectMany(x => x.MappedSkills.EmptyEnumerableIfNull()).Contains(y.SkillId));
+            var coreBehaviour = standard.Behaviours?
+                .Where(y => coreDuties.SelectMany(x => x.MappedBehaviour.EmptyEnumerableIfNull()).Contains(y.BehaviourId));
 
             return options?.Select(x => new StandardOption
             {
@@ -160,16 +164,18 @@ namespace SFA.DAS.Courses.Domain.Entities
                     .Where(y => od
                                 .Where(z => z.OptionId == x.OptionId)
                                 .SelectMany(z => z.Item2)
-                                .SelectMany(z => z.MappedSkills.EmptyEnumerableIfNull(), (_, id) => id.ToString())
+                                .SelectMany(z => z.MappedSkills.EmptyEnumerableIfNull(), (_, id) => id)
                                 .Contains(y.SkillId))
+                    .Union(coreSkills)
                     .Select(x => x.Detail)
                     .ToList(),
                 Behaviours = standard.Behaviours?
                     .Where(y => od
                                 .Where(z => z.OptionId == x.OptionId)
                                 .SelectMany(z => z.Item2)
-                                .SelectMany(z => z.MappedBehaviour.EmptyEnumerableIfNull(), (_, id) => id.ToString())
+                                .SelectMany(z => z.MappedBehaviour.EmptyEnumerableIfNull(), (_, id) => id)
                                 .Contains(y.BehaviourId))
+                    .Union(coreBehaviour)
                     .Select(x => x.Detail)
                     .ToList(),
             }).ToList();
