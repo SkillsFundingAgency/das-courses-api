@@ -159,16 +159,16 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public long IsThisACoreDuty { get; set; }
 
         [JsonProperty("mappedBehaviour")]
-        public List<Guid> MappedBehaviour { get; set; } = new List<Guid>();
+        public List<Guid> MappedBehaviour { get; set; }
 
         [JsonProperty("mappedKnowledge")]
-        public List<Guid> MappedKnowledge { get; set; } = new List<Guid>();
+        public List<Guid> MappedKnowledge { get; set; }
 
         [JsonProperty("mappedOptions")]
         public List<Guid> MappedOptions { get; set; }
 
         [JsonProperty("mappedSkills")]
-        public List<Guid> MappedSkills { get; set; } = new List<Guid>();
+        public List<Guid> MappedSkills { get; set; }
 
         [JsonProperty("criteriaForMeasuringPerformance")]
         public string CriteriaForMeasuringPerformance { get; set; }
