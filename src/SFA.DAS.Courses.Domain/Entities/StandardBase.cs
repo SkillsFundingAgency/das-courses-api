@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using SFA.DAS.Courses.Domain.Extensions;
 
@@ -37,9 +37,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string RegulatedBody { get; set; }
         public virtual LarsStandard LarsStandard { get; set; }
         public virtual ICollection<ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
-        public List<string> Skills => Options.SelectManyOrEmptyList(x => x.Skills);
-        public List<string> Knowledge => Options.SelectManyOrEmptyList(x => x.Knowledge);
-        public List<string> Behaviours => Options.SelectManyOrEmptyList(x => x.Behaviours);
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }

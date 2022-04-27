@@ -314,45 +314,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_Are_Mapped(ImportTypes.Standard standard)
-        {
-            //Arrange
-            standard.CoreAndOptions = false;
-
-            //Act
-            var actual = (StandardImport)standard;
-
-            //Assert
-            actual.Skills.Should().BeEquivalentTo(standard.Skills.Select(x => x.Detail).ToList());
-        }
-
-        [Test, AutoData]
-        public void Then_All_Knowledge_Is_Mapped(ImportTypes.Standard standard)
-        {
-            //Arrange
-            standard.CoreAndOptions = false;
-
-            //Act
-            var actual = (StandardImport)standard;
-
-            //Assert
-            actual.Knowledge.Should().BeEquivalentTo(standard.Knowledge.Select(c => c.Detail));
-        }
-
-        [Test, AutoData]
-        public void Then_All_Behaviours_Are_Mapped(ImportTypes.Standard standard)
-        {
-            //Arrange
-            standard.CoreAndOptions = false;
-
-            //Act
-            var actual = (StandardImport)standard;
-
-            //Assert
-            actual.Behaviours.Should().BeEquivalentTo(standard.Behaviours.Select(c => c.Detail));
-        }
-
-        [Test, AutoData]
         public void Then_All_Duties_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
@@ -428,21 +389,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.OptionsUnstructuredTemplate.Should().BeEquivalentTo(new List<string>());
-        }
-
-        [Test, AutoData]
-        public void Then_Mappings_Cope_With_Null_Sources(ImportTypes.Standard standard)
-        {
-            //Arrange
-            standard.Knowledge = null;
-            standard.Behaviours = null;
-
-            //Act
-            var actual = (StandardImport)standard;
-
-            //Assert
-            actual.Knowledge.Should().BeEmpty();
-            actual.Behaviours.Should().BeEmpty();
         }
 
         [Test]
