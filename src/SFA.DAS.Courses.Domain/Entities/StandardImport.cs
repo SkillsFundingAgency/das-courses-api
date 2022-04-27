@@ -140,57 +140,70 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
-            if(!standard.CoreAndOptions)
-            {
-                return CreateStructuredOptionsListWithoutMapping(standard);
-            }
+            return standard.CoreAndOptions
+                ? CreateStructuredOptionsListWithDutyMapping(standard)
+                : CreateStructuredOptionsListWithoutDutyMapping(standard);
+        }
 
-            var options = standard.Options ?? new List<ImportTypes.Option>();
-            var od = options.Select(x => (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)));
-            var coreDuties = standard.Duties.Where(x => x.IsThisACoreDuty == 1);
+        private static List<StandardOption> CreateStructuredOptionsListWithDutyMapping(ImportTypes.Standard standard)
+        {
+            var options = standard.Options.EmptyEnumerableIfNull();
+            var coreDuties = standard.Duties.Where(x => x.IsThisACoreDuty == 1).ToList();
 
-            var coreKnowledge = standard.Knowledge?
-                .Where(y => coreDuties.SelectMany(x => x.MappedKnowledge.EmptyEnumerableIfNull()).Contains(y.KnowledgeId));
-            var coreSkills = standard.Skills?
-                .Where(y => coreDuties.SelectMany(x => x.MappedSkills.EmptyEnumerableIfNull()).Contains(y.SkillId));
-            var coreBehaviour = standard.Behaviours?
-                .Where(y => coreDuties.SelectMany(x => x.MappedBehaviour.EmptyEnumerableIfNull()).Contains(y.BehaviourId));
-
-            return options?.Select(x => new StandardOption
+            return options.Select(x => new StandardOption
             {
                 OptionId = x.OptionId,
                 Title = x.Title?.Trim(),
-                Knowledge = standard.Knowledge?
-                    .Where(y => od
-                                .Where(z => z.OptionId == x.OptionId)
-                                .SelectMany(z => z.Item2)
-                                .SelectMany(z => z.MappedKnowledge.EmptyEnumerableIfNull())
-                                .Contains(y.KnowledgeId))
-                    .Union(coreKnowledge)
-                    .Select(x => x.Detail)
-                    .ToList(),
-                Skills = standard.Skills?
-                    .Where(y => od
-                                .Where(z => z.OptionId == x.OptionId)
-                                .SelectMany(z => z.Item2)
-                                .SelectMany(z => z.MappedSkills.EmptyEnumerableIfNull(), (_, id) => id)
-                                .Contains(y.SkillId))
-                    .Union(coreSkills)
-                    .Select(x => x.Detail)
-                    .ToList(),
-                Behaviours = standard.Behaviours?
-                    .Where(y => od
-                                .Where(z => z.OptionId == x.OptionId)
-                                .SelectMany(z => z.Item2)
-                                .SelectMany(z => z.MappedBehaviour.EmptyEnumerableIfNull(), (_, id) => id)
-                                .Contains(y.BehaviourId))
-                    .Union(coreBehaviour)
-                    .Select(x => x.Detail)
-                    .ToList(),
+                Knowledge = MapDuties(x, standard.Knowledge, x => x.MappedKnowledge, x => x.KnowledgeId, x => x.Detail),
+                Skills = MapDuties(x, standard.Skills, x => x.MappedSkills, x => x.SkillId, x => x.Detail),
+                Behaviours = MapDuties(x, standard.Behaviours, x => x.MappedBehaviour, x => x.BehaviourId, x => x.Detail)
             }).ToList();
+
+            List<string> MapDuties<Tksb>(
+                ImportTypes.Option option,
+                IEnumerable<Tksb> sequence,
+                Func<ImportTypes.Duty, IEnumerable<Guid>> mappedSequence,
+                Func<Tksb, Guid> selectId,
+                Func<Tksb, string> selectDetail)
+            {
+                return MapCoreDuties(sequence, mappedSequence, selectId)
+                    .Union(MapOptionDuties(option, sequence, mappedSequence, selectId))
+                    .Select(selectDetail)
+                    .ToList();
+            }
+
+            IEnumerable<Tksb> MapCoreDuties<Tksb>(
+                IEnumerable<Tksb> sequence,
+                Func<ImportTypes.Duty, IEnumerable<Guid>> innerSequence,
+                Func<Tksb, Guid> selectId)
+            {
+                return sequence
+                    .EmptyEnumerableIfNull()
+                    .Where(y => coreDuties
+                        .SelectMany(x => innerSequence(x).EmptyEnumerableIfNull())
+                        .Contains(selectId(y)));
+            }
+
+            IEnumerable<Tksb> MapOptionDuties<Tksb>(
+                ImportTypes.Option option,
+                IEnumerable<Tksb> sequence,
+                Func<ImportTypes.Duty, IEnumerable<Guid>> innerSequence,
+                Func<Tksb, Guid> selectId)
+            {
+                var dutiesForAllOptions = options.Select(x =>
+                    (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)))
+                    .ToList();
+
+                return sequence
+                    .EmptyEnumerableIfNull()
+                    .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
+                        .SelectMany(z => z.Item2)
+                        .SelectMany(z => innerSequence(z).EmptyEnumerableIfNull())
+                        .Contains(selectId(y)));
+            }
         }
 
-        private static List<StandardOption> CreateStructuredOptionsListWithoutMapping(ImportTypes.Standard standard)
+        private static List<StandardOption> CreateStructuredOptionsListWithoutDutyMapping(ImportTypes.Standard standard)
         {
             return new List<StandardOption>
             {

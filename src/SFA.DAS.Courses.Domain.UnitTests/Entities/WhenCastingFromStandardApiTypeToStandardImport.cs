@@ -351,7 +351,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options[0].Should().Be("Option");
+            actual.Options[0].Should().NotBeNull()
+                .And.BeAssignableTo<StandardOption>()
+                .Which.Title.Should().Be("Option");
         }
 
         [Test, AutoData]
