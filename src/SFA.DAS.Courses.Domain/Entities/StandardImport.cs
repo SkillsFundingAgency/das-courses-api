@@ -7,6 +7,8 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class StandardImport : StandardBase
     {
+        private const string FakeDutyText = ".";
+
         public List<string> OptionsUnstructuredTemplate { get; set; }
         public DateTime? CreatedDate { get; set; }
 
@@ -49,7 +51,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EqaProviderContactEmail = standard.EqaProvider?.ContactEmail?.Trim(),
                 EqaProviderWebLink = standard.EqaProvider?.WebLink,
                 RegulatedBody = standard.RegulatedBody?.Trim(),
-                Duties = standard.Duties?.Select(x => x.DutyDetail).ToList() ?? new List<string>(),
+                Duties = GetDuties(standard),
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = coreDuties,
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
@@ -60,6 +62,13 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EPAChanged = IsEPAChanged(standard)
             };
         }
+
+        private static List<string> GetDuties(ImportTypes.Standard standard)
+            => standard.Duties
+                .EmptyEnumerableIfNull()
+                .Select(duty => duty.DutyDetail)
+                .Where(dutyText => dutyText != FakeDutyText)
+                .ToList();
 
         private static int GetVersionPart(string version, VersionPart part)
         {

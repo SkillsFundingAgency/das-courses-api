@@ -584,5 +584,24 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             actual.RegulatedBody.Should().Be(expected);
         }
+
+        [Test, AutoData]
+        public void Then_fake_duties_are_omitted(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.Duties = new List<Duty>
+            {
+                new Duty
+                {
+                    DutyDetail = "."
+                }
+            };
+
+            //Act	
+            var actual = (StandardImport)standard;
+
+            // Assert
+            actual.Duties.Should().BeEmpty();
+        }
     }
 }
