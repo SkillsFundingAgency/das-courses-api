@@ -146,10 +146,10 @@
 
     Scenario: Get KSBs for a standard's option
     Given I have an http client
-    When I GET the following url: /api/courses/standards/1/options/Option 1/ksbs
+    When I GET the following url: /api/courses/standards/8/options/Option 1/ksbs
     Then an http status code of 200 is returned
     And the following knowledges are returned
     | KSB | value |
-    | knowledge | core_knowledge_1 |
+    | knowledge | core_knowledge_1, core_knowledge_2, opt1_knowledge_3 |
     | skills | core_knowledge_1 , core_knowledge_2 , opt1_knowledge_3 |
     | behaviour | core_knowledge_1 , core_knowledge_2 , opt1_knowledge_3 |

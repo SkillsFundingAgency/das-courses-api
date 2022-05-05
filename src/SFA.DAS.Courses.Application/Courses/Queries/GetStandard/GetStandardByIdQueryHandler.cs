@@ -16,31 +16,41 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
         }
         public async Task<GetStandardByIdResult> Handle(GetStandardByIdQuery request, CancellationToken cancellationToken)
         {
-            Standard standard;
-            if (IsLarsCode(request, out var larsCode))
-            {
-                standard = await _standardsService.GetLatestActiveStandard(larsCode);
-            }
-            else if (IsIfateReference(request))
-            {
-                standard = await _standardsService.GetLatestActiveStandard(request.Id);
-            }
-            else
-            {
-                standard = await _standardsService.GetStandard(request.Id);
-            }
+            var standard = await new GetStandardById(_standardsService).GetStandard(request.Id);
 
             return new GetStandardByIdResult { Standard = standard };
         }
+    }
 
-        private static bool IsIfateReference(GetStandardByIdQuery request)
+    public class GetStandardById
+    {
+        private readonly IStandardsService _standardsService;
+
+        public GetStandardById(IStandardsService standardsService)
         {
-            return request.Id.Length == 6;
+            this._standardsService = standardsService;
         }
 
-        private static bool IsLarsCode(GetStandardByIdQuery request, out int larsCode)
+        public async Task<Standard> GetStandard(string id)
         {
-            return int.TryParse(request.Id, out larsCode);
+            if (IsLarsCode(id, out var larsCode))
+            {
+                return await _standardsService.GetLatestActiveStandard(larsCode);
+            }
+            else if (IsIfateReference(id))
+            {
+                return await _standardsService.GetLatestActiveStandard(id);
+            }
+            else
+            {
+                return await _standardsService.GetStandard(id);
+            }
         }
+
+        private static bool IsIfateReference(string id)
+            => id.Length == 6;
+
+        private static bool IsLarsCode(string id, out int larsCode)
+            => int.TryParse(id, out larsCode);
     }
 }

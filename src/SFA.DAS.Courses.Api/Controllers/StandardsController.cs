@@ -71,8 +71,8 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             var queryResult = await _mediator.Send(new GetStandardOptionKsbsQuery
             {
-                StandardId = id,
-                StandardOption = option,
+                Id = id,
+                Option = option,
             });
 
             return Ok(queryResult);
