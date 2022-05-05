@@ -225,6 +225,40 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
+                },
+                new Standard
+                {
+                    LarsCode = 8,
+                    StandardUId = "ST0008_1.0",
+                    IfateReferenceNumber = "ST0008",
+                    Title = "Standard with option mapped KSBs",
+                    Level = 3,
+                    RouteCode = routes[2].Id,
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LarsCode = 8,
+                        SectorSubjectAreaTier2 = 1m
+                    },
+                    Status = "Approved for delivery",
+                    Version = "1.0",
+                    Options = new List<StandardOption>
+                    {
+                        new StandardOption
+                        {
+                            Title = "Option 1",
+                            Knowledge = new List<string> { "core_knowledge_1", "core_knowledge_2", "opt1_knowledge_3" },
+                            Skills = new List<string> { "core_skill_1" },
+                            Behaviours = new List<string> { "opt1_behaviour_1" },
+                        },
+                        new StandardOption
+                        {
+                            Title = "Option 2",
+                            Knowledge = new List<string> { "core_knowledge_1", "core_knowledge_2", "opt2_knowledge_4" },
+                            Skills = new List<string> { "core_skill_1" },
+                            Behaviours = new List<string> { "opt2_behaviour_2" },
+                        },
+                    }
                 }
             };
         }

@@ -68,6 +68,24 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
+        [Route("{id}/options/{option}/ksbs")]
+        public async Task<IActionResult> GetOptionKsbs(string id, string option)
+        {
+            return Ok(new GetStandardOptionsResponse
+            {
+                KSBs = new StandardOptionKsb[]
+                {
+                   new StandardOptionKsb
+                   {
+                       Type = KsbType.Knowledge,
+                       Key = "k1",
+                       Detail = "core_knowledge_1",
+                   }
+                }
+            });
+        }
+
+        [HttpGet]
         [Route("versions/{iFateReferenceNumber}")]
         public async Task<IActionResult> GetStandardsByIFateReferenceNumber(string iFateReferenceNumber)
         {

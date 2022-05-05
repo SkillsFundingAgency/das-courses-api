@@ -9,6 +9,7 @@ using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Domain.Entities;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 {
@@ -138,6 +139,31 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             return standards;
         }
 
+        [Then("the following knowledges are returned")]
+        public async Task ThenTheFollowingKnowledgesAreReturned(Table table)
+        {
+            var knowledges = table.CreateInstance<KsbData>();
+            var exp = new GetStandardOptionsResponse
+            {
+                KSBs = knowledges.Knowledge.Select(x => new StandardOptionKsb
+                {
+                    Type = KsbType.Knowledge,
+                    Key = "k1",
+                    Detail = x,
+                }).ToArray(),
+            };
+
+            if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
+            {
+                Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
+            }
+
+            var standard = await HttpUtilities.ReadContent<GetStandardOptionsResponse>(result.Content);
+
+            standard.Should().BeEquivalentTo(exp);
+        }
+
+
         private EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>
             config
                 .Excluding(c => c.LarsStandard)
@@ -163,5 +189,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.EPAChanged)
                 .Excluding(c => c.VersionMajor)
                 .Excluding(c => c.VersionMinor);
+    }
+
+    public class KsbData
+    {
+        public string[] Knowledge { get; set; }
+        public string[] Skills { get; set; }
+        public string[] Behaviour { get; set; }
     }
 }
