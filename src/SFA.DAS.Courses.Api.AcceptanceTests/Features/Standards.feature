@@ -149,7 +149,10 @@
     When I GET the following url: /api/courses/standards/8/options/Option 1/ksbs
     Then an http status code of 200 is returned
     And the following knowledges are returned
-    | KSB | value |
-    | knowledge | core_knowledge_1, core_knowledge_2, opt1_knowledge_3 |
-    | skills | core_knowledge_1 , core_knowledge_2 , opt1_knowledge_3 |
-    | behaviour | core_knowledge_1 , core_knowledge_2 , opt1_knowledge_3 |
+    | Type      | Key | Detail           |
+    | Knowledge | k1  | core_knowledge_1 |
+    | Knowledge | k2  | core_knowledge_2 |
+    | Knowledge | k3  | opt1_knowledge_3 |
+    | Skill | s1  | core_skill_1 |
+    | Behaviour | b1  | opt1_behaviour_1 |
+    

@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
+using SFA.DAS.Courses.Domain.Courses;
+using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
@@ -26,14 +28,15 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 
             var option = standard.Options.FirstOrDefault(x => x.Title == request.Option);
 
+            var standardOptionKsbs = standard.Options?.SelectMany(x => x.AllKsbs.EmptyEnumerableIfNull(), (x, y) => new StandardOptionKsb
+            {
+                Type = y.Type,
+                Key = y.Key,
+                Detail = y.Detail,
+            }).ToArray();
             return new GetStandardOptionKsbsResult
             {
-                KSBs = option?.Knowledge.Select(x => new StandardOptionKsb
-                {
-                    Type = KsbType.Knowledge,
-                    Key = "k1",
-                    Detail = x
-                }).ToArray()
+                KSBs = standardOptionKsbs
             };
         }
     }
@@ -48,12 +51,5 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
         public KsbType Type { get; set; }
         public string Key { get; set; }
         public string Detail { get; set; }
-    }
-
-    public enum KsbType
-    {
-        Knowledge = 1,
-        Skill = 2,
-        Behaviour = 3,
     }
 }

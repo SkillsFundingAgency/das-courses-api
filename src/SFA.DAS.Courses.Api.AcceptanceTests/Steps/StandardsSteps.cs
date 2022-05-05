@@ -143,15 +143,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         [Then("the following knowledges are returned")]
         public async Task ThenTheFollowingKnowledgesAreReturned(Table table)
         {
-            var knowledges = table.CreateInstance<KsbData>();
+            var ksbs = table.CreateSet<StandardOptionKsb>().ToArray();
             var exp = new GetStandardOptionKsbsResult
             {
-                KSBs = knowledges.Knowledge.Select(x => new StandardOptionKsb
-                {
-                    Type = KsbType.Knowledge,
-                    Key = "k1",
-                    Detail = x,
-                }).ToArray(),
+                KSBs = ksbs
             };
 
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
@@ -190,12 +185,5 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.EPAChanged)
                 .Excluding(c => c.VersionMajor)
                 .Excluding(c => c.VersionMinor);
-    }
-
-    public class KsbData
-    {
-        public string[] Knowledge { get; set; }
-        public string[] Skills { get; set; }
-        public string[] Behaviour { get; set; }
     }
 }
