@@ -186,6 +186,23 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.Options.Should().BeEquivalentTo(standard.Options.Select(c => c.Title));
         }
 
+        [Test]
+        [InlineAutoData("Option")]
+        [InlineAutoData(" Option")]
+        [InlineAutoData("  Option")]
+        [InlineAutoData("Option ")]
+        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle,ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Options[0].Title = optionTitle;
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options[0].Should().Be("Option");
+        }
+
         [Test, AutoData]
         public void Then_Options_Are_Mapped_To_Empty_List(ImportTypes.Standard standard)
         {
