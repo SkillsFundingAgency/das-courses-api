@@ -7,6 +7,7 @@ using FluentAssertions.Equivalency;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using SFA.DAS.Courses.Api.ApiResponses;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Domain.Entities;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
@@ -143,7 +144,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         public async Task ThenTheFollowingKnowledgesAreReturned(Table table)
         {
             var knowledges = table.CreateInstance<KsbData>();
-            var exp = new GetStandardOptionsResponse
+            var exp = new GetStandardOptionKsbsResult
             {
                 KSBs = knowledges.Knowledge.Select(x => new StandardOptionKsb
                 {
@@ -158,7 +159,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
             }
 
-            var standard = await HttpUtilities.ReadContent<GetStandardOptionsResponse>(result.Content);
+            var standard = await HttpUtilities.ReadContent<GetStandardOptionKsbsResult>(result.Content);
 
             standard.Should().BeEquivalentTo(exp);
         }
