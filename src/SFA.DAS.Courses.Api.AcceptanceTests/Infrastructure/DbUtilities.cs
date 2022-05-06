@@ -247,7 +247,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new StandardOption
                         {
                             Title = "Option 1",
-                            AllKsbs = new List<Ksb> 
+                            Ksbs = new List<Ksb> 
                             {
                                 Ksb.Knowledge(1, "core_knowledge_1"),
                                 Ksb.Knowledge(2, "core_knowledge_2"),
@@ -259,12 +259,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new StandardOption
                         {
                             Title = "Option 2",
-                            //AllKsbs = new List<Ksb>
-                            //{
-                            //    new Ksb { Type = KsbType.Knowledge, Key = "k1", Detail = "core_knowledge_1" },
-                            //    new Ksb { Type = KsbType.Skill, Key = "s1", Detail = "core_skill_1" },
-                            //    new Ksb { Type = KsbType.Behaviour, Key = "b1", Detail = "opt1_behaviour_1" },
-                            //}
                         },
                     }
                 }

@@ -180,7 +180,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             var mappedOption = actual.Options.Should().Contain(x => x.OptionId == option.OptionId).Which;
-            mappedOption.AllKsbs.Should().BeEquivalentTo(new[]
+            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
             {
                 new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
                 new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },

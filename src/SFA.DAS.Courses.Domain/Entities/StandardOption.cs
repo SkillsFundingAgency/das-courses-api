@@ -8,9 +8,15 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         public Guid OptionId { get; set; }
         public string Title { get; set; }
-        public List<string> Knowledge => AllKsbs?.Where(x => x.Type == KsbType.Knowledge).Select(x => x.Detail).ToList();
-        public List<string> Skills => AllKsbs?.Where(x => x.Type == KsbType.Skill).Select(x => x.Detail).ToList();
-        public List<string> Behaviours => AllKsbs?.Where(x => x.Type == KsbType.Behaviour).Select(x => x.Detail).ToList();
-        public List<Ksb> AllKsbs { get; set; }
+        public List<string> Knowledge => KsbDetail(KsbType.Knowledge);
+        public List<string> Skills => KsbDetail(KsbType.Skill);
+        public List<string> Behaviours => KsbDetail(KsbType.Behaviour);
+        public List<Ksb> Ksbs { get; set; }
+
+        private List<string> KsbDetail(KsbType knowledge)
+            => Ksbs?
+            .Where(x => x.Type == knowledge)
+            .Select(x => x.Detail)
+            .ToList();
     }
 }

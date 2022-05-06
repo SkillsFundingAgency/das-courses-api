@@ -143,10 +143,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         [Then("the following knowledges are returned")]
         public async Task ThenTheFollowingKnowledgesAreReturned(Table table)
         {
-            var ksbs = table.CreateSet<StandardOptionKsb>().ToArray();
             var exp = new GetStandardOptionKsbsResult
             {
-                KSBs = ksbs
+                Ksbs = table.CreateSet<Domain.Courses.Ksb>().ToArray()
             };
 
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))

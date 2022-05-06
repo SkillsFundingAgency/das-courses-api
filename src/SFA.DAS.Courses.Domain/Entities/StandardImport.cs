@@ -155,82 +155,46 @@ namespace SFA.DAS.Courses.Domain.Entities
             {
                 OptionId = x.OptionId,
                 Title = x.Title?.Trim(),
-                AllKsbs = MapKsbs(x),
+                Ksbs = MapKsbs(x),
             }).ToList();
 
             List<Ksb> MapKsbs(ImportTypes.Option option)
             {
-                var core = coreDuties.ToList();
-                var opt = options.FirstOrDefault(x => x.OptionId == option.OptionId);
+                var knowledge = MapDuties(option, standard.Knowledge, x => x.MappedKnowledge, x => x.KnowledgeId, x => x.Detail, Ksb.Knowledge);
+                var skills = MapDuties(option, standard.Skills, x => x.MappedSkills, x => x.SkillId, x => x.Detail, Ksb.Skill);
+                var behaviour = MapDuties(option, standard.Behaviours, x => x.MappedBehaviour, x => x.BehaviourId, x => x.Detail, Ksb.Behaviour);
 
-                var dutiesForAllOptions = options.Select(x =>
-                    (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)))
-                    .ToList();
-
-                var k = standard.Knowledge
-                    .Select((x, i) => (x, i))
-                    .Where(x => core.SelectMany(x => x.MappedKnowledge.EmptyEnumerableIfNull()).Contains(x.x.KnowledgeId))
-                    .Select(x => Ksb.Knowledge(x.i + 1, x.x.Detail));
-                var s = standard.Skills
-                    .Select((x, i) => (x,i))
-                    .Where(x => core.SelectMany(x => x.MappedSkills.EmptyEnumerableIfNull()).Contains(x.x.SkillId))
-                    .Select(x => Ksb.Skill(x.i + 1, x.x.Detail));
-                var b = standard.Behaviours
-                    .Select((x, i) => (x,i))
-                    .Where(x => core.SelectMany(x => x.MappedBehaviour.EmptyEnumerableIfNull()).Contains(x.x.BehaviourId))
-                    .Select(x => Ksb.Behaviour(x.i + 1, x.x.Detail));
-
-                var kk = standard.Knowledge
-                    .Select((x, i) => (x,i))
-                    .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
-                        .SelectMany(z => z.Item2)
-                        .SelectMany(z => z.MappedKnowledge.EmptyEnumerableIfNull())
-                        .Contains(y.x.KnowledgeId))
-                    .Select(x => Ksb.Knowledge(x.i + 1, x.x.Detail));
-                var ss = standard.Skills
-                    .Select((x, i) => (x,i))
-                    .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
-                        .SelectMany(z => z.Item2)
-                        .SelectMany(z => z.MappedSkills.EmptyEnumerableIfNull())
-                        .Contains(y.x.SkillId))
-                    .Select(x => Ksb.Skill(x.i + 1, x.x.Detail));
-                var bb = standard.Behaviours
-                    .Select((x, i) => (x,i))
-                    .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
-                        .SelectMany(z => z.Item2)
-                        .SelectMany(z => z.MappedBehaviour.EmptyEnumerableIfNull())
-                        .Contains(y.x.BehaviourId))
-                    .Select(x => Ksb.Behaviour(x.i + 1, x.x.Detail));
-
-                return k.Union(kk).Union(s).Union(ss).Union(b).Union(bb).DistinctBy(x => x.Key).ToList();
+                return knowledge.Union(skills).Union(behaviour).DistinctBy(x => x.Key).ToList();
             }
 
-            List<string> MapDuties<Tksb>(
+            List<Ksb> MapDuties<Tksb>(
                 ImportTypes.Option option,
                 IEnumerable<Tksb> sequence,
                 Func<ImportTypes.Duty, IEnumerable<Guid>> mappedSequence,
                 Func<Tksb, Guid> selectId,
-                Func<Tksb, string> selectDetail)
+                Func<Tksb, string> selectDetail,
+                Func<int, string, Ksb> createKsb)
             {
                 return MapCoreDuties(sequence, mappedSequence, selectId)
                     .Union(MapOptionDuties(option, sequence, mappedSequence, selectId))
-                    .Select(selectDetail)
+                    .Select(x => createKsb(x.index + 1, selectDetail(x.ksb)))
                     .ToList();
             }
 
-            IEnumerable<Tksb> MapCoreDuties<Tksb>(
+            IEnumerable<(Tksb ksb, int index)> MapCoreDuties<Tksb>(
                 IEnumerable<Tksb> sequence,
                 Func<ImportTypes.Duty, IEnumerable<Guid>> innerSequence,
                 Func<Tksb, Guid> selectId)
             {
                 return sequence
                     .EmptyEnumerableIfNull()
+                    .Select((x, i) => (x, i))
                     .Where(y => coreDuties
                         .SelectMany(x => innerSequence(x).EmptyEnumerableIfNull())
-                        .Contains(selectId(y)));
+                        .Contains(selectId(y.x)));
             }
 
-            IEnumerable<Tksb> MapOptionDuties<Tksb>(
+            IEnumerable<(Tksb ksb, int index)> MapOptionDuties<Tksb>(
                 ImportTypes.Option option,
                 IEnumerable<Tksb> sequence,
                 Func<ImportTypes.Duty, IEnumerable<Guid>> innerSequence,
@@ -242,10 +206,11 @@ namespace SFA.DAS.Courses.Domain.Entities
 
                 return sequence
                     .EmptyEnumerableIfNull()
+                    .Select((x, i) => (x, i))
                     .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
                         .SelectMany(z => z.Item2)
                         .SelectMany(z => innerSequence(z).EmptyEnumerableIfNull())
-                        .Contains(selectId(y)));
+                        .Contains(selectId(y.x)));
             }
         }
 
@@ -255,7 +220,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             {
                 new StandardOption
                 {
-                    AllKsbs = standard.Knowledge.Select((x,i) => Ksb.Knowledge(i + 1, x.Detail))
+                    Ksbs = standard.Knowledge.Select((x,i) => Ksb.Knowledge(i + 1, x.Detail))
                         .Union(standard.Skills.Select((x,i) => Ksb.Skill(i + 1, x.Detail)))
                         .Union(standard.Behaviours.Select((x,i) => Ksb.Behaviour(i + 1, x.Detail)))
                         .DistinctBy(x => x.Key).ToList()

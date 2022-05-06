@@ -24,32 +24,19 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 
         public async Task<GetStandardOptionKsbsResult> Handle(GetStandardOptionKsbsQuery request, CancellationToken cancellationToken)
         {
-            var standard = await new GetStandardById(_standardsService).GetStandard(request.Id);
+            var standard = await new GetStandardByAnyId(_standardsService).GetStandard(request.Id);
 
             var option = standard.Options.FirstOrDefault(x => x.Title == request.Option);
 
-            var standardOptionKsbs = option?.AllKsbs.EmptyEnumerableIfNull().Select(y => new StandardOptionKsb
-            {
-                Type = y.Type,
-                Key = y.Key,
-                Detail = y.Detail,
-            }).ToArray();
             return new GetStandardOptionKsbsResult
             {
-                KSBs = standardOptionKsbs
+                Ksbs = option?.Ksbs.EmptyEnumerableIfNull().ToArray()
             };
         }
     }
 
     public class GetStandardOptionKsbsResult
     {
-        public StandardOptionKsb[] KSBs { get; set; }
-    }
-
-    public class StandardOptionKsb
-    {
-        public KsbType Type { get; set; }
-        public string Key { get; set; }
-        public string Detail { get; set; }
+        public Ksb[] Ksbs { get; set; }
     }
 }
