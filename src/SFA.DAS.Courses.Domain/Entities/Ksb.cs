@@ -9,10 +9,6 @@
 
     public class Ksb
     {
-        public KsbType Type { get; }
-        public string Key { get; }
-        public string Detail { get; }
-
         private Ksb()
         {
             /* Entity Framework */
@@ -29,5 +25,10 @@
 
         private Ksb(KsbType type, int index, string detail)
             => (Type, Key, Detail) = (type, $"{type.ToString()[0]}{index}", detail);
+
+        public KsbType Type { get; set; }
+        public string Key { get; set; }
+        public string Detail { get; set; }
+
     }
 }

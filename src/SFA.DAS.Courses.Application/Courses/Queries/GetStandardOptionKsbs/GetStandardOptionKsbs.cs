@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 
             var option = standard.Options.FirstOrDefault(x => x.Title == request.Option);
 
-            var standardOptionKsbs = standard.Options?.SelectMany(x => x.AllKsbs.EmptyEnumerableIfNull(), (x, y) => new StandardOptionKsb
+            var standardOptionKsbs = option?.AllKsbs.EmptyEnumerableIfNull().Select(y => new StandardOptionKsb
             {
                 Type = y.Type,
                 Key = y.Key,
