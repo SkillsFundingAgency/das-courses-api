@@ -168,17 +168,17 @@ namespace SFA.DAS.Courses.Domain.Entities
                     .ToList();
 
                 var k = standard.Knowledge
-                    .Select((x, i) => (x,i))
+                    .Select((x, i) => (x, i))
                     .Where(x => core.SelectMany(x => x.MappedKnowledge.EmptyEnumerableIfNull()).Contains(x.x.KnowledgeId))
-                    .Select(x => new Ksb { Type = KsbType.Knowledge, Key = $"K{x.i+1}", Detail = x.x.Detail });
+                    .Select(x => Ksb.Knowledge(x.i + 1, x.x.Detail));
                 var s = standard.Skills
                     .Select((x, i) => (x,i))
                     .Where(x => core.SelectMany(x => x.MappedSkills.EmptyEnumerableIfNull()).Contains(x.x.SkillId))
-                    .Select(x => new Ksb { Type = KsbType.Skill, Key = $"S{x.i+1}", Detail = x.x.Detail });
+                    .Select(x => Ksb.Skill(x.i + 1, x.x.Detail));
                 var b = standard.Behaviours
                     .Select((x, i) => (x,i))
                     .Where(x => core.SelectMany(x => x.MappedBehaviour.EmptyEnumerableIfNull()).Contains(x.x.BehaviourId))
-                    .Select(x => new Ksb { Type = KsbType.Behaviour, Key = $"B{x.i+1}", Detail = x.x.Detail });
+                    .Select(x => Ksb.Behaviour(x.i + 1, x.x.Detail));
 
                 var kk = standard.Knowledge
                     .Select((x, i) => (x,i))
@@ -186,21 +186,21 @@ namespace SFA.DAS.Courses.Domain.Entities
                         .SelectMany(z => z.Item2)
                         .SelectMany(z => z.MappedKnowledge.EmptyEnumerableIfNull())
                         .Contains(y.x.KnowledgeId))
-                    .Select(x => new Ksb { Type = KsbType.Knowledge, Key = $"K{x.i+1}", Detail = x.x.Detail });
+                    .Select(x => Ksb.Knowledge(x.i + 1, x.x.Detail));
                 var ss = standard.Skills
                     .Select((x, i) => (x,i))
                     .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
                         .SelectMany(z => z.Item2)
                         .SelectMany(z => z.MappedSkills.EmptyEnumerableIfNull())
                         .Contains(y.x.SkillId))
-                    .Select(x => new Ksb { Type = KsbType.Skill, Key = $"S{x.i+1}", Detail = x.x.Detail });
+                    .Select(x => Ksb.Skill(x.i + 1, x.x.Detail));
                 var bb = standard.Behaviours
                     .Select((x, i) => (x,i))
                     .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
                         .SelectMany(z => z.Item2)
                         .SelectMany(z => z.MappedBehaviour.EmptyEnumerableIfNull())
                         .Contains(y.x.BehaviourId))
-                    .Select(x => new Ksb { Type = KsbType.Behaviour, Key = $"B{x.i+1}", Detail = x.x.Detail });
+                    .Select(x => Ksb.Behaviour(x.i + 1, x.x.Detail));
 
                 return k.Union(kk).Union(s).Union(ss).Union(b).Union(bb).DistinctBy(x => x.Key).ToList();
             }
@@ -255,9 +255,9 @@ namespace SFA.DAS.Courses.Domain.Entities
             {
                 new StandardOption
                 {
-                    AllKsbs = standard.Knowledge.Select((x,i) => new Ksb{Type = KsbType.Knowledge, Key = $"K{i+1}", Detail = x.Detail })
-                        .Union(standard.Skills.Select((x,i) => new Ksb{Type = KsbType.Skill, Key = $"S{i+1}", Detail = x.Detail }))
-                        .Union(standard.Behaviours.Select((x,i) => new Ksb{Type = KsbType.Behaviour, Key = $"S{i+1}", Detail = x.Detail }))
+                    AllKsbs = standard.Knowledge.Select((x,i) => Ksb.Knowledge(i + 1, x.Detail))
+                        .Union(standard.Skills.Select((x,i) => Ksb.Skill(i + 1, x.Detail)))
+                        .Union(standard.Behaviours.Select((x,i) => Ksb.Behaviour(i + 1, x.Detail)))
                         .DistinctBy(x => x.Key).ToList()
                 }
             };

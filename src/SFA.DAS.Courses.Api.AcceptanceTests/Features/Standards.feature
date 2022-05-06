@@ -150,9 +150,9 @@
     Then an http status code of 200 is returned
     And the following knowledges are returned
     | Type      | Key | Detail           |
-    | Knowledge | k1  | core_knowledge_1 |
-    | Knowledge | k2  | core_knowledge_2 |
-    | Knowledge | k3  | opt1_knowledge_3 |
-    | Skill     | s1  | core_skill_1     |
-    | Behaviour | b1  | opt1_behaviour_1 |
+    | Knowledge | K1  | core_knowledge_1 |
+    | Knowledge | K2  | core_knowledge_2 |
+    | Knowledge | K3  | opt1_knowledge_3 |
+    | Skill     | S1  | core_skill_1     |
+    | Behaviour | B1  | opt1_behaviour_1 |
     

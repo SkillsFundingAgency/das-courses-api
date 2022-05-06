@@ -16,6 +16,15 @@ namespace SFA.DAS.Courses.Domain.Entities
 
     public class Ksb
     {
+        public static Ksb Knowledge(int index, string detail)
+            => new Ksb { Type = KsbType.Knowledge, Key = $"K{index}", Detail = detail };
+        
+        public static Ksb Skill(int index, string detail)
+            => new Ksb { Type = KsbType.Skill, Key = $"S{index}", Detail = detail };
+        
+        public static Ksb Behaviour(int index, string detail)
+            => new Ksb { Type = KsbType.Behaviour, Key = $"B{index}", Detail = detail };
+
         public KsbType Type { get; set; }
         public string Key { get; set; }
         public string Detail { get; set; }
