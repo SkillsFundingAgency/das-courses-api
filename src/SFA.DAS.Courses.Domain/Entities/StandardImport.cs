@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq;
 using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -154,9 +155,6 @@ namespace SFA.DAS.Courses.Domain.Entities
             {
                 OptionId = x.OptionId,
                 Title = x.Title?.Trim(),
-                Knowledge = MapDuties(x, standard.Knowledge, x => x.MappedKnowledge, x => x.KnowledgeId, x => x.Detail),
-                Skills = MapDuties(x, standard.Skills, x => x.MappedSkills, x => x.SkillId, x => x.Detail),
-                Behaviours = MapDuties(x, standard.Behaviours, x => x.MappedBehaviour, x => x.BehaviourId, x => x.Detail),
                 AllKsbs = MapKsbs(x),
             }).ToList();
 
@@ -204,7 +202,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                         .Contains(y.x.BehaviourId))
                     .Select(x => new Ksb { Type = KsbType.Behaviour, Key = $"B{x.i+1}", Detail = x.x.Detail });
 
-                return k.Union(kk).Union(s).Union(ss).Union(b).Union(bb).ToList();
+                return k.Union(kk).Union(s).Union(ss).Union(b).Union(bb).DistinctBy(x => x.Key).ToList();
             }
 
             List<string> MapDuties<Tksb>(
@@ -257,9 +255,10 @@ namespace SFA.DAS.Courses.Domain.Entities
             {
                 new StandardOption
                 {
-                    Knowledge = standard.Knowledge.Select(x => x.Detail).ToList(),
-                    Skills = standard.Skills.Select(x => x.Detail).ToList(),
-                    Behaviours = standard.Behaviours.Select(x => x.Detail).ToList(),
+                    AllKsbs = standard.Knowledge.Select((x,i) => new Ksb{Type = KsbType.Knowledge, Key = $"K{i+1}", Detail = x.Detail })
+                        .Union(standard.Skills.Select((x,i) => new Ksb{Type = KsbType.Skill, Key = $"S{i+1}", Detail = x.Detail }))
+                        .Union(standard.Behaviours.Select((x,i) => new Ksb{Type = KsbType.Behaviour, Key = $"S{i+1}", Detail = x.Detail }))
+                        .DistinctBy(x => x.Key).ToList()
                 }
             };
         }
