@@ -56,7 +56,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = coreDuties,
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
-                OptionsIncludingCore = CreateStructuredOptionsList(standard),
+                Options = CreateStructuredOptionsList(standard),
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
                 RouteCode = standard.RouteCode,
                 CreatedDate = standard.CreatedDate,
@@ -220,7 +220,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             {
                 new StandardOption
                 {
-                    Title = Courses.StandardOption.CoreTitle,
+                    Title = "core",
                     Ksbs = standard.Knowledge.Select((x,i) => Ksb.Knowledge(i + 1, x.Detail))
                         .Union(standard.Skills.Select((x,i) => Ksb.Skill(i + 1, x.Detail)))
                         .Union(standard.Behaviours.Select((x,i) => Ksb.Behaviour(i + 1, x.Detail)))

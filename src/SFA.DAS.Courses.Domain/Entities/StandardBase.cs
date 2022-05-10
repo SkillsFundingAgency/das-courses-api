@@ -40,7 +40,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        public List<StandardOption> OptionsIncludingCore { get; set; }
+        public List<StandardOption> Options { get; set; }
         public bool EPAChanged { get; set; }
     }
 }

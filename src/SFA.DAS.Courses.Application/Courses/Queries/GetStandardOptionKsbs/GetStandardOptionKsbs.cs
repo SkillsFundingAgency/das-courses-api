@@ -26,7 +26,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
         {
             var standard = await new GetStandardByAnyId(_standardsService).GetStandard(request.Id);
 
-            var option = standard.OptionsIncludingCore.FirstOrDefault(x => x.Title == request.Option);
+            var option = standard.Options.FirstOrDefault(x => x.Title == request.Option);
 
             return new GetStandardOptionKsbsResult
             {

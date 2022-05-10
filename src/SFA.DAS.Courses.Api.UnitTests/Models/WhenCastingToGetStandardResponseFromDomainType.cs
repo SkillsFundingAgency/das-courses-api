@@ -23,11 +23,11 @@ namespace SFA.DAS.Courses.Api.UnitTests.Models
         public void Then_Maps_KSBs_Uniques(
             Standard source)
         {
-            source.OptionsIncludingCore.First().Knowledge.AddRange(source.OptionsIncludingCore.First().Knowledge);
+            source.Options.First().Knowledge.AddRange(source.Options.First().Knowledge);
 
             var response = (GetStandardResponse)source;
 
-            response.Knowledge.Should().BeEquivalentTo(source.OptionsIncludingCore.SelectMany(x => x.Knowledge).Distinct());
+            response.Knowledge.Should().BeEquivalentTo(source.Options.SelectMany(x => x.Knowledge).Distinct());
         }
     }
 }
