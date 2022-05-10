@@ -100,7 +100,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.3",
-                    Options = new List<StandardOption>
+                    OptionsIncludingCore = new List<StandardOption>
                     {
                         new StandardOption{ Title = "Beer" },
                         new StandardOption{ Title = "Cider" },
@@ -123,7 +123,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 2,
                         SectorSubjectAreaTier2 = 1m
                     },
-                    Options = new List<StandardOption> { new StandardOption {  Title = "core" } },
+                    OptionsIncludingCore = new List<StandardOption> 
+                    {
+                        new StandardOption {  Title = Domain.Courses.StandardOption.CoreTitle }
+                    },
                     Status = "Approved for delivery",
                     Version = "1.0",
                 },
@@ -243,7 +246,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    OptionsIncludingCore = new List<StandardOption>
                     {
                         new StandardOption
                         {
@@ -308,7 +311,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    OptionsIncludingCore = new List<StandardOption>
                     {
                         new StandardOption{ Title = "Cosmetic" },
                         new StandardOption{ Title = "Orthodontist" }
@@ -349,7 +352,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = null,
                     Status = "In development",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    OptionsIncludingCore = new List<StandardOption>
                     {
                         new StandardOption{ Title = "Ferrous" },
                         new StandardOption{ Title = "Non-ferroes" },
@@ -376,7 +379,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = null,
                     Status = "Withdrawn",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    OptionsIncludingCore = new List<StandardOption>
                     {
                         new StandardOption{ Title = "Wine" },
                         new StandardOption{ Title = "Spirits" },
@@ -401,7 +404,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     Status = "Retired",
                     Version = "1.2",
-                    Options = new List<StandardOption>
+                    OptionsIncludingCore = new List<StandardOption>
                     {
                         new StandardOption{ Title = "Beer" },
                         new StandardOption{ Title = "Cider" },
@@ -432,7 +435,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    OptionsIncludingCore = new List<StandardOption>
                     {
                         new StandardOption{ Title = "Studio" },
                         new StandardOption{ Title = "Landscape" },
@@ -450,7 +453,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    OptionsIncludingCore = new List<StandardOption>
                     {
                         new StandardOption{ Title = "Studio" },
                         new StandardOption{ Title = "Landscape" },

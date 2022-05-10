@@ -8,7 +8,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             .Excluding(s => s.AssessmentPlanUrl)
             .Excluding(s => s.VersionDetail)
             .Excluding(s => s.EqaProvider)
-            .Excluding(s => s.Options)
+            .Excluding(s => s.OptionsIncludingCore)
             .Excluding(s => s.TrailBlazerContact)
             .Excluding(s => s.EPAChanged)
             .Excluding(s => s.VersionMajor)

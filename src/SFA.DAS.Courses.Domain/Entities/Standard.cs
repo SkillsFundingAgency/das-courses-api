@@ -42,8 +42,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = standard.CoreDuties,
                 IntegratedApprenticeship = standard.IntegratedApprenticeship,
-                Options = 
-                      standard.Options.Any() ? standard.Options 
+                OptionsIncludingCore = 
+                      standard.OptionsIncludingCore.Any() ? standard.OptionsIncludingCore 
                     : standard.OptionsUnstructuredTemplate.Any() ? standard.OptionsUnstructuredTemplate.Select(x => new StandardOption { Title = x }).ToList()
                     : new List<StandardOption>(),
                 EPAChanged = standard.EPAChanged,

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SFA.DAS.Courses.Domain.Courses
@@ -35,7 +35,8 @@ namespace SFA.DAS.Courses.Domain.Courses
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        public List<StandardOption> Options { get; set; }
+        public List<StandardOption> OptionsIncludingCore { get; set; }
+        public List<StandardOption> Options => OptionsIncludingCore?.Where(x => !x.IsCoreOption).ToList();
         public string AssessmentPlanUrl { get; private set; }
         public string TrailBlazerContact { get; private set; }
         public int SectorCode { get ; set ; }
@@ -80,7 +81,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options?.Select(x => (StandardOption)x).ToList(),
+                OptionsIncludingCore = source.OptionsIncludingCore?.Select(x => (StandardOption)x).ToList(),
                 SectorCode = source.LarsStandard?.SectorCode ?? 0,
                 EPAChanged = source.EPAChanged,
                 VersionMajor = source.VersionMajor,

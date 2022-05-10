@@ -200,7 +200,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.EqaProviderWebLink)
                 .Excluding(c => c.AssessmentPlanUrl)
                 .Excluding(c => c.TrailBlazerContact)
-                .Excluding(c => c.Options)
+                .Excluding(c => c.OptionsIncludingCore)
                 .Excluding(c => c.EPAChanged)
                 .Excluding(c => c.VersionMajor)
                 .Excluding(c => c.VersionMinor);

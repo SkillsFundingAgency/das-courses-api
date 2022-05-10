@@ -6,9 +6,11 @@ namespace SFA.DAS.Courses.Domain.Courses
 {
     public class StandardOption
     {
+        public const string CoreTitle = "core";
+
         public Guid OptionId { get; set; }
         public string Title { get; set; }
-        public bool IsCoreOption => Title == "core";
+        public bool IsCoreOption => Title == CoreTitle;
         public List<string> Knowledge { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Behaviours { get; set; }

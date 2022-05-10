@@ -34,7 +34,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
             mockMediator.Verify(x => x.Send(It.IsAny<GetStandardsListQuery>(), It.IsAny<CancellationToken>()), Times.Once);
             var model = controllerResult.Value as GetStandardsExportResponse;
-            model.Standards.Should().BeEquivalentTo(queryResult.Standards, o => o.Excluding(p => p.Options));
+            model.Standards.Should().BeEquivalentTo(queryResult.Standards, o => o.Excluding(p => p.OptionsIncludingCore));
         }
     }
 }
