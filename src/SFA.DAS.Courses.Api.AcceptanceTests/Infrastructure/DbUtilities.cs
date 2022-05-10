@@ -123,6 +123,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 2,
                         SectorSubjectAreaTier2 = 1m
                     },
+                    Options = new List<StandardOption> { new StandardOption {  Title = "core" } },
                     Status = "Approved for delivery",
                     Version = "1.0",
                 },

@@ -24,6 +24,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             _context = context;
         }
 
+        [When("I get a standard with a core pseudo-option")]
+        public Task WhenIGetAStandardWithACorePseudo_Option()
+        {
+            return new HttpSteps(_context).WhenIMethodTheFollowingUrl(
+                Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod.Get,
+                "/api/courses/standards/2");
+        }
+
         [Then("all valid standards are returned")]
         public async Task ThenAllValidStandardsReturned()
         {
@@ -158,6 +166,18 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standard.Should().BeEquivalentTo(exp);
         }
 
+        [Then("the returned standard has no options")]
+        public async Task ThenTheReturnedStandardHasNoOptions()
+        {
+            if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
+            {
+                Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
+            }
+
+            var standard = await HttpUtilities.ReadContent<GetStandardDetailResponse>(result.Content);
+
+            standard.Options.Should().BeEmpty();
+        }
 
         private EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>
             config

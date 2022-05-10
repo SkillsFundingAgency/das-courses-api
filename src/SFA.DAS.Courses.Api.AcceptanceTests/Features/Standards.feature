@@ -155,4 +155,9 @@
     | Knowledge | K3  | opt1_knowledge_3 |
     | Skill     | S1  | core_skill_1     |
     | Behaviour | B1  | opt1_behaviour_1 |
-    
+
+    Scenario: A standard with no options
+	Given I have an http client
+    When I get a standard with a core pseudo-option
+    Then an http status code of 200 is returned
+    And the returned standard has no options

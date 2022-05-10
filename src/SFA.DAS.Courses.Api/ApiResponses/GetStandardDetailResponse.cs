@@ -86,7 +86,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options?.Select(x => x.Title).ToList(),
+                Options = source.Options?.Where(x => !x.IsCoreOption).Select(x => x.Title).ToList(),
                 SectorCode = source.SectorCode,
                 EPAChanged = source.EPAChanged,
                 VersionMajor = source.VersionMajor,

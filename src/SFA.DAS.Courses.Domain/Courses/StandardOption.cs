@@ -8,6 +8,7 @@ namespace SFA.DAS.Courses.Domain.Courses
     {
         public Guid OptionId { get; set; }
         public string Title { get; set; }
+        public bool IsCoreOption => Title == "core";
         public List<string> Knowledge { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Behaviours { get; set; }
