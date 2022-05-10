@@ -192,6 +192,31 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
+        public void Then_Core_KSBs_Are_Mapped_To_Standard_Without_Options(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Knowledge = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
+            standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
+            standard.Behaviours = BehavioursBuilder.Create("b1-detail");
+            standard.CoreAndOptions = false;
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            var mappedOption = actual.Options.Should().Contain(x => x.Title == "core").Which;
+            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
+            {
+                new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
+                new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },
+                new { Type = KsbType.Knowledge, Key = "K3", Detail = "k3-detail" },
+                new { Type = KsbType.Skill, Key = "S1", Detail = "s1-detail" },
+                new { Type = KsbType.Skill, Key = "S2", Detail = "s2-detail" },
+                new { Type = KsbType.Behaviour, Key = "B1", Detail = "b1-detail" },
+            });
+        }
+
+        [Test, AutoData]
         public void Then_All_Skills_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
         {
             //Arrange
