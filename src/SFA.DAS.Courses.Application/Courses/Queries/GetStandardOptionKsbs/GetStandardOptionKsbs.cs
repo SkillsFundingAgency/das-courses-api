@@ -26,11 +26,11 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
         {
             var standard = await new GetStandardByAnyId(_standardsService).GetStandard(request.Id);
 
-            var option = standard.Options.FirstOrDefault(x => x.Title == request.Option);
+            var ksbs = standard?.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
 
             return new GetStandardOptionKsbsResult
             {
-                Ksbs = option?.Ksbs.EmptyEnumerableIfNull().ToArray()
+                Ksbs = ksbs.EmptyEnumerableIfNull().ToArray()
             };
         }
     }
