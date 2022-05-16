@@ -151,12 +151,13 @@ namespace SFA.DAS.Courses.Domain.Entities
             var options = standard.Options.EmptyEnumerableIfNull();
             var coreDuties = standard.Duties.Where(x => x.IsThisACoreDuty == 1).ToList();
 
-            return options.Select(x => new StandardOption
-            {
-                OptionId = x.OptionId,
-                Title = x.Title?.Trim(),
-                Ksbs = MapKsbs(x),
-            }).ToList();
+            return options.Select(MapOption).ToList();
+
+            StandardOption MapOption(ImportTypes.Option option)
+                => StandardOption.Create(
+                    option.OptionId,
+                    option.Title?.Trim(),
+                    MapKsbs(option));
 
             List<Ksb> MapKsbs(ImportTypes.Option option)
             {
@@ -218,14 +219,12 @@ namespace SFA.DAS.Courses.Domain.Entities
         {
             return new List<StandardOption>
             {
-                new StandardOption
-                {
-                    Title = "core",
-                    Ksbs = standard.Knowledge.Select((x,i) => Ksb.Knowledge(i + 1, x.Detail))
+                StandardOption.CreateCorePseudoOption(
+                    standard.Knowledge.Select((x,i) => Ksb.Knowledge(i + 1, x.Detail))
                         .Union(standard.Skills.Select((x,i) => Ksb.Skill(i + 1, x.Detail)))
                         .Union(standard.Behaviours.Select((x,i) => Ksb.Behaviour(i + 1, x.Detail)))
                         .DistinctBy(x => x.Key).ToList()
-                }
+                )
             };
         }
     }

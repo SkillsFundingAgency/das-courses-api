@@ -102,8 +102,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Version = "1.3",
                     Options = new List<StandardOption>
                     {
-                        new StandardOption{ Title = "Beer" },
-                        new StandardOption{ Title = "Cider" },
+                        StandardOption.Create("Beer"),
+                        StandardOption.Create("Cider"),
                     }
                 },
                 new Standard
@@ -123,7 +123,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 2,
                         SectorSubjectAreaTier2 = 1m
                     },
-                    Options = new List<StandardOption> { new StandardOption {  Title = "core" } },
+                    Options = new List<StandardOption> { StandardOption.Create("core") },
                     Status = "Approved for delivery",
                     Version = "1.0",
                 },
@@ -245,22 +245,19 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Version = "1.0",
                     Options = new List<StandardOption>
                     {
-                        new StandardOption
-                        {
-                            Title = "Option 1",
-                            Ksbs = new List<Ksb> 
+                        StandardOption.Create(
+                            Guid.NewGuid(),
+                            "Option 1",
+                            new List<Ksb> 
                             {
                                 Ksb.Knowledge(1, "core_knowledge_1"),
                                 Ksb.Knowledge(2, "core_knowledge_2"),
                                 Ksb.Knowledge(3, "opt1_knowledge_3"),
                                 Ksb.Skill(1, "core_skill_1"),
                                 Ksb.Behaviour(1, "opt1_behaviour_1"),
-                            }
-                        },
-                        new StandardOption
-                        {
-                            Title = "Option 2",
-                        },
+                            }),
+                        StandardOption.Create(
+                            "Option 2"),                        
                     }
                 }
             };
@@ -310,8 +307,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Version = "1.0",
                     Options = new List<StandardOption>
                     {
-                        new StandardOption{ Title = "Cosmetic" },
-                        new StandardOption{ Title = "Orthodontist" }
+                        StandardOption.Create("Cosmetic"),
+                        StandardOption.Create("Orthodontist"),
                     },
                 }
             };
@@ -351,8 +348,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Version = "1.0",
                     Options = new List<StandardOption>
                     {
-                        new StandardOption{ Title = "Ferrous" },
-                        new StandardOption{ Title = "Non-ferroes" },
+                        StandardOption.Create("Ferrous"),
+                        StandardOption.Create("Non-ferroes"),
                     }
                 }
             };
@@ -378,8 +375,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Version = "1.0",
                     Options = new List<StandardOption>
                     {
-                        new StandardOption{ Title = "Wine" },
-                        new StandardOption{ Title = "Spirits" },
+                        StandardOption.Create("Wine"),
+                        StandardOption.Create("Spirits"),
                     }
                 }
             };
@@ -403,8 +400,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Version = "1.2",
                     Options = new List<StandardOption>
                     {
-                        new StandardOption{ Title = "Beer" },
-                        new StandardOption{ Title = "Cider" },
+                        StandardOption.Create("Beer"),
+                        StandardOption.Create("Cider"),
                     }
                 },
                 new Standard
@@ -434,8 +431,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Version = "1.0",
                     Options = new List<StandardOption>
                     {
-                        new StandardOption{ Title = "Studio" },
-                        new StandardOption{ Title = "Landscape" },
+                        StandardOption.Create("Studio"),
+                        StandardOption.Create("Landscape"),
                     }
                 },
                 new Standard
@@ -452,8 +449,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Version = "1.0",
                     Options = new List<StandardOption>
                     {
-                        new StandardOption{ Title = "Studio" },
-                        new StandardOption{ Title = "Landscape" },
+                        StandardOption.Create("Studio"),
+                        StandardOption.Create("Landscape"),
                     }
                 }
             };

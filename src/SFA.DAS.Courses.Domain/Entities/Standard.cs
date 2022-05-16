@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IntegratedApprenticeship = standard.IntegratedApprenticeship,
                 Options = 
                       standard.Options.Any() ? standard.Options 
-                    : standard.OptionsUnstructuredTemplate.Any() ? standard.OptionsUnstructuredTemplate.Select(x => new StandardOption { Title = x }).ToList()
+                    : standard.OptionsUnstructuredTemplate.Any() ? standard.OptionsUnstructuredTemplate.Select(x => StandardOption.Create(x)).ToList()
                     : new List<StandardOption>(),
                 EPAChanged = standard.EPAChanged,
                 VersionMajor = standard.VersionMajor,
