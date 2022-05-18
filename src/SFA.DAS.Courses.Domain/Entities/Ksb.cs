@@ -24,7 +24,11 @@
             => new Ksb(KsbType.Behaviour, index, detail);
 
         private Ksb(KsbType type, int index, string detail)
-            => (Type, Key, Detail) = (type, $"{type.ToString()[0]}{index}", detail);
+        {
+            Type = type;
+            Key = $"{type.ToString()[0]}{index}";
+            Detail = detail;
+        }
 
         public KsbType Type { get; set; }
         public string Key { get; set; }
