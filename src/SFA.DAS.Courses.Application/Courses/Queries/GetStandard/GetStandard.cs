@@ -4,28 +4,21 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
 {
-    public class GetStandardByAnyId
+    public static class GetStandard
     {
-        private readonly IStandardsService _standardsService;
-
-        public GetStandardByAnyId(IStandardsService standardsService)
-        {
-            this._standardsService = standardsService;
-        }
-
-        public async Task<Standard> GetStandard(string id)
+        public static async Task<Standard> ByAnyId(IStandardsService service, string id)
         {
             if (IsLarsCode(id, out var larsCode))
             {
-                return await _standardsService.GetLatestActiveStandard(larsCode);
+                return await service.GetLatestActiveStandard(larsCode);
             }
             else if (IsIfateReference(id))
             {
-                return await _standardsService.GetLatestActiveStandard(id);
+                return await service.GetLatestActiveStandard(id);
             }
             else
             {
-                return await _standardsService.GetStandard(id);
+                return await service.GetStandard(id);
             }
         }
 

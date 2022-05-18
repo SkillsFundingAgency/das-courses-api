@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
 
         public async Task<GetStandardByIdResult> Handle(GetStandardByIdQuery request, CancellationToken cancellationToken)
         {
-            var standard = await new GetStandardByAnyId(_standardsService).GetStandard(request.Id);
+            var standard = await GetStandard.ByAnyId(_standardsService, request.Id);
 
             return new GetStandardByIdResult { Standard = standard };
         }
