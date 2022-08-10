@@ -125,7 +125,7 @@ namespace SFA.DAS.Courses.Api
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+            services.AddApplicationInsightsTelemetry();
 
             services.AddSwaggerGen(c =>
             {
@@ -133,7 +133,7 @@ namespace SFA.DAS.Courses.Api
                 c.SwaggerDoc("operations", new OpenApiInfo { Title = "CoursesAPI operations" });
                 c.OperationFilter<SwaggerVersionHeaderFilter>();
             });
-            
+
             services.AddApiVersioning(opt => {
                 opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
             });
@@ -144,7 +144,7 @@ namespace SFA.DAS.Courses.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IIndexBuilder indexBuilder, ILogger<Startup> logger)
         {
             indexBuilder.Build();
-            
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -152,7 +152,7 @@ namespace SFA.DAS.Courses.Api
                 c.SwaggerEndpoint("/swagger/operations/swagger.json", "Operations v1");
                 c.RoutePrefix = string.Empty;
             });
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
