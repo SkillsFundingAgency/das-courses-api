@@ -26,16 +26,20 @@
 	[StandardPageUrl] VARCHAR(500) NOT NULL,
 	[Version] VARCHAR(20) NULL,
     [RegulatedBody] VARCHAR(1000) NULL,
+    [Skills] NVARCHAR(MAX) NULL, -- TODO: Remove
+    [Knowledge] NVARCHAR(MAX) NULL, -- TODO: Remove
+    [Behaviours] NVARCHAR(MAX) NULL, -- TODO: Remove
     [Duties] NVARCHAR(MAX) NULL,
     [CoreDuties] NVARCHAR(MAX) NULL,
     [CoreAndOptions] BIT NOT NULL DEFAULT 0,
     [IntegratedApprenticeship] BIT NOT NULL DEFAULT 0,
-    [Options] NVARCHAR(MAX) NULL, 
+    [Old_Options] NVARCHAR(MAX) NULL, 
     [OptionsUnstructuredTemplate] NVARCHAR(MAX) NULL, 
     [CreatedDate] DATETIME NULL,
     [EPAChanged] BIT NOT NULL DEFAULT 0,
     [VersionMajor] INT NOT NULL DEFAULT 0,
     [VersionMinor] INT NOT NULL DEFAULT 0,    
+    [Options] NVARCHAR(MAX) NULL, 
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO

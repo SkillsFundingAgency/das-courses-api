@@ -35,13 +35,19 @@ namespace SFA.DAS.Courses.Domain.Courses
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        public List<StandardOption> Options { get; set; }
         public string AssessmentPlanUrl { get; private set; }
         public string TrailBlazerContact { get; private set; }
         public int SectorCode { get ; set ; }
         public bool EPAChanged { get; set; }
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
+
+        private List<StandardOption> _options = new List<StandardOption>();
+        public List<StandardOption> Options
+        {
+            get => _options;
+            set => _options = value ?? new List<StandardOption>();
+        }
 
         public static explicit operator Standard(Entities.Standard source)
         {
