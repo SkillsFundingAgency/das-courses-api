@@ -151,10 +151,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         [Then("the following knowledges are returned")]
         public async Task ThenTheFollowingKnowledgesAreReturned(Table table)
         {
-            var exp = new GetStandardOptionKsbsResult
-            {
-                Ksbs = table.CreateSet<Domain.Courses.Ksb>().ToArray()
-            };
+            var ksbs = table.CreateSet<Domain.Courses.Ksb>().ToArray();
 
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -163,7 +160,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var standard = await HttpUtilities.ReadContent<GetStandardOptionKsbsResult>(result.Content);
 
-            standard.Should().BeEquivalentTo(exp);
+            standard.Ksbs.Should().BeEquivalentTo(ksbs, opts => opts.Excluding(f => f.Id));
         }
 
         [Then("the returned standard has no options")]

@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Courses.Domain.Entities
+﻿using System;
+
+namespace SFA.DAS.Courses.Domain.Entities
 {
     public enum KsbType
     {
@@ -14,23 +16,25 @@
             /* Entity Framework */
         }
 
-        public static Ksb Knowledge(int index, string detail)
-            => new Ksb(KsbType.Knowledge, index, detail);
+        public static Ksb Knowledge(Guid id, int index, string detail)
+            => new Ksb(KsbType.Knowledge, id, index, detail);
 
-        public static Ksb Skill(int index, string detail)
-            => new Ksb(KsbType.Skill, index, detail);
+        public static Ksb Skill(Guid id, int index, string detail)
+            => new Ksb(KsbType.Skill, id, index, detail);
 
-        public static Ksb Behaviour(int index, string detail)
-            => new Ksb(KsbType.Behaviour, index, detail);
+        public static Ksb Behaviour(Guid id, int index, string detail)
+            => new Ksb(KsbType.Behaviour, id, index, detail);
 
-        private Ksb(KsbType type, int index, string detail)
+        private Ksb(KsbType type, Guid id, int index, string detail)
         {
             Type = type;
+            Id = id;
             Key = $"{type.ToString()[0]}{index}";
             Detail = detail;
         }
 
         public KsbType Type { get; set; }
+        public Guid Id { get; set; }
         public string Key { get; set; }
         public string Detail { get; set; }
 

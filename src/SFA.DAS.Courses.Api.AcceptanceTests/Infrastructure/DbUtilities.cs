@@ -250,11 +250,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             "Option 1",
                             new List<Ksb> 
                             {
-                                Ksb.Knowledge(1, "core_knowledge_1"),
-                                Ksb.Knowledge(2, "core_knowledge_2"),
-                                Ksb.Knowledge(3, "opt1_knowledge_3"),
-                                Ksb.Skill(1, "core_skill_1"),
-                                Ksb.Behaviour(1, "opt1_behaviour_1"),
+                                Ksb.Knowledge(Guid.NewGuid(), 1, "core_knowledge_1"),
+                                Ksb.Knowledge(Guid.NewGuid(), 2, "core_knowledge_2"),
+                                Ksb.Knowledge(Guid.NewGuid(), 3, "opt1_knowledge_3"),
+                                Ksb.Skill(Guid.NewGuid(), 1, "core_skill_1"),
+                                Ksb.Behaviour(Guid.NewGuid(), 1, "opt1_behaviour_1"),
                             }),
                         StandardOption.Create(
                             "Option 2"),                        

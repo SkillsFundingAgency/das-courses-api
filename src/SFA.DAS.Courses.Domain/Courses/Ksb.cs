@@ -1,8 +1,11 @@
-﻿namespace SFA.DAS.Courses.Domain.Courses
+﻿using System;
+
+namespace SFA.DAS.Courses.Domain.Courses
 {
     public class Ksb
     {
         public KsbType Type { get; set; }
+        public Guid Id { get; set; }
         public string Key { get; set; }
         public string Detail { get; set; }
 
@@ -11,6 +14,7 @@
             return new Ksb
             {
                 Type = (KsbType)source.Type,
+                Id = source.Id,
                 Key = source.Key,
                 Detail = source.Detail,
             };

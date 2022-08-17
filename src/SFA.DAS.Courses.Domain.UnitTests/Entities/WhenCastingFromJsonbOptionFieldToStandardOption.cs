@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.Extensions;
@@ -17,9 +18,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     System.Guid.NewGuid(),
                     "TheOption", new List<Ksb>
                     {
-                        Ksb.Knowledge(1, "k1"),
-                        Ksb.Knowledge(2, "k2"),
-                        Ksb.Knowledge(3, "k3"),
+                        Ksb.Knowledge(Guid.NewGuid(), 1, "k1"),
+                        Ksb.Knowledge(Guid.NewGuid(), 2, "k2"),
+                        Ksb.Knowledge(Guid.NewGuid(), 3, "k3"),
                     })
             };
 
