@@ -174,11 +174,11 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Func<ImportTypes.Duty, IEnumerable<Guid>> mappedSequence,
                 Func<Tksb, Guid> selectId,
                 Func<Tksb, string> selectDetail,
-                Func<int, string, Ksb> createKsb)
+                Func<Guid, int, string, Ksb> createKsb)
             {
                 return MapCoreDuties(sequence, mappedSequence, selectId)
                     .Union(MapOptionDuties(option, sequence, mappedSequence, selectId))
-                    .Select(x => createKsb(x.index + 1, selectDetail(x.ksb)))
+                    .Select(x => createKsb(selectId(x.ksb), x.index + 1, selectDetail(x.ksb)))
                     .ToList();
             }
 
@@ -220,9 +220,9 @@ namespace SFA.DAS.Courses.Domain.Entities
             return new List<StandardOption>
             {
                 StandardOption.CreateCorePseudoOption(
-                    standard.Knowledge.Select((x,i) => Ksb.Knowledge(i + 1, x.Detail))
-                        .Union(standard.Skills.Select((x,i) => Ksb.Skill(i + 1, x.Detail)))
-                        .Union(standard.Behaviours.Select((x,i) => Ksb.Behaviour(i + 1, x.Detail)))
+                    standard.Knowledge.Select((x,i) => Ksb.Knowledge(x.KnowledgeId, i + 1, x.Detail))
+                        .Union(standard.Skills.Select((x,i) => Ksb.Skill(x.SkillId, i + 1, x.Detail)))
+                        .Union(standard.Behaviours.Select((x,i) => Ksb.Behaviour(x.BehaviourId, i + 1, x.Detail)))
                         .DistinctBy(x => x.Key).ToList()
                 )
             };
