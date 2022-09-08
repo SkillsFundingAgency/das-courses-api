@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Domain.Search;
 
@@ -65,6 +63,19 @@ namespace SFA.DAS.Courses.Api.Controllers
             }
 
             return Ok((GetStandardDetailResponse)result.Standard);
+        }
+
+        [HttpGet]
+        [Route("{id}/options/{option}/ksbs")]
+        public async Task<IActionResult> GetOptionKsbs(string id, string option)
+        {
+            var queryResult = await _mediator.Send(new GetStandardOptionKsbsQuery
+            {
+                Id = id,
+                Option = option,
+            });
+
+            return Ok(queryResult);
         }
 
         [HttpGet]

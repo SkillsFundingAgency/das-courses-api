@@ -6,6 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;
+using SFA.DAS.Courses.Domain.UnitTests.Data;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 {
@@ -56,17 +57,17 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown(ImportTypes.Standard standard, string detail, string skillId, Duty duty)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown(ImportTypes.Standard standard, string detail, Guid skillId, Duty duty)
         {
             // Arrange	
             standard.Skills.Add(new Skill
             {
                 Detail = detail,
-                SkillId = skillId.Substring(7),
+                SkillId = skillId,
             }
             );
 
-            duty.MappedSkills = new List<Guid> { Guid.Parse(skillId.Substring(7)) };
+            duty.MappedSkills = new List<Guid> { skillId };
             duty.IsThisACoreDuty = 1;
             standard.Duties.Add(duty);
 
@@ -89,7 +90,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     if (random.Next(2) == 1)
                     {
                         duty.IsThisACoreDuty = 1;
-                        duty.MappedSkills.Add(Guid.Parse(skill.SkillId.Substring(7)));
+                        duty.MappedSkills.Add(skill.SkillId);
                     }
                 }
             }
@@ -127,39 +128,219 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, AutoData]
-        public void Then_All_Skills_Are_Mapped(ImportTypes.Standard standard)
+        public void Then_All_Knowledge_Is_Mapped_To_Correct_Options(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.Knowledge = KnowledgeBuilder.Create("k1", "k2", "k3", "k4");
+            var options = new[]
+            {
+                new OptionBuilder().WithKnowledge(standard.Knowledge.Take(2)),
+                new OptionBuilder().WithKnowledge(standard.Knowledge.Skip(2)),
+            };
+            standard.Options = options.Select(x => x.Build()).ToList();
+            standard.Duties = new List<Duty>
+            {
+                new OptionDutyBuilder().ForOptions(options[0]).Build(),
+                new OptionDutyBuilder().ForOptions(options[1]).Build(),
+            };
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Skills.Should().BeEquivalentTo(standard.Skills.Select(x => x.Detail).ToList());
+            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+                .Which.Knowledge.Should().BeEquivalentTo("k1", "k2");
+            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
+                .Which.Knowledge.Should().BeEquivalentTo("k3", "k4");
         }
 
         [Test, AutoData]
-        public void Then_All_Knowledge_Is_Mapped(ImportTypes.Standard standard)
+        public void Then_Core_KSBs_Are_Mapped_To_All_Options(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.Knowledge = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
+            standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
+            standard.Behaviours = BehavioursBuilder.Create("b1-detail");
+            var option = new OptionBuilder()
+                .WithKnowledge(standard.Knowledge.Take(1))
+                .WithSkills(standard.Skills.Take(1));
+            standard.Options = new List<Option> { option.Build() };
+            standard.Duties = new List<Duty>
+            {
+                new OptionDutyBuilder().ForOptions(option).Build(),
+                new CoreDutyBuilder()
+                    .WithKnowledge(standard.Knowledge.Skip(1))
+                    .WithSkills(standard.Skills.Skip(1))
+                    .WithBehaviour(standard.Behaviours)
+                    .Build(),
+            };
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Knowledge.Should().BeEquivalentTo(standard.Knowledge.Select(c => c.Detail));
+            var mappedOption = actual.Options.Should().Contain(x => x.OptionId == option.OptionId).Which;
+            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
+            {
+                new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
+                new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },
+                new { Type = KsbType.Knowledge, Key = "K3", Detail = "k3-detail" },
+                new { Type = KsbType.Skill, Key = "S1", Detail = "s1-detail" },
+                new { Type = KsbType.Skill, Key = "S2", Detail = "s2-detail" },
+                new { Type = KsbType.Behaviour, Key = "B1", Detail = "b1-detail" },
+            });
         }
 
         [Test, AutoData]
-        public void Then_All_Behaviours_Are_Mapped(ImportTypes.Standard standard)
+        public void Then_Core_KSBs_Are_Mapped_To_Standard_Without_Options(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.Knowledge = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
+            standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
+            standard.Behaviours = BehavioursBuilder.Create("b1-detail");
+            standard.CoreAndOptions = false;
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Behaviours.Should().BeEquivalentTo(standard.Behaviours.Select(c => c.Detail));
+            var mappedOption = actual.Options.Should().Contain(x => x.Title == "core").Which;
+            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
+            {
+                new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
+                new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },
+                new { Type = KsbType.Knowledge, Key = "K3", Detail = "k3-detail" },
+                new { Type = KsbType.Skill, Key = "S1", Detail = "s1-detail" },
+                new { Type = KsbType.Skill, Key = "S2", Detail = "s2-detail" },
+                new { Type = KsbType.Behaviour, Key = "B1", Detail = "b1-detail" },
+            });
+        }
+
+        [Test, AutoData]
+        public void Then_All_Skills_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Skills = SkillsBuilder.Create("s1", "s2", "s3", "s4", "s5");
+            var options = new[]
+            {
+                new OptionBuilder().WithSkills(standard.Skills.Take(2)),
+                new OptionBuilder().WithSkills(standard.Skills.Skip(2)),
+            };
+            standard.Options = options.Select(x => x.Build()).ToList();
+            standard.Duties = new List<Duty>
+            {
+                new OptionDutyBuilder().ForOptions(options[0]).Build(),
+                new OptionDutyBuilder().ForOptions(options[1]).Build(),
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+                .Which.Skills.Should().BeEquivalentTo("s1", "s2");
+            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
+                .Which.Skills.Should().BeEquivalentTo("s3", "s4", "s5");
+        }
+
+        [Test, AutoData]
+        public void Then_All_Behaviours_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Behaviours = BehavioursBuilder.Create("b1", "b2", "b3", "b4", "b5", "b6");
+            var options = new[]
+            {
+                new OptionBuilder().WithBehaviours(standard.Behaviours.Take(1)),
+                new OptionBuilder().WithBehaviours(standard.Behaviours.Skip(2).Take(3)),
+                new OptionBuilder().WithBehaviours(standard.Behaviours.Skip(3)),
+            };
+            standard.Options = options.Select(x => x.Build()).ToList();
+            standard.Duties = new List<Duty>
+            {
+                new OptionDutyBuilder().ForOptions(options[0], options[1]).Build(),
+                new OptionDutyBuilder().ForOptions(options[2]).Build(),
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+                .Which.Behaviours.Should().BeEquivalentTo("b1", "b3", "b4", "b5");
+            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
+                .Which.Behaviours.Should().BeEquivalentTo("b1", "b3", "b4", "b5");
+            actual.Options.Should().Contain(x => x.OptionId == options[2].OptionId)
+                .Which.Behaviours.Should().BeEquivalentTo("b4", "b5", "b6");
+        }
+
+        [Test, AutoData]
+        public void Then_KSBs_Are_Unique(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Knowledge = KnowledgeBuilder.Create("k1", "k2");
+            standard.Skills = SkillsBuilder.Create("s1", "s2");
+            standard.Behaviours = BehavioursBuilder.Create("b1");
+            var options = new[]
+            {
+                new OptionBuilder().WithKnowledge(standard.Knowledge),
+                new OptionBuilder().WithKnowledge(standard.Knowledge),
+            };
+            standard.Options = options.Select(x => x.Build()).ToList();
+            standard.Duties = new List<Duty>
+            {
+                new OptionDutyBuilder().ForOptions(options).Build(),
+                new CoreDutyBuilder().WithKnowledge(standard.Knowledge).Build(),
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+                .Which.Knowledge.Should().OnlyHaveUniqueItems();
+        }
+
+        [Test, AutoData]
+        public void Then_Null_MappedOptions_Are_OK(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Duties = new List<Duty>
+            {
+                new Duty
+                {
+                    MappedOptions = null,
+                }
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().Contain(x => x.OptionId == standard.Options.First().OptionId)
+                .Which.Behaviours.Should().BeEmpty();
+        }
+
+        [Test, AutoData]
+        public void Then_Null_KSBs_For_Options_Are_OK(ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Duties = new List<Duty>
+            {
+                new Duty
+                {
+                    MappedOptions = standard.Options.Select(x => x.OptionId).ToList(),
+                    MappedKnowledge = null,
+                    MappedSkills = null,
+                    MappedBehaviour = null,
+                }
+            };
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.Options.Should().Contain(x => x.OptionId == standard.Options.First().OptionId)
+                .Which.Behaviours.Should().BeEmpty();
         }
 
         [Test, AutoData]
@@ -183,7 +364,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options.Should().BeEquivalentTo(standard.Options.Select(c => c.Title));
+            actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Select(c => c.Title));
         }
 
         [Test]
@@ -200,7 +381,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options[0].Should().Be("Option");
+            actual.Options[0].Should().NotBeNull()
+                .And.BeAssignableTo<StandardOption>()
+                .Which.Title.Should().Be("Option");
         }
 
         [Test, AutoData]
@@ -213,7 +396,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert
-            actual.Options.Should().BeEquivalentTo(new List<string>());
+            actual.Options.Should().BeEmpty();
         }
 
         [Test, AutoData]
@@ -238,21 +421,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.OptionsUnstructuredTemplate.Should().BeEquivalentTo(new List<string>());
-        }
-
-        [Test, AutoData]
-        public void Then_Mappings_Cope_With_Null_Sources(ImportTypes.Standard standard)
-        {
-            //Arrange
-            standard.Knowledge = null;
-            standard.Behaviours = null;
-
-            //Act
-            var actual = (StandardImport)standard;
-
-            //Assert
-            actual.Knowledge.Should().BeEmpty();
-            actual.Behaviours.Should().BeEmpty();
         }
 
         [Test]
@@ -447,6 +615,25 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             actual.RegulatedBody.Should().Be(expected);
+        }
+
+        [Test, AutoData]
+        public void Then_fake_duties_are_omitted(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.Duties = new List<Duty>
+            {
+                new Duty
+                {
+                    DutyDetail = "."
+                }
+            };
+
+            //Act	
+            var actual = (StandardImport)standard;
+
+            // Assert
+            actual.Duties.Should().BeEmpty();
         }
     }
 }

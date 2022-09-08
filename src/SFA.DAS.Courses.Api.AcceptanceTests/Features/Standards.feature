@@ -143,3 +143,21 @@
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.3     | Approved for delivery  |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.2     | Retired                |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.1     | Retired                |
+
+    Scenario: Get KSBs for a standard's option
+    Given I have an http client
+    When I GET the following url: /api/courses/standards/8/options/Option 1/ksbs
+    Then an http status code of 200 is returned
+    And the following knowledges are returned
+    | Type      | Key | Detail           |
+    | Knowledge | K1  | core_knowledge_1 |
+    | Knowledge | K2  | core_knowledge_2 |
+    | Knowledge | K3  | opt1_knowledge_3 |
+    | Skill     | S1  | core_skill_1     |
+    | Behaviour | B1  | opt1_behaviour_1 |
+
+    Scenario: A standard with no options
+	Given I have an http client
+    When I get a standard with a core pseudo-option
+    Then an http status code of 200 is returned
+    And the returned standard has no options

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq;
 using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
     public class StandardImport : StandardBase
     {
+        private const string FakeDutyText = ".";
+
         public List<string> OptionsUnstructuredTemplate { get; set; }
         public DateTime? CreatedDate { get; set; }
 
@@ -49,20 +52,24 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EqaProviderContactEmail = standard.EqaProvider?.ContactEmail?.Trim(),
                 EqaProviderWebLink = standard.EqaProvider?.WebLink,
                 RegulatedBody = standard.RegulatedBody?.Trim(),
-                Skills = standard.Skills?.Select(x => x.Detail).ToList() ?? new List<string>(),
-                Knowledge = standard.Knowledge?.Select(x => x.Detail).ToList() ?? new List<string>(),
-                Behaviours = standard.Behaviours?.Select(x => x.Detail).ToList() ?? new List<string>(),
-                Duties = standard.Duties?.Select(x => x.DutyDetail).ToList() ?? new List<string>(),
+                Duties = GetDuties(standard),
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = coreDuties,
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
-                Options = standard.Options?.Select(o => o.Title.Trim()).ToList() ?? new List<string>(),
+                Options = CreateStructuredOptionsList(standard),
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
                 RouteCode = standard.RouteCode,
                 CreatedDate = standard.CreatedDate,
                 EPAChanged = IsEPAChanged(standard)
             };
         }
+
+        private static List<string> GetDuties(ImportTypes.Standard standard)
+            => standard.Duties
+                .EmptyEnumerableIfNull()
+                .Select(duty => duty.DutyDetail)
+                .Where(dutyText => dutyText != FakeDutyText)
+                .ToList();
 
         private static int GetVersionPart(string version, VersionPart part)
         {
@@ -87,7 +94,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 versionPart = versionParts[1];
             }
 
-            if(int.TryParse(versionPart, out var intVersion))
+            if (int.TryParse(versionPart, out var intVersion))
             {
                 return intVersion;
             }
@@ -110,15 +117,15 @@ namespace SFA.DAS.Courses.Domain.Entities
             return false;
         }
 
-        private static IEnumerable<string> GetMappedSkillsList(Domain.ImportTypes.Standard standard)
+        private static IEnumerable<Guid> GetMappedSkillsList(Domain.ImportTypes.Standard standard)
         {
             return standard.Duties
                 .Where(d => d.IsThisACoreDuty.Equals(1) && d.MappedSkills != null)
                 .SelectMany(d => d.MappedSkills)
-                .Select(s => s.ToString());
+                .Select(s => s);
         }
 
-        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<string> mappedSkillsList)
+        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<Guid> mappedSkillsList)
         {
             return standard.Skills
                 .Where(s => mappedSkillsList.Contains(s.SkillId))
@@ -130,6 +137,95 @@ namespace SFA.DAS.Courses.Domain.Entities
             if (string.IsNullOrWhiteSpace(standard.Change)) return false;
 
             return standard.Change.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
+        {
+            return standard.CoreAndOptions
+                ? CreateStructuredOptionsListWithDutyMapping(standard)
+                : CreateStructuredOptionsListWithoutDutyMapping(standard);
+        }
+
+        private static List<StandardOption> CreateStructuredOptionsListWithDutyMapping(ImportTypes.Standard standard)
+        {
+            var options = standard.Options.EmptyEnumerableIfNull();
+            var coreDuties = standard.Duties.Where(x => x.IsThisACoreDuty == 1).ToList();
+
+            return options.Select(MapOption).ToList();
+
+            StandardOption MapOption(ImportTypes.Option option)
+                => StandardOption.Create(
+                    option.OptionId,
+                    option.Title?.Trim(),
+                    MapKsbs(option));
+
+            List<Ksb> MapKsbs(ImportTypes.Option option)
+            {
+                var knowledge = MapDuties(option, standard.Knowledge, x => x.MappedKnowledge, x => x.KnowledgeId, x => x.Detail, Ksb.Knowledge);
+                var skills = MapDuties(option, standard.Skills, x => x.MappedSkills, x => x.SkillId, x => x.Detail, Ksb.Skill);
+                var behaviour = MapDuties(option, standard.Behaviours, x => x.MappedBehaviour, x => x.BehaviourId, x => x.Detail, Ksb.Behaviour);
+
+                return knowledge.Union(skills).Union(behaviour).DistinctBy(x => x.Key).ToList();
+            }
+
+            List<Ksb> MapDuties<Tksb>(
+                ImportTypes.Option option,
+                IEnumerable<Tksb> sequence,
+                Func<ImportTypes.Duty, IEnumerable<Guid>> mappedSequence,
+                Func<Tksb, Guid> selectId,
+                Func<Tksb, string> selectDetail,
+                Func<Guid, int, string, Ksb> createKsb)
+            {
+                return MapCoreDuties(sequence, mappedSequence, selectId)
+                    .Union(MapOptionDuties(option, sequence, mappedSequence, selectId))
+                    .Select(x => createKsb(selectId(x.ksb), x.index + 1, selectDetail(x.ksb)))
+                    .ToList();
+            }
+
+            IEnumerable<(Tksb ksb, int index)> MapCoreDuties<Tksb>(
+                IEnumerable<Tksb> sequence,
+                Func<ImportTypes.Duty, IEnumerable<Guid>> innerSequence,
+                Func<Tksb, Guid> selectId)
+            {
+                return sequence
+                    .EmptyEnumerableIfNull()
+                    .Select((x, i) => (x, i))
+                    .Where(y => coreDuties
+                        .SelectMany(x => innerSequence(x).EmptyEnumerableIfNull())
+                        .Contains(selectId(y.x)));
+            }
+
+            IEnumerable<(Tksb ksb, int index)> MapOptionDuties<Tksb>(
+                ImportTypes.Option option,
+                IEnumerable<Tksb> sequence,
+                Func<ImportTypes.Duty, IEnumerable<Guid>> innerSequence,
+                Func<Tksb, Guid> selectId)
+            {
+                var dutiesForAllOptions = options.Select(x =>
+                    (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)))
+                    .ToList();
+
+                return sequence
+                    .EmptyEnumerableIfNull()
+                    .Select((x, i) => (x, i))
+                    .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
+                        .SelectMany(z => z.Item2)
+                        .SelectMany(z => innerSequence(z).EmptyEnumerableIfNull())
+                        .Contains(selectId(y.x)));
+            }
+        }
+
+        private static List<StandardOption> CreateStructuredOptionsListWithoutDutyMapping(ImportTypes.Standard standard)
+        {
+            return new List<StandardOption>
+            {
+                StandardOption.CreateCorePseudoOption(
+                    standard.Knowledge.Select((x,i) => Ksb.Knowledge(x.KnowledgeId, i + 1, x.Detail))
+                        .Union(standard.Skills.Select((x,i) => Ksb.Skill(x.SkillId, i + 1, x.Detail)))
+                        .Union(standard.Behaviours.Select((x,i) => Ksb.Behaviour(x.BehaviourId, i + 1, x.Detail)))
+                        .DistinctBy(x => x.Key).ToList()
+                )
+            };
         }
     }
 }

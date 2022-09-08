@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
@@ -33,22 +34,22 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [Test, RecursiveMoqAutoData]
         public void Then_If_Options_Do_Not_Exists_Then_OptionsUnstructuredTemplate_Are_Mapped_To_Options(StandardImport standardImport)
         {
-            standardImport.Options = new List<string>(); 
-
+            standardImport.Options = new List<StandardOption>();
+            
             var actual = (Standard)standardImport;
 
-            actual.Options.Should().BeEquivalentTo(standardImport.OptionsUnstructuredTemplate);
+            actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standardImport.OptionsUnstructuredTemplate);
         }
 
         [Test, RecursiveMoqAutoData]
         public void Then_If_No_Options_Exists_Then_Empty_List_is_Mapped_To_Options(StandardImport standardImport)
         {
-            standardImport.Options = new List<string>();
+            standardImport.Options = new List<StandardOption>();
             standardImport.OptionsUnstructuredTemplate = new List<string>();
 
             var actual = (Standard)standardImport;
 
-            actual.Options.Should().BeEquivalentTo(new List<string>());
+            actual.Options.Should().BeEmpty();
         }
 
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Domain.Courses;
+using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
@@ -68,9 +69,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
                 TrailBlazerContact = source.TrailBlazerContact,
                 TypicalJobTitles = source.TypicalJobTitles,
-                Skills = source.Skills,
-                Knowledge = source.Knowledge,
-                Behaviours = source.Behaviours,
+                Skills = source.Options.SelectManyOrEmptyList(x => x.Skills).Distinct().ToList(),
+                Knowledge = source.Options.SelectManyOrEmptyList(x => x.Knowledge).Distinct().ToList(),
+                Behaviours = source.Options.SelectManyOrEmptyList(x => x.Behaviours).Distinct().ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
@@ -85,7 +86,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options,
+                Options = source.Options?.Where(x => x.IsRealOption).Select(x => x.Title).ToList(),
                 SectorCode = source.SectorCode,
                 EPAChanged = source.EPAChanged,
                 VersionMajor = source.VersionMajor,

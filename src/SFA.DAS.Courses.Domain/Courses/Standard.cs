@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SFA.DAS.Courses.Domain.Courses
@@ -17,9 +17,6 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string Keywords { get; set; }
         public string Route { get; set; }
         public string TypicalJobTitles { get; set; }
-        public List<string> Skills { get; set; }
-        public List<string> Knowledge { get; set; }
-        public List<string> Behaviours { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
 
@@ -38,13 +35,19 @@ namespace SFA.DAS.Courses.Domain.Courses
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        public List<string> Options { get; set; }
         public string AssessmentPlanUrl { get; private set; }
         public string TrailBlazerContact { get; private set; }
         public int SectorCode { get ; set ; }
         public bool EPAChanged { get; set; }
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
+
+        private List<StandardOption> _options = new List<StandardOption>();
+        public List<StandardOption> Options
+        {
+            get => _options;
+            set => _options = value ?? new List<StandardOption>();
+        }
 
         public static explicit operator Standard(Entities.Standard source)
         {
@@ -71,9 +74,6 @@ namespace SFA.DAS.Courses.Domain.Courses
                 TrailBlazerContact = source.TrailBlazerContact,
                 EqaProvider = (EqaProvider)source,
                 TypicalJobTitles = source.TypicalJobTitles,
-                Skills = source.Skills,
-                Knowledge = source.Knowledge,
-                Behaviours = source.Behaviours,
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFunding)c).ToList(),
@@ -86,7 +86,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options,
+                Options = source.Options?.Select(x => (StandardOption)x).ToList(),
                 SectorCode = source.LarsStandard?.SectorCode ?? 0,
                 EPAChanged = source.EPAChanged,
                 VersionMajor = source.VersionMajor,

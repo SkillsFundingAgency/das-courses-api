@@ -7,8 +7,10 @@ using FluentAssertions.Equivalency;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using SFA.DAS.Courses.Api.ApiResponses;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Domain.Entities;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 {
@@ -20,6 +22,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         public StandardsSteps(ScenarioContext context)
         {
             _context = context;
+        }
+
+        [When("I get a standard with a core pseudo-option")]
+        public Task WhenIGetAStandardWithACorePseudo_Option()
+        {
+            return new HttpSteps(_context).WhenIMethodTheFollowingUrl(
+                Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod.Get,
+                "/api/courses/standards/2");
         }
 
         [Then("all valid standards are returned")]
@@ -136,6 +146,34 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             }
 
             return standards;
+        }
+
+        [Then("the following knowledges are returned")]
+        public async Task ThenTheFollowingKnowledgesAreReturned(Table table)
+        {
+            var ksbs = table.CreateSet<Domain.Courses.Ksb>().ToArray();
+
+            if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
+            {
+                Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
+            }
+
+            var standard = await HttpUtilities.ReadContent<GetStandardOptionKsbsResult>(result.Content);
+
+            standard.Ksbs.Should().BeEquivalentTo(ksbs, opts => opts.Excluding(f => f.Id));
+        }
+
+        [Then("the returned standard has no options")]
+        public async Task ThenTheReturnedStandardHasNoOptions()
+        {
+            if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
+            {
+                Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
+            }
+
+            var standard = await HttpUtilities.ReadContent<GetStandardDetailResponse>(result.Content);
+
+            standard.Options.Should().BeEmpty();
         }
 
         private EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>

@@ -38,14 +38,14 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Version = standard.Version,
                 Keywords = standard.Keywords,
                 RegulatedBody = standard.RegulatedBody,
-                Skills = standard.Skills,
-                Knowledge = standard.Knowledge,
-                Behaviours = standard.Behaviours,
                 Duties = standard.Duties,
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = standard.CoreDuties,
                 IntegratedApprenticeship = standard.IntegratedApprenticeship,
-                Options = standard.Options.Any() ? standard.Options : standard.OptionsUnstructuredTemplate.Any() ? standard.OptionsUnstructuredTemplate : new List<string>(),
+                Options = 
+                      standard.Options.Any() ? standard.Options 
+                    : standard.OptionsUnstructuredTemplate.Any() ? standard.OptionsUnstructuredTemplate.Select(x => StandardOption.Create(x)).ToList()
+                    : new List<StandardOption>(),
                 EPAChanged = standard.EPAChanged,
                 VersionMajor = standard.VersionMajor,
                 VersionMinor = standard.VersionMinor,

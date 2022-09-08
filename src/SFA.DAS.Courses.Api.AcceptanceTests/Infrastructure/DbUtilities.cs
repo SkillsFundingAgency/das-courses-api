@@ -100,10 +100,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.3",
-                    Options = new List<string>
+                    Options = new List<StandardOption>
                     {
-                        "Beer",
-                        "Cider"
+                        StandardOption.Create("Beer"),
+                        StandardOption.Create("Cider"),
                     }
                 },
                 new Standard
@@ -123,6 +123,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         LarsCode = 2,
                         SectorSubjectAreaTier2 = 1m
                     },
+                    Options = new List<StandardOption> { StandardOption.Create("core") },
                     Status = "Approved for delivery",
                     Version = "1.0",
                 },
@@ -225,6 +226,39 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
+                },
+                new Standard
+                {
+                    LarsCode = 8,
+                    StandardUId = "ST0008_1.0",
+                    IfateReferenceNumber = "ST0008",
+                    Title = "Standard with option mapped KSBs",
+                    Level = 3,
+                    RouteCode = routes[2].Id,
+                    LarsStandard = new LarsStandard
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                        LarsCode = 8,
+                        SectorSubjectAreaTier2 = 1m
+                    },
+                    Status = "Approved for delivery",
+                    Version = "1.0",
+                    Options = new List<StandardOption>
+                    {
+                        StandardOption.Create(
+                            Guid.NewGuid(),
+                            "Option 1",
+                            new List<Ksb> 
+                            {
+                                Ksb.Knowledge(Guid.NewGuid(), 1, "core_knowledge_1"),
+                                Ksb.Knowledge(Guid.NewGuid(), 2, "core_knowledge_2"),
+                                Ksb.Knowledge(Guid.NewGuid(), 3, "opt1_knowledge_3"),
+                                Ksb.Skill(Guid.NewGuid(), 1, "core_skill_1"),
+                                Ksb.Behaviour(Guid.NewGuid(), 1, "opt1_behaviour_1"),
+                            }),
+                        StandardOption.Create(
+                            "Option 2"),                        
+                    }
                 }
             };
         }
@@ -271,10 +305,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options = new List<StandardOption>
                     {
-                        "Cosmetic",
-                        "Orthodontist"
+                        StandardOption.Create("Cosmetic"),
+                        StandardOption.Create("Orthodontist"),
                     },
                 }
             };
@@ -312,10 +346,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = null,
                     Status = "In development",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options = new List<StandardOption>
                     {
-                        "Ferrous",
-                        "Non-ferroes"
+                        StandardOption.Create("Ferrous"),
+                        StandardOption.Create("Non-ferroes"),
                     }
                 }
             };
@@ -339,10 +373,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = null,
                     Status = "Withdrawn",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options = new List<StandardOption>
                     {
-                        "Wine",
-                        "Spirits"
+                        StandardOption.Create("Wine"),
+                        StandardOption.Create("Spirits"),
                     }
                 }
             };
@@ -364,10 +398,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     Status = "Retired",
                     Version = "1.2",
-                    Options = new List<string>
+                    Options = new List<StandardOption>
                     {
-                        "Beer",
-                        "Cider"
+                        StandardOption.Create("Beer"),
+                        StandardOption.Create("Cider"),
                     }
                 },
                 new Standard
@@ -395,10 +429,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options = new List<StandardOption>
                     {
-                        "Studio",
-                        "Landscape"
+                        StandardOption.Create("Studio"),
+                        StandardOption.Create("Landscape"),
                     }
                 },
                 new Standard
@@ -413,10 +447,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = "1.0",
-                    Options = new List<string>
+                    Options = new List<StandardOption>
                     {
-                        "Studio",
-                        "Landscape"
+                        StandardOption.Create("Studio"),
+                        StandardOption.Create("Landscape"),
                     }
                 }
             };

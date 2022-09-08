@@ -268,3 +268,4 @@ desktop.ini
 App.Debug.config
 
 src/SFA.DAS.Courses.Api/appsettings.Development.json
+/src/SFA.DAS.Courses.v3.ncrunchsolution

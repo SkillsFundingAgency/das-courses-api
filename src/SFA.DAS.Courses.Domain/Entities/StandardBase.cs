@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -36,14 +36,11 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string RegulatedBody { get; set; }
         public virtual LarsStandard LarsStandard { get; set; }
         public virtual ICollection<ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
-        public List<string> Skills { get; set; }
-        public List<string> Knowledge { get; set; }
-        public List<string> Behaviours { get; set; }
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get ; set ; }
-        public List<string> Options { get; set; }
+        public List<StandardOption> Options { get; set; }
         public bool EPAChanged { get; set; }
     }
 }

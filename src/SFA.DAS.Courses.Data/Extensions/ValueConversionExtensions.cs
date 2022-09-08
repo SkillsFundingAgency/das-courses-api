@@ -13,8 +13,8 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             var converter = new ValueConverter<T, string>
             (
-                v => JsonConvert.SerializeObject(v),
-                v => JsonConvert.DeserializeObject<T>(v) ?? new T()
+                v => Serialise(v),
+                v => Deserialise<T>(v)
             );
 
             var comparer = new ValueComparer<T>
@@ -36,5 +36,10 @@ namespace SFA.DAS.Courses.Data.Extensions
 
             return propertyBuilder;
         }
+
+        public static string Serialise(object value) => JsonConvert.SerializeObject(value);
+
+        public static T Deserialise<T>(string json) where T : class, new()
+            => JsonConvert.DeserializeObject<T>(json) ?? new T();
     }
 }

@@ -56,7 +56,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public string Version { get; set; }
 
         [JsonProperty("skills")]
-        public List<Skill> Skills { get; set; }
+        public List<Skill> Skills { get; set; } = new List<Skill>();
 
         [JsonProperty("knowledges")]
         public List<Knowledge> Knowledge { get; set; } = new List<Knowledge>();
@@ -141,7 +141,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     public class Skill
     {
         [JsonProperty("skillId")]
-        public string SkillId { get; set; }
+        public Guid SkillId { get; set; }
 
         [JsonProperty("detail")]
         public string Detail { get; set; }
@@ -165,7 +165,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public List<Guid> MappedKnowledge { get; set; }
 
         [JsonProperty("mappedOptions")]
-        public object MappedOptions { get; set; }
+        public List<Guid> MappedOptions { get; set; }
 
         [JsonProperty("mappedSkills")]
         public List<Guid> MappedSkills { get; set; }
@@ -177,7 +177,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     public class Behaviour
     {
         [JsonProperty("behaviourId")]
-        public string BehaviourId { get; set; }
+        public Guid BehaviourId { get; set; }
 
         [JsonProperty("detail")]
         public string Detail { get; set; }
@@ -186,7 +186,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     public class Knowledge
     {
         [JsonProperty("knowledgeId")]
-        public string KnowledgeId { get; set; }
+        public Guid KnowledgeId { get; set; }
 
         [JsonProperty("detail")]
         public string Detail { get; set; }
