@@ -11,9 +11,9 @@ namespace SFA.DAS.Courses.Domain.Courses
         public Guid OptionId { get; set; }
         public string Title { get; set; }
         public bool IsRealOption => Title != CoreTitle;
-        public List<string> Knowledge { get; set; }
-        public List<string> Skills { get; set; }
-        public List<string> Behaviours { get; set; }
+        public List<Ksb> Knowledge { get; set; }
+        public List<Ksb> Skills { get; set; }
+        public List<Ksb> Behaviours { get; set; }
         public List<Ksb> Ksbs { get; set; }
 
         public static explicit operator StandardOption(Entities.StandardOption source)
@@ -22,9 +22,9 @@ namespace SFA.DAS.Courses.Domain.Courses
             {
                 OptionId = source.OptionId,
                 Title = source.Title,
-                Knowledge = source.Knowledge,
-                Skills = source.Skills,
-                Behaviours = source.Behaviours,
+                Knowledge = source.Knowledge?.Select(x => (Ksb)x).ToList(),
+                Skills = source.Skills?.Select(x => (Ksb)x).ToList(),
+                Behaviours = source.Behaviours?.Select(x => (Ksb)x).ToList(),
                 Ksbs = source.Ksbs?.Select(x => (Ksb)x).ToList(),
             };
         }

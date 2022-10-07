@@ -22,8 +22,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string TrailBlazerContact { get; set; }
         public string TypicalJobTitles { get; set; }
         public List<string> Skills { get; set; }
-        public List<string> Knowledge { get; set; }
-        public List<string> Behaviours { get; set; }
+        public List<KsbResponse> Ksbs { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
         public decimal SectorSubjectAreaTier2 { get ; set ; }
@@ -69,9 +68,13 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
                 TrailBlazerContact = source.TrailBlazerContact,
                 TypicalJobTitles = source.TypicalJobTitles,
-                Skills = source.Options.SelectManyOrEmptyList(x => x.Skills).Distinct().ToList(),
-                Knowledge = source.Options.SelectManyOrEmptyList(x => x.Knowledge).Distinct().ToList(),
-                Behaviours = source.Options.SelectManyOrEmptyList(x => x.Behaviours).Distinct().ToList(),
+                Skills = source.Options
+                               .SelectManyOrEmptyList(x => x.Skills)
+                               .Select(x => x.Detail)
+                               .Distinct().ToList(),
+                Ksbs = source.Options
+                             .SelectManyOrEmptyList(x => x.Skills.EmptyEnumerableIfNull().Union(x.Knowledge.EmptyEnumerableIfNull()).Union(x.Behaviours.EmptyEnumerableIfNull()))
+                             .Select(x => (KsbResponse)x).ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
