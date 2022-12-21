@@ -149,13 +149,13 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Knowledge.Should().BeEquivalentTo(
+                .Which.Knowledge.Should().BeEquivalentTo(new []{
                     new { Id = standard.Knowledge[0].KnowledgeId, Detail = "k1" },
-                    new { Id = standard.Knowledge[1].KnowledgeId, Detail = "k2" });
+                    new { Id = standard.Knowledge[1].KnowledgeId, Detail = "k2" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Knowledge.Should().BeEquivalentTo(
+                .Which.Knowledge.Should().BeEquivalentTo( new [] {
                     new { Id = standard.Knowledge[2].KnowledgeId, Detail = "k3" },
-                    new { Id = standard.Knowledge[3].KnowledgeId, Detail = "k4" });
+                    new { Id = standard.Knowledge[3].KnowledgeId, Detail = "k4" }});
         }
 
         [Test, AutoData]
@@ -242,14 +242,14 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Skills.Should().BeEquivalentTo(
+                .Which.Skills.Should().BeEquivalentTo(new []{
                     new { Id = standard.Skills[0].SkillId, Detail = "s1" },
-                    new { Id = standard.Skills[1].SkillId, Detail = "s2" });
+                    new { Id = standard.Skills[1].SkillId, Detail = "s2" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Skills.Should().BeEquivalentTo(
+                .Which.Skills.Should().BeEquivalentTo( new []{
                     new { Id = standard.Skills[2].SkillId, Detail = "s3" },
                     new { Id = standard.Skills[3].SkillId, Detail = "s4" },
-                    new { Id = standard.Skills[4].SkillId, Detail = "s5" });
+                    new { Id = standard.Skills[4].SkillId, Detail = "s5" }});
         }
 
         [Test, AutoData]
@@ -275,22 +275,22 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo(
+                .Which.Behaviours.Should().BeEquivalentTo( new []{
                     new { Id = standard.Behaviours[0].BehaviourId, Detail = "b1" },
                     new { Id = standard.Behaviours[2].BehaviourId, Detail = "b3" },
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
-                    new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" });
+                    new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo(
+                .Which.Behaviours.Should().BeEquivalentTo(new []{
                     new { Id = standard.Behaviours[0].BehaviourId, Detail = "b1" },
                     new { Id = standard.Behaviours[2].BehaviourId, Detail = "b3" },
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
-                    new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" });
+                    new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" }});
             actual.Options.Should().Contain(x => x.OptionId == options[2].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo(
+                .Which.Behaviours.Should().BeEquivalentTo(new []{
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
                     new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" },
-                    new { Id = standard.Behaviours[5].BehaviourId, Detail = "b6" });
+                    new { Id = standard.Behaviours[5].BehaviourId, Detail = "b6" }});
         }
 
         [Test, AutoData]

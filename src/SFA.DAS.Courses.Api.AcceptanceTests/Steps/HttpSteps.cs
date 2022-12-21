@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -72,7 +73,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
             }
 
-            result.StatusCode.Should().Be(httpStatusCode);
+            result.StatusCode.Should().Be((HttpStatusCode)httpStatusCode);
         }
     }
 }
