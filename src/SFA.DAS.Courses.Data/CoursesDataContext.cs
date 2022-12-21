@@ -69,9 +69,10 @@ namespace SFA.DAS.Courses.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();
-            
+
             if (_configuration == null || _azureServiceTokenProvider == null)
             {
+                optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 return;
             }
             
@@ -86,7 +87,7 @@ namespace SFA.DAS.Courses.Data
                     5,
                     TimeSpan.FromSeconds(20),
                     null
-                ));
+                )).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
         }
 
