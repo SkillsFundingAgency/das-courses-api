@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ProjectGuid>BCAB4ABA-AE1F-46D0-B33B-33355F8F2FB0</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
@@ -8,10 +8,10 @@
     <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.14.0" />
-    <PackageReference Include="CsvHelper" Version="15.0.5" />
+    <PackageReference Include="AngleSharp" Version="0.17.1" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="2.2.0" />
-    <PackageReference Include="SFA.DAS.Api.Common" Version="1.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="6.0.12" />
+    <PackageReference Include="SFA.DAS.Api.Common" Version="1.0.28" />
   </ItemGroup>
 </Project>
