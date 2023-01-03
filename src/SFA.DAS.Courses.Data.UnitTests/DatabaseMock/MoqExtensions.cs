@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.Language.Flow;
@@ -24,7 +25,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
 			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
 			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
-			mock.ConfigureDbSetCalls();
+			mock.ConfigureDbSetCalls(data);
 			return mock;
 		}
 
@@ -40,11 +41,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
             return setupResult.Returns(entities.BuildDbSet());
         }
 
-		private static void ConfigureDbSetCalls<TEntity>(this Mock<DbSet<TEntity>> mock) 
+		private static void ConfigureDbSetCalls<TEntity>(this Mock<DbSet<TEntity>> mock, IQueryable<TEntity> data) 
 			where TEntity : class
 		{
 			mock.Setup(m => m.AsQueryable()).Returns(mock.Object);
-			mock.Setup(m => m.AsAsyncEnumerable()).Returns(mock.Object);
+            mock.Setup(m => m.AsAsyncEnumerable()).Returns(CreateAsyncMock(data));
 		}
 
 		private static void ConfigureQueryableCalls<TEntity>(
@@ -65,5 +66,15 @@ namespace SFA.DAS.Courses.Data.UnitTests.DatabaseMock
 			mock.Setup(d => d.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
 				.Returns(() => enumerable.GetAsyncEnumerator());
 		}
+        private static async IAsyncEnumerable<TEntity> CreateAsyncMock<TEntity>(IEnumerable<TEntity> data)
+            where TEntity : class
+        {
+            foreach (var entity in data)
+            {
+                yield return entity;
+            }
+
+            await Task.CompletedTask;
+        }
     }
 }

@@ -104,7 +104,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         StandardOption.Create("Beer"),
                         StandardOption.Create("Cider"),
-                    }
+                    },
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -126,6 +128,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Options = new List<StandardOption> { StandardOption.Create("core") },
                     Status = "Approved for delivery",
                     Version = "1.0",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -146,6 +150,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -166,6 +172,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -186,6 +194,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.1",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -206,6 +216,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -226,6 +238,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -257,8 +271,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                                 Ksb.Behaviour(Guid.NewGuid(), 1, "opt1_behaviour_1"),
                             }),
                         StandardOption.Create(
-                            "Option 2"),                        
-                    }
+                            "Option 2")                        
+                    },
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 }
             };
         }
@@ -286,6 +302,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -310,6 +328,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         StandardOption.Create("Cosmetic"),
                         StandardOption.Create("Orthodontist"),
                     },
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 }
             };
         }
@@ -331,7 +351,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     LarsStandard = null,
                     Status = "Proposal in development",
-                    Version = "1.1"
+                    Version = "1.1",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                  new Standard
                 {
@@ -350,7 +372,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         StandardOption.Create("Ferrous"),
                         StandardOption.Create("Non-ferroes"),
-                    }
+                    },
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 }
             };
         }
@@ -377,7 +401,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         StandardOption.Create("Wine"),
                         StandardOption.Create("Spirits"),
-                    }
+                    },
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 }
             };
         }
@@ -402,7 +428,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         StandardOption.Create("Beer"),
                         StandardOption.Create("Cider"),
-                    }
+                    },
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -415,7 +443,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     Level = 2,
                     RouteCode = routes[0].Id,
                     Status = "Retired",
-                    Version = "1.1"
+                    Version = "1.1",
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -433,7 +463,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         StandardOption.Create("Studio"),
                         StandardOption.Create("Landscape"),
-                    }
+                    },
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 },
                 new Standard
                 {
@@ -451,7 +483,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         StandardOption.Create("Studio"),
                         StandardOption.Create("Landscape"),
-                    }
+                    },
+                    OverviewOfRole = "test",
+                    StandardPageUrl = "https://tempuri.org"
                 }
             };
         }
