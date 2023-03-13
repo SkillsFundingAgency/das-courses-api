@@ -25,7 +25,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
             [Greedy] ExportController controller)
         {
             mockMediator.Setup(mediator => mediator.Send(
-                It.Is<GetStandardsListQuery>(query => query.Filter.Equals(StandardFilter.None)),
+                It.Is<GetStandardsListQuery>(query => query.Filter.Equals(StandardFilter.None) && query.IsExport),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(queryResult);
 
