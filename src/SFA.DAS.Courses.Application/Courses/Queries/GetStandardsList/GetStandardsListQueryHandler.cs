@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
 
         public async Task<GetStandardsListResult> Handle(GetStandardsListQuery request, CancellationToken cancellationToken)
         {
-            var standards = (await _standardsService.GetStandardsList(request.Keyword, request.RouteIds, request.Levels, request.OrderBy, request.Filter)).ToList();
+            var standards = (await _standardsService.GetStandardsList(request.Keyword, request.RouteIds, request.Levels, request.OrderBy, request.Filter, request.IsExport)).ToList();
             var total = await _standardsService.Count(request.Filter);
 
             if (standards.Count == 0 && !string.IsNullOrWhiteSpace(request.Keyword) && request.RouteIds.Count == 0 && request.Levels.Count == 0)
