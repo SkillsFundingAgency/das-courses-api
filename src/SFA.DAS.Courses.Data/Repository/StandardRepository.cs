@@ -57,7 +57,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber)
         {
-            var standards = await GetBaseStandardQuery()
+            var standards = await GetFullBaseStandardQuery()
                 .FilterStandards(StandardFilter.Active)
                 .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber)).ToListAsync();
 
@@ -70,7 +70,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<Standard> GetLatestActiveStandard(int larsCode)
         {
-            var standards = await GetBaseStandardQuery()
+            var standards = await GetFullBaseStandardQuery()
                 .FilterStandards(StandardFilter.Active)
                 .Where(c => c.LarsCode.Equals(larsCode)).ToListAsync();
 
@@ -83,7 +83,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<Standard> Get(string standardUId)
         {
-            var standard = await GetBaseStandardQuery()
+            var standard = await GetFullBaseStandardQuery()
                 .SingleOrDefaultAsync(c => c.StandardUId.Equals(standardUId));
 
             return standard;
@@ -118,14 +118,53 @@ namespace SFA.DAS.Courses.Data.Repository
             return standards;
         }
 
-        private IQueryable<Standard> GetBaseStandardQuery()
+        private IQueryable<Standard> GetFullBaseStandardQuery()
         {
             return _coursesDataContext
                 .Standards
+                
                 .Include(c => c.Route)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
                 .ThenInclude(c => c.SectorSubjectArea);
+        }
+        
+        private IQueryable<Standard> GetBaseStandardQuery()
+        {
+            return _coursesDataContext
+                .Standards
+                
+                .Include(c => c.Route)
+                .Include(c => c.ApprenticeshipFunding)
+                .Include(c => c.LarsStandard)
+                .ThenInclude(c => c.SectorSubjectArea)
+                .Select(c=>new Standard
+                {
+                    Status = c.Status,
+                    StandardUId = c.StandardUId,
+                    LarsStandard = c.LarsStandard,
+                    Keywords = c.Keywords,
+                    Level = c.Level,
+                    Route = c.Route,
+                    Title = c.Title,
+                    Version = c.Version,
+                    ApprenticeshipFunding = c.ApprenticeshipFunding,
+                    IntegratedApprenticeship = c.IntegratedApprenticeship,
+                    IntegratedDegree = c.IntegratedDegree,
+                    LarsCode = c.LarsCode,
+                    RouteCode = c.RouteCode,
+                    VersionMajor = c.VersionMajor,
+                    VersionMinor = c.VersionMinor,
+                    ApprovedForDelivery = c.ApprovedForDelivery,
+                    IfateReferenceNumber = c.IfateReferenceNumber,
+                    StandardPageUrl = c.StandardPageUrl,
+                    TypicalJobTitles = c.TypicalJobTitles,
+                    VersionEarliestStartDate = c.VersionEarliestStartDate,
+                    VersionLatestEndDate = c.VersionLatestEndDate,
+                    VersionLatestStartDate = c.VersionLatestStartDate,
+                    OverviewOfRole = c.OverviewOfRole
+                })
+                ;
         }
 
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.Customisations;
@@ -51,7 +52,25 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actualStandards = await repository.GetStandards(iFateReferenceNumber);
 
             Assert.IsNotNull(actualStandards);
-            actualStandards.Should().BeEquivalentTo(new List<Standard> { active, retired });
+            actualStandards.Should().BeEquivalentTo(new List<Standard> { active, retired }, EquivalentCheckExcludes());
+        }
+        private static Func<EquivalencyAssertionOptions<Standard>, EquivalencyAssertionOptions<Standard>> EquivalentCheckExcludes()
+        {
+            return options=>options
+                .Excluding(c=>c.SearchScore)
+                .Excluding(c=>c.ProposedTypicalDuration)
+                .Excluding(c=>c.ProposedMaxFunding)
+                .Excluding(c=>c.OverviewOfRole)
+                .Excluding(c=>c.AssessmentPlanUrl)
+                .Excluding(c=>c.TrailBlazerContact)
+                .Excluding(c=>c.EqaProviderName)
+                .Excluding(c=>c.EqaProviderContactEmail)
+                .Excluding(c=>c.EqaProviderContactName)
+                .Excluding(c=>c.EqaProviderWebLink)
+                .Excluding(c=>c.RegulatedBody)
+                .Excluding(c=>c.Duties)
+                .Excluding(c=>c.CoreDuties)
+                .Excluding(c=>c.Options);
         }
     }
 }
