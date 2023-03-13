@@ -89,9 +89,12 @@ namespace SFA.DAS.Courses.Data.Repository
             return standard;
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter)
+        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool isExport)
         {
-            var standards = GetBaseStandardQuery().FilterStandards(filter);
+            var standards = (isExport 
+                ? GetFullBaseStandardQuery()
+                : GetBaseStandardQuery())
+                .FilterStandards(filter);
 
             if (routeIds.Count > 0)
             {
