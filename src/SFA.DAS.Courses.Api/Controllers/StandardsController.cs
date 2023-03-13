@@ -38,7 +38,8 @@ namespace SFA.DAS.Courses.Api.Controllers
                 RouteIds = routeIds,
                 Levels = levels,
                 OrderBy = orderBy,
-                Filter = filter
+                Filter = filter,
+                IsExport = false
             });
 
             var response = new GetStandardsListResponse
