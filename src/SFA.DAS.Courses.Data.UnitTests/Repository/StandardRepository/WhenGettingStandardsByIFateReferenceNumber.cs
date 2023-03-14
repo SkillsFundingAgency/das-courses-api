@@ -67,7 +67,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Excluding(c=>c.EqaProviderContactEmail)
                 .Excluding(c=>c.EqaProviderContactName)
                 .Excluding(c=>c.EqaProviderWebLink)
-                .Excluding(c=>c.RegulatedBody)
                 .Excluding(c=>c.Duties)
                 .Excluding(c=>c.CoreDuties)
                 .Excluding(c=>c.Options);
