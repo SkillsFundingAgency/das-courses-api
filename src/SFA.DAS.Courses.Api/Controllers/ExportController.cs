@@ -26,7 +26,8 @@ namespace SFA.DAS.Courses.Api.Controllers
         {
             var queryResult = await _mediator.Send(new GetStandardsListQuery
             {
-                Filter = StandardFilter.None
+                Filter = StandardFilter.None,
+                IsExport = true
             });
 
             var response = new GetStandardsExportResponse

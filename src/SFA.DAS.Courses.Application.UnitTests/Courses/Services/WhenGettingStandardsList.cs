@@ -26,13 +26,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter))
+                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
-            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter)).ToList();
+            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false)).ToList();
 
             result.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
 
@@ -53,13 +53,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             filter = StandardFilter.Active;
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter))
+                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
-            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter)).ToList();
+            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false)).ToList();
 
             result.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
 
@@ -89,7 +89,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter))
+                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -98,7 +98,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(orderService => orderService.OrderBy(standardsFoundInSearch, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
-            var standards = await service.GetStandardsList(keyword, new List<int>(), new List<int>(), orderBy, filter);
+            var standards = await service.GetStandardsList(keyword, new List<int>(), new List<int>(), orderBy, filter, false);
 
             standards.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
         }
@@ -124,7 +124,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter))
+                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter,true))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -133,7 +133,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(orderService => orderService.OrderBy(standardsFoundInSearch, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter);
+            var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter,true);
 
             getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
         }
@@ -160,7 +160,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter))
+                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter, false))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -169,7 +169,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(orderService => orderService.OrderBy(standardsFoundInSearch, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter);
+            var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, false);
 
             getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
         }
@@ -185,13 +185,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter))
+                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter);
+            var getStandardsListResult = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true);
 
             getStandardsListResult.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
         }
@@ -208,13 +208,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter))
+                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, false))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, orderBy, ""))
                 .Returns(standardsFromSortService.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter);
+            var getStandardsListResult = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, false);
 
             getStandardsListResult
                 .Should().BeEquivalentTo(standardsFromSortService.OrderBy(standard => standard.SearchScore), StandardEquivalencyAssertionOptions.ExcludingFieldsWithStrictOrdering);

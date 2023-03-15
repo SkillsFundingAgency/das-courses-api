@@ -37,10 +37,36 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
             
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, false);
             
             Assert.IsNotNull(actualStandards);
             actualStandards.Should().BeEquivalentTo(activeValidStandards,EquivalentCheckExcludes());
+        }
+        
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_Available_Standards_Are_Returned_When_Filter_Set_To_ActiveAvailable_For_Export(
+            [StandardsAreLarsValid] List<Standard> activeValidStandards,
+            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
+            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
+            [StandardsWithdrawn] List<Standard> withdrawnStandards,
+            [StandardsRetired] List<Standard> retiredStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            var allStandards = new List<Standard>();
+            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeInvalidStandards);
+            allStandards.AddRange(notYetApprovedStandards);
+            allStandards.AddRange(withdrawnStandards);
+            allStandards.AddRange(retiredStandards);
+            mockDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(allStandards);
+            
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, true);
+            
+            Assert.IsNotNull(actualStandards);
+            actualStandards.Should().BeEquivalentTo(activeValidStandards);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -63,7 +89,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false);
             
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -104,7 +130,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false);
 
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -135,7 +161,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.NotYetApproved);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.NotYetApproved, false);
 
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -163,7 +189,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.None);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.None, false);
 
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
@@ -199,7 +225,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actual = await repository.GetStandards(
                 new List<int> { activeValidStandards[0].RouteCode },
                 new List<int>(),
-                StandardFilter.ActiveAvailable);
+                StandardFilter.ActiveAvailable, false);
 
             //Assert
             Assert.IsNotNull(actual);
@@ -230,7 +256,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actual = await repository.GetStandards(
                 new List<int> { activeInvalidStandards[0].RouteCode },
                 new List<int>(),
-                StandardFilter.ActiveAvailable);
+                StandardFilter.ActiveAvailable, false);
 
             //Assert
             Assert.IsNotNull(actual);
@@ -260,7 +286,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actual = await repository.GetStandards(
                 new List<int>(),
                 new List<int> { activeValidStandards[0].Level },
-                StandardFilter.ActiveAvailable);
+                StandardFilter.ActiveAvailable, false);
 
             actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] }, EquivalentCheckExcludes());
         }
@@ -289,7 +315,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actual = await repository.GetStandards(
                 new List<int>(),
                 new List<int> { activeValidStandards[0].Level },
-                StandardFilter.Active);
+                StandardFilter.Active, false);
 
             var expectedList = new List<Standard>
             {
@@ -312,7 +338,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Excluding(c=>c.EqaProviderContactEmail)
                 .Excluding(c=>c.EqaProviderContactName)
                 .Excluding(c=>c.EqaProviderWebLink)
-                .Excluding(c=>c.RegulatedBody)
                 .Excluding(c=>c.Duties)
                 .Excluding(c=>c.CoreDuties)
                 .Excluding(c=>c.Options);

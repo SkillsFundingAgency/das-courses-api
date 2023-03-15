@@ -38,7 +38,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                         query.RouteIds.Equals(routeIds) &&
                         query.Levels.Equals(levels) &&
                         query.OrderBy.Equals(orderBy) &&
-                        query.Filter.Equals(filter)), 
+                        query.Filter.Equals(filter) &&
+                        !query.IsExport), 
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
