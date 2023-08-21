@@ -148,6 +148,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     LarsStandard = c.LarsStandard,
                     Keywords = c.Keywords,
                     Level = c.Level,
+                    CoronationEmblem = c.CoronationEmblem,
                     Route = c.Route,
                     Title = c.Title,
                     Version = c.Version,

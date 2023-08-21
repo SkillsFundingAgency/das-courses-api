@@ -20,6 +20,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(c => c.VersionLatestStartDate)
                 .Excluding(c => c.VersionLatestEndDate)
                 .Excluding(c => c.ApprovedForDelivery)
+                .Excluding(c => c.CoronationEmblem)
                 .Excluding(c => c.ProposedTypicalDuration)
                 .Excluding(c => c.ProposedMaxFunding)
                 .Excluding(c => c.EqaProviderContactEmail)

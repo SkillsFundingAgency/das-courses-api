@@ -63,5 +63,21 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 
             result.Standard.Should().BeEquivalentTo(standardFromService);
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task Then_Gets_Standard_With_CoronationEmblem_Set(bool coronationEmblem)
+        {
+            var query = new GetStandardByIdQuery() { Id = "ST0152_1.0" };
+            var mockStandardsService = new Mock<IStandardsService>();
+            var standardFromService = new Standard() { CoronationEmblem = coronationEmblem };
+            mockStandardsService.Setup(service => service.GetStandard(query.Id))
+                                .ReturnsAsync(standardFromService);
+            var handler = new GetStandardByIdQueryHandler(mockStandardsService.Object);
+
+            var result = await handler.Handle(query, CancellationToken.None);
+
+            result.Standard.CoronationEmblem.Should().Be(coronationEmblem);
+        }
     }
 }

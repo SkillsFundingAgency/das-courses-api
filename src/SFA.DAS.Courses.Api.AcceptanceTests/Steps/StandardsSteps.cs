@@ -185,6 +185,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.RouteCode)
                 .Excluding(c => c.RegulatedBody)
                 .Excluding(c => c.CoreDuties)
+                .Excluding(c => c.CoronationEmblem)
                 .Excluding(c => c.VersionEarliestStartDate)
                 .Excluding(c => c.VersionLatestStartDate)
                 .Excluding(c => c.VersionLatestEndDate)

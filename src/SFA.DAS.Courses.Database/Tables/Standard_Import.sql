@@ -9,6 +9,7 @@
     [VersionLatestEndDate] DATETIME NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
+    [CoronationEmblem] BIT NOT NULL DEFAULT 0,
     [ProposedTypicalDuration] INT NOT NULL,
     [ProposedMaxFunding] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
