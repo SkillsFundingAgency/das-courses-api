@@ -14,6 +14,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public float? SearchScore { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
+        public bool CoronationEmblem { get; set; }
         public string Version { get; set; }
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
@@ -48,6 +49,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 SearchScore = source.SearchScore,
                 Title = source.Title,
                 Level = source.Level,
+                CoronationEmblem = source.CoronationEmblem,
                 Version = source.Version,
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
