@@ -9,7 +9,6 @@ CREATE TABLE [dbo].[Standard]
     [VersionLatestEndDate] DATETIME NULL,
 	[Title] VARCHAR(1000) NOT NULL,
 	[Level] INT NOT NULL,
-    [CoronationEmblem] BIT NOT NULL DEFAULT 0,
     [ProposedTypicalDuration] INT NOT NULL,
     [ProposedMaxFunding] INT NOT NULL,
 	[IntegratedDegree] VARCHAR(100) NULL,
@@ -39,6 +38,7 @@ CREATE TABLE [dbo].[Standard]
     [VersionMajor] INT NOT NULL DEFAULT 0,
     [VersionMinor] INT NOT NULL DEFAULT 0,
     [Options] NVARCHAR(MAX) NULL, 
+    [CoronationEmblem] BIT NOT NULL DEFAULT 0,
     CONSTRAINT [AK_Standard_Column] UNIQUE ([StandardUId])
 )
 GO
@@ -50,7 +50,7 @@ CREATE NONCLUSTERED INDEX [IDX_Standard_LarsCode] ON [dbo].[Standard] (LarsCode)
 GO
 
 CREATE NONCLUSTERED INDEX [IDX_Standard_Status] ON [dbo].[Standard] (Status)
-INCLUDE([StandardUId],[IFateReferenceNumber],[LarsCode],[VersionEarliestStartDate],[VersionLatestStartDate],[VersionLatestEndDate],[Title],[Level],[CoronationEmblem],[ProposedTypicalDuration],[ProposedMaxFunding],[IntegratedDegree],[OverviewOfRole],[RouteCode],[AssessmentPlanUrl],[ApprovedForDelivery],[TrailBlazerContact],[EqaProviderName],[EqaProviderContactName],[EqaProviderContactEmail],[EqaProviderWebLink],[Keywords],[TypicalJobTitles],[StandardPageUrl],[Version],[RegulatedBody],[Duties],[CoreAndOptions],[IntegratedApprenticeship],[Old_Options],[CoreDuties])
+INCLUDE([StandardUId],[IFateReferenceNumber],[LarsCode],[VersionEarliestStartDate],[VersionLatestStartDate],[VersionLatestEndDate],[Title],[Level],[ProposedTypicalDuration],[ProposedMaxFunding],[IntegratedDegree],[OverviewOfRole],[RouteCode],[AssessmentPlanUrl],[ApprovedForDelivery],[TrailBlazerContact],[EqaProviderName],[EqaProviderContactName],[EqaProviderContactEmail],[EqaProviderWebLink],[Keywords],[TypicalJobTitles],[StandardPageUrl],[Version],[RegulatedBody],[Duties],[CoreAndOptions],[IntegratedApprenticeship],[Old_Options],[CoreDuties],[CoronationEmblem])
 GO
 
 CREATE NONCLUSTERED INDEX [IDX_Standard_IfateReferenceNumber] ON [dbo].[Standard] (IfateReferenceNumber) 
