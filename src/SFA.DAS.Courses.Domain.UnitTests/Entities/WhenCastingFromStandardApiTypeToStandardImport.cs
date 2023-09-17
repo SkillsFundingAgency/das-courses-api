@@ -34,6 +34,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.EqaProvider)
                 .Excluding(c => c.TbMainContact)
                 .Excluding(c => c.Change)
+                .Excluding(c => c.IntegratedApprenticeship)
             );
 
             actual.LarsCode.Should().Be(standard.LarsCode);
@@ -131,6 +132,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_Knowledge_Is_Mapped_To_Correct_Options(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Knowledge = KnowledgeBuilder.Create("k1", "k2", "k3", "k4");
             var options = new[]
             {
@@ -162,6 +164,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_Core_KSBs_Are_Mapped_To_All_Options(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Knowledge = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
             standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
             standard.Behaviours = BehavioursBuilder.Create("b1-detail");
@@ -224,6 +227,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_Skills_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Skills = SkillsBuilder.Create("s1", "s2", "s3", "s4", "s5");
             var options = new[]
             {
@@ -256,6 +260,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_Behaviours_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Behaviours = BehavioursBuilder.Create("b1", "b2", "b3", "b4", "b5", "b6");
             var options = new[]
             {
@@ -297,6 +302,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_KSBs_Are_Unique(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Knowledge = KnowledgeBuilder.Create("k1", "k2");
             standard.Skills = SkillsBuilder.Create("s1", "s2");
             standard.Behaviours = BehavioursBuilder.Create("b1");
@@ -324,6 +330,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_Null_MappedOptions_Are_OK(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Duties = new List<Duty>
             {
                 new Duty
@@ -344,6 +351,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_Null_KSBs_For_Options_Are_OK(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Duties = new List<Duty>
             {
                 new Duty
@@ -379,6 +387,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_Options_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
 
             //Act
             var actual = (StandardImport)standard;
@@ -395,6 +404,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle,ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Options[0].Title = optionTitle;
 
             //Act
@@ -410,6 +420,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_Options_Are_Mapped_To_Empty_List(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.CoreAndOptions = true;
             standard.Options = null;
 
             //Act
@@ -444,21 +455,24 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test]
-        [InlineAutoData(3, "integrated degree", false)]
-        [InlineAutoData(5, "integrated degree", false)]
-        [InlineAutoData(6, "integrated degree", true)]
-        [InlineAutoData(6, "INTEGRATED degree", true)]
-        [InlineAutoData(6, "non integrated", false)]
-        [InlineAutoData(6, "", false)]
-        [InlineAutoData(6, "abc", false)]
-        [InlineAutoData(7, "Integrated Degree", true)]
+        [InlineAutoData(3, "integrated degree", false, false)]
+        [InlineAutoData(3, "integrated degree", true, true)]
+        [InlineAutoData(5, "integrated degree", false, false)]
+        [InlineAutoData(5, "integrated degree", true, true)]
+        [InlineAutoData(6, "integrated degree", false, true)]
+        [InlineAutoData(6, "INTEGRATED degree", false, true)]
+        [InlineAutoData(6, "non integrated", false, false)]
+        [InlineAutoData(6, "", false, false)]
+        [InlineAutoData(6, "abc", false, false)]
+        [InlineAutoData(7, "Integrated Degree", false, true)]
         public void Then_If_The_Standard_Is_Level_Six_Or_Above_The_Integrated_Degree_Field_Is_Used_To_Set_The_Standard_As_IntegratedApprenticeship(
-            int level, string integratedDegreeValue, bool expected, ImportTypes.Standard standard)
+            int level, string integratedDegreeValue, bool integratedApprenticeship, bool expected, ImportTypes.Standard standard)
         {
             //Arrange
             standard.Level = level;
             standard.IntegratedDegree = integratedDegreeValue;
-            
+            standard.IntegratedApprenticeship = integratedApprenticeship;
+
             //Act
             var actual = (StandardImport) standard;
 

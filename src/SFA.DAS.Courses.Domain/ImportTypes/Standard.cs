@@ -34,6 +34,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("level")]
         public int Level { get; set; }
 
+        [JsonProperty("coronationEmblem")]
+        public bool CoronationEmblem { get; set; }
+
         [JsonProperty("typicalDuration")]
         public int ProposedTypicalDuration { get; set; }
 

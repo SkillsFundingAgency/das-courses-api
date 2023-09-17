@@ -20,6 +20,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionLatestEndDate = standard.VersionLatestEndDate,
                 IntegratedDegree = standard.IntegratedDegree,
                 Level = standard.Level,
+                CoronationEmblem = standard.CoronationEmblem,
                 ProposedTypicalDuration = standard.ProposedTypicalDuration,
                 ProposedMaxFunding = standard.ProposedMaxFunding,
                 OverviewOfRole = standard.OverviewOfRole,

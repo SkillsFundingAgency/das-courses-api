@@ -40,6 +40,7 @@
     [VersionMajor] INT NOT NULL DEFAULT 0,
     [VersionMinor] INT NOT NULL DEFAULT 0,    
     [Options] NVARCHAR(MAX) NULL, 
+    [CoronationEmblem] BIT NOT NULL DEFAULT 0,
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -14,6 +14,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public DateTime? VersionLatestEndDate { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
+        public bool CoronationEmblem { get; set; }
         public int ProposedTypicalDuration { get; set; }
         public int ProposedMaxFunding { get; set; }
         public string Version { get; set; }
