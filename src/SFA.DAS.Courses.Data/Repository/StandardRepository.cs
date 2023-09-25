@@ -167,7 +167,8 @@ namespace SFA.DAS.Courses.Data.Repository
                     VersionLatestEndDate = c.VersionLatestEndDate,
                     VersionLatestStartDate = c.VersionLatestStartDate,
                     OverviewOfRole = c.OverviewOfRole,
-                    RegulatedBody = c.RegulatedBody
+                    RegulatedBody = c.RegulatedBody,
+                    EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody
                 });
         }
 

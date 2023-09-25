@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Domain.ImportTypes
 {
@@ -112,6 +113,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("change")]
         public string Change { get; set; }
 
+        [JsonProperty("qualifications")]
+        public List<Qualification> Qualifications { get; set; }
     }
 
     public class EqaProvider
