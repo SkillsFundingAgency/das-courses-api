@@ -8,8 +8,8 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class StandardImport : StandardBase
     {
         private const string FakeDutyText = ".";
-
         public List<string> OptionsUnstructuredTemplate { get; set; }
+        public List<Qualification> Qualifications { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
@@ -60,8 +60,20 @@ namespace SFA.DAS.Courses.Domain.Entities
                 OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
                 RouteCode = standard.RouteCode,
                 CreatedDate = standard.CreatedDate,
-                EPAChanged = IsEPAChanged(standard)
+                EPAChanged = IsEPAChanged(standard),
+                Qualifications = standard.Qualifications,
             };
+        }
+
+        public bool QualificationsContainsEpaoMustBeApprovedText()
+        {
+            var keyStrings = new string[]
+            {
+                "EPAO must be approved by regulator body",
+                "EPAO must be approved by the regulator body",
+            };
+
+            return Qualifications.Any(q => q.AnyAdditionalInformation.ContainsSubstringIn(keyStrings, StringComparison.OrdinalIgnoreCase));
         }
 
         private static List<string> GetDuties(ImportTypes.Standard standard)

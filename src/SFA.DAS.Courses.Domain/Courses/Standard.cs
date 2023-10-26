@@ -42,6 +42,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public bool EPAChanged { get; set; }
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
+        public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
 
         private List<StandardOption> _options = new List<StandardOption>();
         public List<StandardOption> Options
@@ -93,6 +94,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 EPAChanged = source.EPAChanged,
                 VersionMajor = source.VersionMajor,
                 VersionMinor = source.VersionMinor,
+                EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
             };
         }
     }

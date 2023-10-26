@@ -39,6 +39,7 @@ CREATE TABLE [dbo].[Standard]
     [VersionMinor] INT NOT NULL DEFAULT 0,
     [Options] NVARCHAR(MAX) NULL, 
     [CoronationEmblem] BIT NOT NULL DEFAULT 0,
+    [EpaoMustBeApprovedByRegulatorBody] BIT NOT NULL Default 0,
     CONSTRAINT [AK_Standard_Column] UNIQUE ([StandardUId])
 )
 GO

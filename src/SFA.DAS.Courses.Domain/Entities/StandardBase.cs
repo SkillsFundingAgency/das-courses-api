@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -21,7 +22,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
         public string OverviewOfRole { get; set; }
-        public virtual Route Route { get ; set ; }
+        public virtual Route Route { get; set; }
         public int RouteCode { get; set; }
         public string AssessmentPlanUrl { get; set; }
         public string Keywords { get; set; }
@@ -40,7 +41,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
-        public bool IntegratedApprenticeship { get ; set ; }
+        public bool IntegratedApprenticeship { get; set; }
         public List<StandardOption> Options { get; set; }
         public bool EPAChanged { get; set; }
     }
