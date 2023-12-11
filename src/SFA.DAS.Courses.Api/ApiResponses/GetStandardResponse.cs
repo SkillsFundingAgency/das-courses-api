@@ -75,7 +75,5 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
             };
         }
-
-        
     }
 }

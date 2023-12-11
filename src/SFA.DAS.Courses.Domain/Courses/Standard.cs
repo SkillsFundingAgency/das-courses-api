@@ -99,7 +99,5 @@ namespace SFA.DAS.Courses.Domain.Courses
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
             };
         }
-
-        
     }
 }
