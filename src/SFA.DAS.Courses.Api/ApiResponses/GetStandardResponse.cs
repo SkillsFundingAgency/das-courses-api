@@ -19,6 +19,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public string Route { get; set; }
+        public int RouteCode { get; set; }
         public string TypicalJobTitles { get; set; }
         public List<string> Skills { get; set; }
         public string StandardPageUrl { get; set; }
@@ -55,6 +56,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 Route = source.Route,
+                RouteCode = source.RouteCode,
                 TypicalJobTitles = source.TypicalJobTitles,
                 Skills = source.Options.SelectManyOrEmptyList(x => x.Skills).Select(x => x.Detail).Distinct().ToList(),
                 StandardPageUrl = source.StandardPageUrl,

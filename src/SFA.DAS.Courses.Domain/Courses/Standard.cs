@@ -17,6 +17,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public string Route { get; set; }
+        public int RouteCode { get; set; }
         public string TypicalJobTitles { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
@@ -73,6 +74,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 Route = source.Route.Name,
+                RouteCode = source.Route.Id,
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
                 TrailBlazerContact = source.TrailBlazerContact,
                 EqaProvider = (EqaProvider)source,

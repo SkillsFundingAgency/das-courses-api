@@ -19,6 +19,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string OverviewOfRole { get; set; }
         public string Keywords { get; set; }
         public string Route { get; set; }
+        public int RouteCode { get; set; }
         public string AssessmentPlanUrl { get; set; }
         public string TrailBlazerContact { get; set; }
         public string TypicalJobTitles { get; set; }
@@ -68,6 +69,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 OverviewOfRole = source.OverviewOfRole,
                 Keywords = source.Keywords,
                 Route = source.Route,
+                RouteCode = source.RouteCode,
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
                 TrailBlazerContact = source.TrailBlazerContact,
                 TypicalJobTitles = source.TypicalJobTitles,
