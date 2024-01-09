@@ -133,14 +133,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             var routeId = 1;
             return standards
+                .Where(c => c.Status.Equals("Approved for Delivery", StringComparison.CurrentCultureIgnoreCase))
                 .Select(c => c.Route)
                 .Distinct()
-                .OrderBy(c=>c)
-                .Select(c => new RouteImport
-                {
-                    Id = routeId ++,
-                    Name = c
-                })
+                .OrderBy(c => c)
+                .Select(c => new RouteImport { Id = routeId++, Name = c })
                 .ToList();
         }
 
