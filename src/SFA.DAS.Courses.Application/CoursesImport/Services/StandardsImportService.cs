@@ -119,7 +119,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             foreach (var standard in standards)
             {
-                standard.RouteCode = routes.Single(c => c.Name.Equals(standard.Route)).Id;
+                standard.RouteCode = routes.SingleOrDefault(c => c.Name.Equals(standard.Route))?.Id ?? 0;
             }
         }
 

@@ -26,7 +26,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             StandardsImportService standardsImportService)
         {
             //Arrange
-            SetStandardsToApprovedForDelivery(standardsImport);
+            SetStandardsToStatus(standardsImport);
             notImportedStandard.Status = "In development";
             standardsImport.Add(notImportedStandard);
             var routes = standardsImport.Select(s=>s.Route).Distinct().ToList();
@@ -41,7 +41,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_All_The_Standards_Are_Loaded_Into_The_Staging_Table_From_The_Api_And_Import_Data_Deleted_On_Load(
+        public async Task Then_All_The_Standards_Are_Loaded_Into_The_Staging_Table_From_The_Api_And_Import_Data_Deleted_On_Load_And_Only_Routes_With_Approved_For_Delivery_Loaded(
             [Frozen] Mock<IStandardImportRepository> importRepository,
             [Frozen] Mock<IInstituteOfApprenticeshipService> ifateService,
             [Frozen] Mock<IRouteImportRepository> importRouteRepository,
@@ -49,7 +49,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             StandardsImportService standardsImportService)
         {
             //Arrange
-            SetStandardsToApprovedForDelivery(standardsImport);
+            SetStandardsToStatus(standardsImport, "In Development");
             ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
             
             //Act
@@ -60,6 +60,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             importRepository.Verify(x=>
                 x.InsertMany(It.Is<List<StandardImport>>(c=>
                     c.Count.Equals(standardsImport.Count()))), Times.Once);
+            importRouteRepository.Verify(x=>x.InsertMany(It.Is<List<RouteImport>>(c=>c.Count == 0)));
             importRepository.Verify(x=>x.DeleteAll(), Times.Once);
             importRouteRepository.Verify(x=>x.DeleteAll(), Times.Once);
         }
@@ -72,7 +73,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             StandardsImportService standardsImportService)
         {
             //Arrange
-            SetStandardsToApprovedForDelivery(standardsImport);
+            SetStandardsToStatus(standardsImport);
             ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
 
             //Act
@@ -100,7 +101,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             standardDuplicate.CreatedDate = DateTime.Now.AddHours(-1);
             standardsImport.Add(standard);
             standardsImport.Add(standardDuplicate);
-            SetStandardsToApprovedForDelivery(standardsImport);
+            SetStandardsToStatus(standardsImport);
             ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
 
             //Act
@@ -112,11 +113,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     c.TrueForAll(s => s.StandardUId.Equals(s.IfateReferenceNumber.ToStandardUId(s.Version))))), Times.Once);
         }
 
-        private static void SetStandardsToApprovedForDelivery(List<Standard> standardsImport)
+        private static void SetStandardsToStatus(List<Standard> standardsImport, string status = "Approved for Delivery")
         {
             standardsImport.ForEach(c=>
             {
-                c.Status = "Approved for Delivery";
+                c.Status = status;
             });
         }
     }
