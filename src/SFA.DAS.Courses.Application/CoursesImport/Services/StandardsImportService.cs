@@ -119,7 +119,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             foreach (var standard in standards)
             {
-                standard.RouteCode = routes.Single(c => c.Name.Equals(standard.Route)).Id;
+                standard.RouteCode = routes.SingleOrDefault(c => c.Name.Equals(standard.Route))?.Id ?? 0;
             }
         }
 
@@ -133,14 +133,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             var routeId = 1;
             return standards
+                .Where(c => c.Status.Equals("Approved for Delivery", StringComparison.CurrentCultureIgnoreCase))
                 .Select(c => c.Route)
                 .Distinct()
-                .OrderBy(c=>c)
-                .Select(c => new RouteImport
-                {
-                    Id = routeId ++,
-                    Name = c
-                })
+                .OrderBy(c => c)
+                .Select(c => new RouteImport { Id = routeId++, Name = c })
                 .ToList();
         }
 
