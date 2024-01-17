@@ -36,13 +36,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
-            
+
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, false);
-            
+
             Assert.IsNotNull(actualStandards);
-            actualStandards.Should().BeEquivalentTo(activeValidStandards,EquivalentCheckExcludes());
+            actualStandards.Should().BeEquivalentTo(activeValidStandards, EquivalentCheckExcludes());
         }
-        
+
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Available_Standards_Are_Returned_When_Filter_Set_To_ActiveAvailable_For_Export(
             [StandardsAreLarsValid] List<Standard> activeValidStandards,
@@ -62,9 +62,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
-            
+
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, true);
-            
+
             Assert.IsNotNull(actualStandards);
             actualStandards.Should().BeEquivalentTo(activeValidStandards);
         }
@@ -90,7 +90,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .ReturnsDbSet(allStandards);
 
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false);
-            
+
             Assert.IsNotNull(actualStandards);
             var expectedList = new List<Standard>();
             expectedList.AddRange(activeValidStandards);
@@ -99,7 +99,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             actualStandards.Should().BeEquivalentTo(expectedList, EquivalentCheckExcludes());
         }
 
-        [Test, RecursiveMoqAutoData] 
+        [Test, RecursiveMoqAutoData]
         public async Task Then_Active_Standards_Are_Returned_Including_Retired_With_Distinct_LarsCode(
             [StandardsAreLarsValid] List<Standard> activeValidStandards,
             [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
@@ -138,7 +138,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             expectedList.AddRange(activeInvalidStandards);
             expectedList.AddRange(retiredStandards);
             expectedList.Add(retiredStandardWithDistinctLarsCode);
-            actualStandards.Should().BeEquivalentTo(expectedList,EquivalentCheckExcludes());
+            actualStandards.Should().BeEquivalentTo(expectedList, EquivalentCheckExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -229,7 +229,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             //Assert
             Assert.IsNotNull(actual);
-            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] },EquivalentCheckExcludes());
+            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] }, EquivalentCheckExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -327,22 +327,24 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
         private static Func<EquivalencyAssertionOptions<Standard>, EquivalencyAssertionOptions<Standard>> EquivalentCheckExcludes()
         {
-            return options=>options
-                .Excluding(c=>c.SearchScore)
-                .Excluding(c=>c.ProposedTypicalDuration)
-                .Excluding(c=>c.ProposedMaxFunding)
-                .Excluding(c=>c.OverviewOfRole)
-                .Excluding(c=>c.AssessmentPlanUrl)
-                .Excluding(c=>c.TrailBlazerContact)
-                .Excluding(c=>c.EqaProviderName)
-                .Excluding(c=>c.EqaProviderContactEmail)
-                .Excluding(c=>c.EqaProviderContactName)
-                .Excluding(c=>c.EqaProviderWebLink)
-                .Excluding(c=>c.Duties)
-                .Excluding(c=>c.CoreDuties)
-                .Excluding(c=>c.Options)
-                .Excluding(c=>c.CoreAndOptions)
-                .Excluding(c=>c.EPAChanged);
+            return options => options
+                .Excluding(c => c.SearchScore)
+                .Excluding(c => c.ProposedTypicalDuration)
+                .Excluding(c => c.ProposedMaxFunding)
+                .Excluding(c => c.OverviewOfRole)
+                .Excluding(c => c.AssessmentPlanUrl)
+                .Excluding(c => c.TrailBlazerContact)
+                .Excluding(c => c.EqaProviderName)
+                .Excluding(c => c.EqaProviderContactEmail)
+                .Excluding(c => c.EqaProviderContactName)
+                .Excluding(c => c.EqaProviderWebLink)
+                .Excluding(c => c.Duties)
+                .Excluding(c => c.CoreDuties)
+                .Excluding(c => c.Options)
+                .Excluding(c => c.CoreAndOptions)
+                .Excluding(c => c.EPAChanged)
+                .Excluding(c => c.SSA1)
+                .Excluding(c => c.SSA2);
         }
     }
 }

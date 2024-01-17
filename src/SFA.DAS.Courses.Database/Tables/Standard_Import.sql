@@ -1,18 +1,18 @@
 ﻿CREATE TABLE [dbo].[Standard_Import]
 (
-	[StandardUId] VARCHAR(20) PRIMARY KEY,
+    [StandardUId] VARCHAR(20) PRIMARY KEY,
     [IfateReferenceNumber] VARCHAR(10) NOT NULL,
     [LarsCode] INT NULL,
     [Status] VARCHAR(100) NOT NULL,
     [VersionEarliestStartDate] DATETIME NULL,
     [VersionLatestStartDate] DATETIME NULL,
     [VersionLatestEndDate] DATETIME NULL,
-	[Title] VARCHAR(1000) NOT NULL,
-	[Level] INT NOT NULL,
+    [Title] VARCHAR(1000) NOT NULL,
+    [Level] INT NOT NULL,
     [ProposedTypicalDuration] INT NOT NULL,
     [ProposedMaxFunding] INT NOT NULL,
-	[IntegratedDegree] VARCHAR(100) NULL,
-	[OverviewOfRole] VARCHAR(MAX) NOT NULL,
+    [IntegratedDegree] VARCHAR(100) NULL,
+    [OverviewOfRole] VARCHAR(MAX) NOT NULL,
     [RouteCode] INT NOT NULL DEFAULT 0,
     [AssessmentPlanUrl] VARCHAR(500) NULL,
     [ApprovedForDelivery] DATETIME NULL,
@@ -21,10 +21,10 @@
     [EqaProviderContactName] VARCHAR(200) NULL,
     [EqaProviderContactEmail] VARCHAR(200) NULL,
     [EqaProviderWebLink] VARCHAR(500) NULL,
-	[Keywords] VARCHAR(MAX) NULL,
-	[TypicalJobTitles] VARCHAR(MAX) NULL,
-	[StandardPageUrl] VARCHAR(500) NOT NULL,
-	[Version] VARCHAR(20) NULL,
+    [Keywords] VARCHAR(MAX) NULL,
+    [TypicalJobTitles] VARCHAR(MAX) NULL,
+    [StandardPageUrl] VARCHAR(500) NOT NULL,
+    [Version] VARCHAR(20) NULL,
     [RegulatedBody] VARCHAR(1000) NULL,
     [Skills] NVARCHAR(MAX) NULL, -- TODO: Remove
     [Knowledge] NVARCHAR(MAX) NULL, -- TODO: Remove
@@ -42,6 +42,8 @@
     [Options] NVARCHAR(MAX) NULL, 
     [CoronationEmblem] BIT NOT NULL DEFAULT 0,
     [Qualifications] NVARCHAR(MAX) NULL,
+    [SSA1] INT NULL,
+    [SSA2] DECIMAL(5,2) NULL,
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO

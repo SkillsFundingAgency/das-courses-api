@@ -90,13 +90,13 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public List<Duty> Duties { get; set; }
 
         [JsonProperty("coreAndOptions")]
-        public bool CoreAndOptions { get ; set ; }
+        public bool CoreAndOptions { get; set; }
 
-        [JsonProperty("regulatedBody")] 
+        [JsonProperty("regulatedBody")]
         public string RegulatedBody { get; set; }
 
         [JsonProperty("integratedApprenticeship")]
-        public bool? IntegratedApprenticeship { get ; set ; }
+        public bool? IntegratedApprenticeship { get; set; }
 
         [JsonProperty("options")]
         public List<Option> Options { get; set; }
@@ -108,13 +108,19 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public DateTime CreatedDate { get; set; }
 
         [JsonIgnore]
-        public int RouteCode { get ; set ; }
+        public int RouteCode { get; set; }
 
         [JsonProperty("change")]
         public string Change { get; set; }
 
         [JsonProperty("qualifications")]
         public List<Qualification> Qualifications { get; set; }
+
+        [JsonProperty("ssa1")]
+        public string SSA1 { get; set; }
+
+        [JsonProperty("ssa2")]
+        public string SSA2 { get; set; }
     }
 
     public class EqaProvider

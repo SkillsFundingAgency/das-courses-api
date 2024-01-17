@@ -62,7 +62,41 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CreatedDate = standard.CreatedDate,
                 EPAChanged = IsEPAChanged(standard),
                 Qualifications = standard.Qualifications,
+                SSA1 = GetSSA1Code(standard.SSA1?.Trim()),
+                SSA2 = GetSSA2Code(standard.SSA2?.Trim())
             };
+        }
+
+        /// <summary>
+        /// The value expected in SSA looks like: 4 Engineering and Manufacturing Technologies.
+        /// This method extracts and returns the code i.e. 4 as per above example
+        /// </summary>
+        /// <param name="ssa1"></param>
+        /// <returns></returns>
+        public static int? GetSSA1Code(string ssa1)
+        {
+            if (string.IsNullOrWhiteSpace(ssa1)) return null;
+            var firstSpacePosition = ssa1.IndexOf(" ");
+            if (firstSpacePosition < 0) return null;
+            var code = ssa1.Substring(0, firstSpacePosition);
+            if (int.TryParse(code, out var ssa1Code)) return ssa1Code;
+            return null;
+        }
+
+        /// <summary>
+        /// The value expected in SSA looks like: 4 Engineering and Manufacturing Technologies.
+        /// This method extracts and returns the code i.e. 4 as per above example
+        /// </summary>
+        /// <param name="ssa2"></param>
+        /// <returns></returns>
+        public static decimal? GetSSA2Code(string ssa2)
+        {
+            if (string.IsNullOrWhiteSpace(ssa2)) return null;
+            var firstSpacePosition = ssa2.IndexOf(" ");
+            if (firstSpacePosition < 0) return null;
+            var code = ssa2.Substring(0, firstSpacePosition);
+            if (decimal.TryParse(code, out var ssa2Code)) return ssa2Code;
+            return null;
         }
 
         public bool QualificationsContainsEpaoMustBeApprovedText()

@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
         {
             var response = (Standard)source;
 
-            response.Should().BeEquivalentTo(source,options=>options
+            response.Should().BeEquivalentTo(source, options => options
                 .Excluding(c => c.ApprenticeshipFunding)
                 .Excluding(c => c.LarsStandard)
                 .Excluding(c => c.Route)
@@ -30,6 +30,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.EqaProviderContactName)
                 .Excluding(c => c.EqaProviderName)
                 .Excluding(c => c.EqaProviderWebLink)
+                .Excluding(c => c.SSA1)
+                .Excluding(c => c.SSA2)
             );
 
             response.Route.Should().Be(source.Route.Name);

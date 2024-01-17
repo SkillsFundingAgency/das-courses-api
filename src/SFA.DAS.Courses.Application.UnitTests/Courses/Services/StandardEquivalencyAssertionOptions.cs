@@ -28,7 +28,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(c => c.EqaProviderName)
                 .Excluding(c => c.EqaProviderWebLink)
                 .Excluding(c => c.VersionMajor)
-                .Excluding(c => c.VersionMinor);
+                .Excluding(c => c.VersionMinor)
+                .Excluding(c => c.SSA1)
+                .Excluding(c => c.SSA2);
 
     }
 }

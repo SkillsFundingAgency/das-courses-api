@@ -201,6 +201,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.Options)
                 .Excluding(c => c.EPAChanged)
                 .Excluding(c => c.VersionMajor)
-                .Excluding(c => c.VersionMinor);
+                .Excluding(c => c.VersionMinor)
+                .Excluding(c => c.SSA1)
+                .Excluding(c => c.SSA2);
     }
 }

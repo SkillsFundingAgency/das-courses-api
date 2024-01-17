@@ -32,6 +32,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.Options).HasJsonConversion();
             builder.Property(x => x.OptionsUnstructuredTemplate).HasJsonConversion();
             builder.Property(x => x.Qualifications).HasJsonConversion();
+            builder.Property(x => x.SSA2).HasColumnType("decimal(5,2)");
 
             builder.Ignore(x => x.ApprenticeshipFunding);
             builder.Ignore(x => x.LarsStandard);

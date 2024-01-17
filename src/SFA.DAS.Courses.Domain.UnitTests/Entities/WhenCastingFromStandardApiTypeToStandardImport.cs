@@ -35,6 +35,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.TbMainContact)
                 .Excluding(c => c.Change)
                 .Excluding(c => c.IntegratedApprenticeship)
+                .Excluding(c => c.SSA1)
+                .Excluding(c => c.SSA2)
             );
 
             actual.LarsCode.Should().Be(standard.LarsCode);
@@ -49,7 +51,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Arrange
             var expectedTitle = standard.Title;
             standard.Title = $"  {expectedTitle} ";
-            
+
             //Act
             var actual = (StandardImport)standard;
 
@@ -76,7 +78,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             //Assert	
-            actual.CoreDuties.Should().BeEquivalentTo(new List<string>{detail});
+            actual.CoreDuties.Should().BeEquivalentTo(new List<string> { detail });
         }
 
         [Test, AutoData]
@@ -108,7 +110,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_If_The_Version_Is_Null_It_Is_Set_To_DefaultVersion(ImportTypes.Standard standard)
         {
             //Arrange
-            standard.Version = null;            
+            standard.Version = null;
 
             //Act
             var actual = (StandardImport)standard;
@@ -151,11 +153,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Knowledge.Should().BeEquivalentTo(new []{
+                .Which.Knowledge.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Knowledge[0].KnowledgeId, Detail = "k1" },
                     new { Id = standard.Knowledge[1].KnowledgeId, Detail = "k2" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Knowledge.Should().BeEquivalentTo( new [] {
+                .Which.Knowledge.Should().BeEquivalentTo(new[] {
                     new { Id = standard.Knowledge[2].KnowledgeId, Detail = "k3" },
                     new { Id = standard.Knowledge[3].KnowledgeId, Detail = "k4" }});
         }
@@ -246,11 +248,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Skills.Should().BeEquivalentTo(new []{
+                .Which.Skills.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Skills[0].SkillId, Detail = "s1" },
                     new { Id = standard.Skills[1].SkillId, Detail = "s2" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Skills.Should().BeEquivalentTo( new []{
+                .Which.Skills.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Skills[2].SkillId, Detail = "s3" },
                     new { Id = standard.Skills[3].SkillId, Detail = "s4" },
                     new { Id = standard.Skills[4].SkillId, Detail = "s5" }});
@@ -280,19 +282,19 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo( new []{
+                .Which.Behaviours.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Behaviours[0].BehaviourId, Detail = "b1" },
                     new { Id = standard.Behaviours[2].BehaviourId, Detail = "b3" },
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
                     new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo(new []{
+                .Which.Behaviours.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Behaviours[0].BehaviourId, Detail = "b1" },
                     new { Id = standard.Behaviours[2].BehaviourId, Detail = "b3" },
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
                     new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" }});
             actual.Options.Should().Contain(x => x.OptionId == options[2].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo(new []{
+                .Which.Behaviours.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
                     new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" },
                     new { Id = standard.Behaviours[5].BehaviourId, Detail = "b6" }});
@@ -401,7 +403,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData(" Option")]
         [InlineAutoData("  Option")]
         [InlineAutoData("Option ")]
-        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle,ImportTypes.Standard standard)
+        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle, ImportTypes.Standard standard)
         {
             //Arrange
             standard.CoreAndOptions = true;
@@ -474,7 +476,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.IntegratedApprenticeship = integratedApprenticeship;
 
             //Act
-            var actual = (StandardImport) standard;
+            var actual = (StandardImport)standard;
 
             //Assert
             actual.IntegratedApprenticeship.Should().Be(expected);
@@ -493,9 +495,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Arrange
             standard.Level = level;
             standard.IntegratedApprenticeship = integratedValue;
-            
+
             //Act
-            var actual = (StandardImport) standard;
+            var actual = (StandardImport)standard;
 
             //Assert
             actual.IntegratedApprenticeship.Should().Be(expected);
@@ -668,6 +670,35 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             // Assert
             actual.Duties.Should().BeEmpty();
+        }
+
+        [Test]
+        [InlineAutoData("4 Engineering and Manufacturing Technologies", 4)]
+        [InlineAutoData(" 4 Engineering and Manufacturing Technologies", 4)]
+        [InlineAutoData(" ", null)]
+        [InlineAutoData(null, null)]
+        [InlineAutoData("4Engineering and Manufacturing Technologies", null)]
+        [InlineAutoData("Engineering and Manufacturing Technologies", null)]
+        public void Then_ssa1_code_is_extracted_from_ssa1_import_field(string ssa1, int? ssaCode, ImportTypes.Standard standard)
+        {
+            standard.SSA1 = ssa1;
+            StandardImport actual = standard;
+            actual.SSA1.Should().Be(ssaCode);
+        }
+
+        [Test]
+        [InlineAutoData("4.3 Transportation operations and maintenance", "4.3")]
+        [InlineAutoData(" 4.3 Transportation operations and maintenance", "4.3")]
+        [InlineAutoData(" ", null)]
+        [InlineAutoData(null, null)]
+        [InlineAutoData("4.3Engineering and Manufacturing Technologies", null)]
+        [InlineAutoData("Engineering and Manufacturing Technologies", null)]
+        public void Then_ssa2_code_is_extracted_from_ssa2_import_field(string ssa2, string ssaCode, ImportTypes.Standard standard)
+        {
+            standard.SSA2 = ssa2;
+            StandardImport actual = standard;
+            decimal? parsedValue = decimal.TryParse(ssaCode, out decimal code) ? code : null;
+            actual.SSA2.Should().Be(parsedValue);
         }
     }
 }

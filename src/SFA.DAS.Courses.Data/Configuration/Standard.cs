@@ -30,13 +30,14 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.IntegratedApprenticeship).HasColumnName("IntegratedApprenticeship").HasColumnType("bit").IsRequired();
             builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
             builder.Property(x => x.Options).HasJsonConversion();
-            builder.Property(x => x.EpaoMustBeApprovedByRegulatorBody).HasColumnType("EpaoMustBeApprovedByRegulatorBody").HasColumnType("bit").IsRequired();
+            builder.Property(x => x.EpaoMustBeApprovedByRegulatorBody).HasColumnName("EpaoMustBeApprovedByRegulatorBody").HasColumnType("bit").IsRequired();
+            builder.Property(x => x.SSA2).HasColumnType("decimal(5,2)");
 
             builder.HasOne(c => c.Route)
                 .WithMany(c => c.Standards)
                 .HasPrincipalKey(c => c.Id)
                 .HasForeignKey(c => c.RouteCode).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
-            
+
             builder.HasOne(c => c.LarsStandard)
                 .WithMany(c => c.Standards)
                 .HasForeignKey(s => s.LarsCode)
