@@ -24,21 +24,23 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public List<string> Skills { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
-        public decimal SectorSubjectAreaTier2 { get ; set ; }
-        public string SectorSubjectAreaTier2Description { get ; set ; }
+        public decimal SectorSubjectAreaTier2 { get; set; }
+        public string SectorSubjectAreaTier2Description { get; set; }
 
-        public List<ApprenticeshipFundingResponse> ApprenticeshipFunding { get ; set ; }
+        public List<ApprenticeshipFundingResponse> ApprenticeshipFunding { get; set; }
 
-        public StandardDatesResponse StandardDates { get ; set ; }
+        public StandardDatesResponse StandardDates { get; set; }
 
         public bool OtherBodyApprovalRequired { get; set; }
         public string ApprovalBody { get; set; }
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
-        public bool IntegratedApprenticeship { get ; set ; }
-        public int SectorCode { get ; set ; }        
-        public bool EpaoMustBeApprovedByRegulatorBody { get; set ; }
+        public bool IntegratedApprenticeship { get; set; }
+        public int SectorCode { get; set; }
+        public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
+
+        public int? SectorSubjectAreaTier1 { get; set; }
 
         public static implicit operator GetStandardResponse(Standard source)
         {
@@ -61,7 +63,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Skills = source.Options.SelectManyOrEmptyList(x => x.Skills).Select(x => x.Detail).Distinct().ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
-                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFundingResponse)c).ToList(),
+                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (ApprenticeshipFundingResponse)c).ToList(),
                 StandardDates = (StandardDatesResponse)source.StandardDates,
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description,
@@ -73,6 +75,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
                 SectorCode = source.SectorCode,
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
+                SectorSubjectAreaTier1 = source.SectorSubjectAreaTier1
             };
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -91,7 +90,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool isExport)
         {
-            var standards = (isExport 
+            var standards = (isExport
                 ? GetFullBaseStandardQuery()
                 : GetBaseStandardQuery())
                 .FilterStandards(filter);
@@ -125,23 +124,23 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             return _coursesDataContext
                 .Standards
-                
+
                 .Include(c => c.Route)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
                 .ThenInclude(c => c.SectorSubjectArea);
         }
-        
+
         private IQueryable<Standard> GetBaseStandardQuery()
         {
             return _coursesDataContext
                 .Standards
-                
+
                 .Include(c => c.Route)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
                 .ThenInclude(c => c.SectorSubjectArea)
-                .Select(c=>new Standard
+                .Select(c => new Standard
                 {
                     Status = c.Status,
                     StandardUId = c.StandardUId,
@@ -168,7 +167,8 @@ namespace SFA.DAS.Courses.Data.Repository
                     VersionLatestStartDate = c.VersionLatestStartDate,
                     OverviewOfRole = c.OverviewOfRole,
                     RegulatedBody = c.RegulatedBody,
-                    EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody
+                    EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
+                    SSA1 = c.SSA1
                 });
         }
 
