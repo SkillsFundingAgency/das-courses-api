@@ -10,6 +10,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public DateTime? EffectiveTo { get; set; }
         public DateTime? LastDateStarts { get; set; }
         public decimal SectorSubjectAreaTier2 { get; set; }
+        public string SectorSubjectAreaTier1 { get; set; }
         public string OtherBodyApprovalRequired { get; set; }
         public int StandardSectorCode { get; set; }
     }
