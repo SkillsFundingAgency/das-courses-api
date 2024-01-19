@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -16,7 +17,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 LarsCode = standardCsv.StandardCode,
                 SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2,
                 OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(standardCsv.OtherBodyApprovalRequired),
-                SectorCode = standardCsv.StandardSectorCode
+                SectorCode = standardCsv.StandardSectorCode,
+                SectorSubjectAreaTier1 = int.TryParse(standardCsv.SectorSubjectAreaTier1, NumberStyles.AllowDecimalPoint, null, out int code) ? code : -1
             };
         }
 

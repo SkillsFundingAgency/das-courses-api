@@ -18,7 +18,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 LastDateStarts = larsStandardImport.LastDateStarts,
                 SectorSubjectAreaTier2 = larsStandardImport.SectorSubjectAreaTier2,
                 OtherBodyApprovalRequired = larsStandardImport.OtherBodyApprovalRequired,
-                SectorCode = larsStandardImport.SectorCode
+                SectorCode = larsStandardImport.SectorCode,
+                SectorSubjectAreaTier1 = larsStandardImport.SectorSubjectAreaTier1
             };
         }
     }

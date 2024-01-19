@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Entities;
-using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
-using LarsStandard = SFA.DAS.Courses.Domain.Entities.LarsStandard;
 using Framework = SFA.DAS.Courses.Domain.Entities.Framework;
+using LarsStandard = SFA.DAS.Courses.Domain.Entities.LarsStandard;
+using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 {
@@ -96,7 +96,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         LarsCode = 1,
-                        SectorSubjectAreaTier2 = 1m
+                        SectorSubjectAreaTier2 = 1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.3",
@@ -123,7 +124,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         LarsCode = 2,
-                        SectorSubjectAreaTier2 = 1m
+                        SectorSubjectAreaTier2 = 1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Options = new List<StandardOption> { StandardOption.Create("core") },
                     Status = "Approved for delivery",
@@ -146,7 +148,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         LarsCode = 3,
-                        SectorSubjectAreaTier2 = 1.1m
+                        SectorSubjectAreaTier2 = 1.1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
@@ -168,7 +171,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         LarsCode = 4,
-                        SectorSubjectAreaTier2 = 1.1m
+                        SectorSubjectAreaTier2 = 1.1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
@@ -190,7 +194,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         LarsCode = 5,
-                        SectorSubjectAreaTier2 = 1m
+                        SectorSubjectAreaTier2 = 1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.1",
@@ -212,7 +217,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         LarsCode = 6,
-                        SectorSubjectAreaTier2 = 1.1m
+                        SectorSubjectAreaTier2 = 1.1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
@@ -234,7 +240,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
                         LarsCode = 7,
-                        SectorSubjectAreaTier2 = 1m
+                        SectorSubjectAreaTier2 = 1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
@@ -253,7 +260,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LarsCode = 8,
-                        SectorSubjectAreaTier2 = 1m
+                        SectorSubjectAreaTier2 = 1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
@@ -262,7 +270,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         StandardOption.Create(
                             Guid.NewGuid(),
                             "Option 1",
-                            new List<Ksb> 
+                            new List<Ksb>
                             {
                                 Ksb.Knowledge(Guid.NewGuid(), 1, "core_knowledge_1"),
                                 Ksb.Knowledge(Guid.NewGuid(), 2, "core_knowledge_2"),
@@ -271,7 +279,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                                 Ksb.Behaviour(Guid.NewGuid(), 1, "opt1_behaviour_1"),
                             }),
                         StandardOption.Create(
-                            "Option 2")                        
+                            "Option 2")
                     },
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
@@ -298,7 +306,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
                         LarsCode = 11,
-                        SectorSubjectAreaTier2 = 1m
+                        SectorSubjectAreaTier2 = 1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
@@ -319,7 +328,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
                         LarsCode = 14,
-                        SectorSubjectAreaTier2 = 1m
+                        SectorSubjectAreaTier2 = 1m,
+                        SectorSubjectAreaTier1 = 1
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
