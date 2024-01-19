@@ -2,7 +2,6 @@
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Courses.Data.Configuration;
 using SFA.DAS.Courses.Domain.Configuration;
@@ -24,11 +23,13 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
+        DbSet<Domain.Entities.SectorSubjectAreaTier1> SectorSubjectAreaTier1 { get; set; }
         DbSet<Domain.Entities.Route> Routes { get; set; }
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
+        DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
         int SaveChanges();
     }
-    
+
     public partial class CoursesDataContext : DbContext, ICoursesDataContext
     {
         private const string AzureResource = "https://database.windows.net/";
@@ -48,19 +49,21 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
         public DbSet<Domain.Entities.Route> Routes { get; set; }
         public DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
+        public DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
+        public DbSet<Domain.Entities.SectorSubjectAreaTier1> SectorSubjectAreaTier1 { get; set; }
 
         private readonly CoursesConfiguration _configuration;
         private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
-     
+
         public CoursesDataContext()
         {
         }
 
         public CoursesDataContext(DbContextOptions options) : base(options)
         {
-            
+
         }
-        public CoursesDataContext(IOptions<CoursesConfiguration> config, DbContextOptions options, AzureServiceTokenProvider azureServiceTokenProvider) :base(options)
+        public CoursesDataContext(IOptions<CoursesConfiguration> config, DbContextOptions options, AzureServiceTokenProvider azureServiceTokenProvider) : base(options)
         {
             _configuration = config.Value;
             _azureServiceTokenProvider = azureServiceTokenProvider;
@@ -75,14 +78,14 @@ namespace SFA.DAS.Courses.Data
                 optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 return;
             }
-            
+
             var connection = new SqlConnection
             {
                 ConnectionString = _configuration.ConnectionString,
                 AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result,
             };
-            
-            optionsBuilder.UseSqlServer(connection,options=>
+
+            optionsBuilder.UseSqlServer(connection, options =>
                 options.EnableRetryOnFailure(
                     5,
                     TimeSpan.FromSeconds(20),
@@ -106,6 +109,8 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new FrameworkFundingImport());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2Import());
+            modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1Import());
+            modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1());
             modelBuilder.ApplyConfiguration(new Route());
             modelBuilder.ApplyConfiguration(new RouteImport());
             base.OnModelCreating(modelBuilder);

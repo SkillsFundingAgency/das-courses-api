@@ -4,9 +4,9 @@ using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Domain.Interfaces
 {
-    public interface ISectorSubjectAreaTier2Repository
+    public interface ISectorSubjectAreaTier1Repository
     {
         void DeleteAll();
-        Task InsertMany(IEnumerable<SectorSubjectAreaTier2> sectorSubjectAreaTier2Items);
+        Task InsertMany(IEnumerable<SectorSubjectAreaTier1> sectorSubjectAreaTier1Items);
     }
 }

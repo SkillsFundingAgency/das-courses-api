@@ -22,6 +22,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.OtherBodyApprovalRequired)
                 .Excluding(c => c.SectorCode)
                 .Excluding(c => c.SectorSubjectAreaTier1)
+                .Excluding(c => c.SectorSubjectArea1)
             );
         }
     }

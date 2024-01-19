@@ -9,5 +9,6 @@
         public static string LarsStandardsFileName => "Standard.csv";
         public static string LarsApprenticeshipFundingFileName => "ApprenticeshipFunding.csv";
         public static string LarsSectorSubjectAreaTier2FileName => "SectorSubjectAreaTier2.csv";
+        public static string LarsSectorSubjectAreaTier1FileName => "SectorSubjectAreaTier1.csv";
     }
 }
