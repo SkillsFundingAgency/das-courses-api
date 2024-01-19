@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
@@ -21,6 +21,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
             [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2Repository> sectorSubjectAreaTier2Repository,
+            [Frozen] Mock<ISectorSubjectAreaTier1Repository> sectorSubjectAreaTier1Repository,
             LarsImportService larsImportService)
         {
             //Act
@@ -30,6 +31,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             larsStandardRepository.Verify(x => x.DeleteAll(), Times.Once);
             apprenticeshipFundingRepository.Verify(x => x.DeleteAll(), Times.Once);
             sectorSubjectAreaTier2Repository.Verify(x => x.DeleteAll(), Times.Once);
+            sectorSubjectAreaTier1Repository.Verify(x => x.DeleteAll(), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -38,16 +40,19 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             string filePath,
             List<LarsStandardImport> larsStandardImports,
             List<SectorSubjectAreaTier2Import> sectorSubjectAreaTier2Imports,
+            List<SectorSubjectAreaTier1Import> sectorSubjectAreaTier1Imports,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier1ImportRepository> sectorSubjectAreaTier1ImportRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier1Repository> sectorSubjectAreaTier1Repository,
             [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
-            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2Repository> sectorSubjectAreaTier2Repository,
             LarsImportService larsImportService)
         {
             //Arrange
             larsStandardImportRepository.Setup(x => x.GetAll()).ReturnsAsync(larsStandardImports);
             sectorSubjectAreaTier2ImportRepository.Setup(x => x.GetAll()).ReturnsAsync(sectorSubjectAreaTier2Imports);
+            sectorSubjectAreaTier1ImportRepository.Setup(x => x.GetAll()).ReturnsAsync(sectorSubjectAreaTier1Imports);
 
             //Act
             await larsImportService.LoadDataFromStaging(importStartTime, filePath);
@@ -55,6 +60,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             larsStandardRepository.Verify(x => x.InsertMany(It.Is<List<LarsStandard>>(c => c.Count.Equals(larsStandardImports.Count))), Times.Once);
             sectorSubjectAreaTier2Repository.Verify(x => x.InsertMany(It.Is<List<SectorSubjectAreaTier2>>(c => c.Count.Equals(sectorSubjectAreaTier2Imports.Count))), Times.Once);
+            sectorSubjectAreaTier1Repository.Verify(x => x.InsertMany(It.Is<List<SectorSubjectAreaTier1>>(c => c.Count.Equals(sectorSubjectAreaTier1Imports.Count))), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -67,8 +73,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             LarsImportService larsImportService)
         {
             //Arrange
-            var standardImports = new List<StandardImport> 
-            { 
+            var standardImports = new List<StandardImport>
+            {
                 new StandardImport { LarsCode = 1, StandardUId = "ST0001_1.0" },
                 new StandardImport { LarsCode = 2, StandardUId = "ST0002_1.0" },
                 new StandardImport { LarsCode = 2, StandardUId = "ST0002_1.1" }
@@ -76,7 +82,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             standardImportRepository.Setup(s => s.GetAll()).ReturnsAsync(standardImports);
 
             var apprenticeshipFundingImports = new List<ApprenticeshipFundingImport>
-            { 
+            {
                 new ApprenticeshipFundingImport { LarsCode = 1, Id = Guid.NewGuid() },
                 new ApprenticeshipFundingImport { LarsCode = 1, Id = Guid.NewGuid() },
                 new ApprenticeshipFundingImport { LarsCode = 2, Id = Guid.NewGuid() },

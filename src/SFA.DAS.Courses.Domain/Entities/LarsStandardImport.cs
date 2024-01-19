@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2,
                 OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(standardCsv.OtherBodyApprovalRequired),
                 SectorCode = standardCsv.StandardSectorCode,
-                SectorSubjectAreaTier1 = int.TryParse(standardCsv.SectorSubjectAreaTier1, NumberStyles.AllowDecimalPoint, null, out int code) ? code : -1
+                SectorSubjectAreaTier1 = int.TryParse(standardCsv.SectorSubjectAreaTier1, NumberStyles.AllowDecimalPoint, null, out int code) ? code : default
             };
         }
 
