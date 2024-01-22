@@ -17,7 +17,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.EffectiveTo).HasColumnName("EffectiveTo").HasColumnType("datetime").IsRequired(false);
             
             builder.HasMany(c=>c.LarsStandard)
-                .WithOne(c=>c.SectorSubjectArea)
+                .WithOne(c=>c.SectorSubjectArea2)
                 .HasForeignKey(c=>c.SectorSubjectAreaTier2)
                 .HasPrincipalKey(c=>c.SectorSubjectAreaTier2)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
