@@ -22,24 +22,26 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
 
-        public IEnumerable<ApprenticeshipFunding> ApprenticeshipFunding { get ; set ; }
+        public IEnumerable<ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
 
         public StandardVersionDetail VersionDetail { get; set; }
 
         public EqaProvider EqaProvider { get; set; }
 
-        public StandardDates StandardDates { get ; set ; }
-        public decimal SectorSubjectAreaTier2 { get ; set ; }
-        public string SectorSubjectAreaTier2Description { get ; set ; }
+        public StandardDates StandardDates { get; set; }
+        public decimal SectorSubjectAreaTier2 { get; set; }
+        public string SectorSubjectAreaTier2Description { get; set; }
+        public int? SectorSubjectAreaTier1 { get; set; }
+        public string SectorSubjectAreaTier1Description { get; set; }
         public bool OtherBodyApprovalRequired { get; set; }
         public string ApprovalBody { get; set; }
         public List<string> Duties { get; set; }
         public bool CoreAndOptions { get; set; }
         public List<string> CoreDuties { get; set; }
-        public bool IntegratedApprenticeship { get ; set ; }
+        public bool IntegratedApprenticeship { get; set; }
         public string AssessmentPlanUrl { get; private set; }
         public string TrailBlazerContact { get; private set; }
-        public int SectorCode { get ; set ; }
+        public int SectorCode { get; set; }
         public bool EPAChanged { get; set; }
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
@@ -81,10 +83,12 @@ namespace SFA.DAS.Courses.Domain.Courses
                 TypicalJobTitles = source.TypicalJobTitles,
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
-                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c=>(ApprenticeshipFunding)c).ToList(),
+                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (ApprenticeshipFunding)c).ToList(),
                 StandardDates = (StandardDates)source.LarsStandard,
-                SectorSubjectAreaTier2 = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2 : 0m,
-                SectorSubjectAreaTier2Description = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea.Name : "",
+                SectorSubjectAreaTier2 = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.SectorSubjectAreaTier2 : 0m,
+                SectorSubjectAreaTier2Description = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.Name : "",
+                SectorSubjectAreaTier1 = source.LarsStandard?.SectorSubjectArea1?.SectorSubjectAreaTier1,
+                SectorSubjectAreaTier1Description = source.LarsStandard?.SectorSubjectArea1?.SectorSubjectAreaTier1Desc,
                 OtherBodyApprovalRequired = source.LarsStandard != null ? source.LarsStandard.OtherBodyApprovalRequired : false,
                 ApprovalBody = source.RegulatedBody,
                 Duties = source.Duties,

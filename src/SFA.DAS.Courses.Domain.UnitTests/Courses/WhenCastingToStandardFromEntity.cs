@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
         {
             var response = (Standard)source;
 
-            response.Should().BeEquivalentTo(source,options=>options
+            response.Should().BeEquivalentTo(source, options => options
                 .Excluding(c => c.ApprenticeshipFunding)
                 .Excluding(c => c.LarsStandard)
                 .Excluding(c => c.Route)
@@ -37,8 +37,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.StandardDates.Should().NotBeNull();
             response.VersionDetail.Should().NotBeNull();
             response.EqaProvider.Should().NotBeNull();
-            response.SectorSubjectAreaTier2.Should().Be(source.LarsStandard.SectorSubjectArea.SectorSubjectAreaTier2);
-            response.SectorSubjectAreaTier2Description.Should().Be(source.LarsStandard.SectorSubjectArea.Name);
+            response.SectorSubjectAreaTier2.Should().Be(source.LarsStandard.SectorSubjectArea2.SectorSubjectAreaTier2);
+            response.SectorSubjectAreaTier2Description.Should().Be(source.LarsStandard.SectorSubjectArea2.Name);
+            response.SectorSubjectAreaTier1.Should().Be(source.LarsStandard.SectorSubjectArea1.SectorSubjectAreaTier1);
+            response.SectorSubjectAreaTier1Description.Should().Be(source.LarsStandard.SectorSubjectArea1.SectorSubjectAreaTier1Desc);
             response.OtherBodyApprovalRequired.Should().Be(source.LarsStandard.OtherBodyApprovalRequired);
             response.SectorCode.Should().Be(source.LarsStandard.SectorCode);
 

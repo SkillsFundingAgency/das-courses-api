@@ -17,7 +17,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.LarsCode)
                 .Excluding(c => c.Version)
                 .Excluding(c => c.Standards)
-                .Excluding(c => c.SectorSubjectArea)
+                .Excluding(c => c.SectorSubjectArea2)
                 .Excluding(c => c.SectorSubjectAreaTier2)
                 .Excluding(c => c.OtherBodyApprovalRequired)
                 .Excluding(c => c.SectorCode)

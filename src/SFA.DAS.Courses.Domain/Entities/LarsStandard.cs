@@ -4,7 +4,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class LarsStandard : LarsStandardBase
     {
-        public virtual SectorSubjectAreaTier2 SectorSubjectArea { get; set; }
+        public virtual SectorSubjectAreaTier2 SectorSubjectArea2 { get; set; }
         public virtual SectorSubjectAreaTier1 SectorSubjectArea1 { get; set; }
         public virtual ICollection<Standard> Standards { get; set; }
 

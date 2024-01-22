@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -91,7 +90,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool isExport)
         {
-            var standards = (isExport 
+            var standards = (isExport
                 ? GetFullBaseStandardQuery()
                 : GetBaseStandardQuery())
                 .FilterStandards(filter);
@@ -123,25 +122,29 @@ namespace SFA.DAS.Courses.Data.Repository
 
         private IQueryable<Standard> GetFullBaseStandardQuery()
         {
-            return _coursesDataContext
+            var query = _coursesDataContext
                 .Standards
-                
                 .Include(c => c.Route)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
-                .ThenInclude(c => c.SectorSubjectArea);
+                .ThenInclude(l => l.SectorSubjectArea2)
+                .Include(c => c.LarsStandard)
+                .ThenInclude(l => l.SectorSubjectArea1);
+            return query;
         }
-        
+
         private IQueryable<Standard> GetBaseStandardQuery()
         {
-            return _coursesDataContext
+            var query = _coursesDataContext
                 .Standards
-                
+
                 .Include(c => c.Route)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
-                .ThenInclude(c => c.SectorSubjectArea)
-                .Select(c=>new Standard
+                .ThenInclude(c => c.SectorSubjectArea2)
+                .Include(c => c.LarsStandard)
+                .ThenInclude(c => c.SectorSubjectArea1)
+                .Select(c => new Standard
                 {
                     Status = c.Status,
                     StandardUId = c.StandardUId,
@@ -170,6 +173,8 @@ namespace SFA.DAS.Courses.Data.Repository
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody
                 });
+
+            return query;
         }
 
     }
