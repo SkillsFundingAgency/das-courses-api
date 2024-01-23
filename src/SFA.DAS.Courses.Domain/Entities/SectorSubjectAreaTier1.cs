@@ -15,6 +15,6 @@ namespace SFA.DAS.Courses.Domain.Entities
             };
         }
 
-        public virtual ICollection<LarsStandard> LarsStandard { get; set; }
+        public virtual ICollection<LarsStandard> LarsStandards { get; set; }
     }
 }
