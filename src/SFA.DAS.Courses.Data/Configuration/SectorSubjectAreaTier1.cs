@@ -10,7 +10,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.ToTable("SectorSubjectAreaTier1");
             builder.HasKey(x => x.SectorSubjectAreaTier1);
 
-            builder.HasMany(c => c.LarsStandard)
+            builder.HasMany(c => c.LarsStandards)
                 .WithOne(c => c.SectorSubjectArea1)
                 .HasForeignKey(c => c.SectorSubjectAreaTier1)
                 .HasPrincipalKey(c => c.SectorSubjectAreaTier1)

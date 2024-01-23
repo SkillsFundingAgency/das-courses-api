@@ -32,7 +32,7 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             builder.HasOne(c => c.SectorSubjectArea1)
-                .WithMany(c => c.LarsStandard)
+                .WithMany(c => c.LarsStandards)
                 .HasForeignKey(c => c.SectorSubjectAreaTier1)
                 .HasPrincipalKey(c => c.SectorSubjectAreaTier1)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
