@@ -12,13 +12,13 @@ using SFA.DAS.Courses.Domain.Entities;
 namespace SFA.DAS.Courses.Api.Controllers;
 
 [ApiVersion("1.0")]
-[Route("api/[controller]")]
+[Route("api/SectorSubjectAreaTier1")]
 [ApiController]
-public class SectorSubjectAreaController : ControllerBase
+public class SectorSubjectAreaTier1Controller : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public SectorSubjectAreaController(IMediator mediator)
+    public SectorSubjectAreaTier1Controller(IMediator mediator)
     {
         _mediator = mediator;
     }

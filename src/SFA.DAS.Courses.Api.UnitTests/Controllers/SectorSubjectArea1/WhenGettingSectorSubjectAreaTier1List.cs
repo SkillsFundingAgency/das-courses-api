@@ -21,7 +21,7 @@ public class WhenGettingSectorSubjectAreaTier1List
     public async Task Then_Gets_Ssa1_List_From_Mediator(
         List<SectorSubjectAreaTier1> sectorSubjectAreaTier1s,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] SectorSubjectAreaController sut,
+        [Greedy] SectorSubjectAreaTier1Controller sut,
         CancellationToken cancellationToken)
     {
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllSectorSubjectAreaTier1Query>(), cancellationToken)).ReturnsAsync(sectorSubjectAreaTier1s);
