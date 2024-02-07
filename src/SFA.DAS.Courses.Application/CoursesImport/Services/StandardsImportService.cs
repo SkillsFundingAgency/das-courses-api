@@ -18,9 +18,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly IRouteImportRepository _routeImportRepository;
         private readonly ILogger<StandardsImportService> _logger;
 
-        public StandardsImportService (
-            IInstituteOfApprenticeshipService instituteOfApprenticeshipService, 
-            IStandardImportRepository standardImportRepository, 
+        public StandardsImportService(
+            IInstituteOfApprenticeshipService instituteOfApprenticeshipService,
+            IStandardImportRepository standardImportRepository,
             IStandardRepository standardRepository,
             IImportAuditRepository auditRepository,
             IRouteRepository routeRepository,
@@ -51,6 +51,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 await LoadRoutesInStaging(routes);
 
                 UpdateStandardsWithRespectiveSectorId(standards, routes);
+                SetEqaProviderName(standards);
 
                 var standardsImport = standards
                     .Select(c => (StandardImport)c)
@@ -96,10 +97,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 _standardRepository.DeleteAll();
                 _routeRepository.DeleteAll();
-                
+
                 _logger.LogInformation($"Standards import - Adding {standardsToInsert.Count} to Standards table.");
 
-                await _routeRepository.InsertMany(routesToImport.Select(c => (Route) c).ToList());
+                await _routeRepository.InsertMany(routesToImport.Select(c => (Route)c).ToList());
 
                 var standards = standardsToInsert.Select(c => (Standard)c).ToList();
                 await _standardRepository.InsertMany(standards);
@@ -114,7 +115,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
         }
 
-        private static void UpdateStandardsWithRespectiveSectorId( IEnumerable<Domain.ImportTypes.Standard> standards,
+        private static void UpdateStandardsWithRespectiveSectorId(IEnumerable<Domain.ImportTypes.Standard> standards,
              List<RouteImport> routes)
         {
             foreach (var standard in standards)
@@ -146,5 +147,17 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             var auditRecord = new ImportAudit(timeStarted, rowsImported);
             await _auditRepository.Insert(auditRecord);
         }
+
+        private void  SetEqaProviderName(List<Domain.ImportTypes.Standard> standards)
+        {
+            foreach (var standard in standards)
+            {
+                if (standard.EqaProvider?.ProviderName.ToLower() == "ofqual is the intended eqa provider")
+                {
+                    standard.EqaProvider.ProviderName = "Ofqual";
+                }
+            }
+        }
+
     }
 }
