@@ -51,7 +51,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 await LoadRoutesInStaging(routes);
 
                 UpdateStandardsWithRespectiveSectorId(standards, routes);
-                SetEqaProviderName(standards);
+                UpdateEqaProviderName(standards);
 
                 var standardsImport = standards
                     .Select(c => (StandardImport)c)
@@ -148,7 +148,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             await _auditRepository.Insert(auditRecord);
         }
 
-        private void  SetEqaProviderName(List<Domain.ImportTypes.Standard> standards)
+        private void  UpdateEqaProviderName(List<Domain.ImportTypes.Standard> standards)
         {
             foreach (var standard in standards)
             {
@@ -158,6 +158,5 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 }
             }
         }
-
     }
 }
