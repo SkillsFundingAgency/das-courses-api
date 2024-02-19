@@ -6,6 +6,7 @@ using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
+using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -63,6 +64,32 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             importRouteRepository.Verify(x=>x.InsertMany(It.Is<List<RouteImport>>(c=>c.Count == 0)));
             importRepository.Verify(x=>x.DeleteAll(), Times.Once);
             importRouteRepository.Verify(x=>x.DeleteAll(), Times.Once);
+        }
+
+        [Test]
+        [MoqInlineAutoData("Ofqual is the intended EQA provider")]
+        [MoqInlineAutoData("ofqual is the intended eqa provider")]
+        [MoqInlineAutoData("OFQUAL IS THE INTENDED EQA PROVIDER")]
+        public async Task Then_EqaProviderName_Is_Updated_If_Ofqual_Is_Intended(
+            string eqaProviderName,
+            [Frozen] Mock<IStandardImportRepository> standardImportRepository,
+            [Frozen] Mock<IInstituteOfApprenticeshipService> ifateService,
+            List<Standard> standardsImport,
+            Standard standard,
+            StandardsImportService standardsImportService)
+        {
+            //Arrange
+            standard.EqaProvider.ProviderName = eqaProviderName;
+            standardsImport.Add(standard);
+            SetStandardsToStatus(standardsImport);
+            ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
+
+            //Act
+            await standardsImportService.ImportDataIntoStaging();
+
+            //Assert
+            standardImportRepository.Verify(x =>
+                x.InsertMany(It.Is<List<StandardImport>>(c => c.Count(s=> s.EqaProviderName == "Ofqual") == 1)), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
