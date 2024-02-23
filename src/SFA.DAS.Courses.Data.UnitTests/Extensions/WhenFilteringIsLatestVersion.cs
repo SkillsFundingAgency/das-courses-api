@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
 
             var resultStandard = filteredStandards.FirstOrDefault(standard => standard.LarsCode == 1);
 
-            Assert.AreEqual(expectedResultVersion, resultStandard.Version);
+            Assert.That(resultStandard.Version, Is.EqualTo(expectedResultVersion));
         }
 
         private List<Standard> GetStandards()

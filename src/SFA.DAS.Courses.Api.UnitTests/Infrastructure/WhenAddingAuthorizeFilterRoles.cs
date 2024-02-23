@@ -29,10 +29,10 @@ namespace SFA.DAS.Courses.Api.UnitTests.Infrastructure
             convention.Apply(model);
             
             //Assert
-            Assert.AreEqual(1,model.Filters.Count);
+            Assert.That(model.Filters.Count, Is.EqualTo(1));
             var actual = ((AuthorizeFilter)model.Filters.FirstOrDefault())?.AuthorizeData.FirstOrDefault();
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(PolicyNames.DataLoad,actual.Policy);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Policy, Is.EqualTo(PolicyNames.DataLoad));
         }
         
         [Test, MoqAutoData]
@@ -51,10 +51,10 @@ namespace SFA.DAS.Courses.Api.UnitTests.Infrastructure
             convention.Apply(model);
             
             //Assert
-            Assert.AreEqual(1,model.Filters.Count);
+            Assert.That(model.Filters.Count, Is.EqualTo(1));
             var actual = ((AuthorizeFilter)model.Filters.FirstOrDefault())?.AuthorizeData.FirstOrDefault();
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(PolicyNames.Default,actual.Policy);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Policy, Is.EqualTo(PolicyNames.Default));
         }
     }
 }

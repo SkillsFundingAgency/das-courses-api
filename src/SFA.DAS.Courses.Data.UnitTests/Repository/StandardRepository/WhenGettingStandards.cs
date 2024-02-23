@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, false);
             
-            Assert.IsNotNull(actualStandards);
+            Assert.That(actualStandards, Is.Not.Null);
             actualStandards.Should().BeEquivalentTo(activeValidStandards,EquivalentCheckExcludes());
         }
         
@@ -65,7 +65,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, true);
             
-            Assert.IsNotNull(actualStandards);
+            Assert.That(actualStandards, Is.Not.Null);
             actualStandards.Should().BeEquivalentTo(activeValidStandards);
         }
 
@@ -91,7 +91,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false);
             
-            Assert.IsNotNull(actualStandards);
+            Assert.That(actualStandards, Is.Not.Null);
             var expectedList = new List<Standard>();
             expectedList.AddRange(activeValidStandards);
             expectedList.AddRange(activeInvalidStandards);
@@ -132,7 +132,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false);
 
-            Assert.IsNotNull(actualStandards);
+            Assert.That(actualStandards, Is.Not.Null);
             var expectedList = new List<Standard>();
             expectedList.AddRange(activeValidStandards);
             expectedList.AddRange(activeInvalidStandards);
@@ -163,7 +163,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.NotYetApproved, false);
 
-            Assert.IsNotNull(actualStandards);
+            Assert.That(actualStandards, Is.Not.Null);
             var expectedList = new List<Standard>();
             expectedList.AddRange(notYetApprovedStandards);
             actualStandards.Should().BeEquivalentTo(expectedList, EquivalentCheckExcludes());
@@ -191,7 +191,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.None, false);
 
-            Assert.IsNotNull(actualStandards);
+            Assert.That(actualStandards, Is.Not.Null);
             var expectedList = new List<Standard>();
             expectedList.AddRange(notYetApprovedStandards);
             expectedList.AddRange(activeValidStandards);
@@ -228,7 +228,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 StandardFilter.ActiveAvailable, false);
 
             //Assert
-            Assert.IsNotNull(actual);
+            Assert.That(actual, Is.Not.Null);
             actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] },EquivalentCheckExcludes());
         }
 
@@ -259,7 +259,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 StandardFilter.ActiveAvailable, false);
 
             //Assert
-            Assert.IsNotNull(actual);
+            Assert.That(actual, Is.Not.Null);
             actual.Should().BeEquivalentTo(new List<Standard>());
         }
 

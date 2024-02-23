@@ -51,7 +51,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             var actualStandards = await repository.GetStandards(iFateReferenceNumber);
 
-            Assert.IsNotNull(actualStandards);
+            Assert.That(actualStandards, Is.Not.Null);
             actualStandards.Should().BeEquivalentTo(new List<Standard> { active, retired }, EquivalentCheckExcludes());
         }
         private static Func<EquivalencyAssertionOptions<Standard>, EquivalencyAssertionOptions<Standard>> EquivalentCheckExcludes()

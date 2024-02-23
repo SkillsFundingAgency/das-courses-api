@@ -42,7 +42,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkRepository
             var sectorsImport = await _frameworkRepository.GetAll();
             
             //Assert
-            Assert.IsNotNull(sectorsImport);
+            Assert.That(sectorsImport, Is.Not.Null);
             sectorsImport.Should().BeEquivalentTo(_frameworks);
         }
     }

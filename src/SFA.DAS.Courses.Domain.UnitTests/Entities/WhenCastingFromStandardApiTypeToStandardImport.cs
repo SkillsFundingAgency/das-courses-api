@@ -101,7 +101,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.Skills.RemoveAll(s => !actual.CoreDuties.Contains(s.Detail));
 
             //Assert           	
-            Assert.AreEqual(standard.Skills.Select(s => s.Detail), actual.CoreDuties);
+            standard.Skills.Select(s => s.Detail).Should().BeEquivalentTo(actual.CoreDuties);
         }
 
         [Test, AutoData]

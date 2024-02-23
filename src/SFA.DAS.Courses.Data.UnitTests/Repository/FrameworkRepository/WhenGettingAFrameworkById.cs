@@ -45,7 +45,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkRepository
             var standards = await _frameworkRepository.Get(ExpectedFrameworkId);
             
             //Assert
-            Assert.IsNotNull(standards);
+            Assert.That(standards, Is.Not.Null);
             standards.Should().BeEquivalentTo(_frameworks.SingleOrDefault(c=>c.Id.Equals(ExpectedFrameworkId)));
         }
     }

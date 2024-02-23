@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkFundingImportReposi
             var actual = await _frameworkFundingImportRepository.GetAll();
             
             //Assert
-            Assert.IsNotNull(actual);
+            Assert.That(actual, Is.Not.Null);
             actual.Should().BeEquivalentTo(_frameworkFundingImports);
         }
     }
