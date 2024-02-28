@@ -96,7 +96,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var standards = await _standardRepository.GetLatestActiveStandard(ExpectedLarsCode);
             
             //Assert
-            Assert.IsNotNull(standards);
+            Assert.That(standards, Is.Not.Null);
             standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c=>c.StandardUId.Equals(ExpectedStandardUId)));
         }
 
@@ -107,7 +107,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var standards = await _standardRepository.GetLatestActiveStandard(ExpectedIFateReferenceNumber);
 
             //Assert
-            Assert.IsNotNull(standards);
+            Assert.That(standards, Is.Not.Null);
             standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c => c.StandardUId.Equals(ExpectedStandardUId)));
         }
 

@@ -40,7 +40,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ImportAuditRepository
             var auditRecord = await _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
             
             //Assert
-            Assert.IsNotNull(auditRecord);
+            Assert.That(auditRecord, Is.Not.Null);
             auditRecord.FileName.Should().Be(ExpectedFileName);
         }
 
@@ -61,7 +61,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ImportAuditRepository
             var auditRecord = await _importAuditRepository.GetLastImportByType(ImportType.LarsImport);
             
             //Assert
-            Assert.IsNull(auditRecord);
+            Assert.That(auditRecord, Is.Null);
         }
     }
 }

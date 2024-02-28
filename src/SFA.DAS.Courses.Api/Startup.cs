@@ -104,7 +104,7 @@ namespace SFA.DAS.Courses.Api
                         tags: new[] {"ready"});
             }
 
-            services.AddMediatR(typeof(ImportDataCommand).Assembly);
+            services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(ImportDataCommand).Assembly));
 
             services.AddServiceRegistration();
 

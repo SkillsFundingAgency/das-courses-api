@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.SectorSubjectAreaTier2Import
             var actual = await _sectorSubjectAreaTier2ImportRepository.GetAll();
             
             //Assert
-            Assert.IsNotNull(actual);
+            Assert.That(actual, Is.Not.Null);
             actual.Should().BeEquivalentTo(_sectorSubjectAreaTier2Imports);
         }
     }

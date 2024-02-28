@@ -24,7 +24,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
             var controllerResult = await controller.Index() as NoContentResult;
 
             mockMediator.Verify(x=>x.Send(It.IsAny<ImportDataCommand>(), It.IsAny<CancellationToken>()), Times.Once);
-            Assert.IsNotNull(controllerResult);
+            Assert.That(controllerResult, Is.Not.Null);
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.NoContent);
         }
     }

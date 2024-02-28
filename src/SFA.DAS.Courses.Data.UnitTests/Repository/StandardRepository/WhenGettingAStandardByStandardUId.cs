@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var standard = await _standardRepository.Get(ExpectedStandardUId);
 
             //Assert
-            Assert.IsNotNull(standard);
+            Assert.That(standard, Is.Not.Null);
             standard.StandardUId.Should().Be(ExpectedStandardUId);
         }
 

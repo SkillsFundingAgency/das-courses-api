@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
 
             // Assert
             actual.Status.Should().Be(HealthStatus.Healthy);
-            Assert.IsTrue(actual.Data["FileName"].Equals(fileName));
+            Assert.That(actual.Data["FileName"].Equals(fileName), Is.True);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardImportRepository
             var standards = await _repository.GetAll();
             
             //Assert
-            Assert.IsNotNull(standards);
+            Assert.That(standards, Is.Not.Null);
             standards.Should().BeEquivalentTo(_standards);
         }
 

@@ -42,7 +42,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkImportRepository
             var actual = await _frameworkImportRepository.GetAll();
             
             //Assert
-            Assert.IsNotNull(actual);
+            Assert.That(actual, Is.Not.Null);
             actual.Should().BeEquivalentTo(_frameworkImports);
         }
     }

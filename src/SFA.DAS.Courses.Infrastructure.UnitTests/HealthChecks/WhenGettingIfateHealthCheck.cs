@@ -42,7 +42,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             // Assert
-            Assert.AreEqual(HealthStatus.Degraded, actual.Status);
+            Assert.That(actual.Status, Is.EqualTo(HealthStatus.Degraded));
 
         }
 
@@ -60,7 +60,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             // Assert
-            Assert.AreEqual(HealthStatus.Healthy, actual.Status);
+            Assert.That(actual.Status, Is.EqualTo(HealthStatus.Healthy));
         }
 
         [Test, MoqAutoData]
@@ -75,7 +75,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
             //Act
             var actual = await handler.CheckHealthAsync(healthCheckContext);
             //Assert
-            Assert.AreEqual(HealthStatus.Degraded, actual.Status);
+            Assert.That(actual.Status, Is.EqualTo(HealthStatus.Degraded));
         }
     }
 }
