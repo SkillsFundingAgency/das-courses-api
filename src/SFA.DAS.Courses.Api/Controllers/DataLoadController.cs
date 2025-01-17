@@ -1,9 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
+using SFA.DAS.Courses.Domain.Configuration;
 
 namespace SFA.DAS.Courses.Api.Controllers
 {
@@ -31,6 +32,14 @@ namespace SFA.DAS.Courses.Api.Controllers
             await _mediator.Send(new ImportDataCommand());
             _logger.LogInformation("Data import completed successfully");
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("StandardsImportUrl")]
+        [ProducesResponseType<string>(StatusCodes.Status200OK)]
+        public IActionResult StandardsImportUrl()
+        {
+            return Ok(Constants.InstituteOfApprenticeshipsStandardsUrl);
         }
     }
 }
