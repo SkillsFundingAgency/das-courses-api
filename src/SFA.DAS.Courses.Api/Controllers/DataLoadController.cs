@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         [ProducesResponseType<string>(StatusCodes.Status200OK)]
         public IActionResult StandardsImportUrl()
         {
-            return Ok(Constants.InstituteOfApprenticeshipsStandardsUrl);
+            return Content(Constants.InstituteOfApprenticeshipsStandardsUrl, "text/plain");
         }
     }
 }
