@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -44,5 +43,8 @@ namespace SFA.DAS.Courses.Domain.Entities
         public bool IntegratedApprenticeship { get; set; }
         public List<StandardOption> Options { get; set; }
         public bool EPAChanged { get; set; }
+        public bool Regulated { get; set; }
+        public bool IsRegulatedForProvider { get; set; } = false;
+        public bool IsRegulatedForEPAO { get; set; } = false;
     }
 }

@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .WithMany(c => c.Standards)
                 .HasPrincipalKey(c => c.Id)
                 .HasForeignKey(c => c.RouteCode).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
-            
+
             builder.HasOne(c => c.LarsStandard)
                 .WithMany(c => c.Standards)
                 .HasForeignKey(s => s.LarsCode)

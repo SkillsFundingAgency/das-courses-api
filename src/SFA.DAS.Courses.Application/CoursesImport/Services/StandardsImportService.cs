@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.Interfaces;
+using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Services
 {
@@ -52,6 +54,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 UpdateStandardsWithRespectiveSectorId(standards, routes);
                 UpdateEqaProviderName(standards);
+                UpdateStandardsWithRegulated(standards);
 
                 var standardsImport = standards
                     .Select(c => (StandardImport)c)
@@ -148,13 +151,24 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             await _auditRepository.Insert(auditRecord);
         }
 
-        private void  UpdateEqaProviderName(List<Domain.ImportTypes.Standard> standards)
+        private void UpdateEqaProviderName(List<Domain.ImportTypes.Standard> standards)
         {
             foreach (var standard in standards)
             {
                 if (standard.EqaProvider?.ProviderName.ToLower() == "ofqual is the intended eqa provider")
                 {
                     standard.EqaProvider.ProviderName = "Ofqual";
+                }
+            }
+        }
+
+        private void UpdateStandardsWithRegulated(List<Domain.ImportTypes.Standard> standards)
+        {
+            foreach (var standard in standards)
+            {
+                if (!standard.Regulated || string.IsNullOrEmpty(standard.RegulatedBody))
+                {
+                    standard.RegulationDetail = new List<RegulationDetail>();
                 }
             }
         }

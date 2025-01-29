@@ -52,6 +52,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
+        public bool Regulated { get; set; }
+        public bool IsRegulatedForProvider { get; set; }
+        public bool IsRegulatedForEPAO { get; set; }
 
         public static explicit operator GetStandardDetailResponse(Standard source)
         {
@@ -104,6 +107,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 VersionMajor = source.VersionMajor,
                 VersionMinor = source.VersionMinor,
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
+                Regulated = source.Regulated,
+                IsRegulatedForProvider = source.IsRegulatedForProvider,
+                IsRegulatedForEPAO = source.IsRegulatedForEPAO
             };
         }
     }
