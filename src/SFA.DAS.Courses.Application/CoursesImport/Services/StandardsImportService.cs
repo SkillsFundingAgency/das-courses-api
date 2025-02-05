@@ -162,7 +162,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
         }
 
-        private void UpdateStandardsWithRegulated(List<Domain.ImportTypes.Standard> standards)
+        private static void UpdateStandardsWithRegulated(List<Domain.ImportTypes.Standard> standards)
         {
             foreach (var standard in standards)
             {
