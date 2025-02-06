@@ -10,5 +10,7 @@
         public static string LarsApprenticeshipFundingFileName => "ApprenticeshipFunding.csv";
         public static string LarsSectorSubjectAreaTier2FileName => "SectorSubjectAreaTier2.csv";
         public static string LarsSectorSubjectAreaTier1FileName => "SectorSubjectAreaTier1.csv";
+        public static string ProviderRegulationType => "Training Provider";
+        public static string EPAORegulationType => "EPAO";
     }
 }

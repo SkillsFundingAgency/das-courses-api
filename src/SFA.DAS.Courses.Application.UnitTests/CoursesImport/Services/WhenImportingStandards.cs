@@ -6,6 +6,7 @@ using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
+using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -16,9 +17,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 {
     public class WhenImportingStandards
     {
-        private const string ProviderName = "Training Provider";
-        private const string EPAOName = "EPAO";
-
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Distinct_Routes_Are_Loaded_Into_The_Import_Table_That_Are_Approved_For_Delivery(
             Standard notImportedStandard,
@@ -160,8 +158,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         {
             foreach (var standard in standardImport)
             {
-                standard.RegulationDetail[0].Name = ProviderName;
-                standard.RegulationDetail[1].Name = EPAOName;
+                standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+                standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
             }
         }
     }

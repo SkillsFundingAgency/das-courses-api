@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -8,8 +9,6 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class StandardImport : StandardBase
     {
         private const string FakeDutyText = ".";
-        private const string ProviderName = "Training Provider";
-        private const string EPAOName = "EPAO";
         public List<string> OptionsUnstructuredTemplate { get; set; }
         public List<Qualification> Qualifications { get; set; }
         public DateTime? CreatedDate { get; set; }
@@ -65,8 +64,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EPAChanged = IsEPAChanged(standard),
                 Qualifications = standard.Qualifications,
                 Regulated = standard.Regulated,
-                IsRegulatedForProvider = SetIsRegulated(standard, ProviderName),
-                IsRegulatedForEPAO = SetIsRegulated(standard, EPAOName)
+                IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
+                IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType)
             };
         }
 
@@ -245,7 +244,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             };
         }
 
-        private static bool SetIsRegulated(Domain.ImportTypes.Standard standard, string name)
+        private static bool GetIsRegulated(Domain.ImportTypes.Standard standard, string name)
         {
             if (standard.RegulationDetail == null)
             {
