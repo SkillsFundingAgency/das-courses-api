@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Extensions;
-using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -245,17 +244,9 @@ namespace SFA.DAS.Courses.Domain.Entities
             };
         }
 
-        private static void UpdateStandardRegulationDetail(Domain.ImportTypes.Standard standard)
-        {
-            if (!standard.Regulated || string.IsNullOrEmpty(standard.RegulatedBody))
-            {
-                standard.RegulationDetail = new List<RegulationDetail>();
-            }
-        }
-
         private static bool GetIsRegulated(Domain.ImportTypes.Standard standard, string name)
         {
-            if (standard.RegulationDetail == null)
+            if (standard.RegulationDetail == null || !standard.Regulated || string.IsNullOrEmpty(standard.RegulatedBody)
             {
                 return false;
             }
