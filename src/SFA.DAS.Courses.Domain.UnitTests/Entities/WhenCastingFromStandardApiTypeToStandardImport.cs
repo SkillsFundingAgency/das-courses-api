@@ -764,38 +764,26 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test]
-        [InlineAutoData(false, false)]
-        [InlineAutoData(true, true)]
-        public void Then_IsRegulatedForProvider_is_mapped(bool source, bool expected, ImportTypes.Standard standard)
+        [InlineAutoData(false, "regulator", true, false)]
+        [InlineAutoData(true, "", true, false)]
+        [InlineAutoData(true, "regulator", false, false)]
+        [InlineAutoData(true, "regulator", true, true)]
+        public void Then_Maps_IsRegulatedForProvider_And_IsRegulatedForEPAO_Correctly(bool regulated, string regulator,
+            bool approved, bool expected, ImportTypes.Standard standard)
         {
             //Arrange
+            standard.Regulated = regulated;
+            standard.RegulatedBody = regulator;
             standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
             standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
-
-            standard.RegulationDetail[0].Approved = source;
+            standard.RegulationDetail[0].Approved = approved;
+            standard.RegulationDetail[1].Approved = approved;
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
             actual.IsRegulatedForProvider.Should().Be(expected);
-        }
-
-        [Test]
-        [InlineAutoData(false, false)]
-        [InlineAutoData(true, true)]
-        public void Then_IsRegulatedForEPAO_is_mapped(bool source, bool expected, ImportTypes.Standard standard)
-        {
-            //Arrange
-            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
-            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
-
-            standard.RegulationDetail[1].Approved = source;
-
-            //Act
-            var actual = (StandardImport)standard;
-
-            //Assert
             actual.IsRegulatedForEPAO.Should().Be(expected);
         }
     }

@@ -6,7 +6,6 @@ using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
-using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -31,7 +30,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             notImportedStandard.Status = "In development";
             standardsImport.Add(notImportedStandard);
             var routes = standardsImport.Select(s => s.Route).Distinct().ToList();
-            UpdateImportWithRegulationDetail(standardsImport);
             service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport.Where(c => c.Status == "Approved for Delivery"));
 
             //Act
@@ -52,7 +50,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         {
             //Arrange
             SetStandardsToStatus(standardsImport, "In Development");
-            UpdateImportWithRegulationDetail(standardsImport);
 
             ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
 
@@ -85,7 +82,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             standard.EqaProvider.ProviderName = eqaProviderName;
             standardsImport.Add(standard);
             SetStandardsToStatus(standardsImport);
-            UpdateImportWithRegulationDetail(standardsImport);
             ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
 
             //Act
@@ -105,7 +101,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         {
             //Arrange
             SetStandardsToStatus(standardsImport);
-            UpdateImportWithRegulationDetail(standardsImport);
             ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
 
             //Act
@@ -134,7 +129,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             standardsImport.Add(standard);
             standardsImport.Add(standardDuplicate);
             SetStandardsToStatus(standardsImport);
-            UpdateImportWithRegulationDetail(standardsImport);
             ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
 
             //Act
@@ -152,15 +146,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             {
                 c.Status = status;
             });
-        }
-
-        private static void UpdateImportWithRegulationDetail(List<Standard> standardImport)
-        {
-            foreach (var standard in standardImport)
-            {
-                standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
-                standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
-            }
         }
     }
 }

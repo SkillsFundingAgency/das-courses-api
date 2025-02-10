@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Extensions;
+using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -22,6 +23,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 var mappedSkillsList = GetMappedSkillsList(standard);
                 coreDuties = GetSkillDetailFromMappedCoreSkill(standard, mappedSkillsList);
             }
+            UpdateStandardRegulationDetail(standard);
 
             return new StandardImport
             {
@@ -241,6 +243,14 @@ namespace SFA.DAS.Courses.Domain.Entities
                         .DistinctBy(x => x.Key).ToList()
                 )
             };
+        }
+
+        private static void UpdateStandardRegulationDetail(Domain.ImportTypes.Standard standard)
+        {
+            if (!standard.Regulated || string.IsNullOrEmpty(standard.RegulatedBody))
+            {
+                standard.RegulationDetail = new List<RegulationDetail>();
+            }
         }
 
         private static bool GetIsRegulated(Domain.ImportTypes.Standard standard, string name)
