@@ -63,7 +63,6 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CreatedDate = standard.CreatedDate,
                 EPAChanged = IsEPAChanged(standard),
                 Qualifications = standard.Qualifications,
-                Regulated = standard.Regulated,
                 IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
                 IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType)
             };
