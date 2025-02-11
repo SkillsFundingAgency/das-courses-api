@@ -22,7 +22,6 @@ namespace SFA.DAS.Courses.Domain.Entities
                 var mappedSkillsList = GetMappedSkillsList(standard);
                 coreDuties = GetSkillDetailFromMappedCoreSkill(standard, mappedSkillsList);
             }
-            UpdateStandardRegulationDetail(standard);
 
             return new StandardImport
             {
@@ -246,7 +245,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static bool GetIsRegulated(Domain.ImportTypes.Standard standard, string name)
         {
-            if (standard.RegulationDetail == null || !standard.Regulated || string.IsNullOrEmpty(standard.RegulatedBody)
+            if (standard.RegulationDetail == null || !standard.Regulated || string.IsNullOrEmpty(standard.RegulatedBody))
             {
                 return false;
             }
