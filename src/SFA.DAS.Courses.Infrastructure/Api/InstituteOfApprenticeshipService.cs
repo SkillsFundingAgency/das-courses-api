@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.ImportTypes;
+using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Infrastructure.Api
@@ -24,8 +25,13 @@ namespace SFA.DAS.Courses.Infrastructure.Api
             response.EnsureSuccessStatusCode();
             
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            
-            return JsonConvert.DeserializeObject<List<Standard>>(jsonResponse);
+
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new SettableContractResolver()
+            };
+
+            return JsonConvert.DeserializeObject<List<Standard>>(jsonResponse, settings);
         }
     }
 }

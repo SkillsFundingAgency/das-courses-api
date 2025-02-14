@@ -327,22 +327,24 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
         private static Func<EquivalencyAssertionOptions<Standard>, EquivalencyAssertionOptions<Standard>> EquivalentCheckExcludes()
         {
-            return options=>options
-                .Excluding(c=>c.SearchScore)
-                .Excluding(c=>c.ProposedTypicalDuration)
-                .Excluding(c=>c.ProposedMaxFunding)
-                .Excluding(c=>c.OverviewOfRole)
-                .Excluding(c=>c.AssessmentPlanUrl)
-                .Excluding(c=>c.TrailBlazerContact)
-                .Excluding(c=>c.EqaProviderName)
-                .Excluding(c=>c.EqaProviderContactEmail)
-                .Excluding(c=>c.EqaProviderContactName)
-                .Excluding(c=>c.EqaProviderWebLink)
-                .Excluding(c=>c.Duties)
-                .Excluding(c=>c.CoreDuties)
-                .Excluding(c=>c.Options)
-                .Excluding(c=>c.CoreAndOptions)
-                .Excluding(c=>c.EPAChanged);
+            return options => options
+                .Excluding(c => c.SearchScore)
+                .Excluding(c => c.ProposedTypicalDuration)
+                .Excluding(c => c.ProposedMaxFunding)
+                .Excluding(c => c.OverviewOfRole)
+                .Excluding(c => c.AssessmentPlanUrl)
+                .Excluding(c => c.TrailBlazerContact)
+                .Excluding(c => c.EqaProviderName)
+                .Excluding(c => c.EqaProviderContactEmail)
+                .Excluding(c => c.EqaProviderContactName)
+                .Excluding(c => c.EqaProviderWebLink)
+                .Excluding(c => c.Duties)
+                .Excluding(c => c.CoreDuties)
+                .Excluding(c => c.Options)
+                .Excluding(c => c.CoreAndOptions)
+                .Excluding(c => c.EPAChanged)
+                .Excluding(c => c.CreatedDate)
+                .Excluding(c => c.PublishDate);
         }
     }
 }

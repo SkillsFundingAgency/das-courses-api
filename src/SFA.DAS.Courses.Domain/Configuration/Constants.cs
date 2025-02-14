@@ -10,5 +10,7 @@
         public static string LarsApprenticeshipFundingFileName => "ApprenticeshipFunding.csv";
         public static string LarsSectorSubjectAreaTier2FileName => "SectorSubjectAreaTier2.csv";
         public static string LarsSectorSubjectAreaTier1FileName => "SectorSubjectAreaTier1.csv";
+        public static string SlackStartUploadUrl => "https://slack.com/api/files.getUploadURLExternal";
+        public static string SlackCompleteUploadUrl => "https://slack.com/api/files.completeUploadExternal";
     }
 }

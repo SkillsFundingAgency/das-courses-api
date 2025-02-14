@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
@@ -15,23 +16,24 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public async Task InsertMany(IEnumerable<StandardImport> standardsImport)
+        public async Task InsertMany(IEnumerable<StandardImport> standardImports)
         {
-            await _coursesDataContext.StandardsImport.AddRangeAsync(standardsImport);
-
-            _coursesDataContext.SaveChanges();
+            if (!standardImports.Any())
+                return;
+            
+            await _coursesDataContext.StandardsImport.AddRangeAsync(standardImports);
+            await _coursesDataContext.SaveChangesAsync();
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.StandardsImport.RemoveRange(_coursesDataContext.StandardsImport);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<StandardImport>> GetAll()
         {
             var standardImportItems = await _coursesDataContext.StandardsImport.ToListAsync();
-
             return standardImportItems;
         }
     }

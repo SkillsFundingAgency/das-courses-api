@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
@@ -35,14 +36,14 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkImportRepository
         }
 
         [Test]
-        public void Then_The_FrameworkImports_Are_Removed()
+        public async Task Then_The_FrameworkImports_Are_Removed()
         {
             //Act
-            _frameworkImportRepository.DeleteAll();
+            await _frameworkImportRepository.DeleteAll();
             
             //Assert
             _coursesDataContext.Verify(x=>x.FrameworksImport.RemoveRange(_coursesDataContext.Object.FrameworksImport), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

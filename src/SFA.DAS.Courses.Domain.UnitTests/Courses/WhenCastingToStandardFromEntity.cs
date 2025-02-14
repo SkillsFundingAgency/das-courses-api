@@ -30,6 +30,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.EqaProviderContactName)
                 .Excluding(c => c.EqaProviderName)
                 .Excluding(c => c.EqaProviderWebLink)
+                .Excluding(c => c.CreatedDate)
+                .Excluding(c => c.PublishDate)
             );
 
             response.Route.Should().Be(source.Route.Name);

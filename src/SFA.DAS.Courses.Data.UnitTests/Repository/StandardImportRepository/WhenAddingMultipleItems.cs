@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardImportRepository
             
             //Assert
             _coursesDataContext.Verify(x=>x.StandardsImport.AddRangeAsync(_standardsImport, It.IsAny<CancellationToken>()), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

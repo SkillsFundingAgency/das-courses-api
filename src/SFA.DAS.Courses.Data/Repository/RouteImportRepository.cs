@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
@@ -15,16 +16,19 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public async Task InsertMany(IEnumerable<RouteImport> routes)
+        public async Task<int> InsertMany(IEnumerable<RouteImport> routes)
         {
+            if (!routes.Any())
+                return 0;
+
             await _coursesDataContext.RoutesImport.AddRangeAsync(routes);
-            _coursesDataContext.SaveChanges();
+            return await _coursesDataContext.SaveChangesAsync();
         }
 
-        public void DeleteAll()
+        public async Task<int> DeleteAll()
         {
             _coursesDataContext.RoutesImport.RemoveRange(_coursesDataContext.RoutesImport);
-            _coursesDataContext.SaveChanges();
+            return await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<RouteImport>> GetAll()

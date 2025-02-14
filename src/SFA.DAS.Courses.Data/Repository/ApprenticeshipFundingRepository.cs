@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -17,13 +17,13 @@ namespace SFA.DAS.Courses.Data.Repository
         public async Task InsertMany(IEnumerable<ApprenticeshipFunding> apprenticeshipFunding)
         {
             await _coursesDataContext.ApprenticeshipFunding.AddRangeAsync(apprenticeshipFunding);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.ApprenticeshipFunding.RemoveRange(_coursesDataContext.ApprenticeshipFunding);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
     }
 }

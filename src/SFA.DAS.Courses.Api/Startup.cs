@@ -67,6 +67,8 @@ namespace SFA.DAS.Courses.Api
             services.AddOptions();
             services.Configure<CoursesConfiguration>(_configuration.GetSection("Courses"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<CoursesConfiguration>>().Value);
+            services.Configure<SlackNotificationConfiguration>(_configuration.GetSection("SlackNotification"));
+            services.AddSingleton(cfg => cfg.GetService<IOptions<SlackNotificationConfiguration>>().Value);
             services.Configure<AzureActiveDirectoryConfiguration>(_configuration.GetSection("AzureAd"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 

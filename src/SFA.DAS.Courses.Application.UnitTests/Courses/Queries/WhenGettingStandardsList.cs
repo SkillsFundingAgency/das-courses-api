@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.Levels,
                     query.OrderBy,
                     query.Filter,
-                    query.IsExport))
+                    query.IncludeAllProperties))
                 .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count(query.Filter))
@@ -64,7 +64,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     It.Is<List<int>>(c=>c.Count == 0),
                     query.OrderBy,
                     query.Filter,
-                    query.IsExport))
+                    query.IncludeAllProperties))
                 .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count(query.Filter))

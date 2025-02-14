@@ -6,7 +6,6 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class Standard : StandardBase
     {
         public float? SearchScore { get; set; }
-        public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
 
         public static implicit operator Standard(StandardImport import)
         {
@@ -44,14 +43,13 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CoreAndOptions = import.CoreAndOptions,
                 CoreDuties = import.CoreDuties,
                 IntegratedApprenticeship = import.IntegratedApprenticeship,
-                Options =
-                      import.Options.Any() ? import.Options
-                    : import.OptionsUnstructuredTemplate.Any() ? import.OptionsUnstructuredTemplate.Select(x => StandardOption.Create(x)).ToList()
-                    : new List<StandardOption>(),
+                Options = import.Options,
                 EPAChanged = import.EPAChanged,
                 VersionMajor = import.VersionMajor,
                 VersionMinor = import.VersionMinor,
-                EpaoMustBeApprovedByRegulatorBody = import.QualificationsContainsEpaoMustBeApprovedText()
+                CreatedDate = import.CreatedDate,
+                EpaoMustBeApprovedByRegulatorBody = import.EpaoMustBeApprovedByRegulatorBody,
+                PublishDate = import.PublishDate
             };
         }
     }
