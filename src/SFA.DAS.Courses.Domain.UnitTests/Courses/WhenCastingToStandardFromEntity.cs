@@ -30,6 +30,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.EqaProviderContactName)
                 .Excluding(c => c.EqaProviderName)
                 .Excluding(c => c.EqaProviderWebLink)
+                .Excluding(c => c.StandardApprenticeshipType)
             );
 
             response.Route.Should().Be(source.Route.Name);
@@ -55,6 +56,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.EqaProvider.ContactName.Should().Be(source.EqaProviderContactName);
             response.EqaProvider.ContactEmail.Should().Be(source.EqaProviderContactEmail);
             response.EqaProvider.WebLink.Should().Be(source.EqaProviderWebLink);
+
+            response.ApprenticeshipType.Should().Be(source.StandardApprenticeshipType.ApprenticeshipType);
         }
     }
 }

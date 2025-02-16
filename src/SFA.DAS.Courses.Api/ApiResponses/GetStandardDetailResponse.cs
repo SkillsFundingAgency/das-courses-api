@@ -54,8 +54,10 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool IsRegulatedForEPAO { get; set; }
+        public string ApprenticeshipType { get; set; }
 
-        public static explicit operator GetStandardDetailResponse(Standard source)
+
+        public static implicit operator GetStandardDetailResponse(Standard source)
         {
             if (source == null) return null;
 
@@ -107,7 +109,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 VersionMinor = source.VersionMinor,
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
-                IsRegulatedForEPAO = source.IsRegulatedForEPAO
+                IsRegulatedForEPAO = source.IsRegulatedForEPAO,
+                ApprenticeshipType = source.ApprenticeshipType
             };
         }
     }
