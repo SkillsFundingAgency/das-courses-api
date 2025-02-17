@@ -7,7 +7,7 @@ public class StandardApprenticeshipTypeConfiguration : IEntityTypeConfiguration<
 {
     public void Configure(EntityTypeBuilder<StandardApprenticeshipType> builder)
     {
-        builder.ToTable("ApprenticeshipTypeConfig");
+        builder.ToTable(nameof(StandardApprenticeshipType));
         builder.HasKey(x => x.IfateReferenceNumber);
         builder
             .HasOne(x => x.Standard)

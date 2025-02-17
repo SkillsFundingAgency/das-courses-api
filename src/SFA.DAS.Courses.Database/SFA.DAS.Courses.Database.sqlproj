@@ -77,9 +77,6 @@
     <Build Include="Tables\Standard_Import.sql" />
     <Build Include="Tables\SectorSubjectAreaTier1.sql" />
     <Build Include="Tables\SectorSubjectAreaTier1_Import.sql" />
-    <Build Include="Tables\ApprenticeshipTypeConfig.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="SFA.DAS.Courses.Database.refactorlog" />
+    <Build Include="Tables\StandardApprenticeshipType.sql" />
   </ItemGroup>
 </Project>
