@@ -42,7 +42,6 @@ CREATE TABLE [dbo].[Standard]
     [EpaoMustBeApprovedByRegulatorBody] BIT NOT NULL Default 0,
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0, 
     [IsRegulatedForEPAO] BIT NOT NULL DEFAULT 0, 
-    [Regulated] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [AK_Standard_Column] UNIQUE ([StandardUId])
 )
 GO

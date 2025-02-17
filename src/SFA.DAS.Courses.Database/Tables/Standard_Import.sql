@@ -44,7 +44,6 @@
     [Qualifications] NVARCHAR(MAX) NULL,
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0, 
     [IsRegulatedForEPAO] BIT NOT NULL DEFAULT 0, 
-    [Regulated] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO
