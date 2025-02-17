@@ -10,9 +10,9 @@ public class StandardApprenticeshipTypeConfiguration : IEntityTypeConfiguration<
         builder.ToTable(nameof(StandardApprenticeshipType));
         builder.HasKey(x => x.IfateReferenceNumber);
         builder
-            .HasOne(x => x.Standard)
+            .HasMany(x => x.Standards)
             .WithOne(s => s.StandardApprenticeshipType)
-            .HasForeignKey<StandardApprenticeshipType>(s => s.IfateReferenceNumber)
-            .HasPrincipalKey<Domain.Entities.Standard>(s => s.IfateReferenceNumber);
+            .HasForeignKey(s => s.IfateReferenceNumber)
+            .HasPrincipalKey(s => s.IfateReferenceNumber);
     }
 }
