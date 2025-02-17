@@ -30,8 +30,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             IImportAuditRepository auditRepository,
             IRouteRepository routeRepository,
             IRouteImportRepository routeImportRepository,
-            ILogger<StandardsImportService> logger,
-            ISlackNotificationService slackNotificationService)
+            ISlackNotificationService slackNotificationService,
+            ILogger<StandardsImportService> logger)
         {
             _instituteOfApprenticeshipService = instituteOfApprenticeshipService;
             _standardImportRepository = standardImportRepository;
@@ -39,13 +39,13 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _auditRepository = auditRepository;
             _routeRepository = routeRepository;
             _routeImportRepository = routeImportRepository;
-            _logger = logger;
             _slackNotificationService = slackNotificationService;
+            _logger = logger;
         }
 
         public async Task<bool> ImportDataIntoStaging()
         {
-            var result = false;
+            var dataImportedIntoStaging = false;
 
             try
             {
@@ -60,7 +60,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.Standard>> { { "All", importedStandards } }, 
                     validationFailures, [new RequiredFieldsPresentValidator(), new ReferenceNumberFormatValidator(), new VersionFormatValidator()]);
 
-                if (!validationFailures.Any(p => p.Value.Errors.Count > 0))
+                var hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
+                if (!hasValidationErrors)
                 {
                     var currentRoutes = await _routeRepository.GetAll();
                     var currentStandards = await _standardRepository.GetStandards();
@@ -75,10 +76,14 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     validStandardImports = CrossValidateStandardGroups(validStandardImports, validationFailures);
                     validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
 
-                    await ImportRouteDataIntoStaging(routeImports, validStandardImports);
-                    await ImportStandardDataIntoStaging(validStandardImports);
+                    hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
+                    if (!hasValidationErrors)
+                    {
+                        await ImportRouteDataIntoStaging(routeImports, validStandardImports);
+                        await ImportStandardDataIntoStaging(validStandardImports);
 
-                    result = true;
+                        dataImportedIntoStaging = true;
+                    }
                 }
 
                 // if there were any validation issues then report them via the slack notification
@@ -105,7 +110,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 throw new ImportStandardsException($"{nameof(ImportDataIntoStaging)} - error whilst importing data into staging.", e);
             }
 
-            return result;
+            return dataImportedIntoStaging;
         }
 
         public async Task ImportStandardDataIntoStaging(Dictionary<string, List<StandardImport>> standardImports)

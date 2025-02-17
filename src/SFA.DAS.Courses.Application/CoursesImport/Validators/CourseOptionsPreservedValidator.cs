@@ -56,12 +56,12 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 
                         if (changedOptions.Any())
                         {
-                            context.AddFailure($"S1013: {standard.ReferenceNumber.Value} version {standard.Version.Value} - has changed option titles: {string.Join("; ", changedOptions)}");
+                            context.AddFailure($"S1013: {standard.ReferenceNumber.Value} version {standard.Version.Value} has changed option titles: {string.Join("; ", changedOptions)}");
                         }
 
                         if (removedOptions.Any())
                         {
-                            context.AddFailure($"S1014: {standard.ReferenceNumber.Value} version {standard.Version.Value} - has removed options: {string.Join(", ", removedOptions)}");
+                            context.AddFailure($"S1014: {standard.ReferenceNumber.Value} version {standard.Version.Value} has removed options: {string.Join(", ", removedOptions)}");
                         }
                     }
                 });

@@ -22,9 +22,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                             hasAddedFailures = true;
                         }
 
-                        if (standard.VersionLatestEndDate.HasInvalidValue)
+                        if (standard.VersionLatestStartDate.HasInvalidValue)
                         {
-                            context.AddFailure($"S1011: {standard.ReferenceNumber.Value} version {standard.Version.Value} the latestStartDate '{standard.VersionEarliestStartDate.InvalidValue}' is not a valid date");
+                            context.AddFailure($"S1011: {standard.ReferenceNumber.Value} version {standard.Version.Value} the latestStartDate '{standard.VersionLatestStartDate.InvalidValue}' is not a valid date");
                             hasAddedFailures = true;
                         }
                     }
