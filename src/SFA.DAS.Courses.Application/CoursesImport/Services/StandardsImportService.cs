@@ -180,7 +180,14 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             var inDevelopmentStatuses = new List<string> { Domain.Courses.Status.InDevelopment, Domain.Courses.Status.ProposalInDevelopment };
 
             return standards
-                .Where(p => p.Version.Value.ParseVersion().Major < 1 || !inDevelopmentStatuses.Contains(p.Status.Value, StringComparer.OrdinalIgnoreCase))
+                .Where(p =>
+                {
+                    var (Major, Minor) = p.Version.Value.ParseVersion();
+                    return 
+                        Major < 1 ||
+                        (Major == 1 && Minor == 0) ||
+                        !inDevelopmentStatuses.Contains(p.Status.Value, StringComparer.OrdinalIgnoreCase);
+                })
                 .ToList();
         }
 

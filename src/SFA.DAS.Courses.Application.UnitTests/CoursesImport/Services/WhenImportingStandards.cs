@@ -58,7 +58,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_In_Developement_Standards_From_1_0_Are_Not_loaded(
+        public async Task Then_In_Developement_Standards_Above_1_0_Are_Not_loaded(
             [Frozen] Mock<IRouteRepository> routeRepository,
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
@@ -72,7 +72,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
                 GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
                 GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3"),
-                GetValidImportedStandard(104, "ST0104", "1.0", "Title 4", Status.InDevelopment, "Route 3", "Option 4") // Route and standard not loaded
+                GetValidImportedStandard(104, "ST0104", "1.0", "Title 4", Status.ApprovedForDelivery, "Route 2", "Option 4"),
+                GetValidImportedStandard(104, "ST0104", "1.1", "Title 4", Status.InDevelopment, "Route 3", "Option 4") // Route and standard not loaded
             };
 
             routeRepository
@@ -94,7 +95,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0101" && p.RouteCode == 1))));
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0102" && p.RouteCode == 1))));
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0103" && p.RouteCode == 2))));
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => !s.Exists(p => p.IfateReferenceNumber == "ST0104"))));
+            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0104" && p.RouteCode == 2))));
+            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => !s.Exists(p => p.IfateReferenceNumber == "ST0104" && p.RouteCode == 3))));
         }
 
         [Test, RecursiveMoqAutoData]

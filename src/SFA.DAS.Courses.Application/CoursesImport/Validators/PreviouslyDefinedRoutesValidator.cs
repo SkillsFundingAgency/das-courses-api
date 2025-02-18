@@ -14,7 +14,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                 {
                     foreach (var standard in importedStandards)
                     {
-                        if(!currentRoutes.Exists(r => r.Name == standard.Route.Value))
+                        // ignoring blank routes as these will not actually be imported
+                        if(!string.IsNullOrEmpty(standard.Route.Value) && !currentRoutes.Exists(r => r.Name == standard.Route.Value))
                         {
                             context.AddFailure($"W1004: {standard.ReferenceNumber.Value} version {standard.Version.Value} route '{standard.Route.Value}' has not been imported before");
                         }
