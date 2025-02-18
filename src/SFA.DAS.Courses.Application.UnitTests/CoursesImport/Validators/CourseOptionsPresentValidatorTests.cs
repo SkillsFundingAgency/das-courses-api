@@ -71,7 +71,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 
             // Assert
             result.Errors.Should().ContainSingle(error => error.ErrorMessage ==
-                "W1002: ST003 version 3.0 coreAndOptions is true, both options and optionsUnstructuredTemplate cannot be empty");
+                "W1003: ST003 version 3.0 coreAndOptions is true, both options and optionsUnstructuredTemplate cannot be empty");
         }
     }
 }

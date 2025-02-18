@@ -331,6 +331,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 new LarsCodeNotZeroForNewVersionValidator(),
                 new LarsCodeNotZeroForRetiredVersionValidator(),
                 new StatusValidValidator(),
+                new StatusRecommendedValidator(),
                 new VersionsSingleApprovedValidator(),
                 new VersionMustMatchVersionNumberValidator(),
                 new StartDatesValidator(),

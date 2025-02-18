@@ -12,13 +12,13 @@ namespace SFA.DAS.Courses.Infrastructure.Api
 {
     public class InstituteOfApprenticeshipService : IInstituteOfApprenticeshipService
     {
-        private readonly HttpClient _client;
         private readonly CoursesConfiguration _coursesConfiguration;
+        private readonly HttpClient _client;
 
-        public InstituteOfApprenticeshipService(HttpClient client, IOptions<CoursesConfiguration> config)
+        public InstituteOfApprenticeshipService(IOptions<CoursesConfiguration> config, HttpClient client)
         {
-            _client = client;
             _coursesConfiguration = config.Value;
+            _client = client;
         }
 
         public async Task<IEnumerable<Standard>> GetStandards()

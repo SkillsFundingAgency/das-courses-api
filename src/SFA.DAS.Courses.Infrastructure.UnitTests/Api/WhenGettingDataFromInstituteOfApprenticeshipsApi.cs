@@ -3,23 +3,33 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using FluentAssertions;
+using Microsoft.Extensions.Options;
+using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Configuration;
-using SFA.DAS.Courses.Domain.ImportTypes.Settable;
-using SFA.DAS.Courses.Domain.ImportTypes;
-using SFA.DAS.Courses.Infrastructure.Api;
 using SFA.DAS.Courses.Domain.Courses;
-using System.Linq;
+using SFA.DAS.Courses.Domain.ImportTypes;
+using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 using SFA.DAS.Courses.Domain.TestHelper.Extensions;
+using SFA.DAS.Courses.Infrastructure.Api;
 
 
 namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
 {
     public class WhenGettingDataFromInstituteOfApprenticeshipsApi
     {
+        private IOptions<CoursesConfiguration> _config;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _config = Options.Create(new CoursesConfiguration
+            {
+                InstituteOfApprenticeshipsStandardsUrl = "https://ifate.org"
+            });
+        }
+
         [Test]
         public async Task Then_The_Endpoint_Is_Called_And_Standards_Returned()
         {
@@ -81,12 +91,12 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 StatusCode = HttpStatusCode.Accepted
             };
 
-            var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri(Constants.InstituteOfApprenticeshipsStandardsUrl));
-            var client = new HttpClient(httpMessageHandler.Object);
-            var apprenticeshipService = new InstituteOfApprenticeshipService(client);
-            
+            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri(_config.Value.InstituteOfApprenticeshipsStandardsUrl));
+            var httpClient = new HttpClient(httpMessageHandler.Object);
+            var sut = new InstituteOfApprenticeshipService(_config, httpClient);
+
             // Act
-            var standards = await apprenticeshipService.GetStandards();
+            var standards = await sut.GetStandards();
 
             // Assert
             standards.ShouldBeEquivalentToWithSettableHandling(importedStandards, options => options.Excluding(c => c.RouteCode));
@@ -101,12 +111,13 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 Content = new StringContent(""),
                 StatusCode = HttpStatusCode.BadRequest
             };
-            var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri(Constants.InstituteOfApprenticeshipsStandardsUrl));
-            var client = new HttpClient(httpMessageHandler.Object);
-            var apprenticeshipService = new InstituteOfApprenticeshipService(client);
-            
+
+            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri(_config.Value.InstituteOfApprenticeshipsStandardsUrl));
+            var httpClient = new HttpClient(httpMessageHandler.Object);
+            var sut = new InstituteOfApprenticeshipService(_config, httpClient);
+
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(() => apprenticeshipService.GetStandards());
+            Assert.ThrowsAsync<HttpRequestException>(() => sut.GetStandards());
         }
     }
 }

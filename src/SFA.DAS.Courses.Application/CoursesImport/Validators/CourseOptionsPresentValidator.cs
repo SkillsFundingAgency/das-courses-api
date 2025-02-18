@@ -19,7 +19,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                         
                         if(standard.CoreAndOptions.Value && !newOptionsPresent && !oldOptionsPresent)
                         {
-                            context.AddFailure($"W1002: {standard.ReferenceNumber.Value} version {standard.Version.Value} coreAndOptions is true, both options and optionsUnstructuredTemplate cannot be empty");
+                            context.AddFailure($"W1003: {standard.ReferenceNumber.Value} version {standard.Version.Value} coreAndOptions is true, both options and optionsUnstructuredTemplate cannot be empty");
                         }
                     }
                 });
