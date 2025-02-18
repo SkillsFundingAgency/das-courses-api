@@ -39,6 +39,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.Change)
                 .Excluding(c => c.IntegratedApprenticeship)
                 .Excluding(c => c.RegulationDetail)
+                .Excluding(c => c.Regulated)
             );
 
             actual.LarsCode.Should().Be(standard.LarsCode);

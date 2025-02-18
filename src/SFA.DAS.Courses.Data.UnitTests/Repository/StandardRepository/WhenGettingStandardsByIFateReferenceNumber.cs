@@ -70,7 +70,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Excluding(c => c.Options)
                 .Excluding(c => c.CoreAndOptions)
                 .Excluding(c => c.EPAChanged)
-                .Excluding(c => c.Regulated)
                 .Excluding(c => c.IsRegulatedForProvider)
                 .Excluding(c => c.IsRegulatedForEPAO);
         }
