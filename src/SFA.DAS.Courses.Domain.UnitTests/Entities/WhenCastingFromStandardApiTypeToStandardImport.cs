@@ -4,6 +4,7 @@ using System.Linq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.UnitTests.Data;
@@ -16,6 +17,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_Maps_The_Fields(ImportTypes.Standard standard)
         {
             standard.Version = "1.0";
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
             var actual = (StandardImport)standard;
 
             actual.Should().BeEquivalentTo(standard, options => options
@@ -35,6 +38,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.TbMainContact)
                 .Excluding(c => c.Change)
                 .Excluding(c => c.IntegratedApprenticeship)
+                .Excluding(c => c.RegulationDetail)
+                .Excluding(c => c.Regulated)
             );
 
             actual.LarsCode.Should().Be(standard.LarsCode);
@@ -49,7 +54,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Arrange
             var expectedTitle = standard.Title;
             standard.Title = $"  {expectedTitle} ";
-            
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
+
             //Act
             var actual = (StandardImport)standard;
 
@@ -71,12 +78,14 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             duty.MappedSkills = new List<Guid> { skillId };
             duty.IsThisACoreDuty = 1;
             standard.Duties.Add(duty);
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act	
             var actual = (StandardImport)standard;
 
             //Assert	
-            actual.CoreDuties.Should().BeEquivalentTo(new List<string>{detail});
+            actual.CoreDuties.Should().BeEquivalentTo(new List<string> { detail });
         }
 
         [Test, AutoData]
@@ -96,6 +105,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 }
             }
 
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
+
             //Act	
             var actual = (StandardImport)standard;
             standard.Skills.RemoveAll(s => !actual.CoreDuties.Contains(s.Detail));
@@ -108,7 +120,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_If_The_Version_Is_Null_It_Is_Set_To_DefaultVersion(ImportTypes.Standard standard)
         {
             //Arrange
-            standard.Version = null;            
+            standard.Version = null;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -121,6 +135,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_Major_and_Minor_versions_are_mapped(ImportTypes.Standard standard)
         {
             standard.Version = "1.2";
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             var actual = (StandardImport)standard;
 
@@ -145,17 +161,19 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 new OptionDutyBuilder().ForOptions(options[0]).Build(),
                 new OptionDutyBuilder().ForOptions(options[1]).Build(),
             };
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Knowledge.Should().BeEquivalentTo(new []{
+                .Which.Knowledge.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Knowledge[0].KnowledgeId, Detail = "k1" },
                     new { Id = standard.Knowledge[1].KnowledgeId, Detail = "k2" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Knowledge.Should().BeEquivalentTo( new [] {
+                .Which.Knowledge.Should().BeEquivalentTo(new[] {
                     new { Id = standard.Knowledge[2].KnowledgeId, Detail = "k3" },
                     new { Id = standard.Knowledge[3].KnowledgeId, Detail = "k4" }});
         }
@@ -181,6 +199,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     .WithBehaviour(standard.Behaviours)
                     .Build(),
             };
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -206,6 +226,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
             standard.Behaviours = BehavioursBuilder.Create("b1-detail");
             standard.CoreAndOptions = false;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -240,17 +262,19 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 new OptionDutyBuilder().ForOptions(options[0]).Build(),
                 new OptionDutyBuilder().ForOptions(options[1]).Build(),
             };
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Skills.Should().BeEquivalentTo(new []{
+                .Which.Skills.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Skills[0].SkillId, Detail = "s1" },
                     new { Id = standard.Skills[1].SkillId, Detail = "s2" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Skills.Should().BeEquivalentTo( new []{
+                .Which.Skills.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Skills[2].SkillId, Detail = "s3" },
                     new { Id = standard.Skills[3].SkillId, Detail = "s4" },
                     new { Id = standard.Skills[4].SkillId, Detail = "s5" }});
@@ -274,25 +298,27 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 new OptionDutyBuilder().ForOptions(options[0], options[1]).Build(),
                 new OptionDutyBuilder().ForOptions(options[2]).Build(),
             };
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
 
             //Assert
             actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo( new []{
+                .Which.Behaviours.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Behaviours[0].BehaviourId, Detail = "b1" },
                     new { Id = standard.Behaviours[2].BehaviourId, Detail = "b3" },
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
                     new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" }});
             actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo(new []{
+                .Which.Behaviours.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Behaviours[0].BehaviourId, Detail = "b1" },
                     new { Id = standard.Behaviours[2].BehaviourId, Detail = "b3" },
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
                     new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" }});
             actual.Options.Should().Contain(x => x.OptionId == options[2].OptionId)
-                .Which.Behaviours.Should().BeEquivalentTo(new []{
+                .Which.Behaviours.Should().BeEquivalentTo(new[]{
                     new { Id = standard.Behaviours[3].BehaviourId, Detail = "b4" },
                     new { Id = standard.Behaviours[4].BehaviourId, Detail = "b5" },
                     new { Id = standard.Behaviours[5].BehaviourId, Detail = "b6" }});
@@ -317,6 +343,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 new OptionDutyBuilder().ForOptions(options).Build(),
                 new CoreDutyBuilder().WithKnowledge(standard.Knowledge).Build(),
             };
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -338,6 +366,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     MappedOptions = null,
                 }
             };
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -362,6 +392,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     MappedBehaviour = null,
                 }
             };
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -375,6 +407,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_Duties_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -388,6 +422,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             //Arrange
             standard.CoreAndOptions = true;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -401,11 +437,13 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData(" Option")]
         [InlineAutoData("  Option")]
         [InlineAutoData("Option ")]
-        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle,ImportTypes.Standard standard)
+        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle, ImportTypes.Standard standard)
         {
             //Arrange
             standard.CoreAndOptions = true;
             standard.Options[0].Title = optionTitle;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -422,6 +460,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Arrange
             standard.CoreAndOptions = true;
             standard.Options = null;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -434,6 +474,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_All_OptionsUnstructuredTemplate_Are_Mapped(ImportTypes.Standard standard)
         {
             //Arrange
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -447,6 +489,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             //Arrange
             standard.OptionsUnstructuredTemplate = null;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
+
             //Act
             var actual = (StandardImport)standard;
 
@@ -472,9 +517,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.Level = level;
             standard.IntegratedDegree = integratedDegreeValue;
             standard.IntegratedApprenticeship = integratedApprenticeship;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
-            var actual = (StandardImport) standard;
+            var actual = (StandardImport)standard;
 
             //Assert
             actual.IntegratedApprenticeship.Should().Be(expected);
@@ -493,9 +540,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             //Arrange
             standard.Level = level;
             standard.IntegratedApprenticeship = integratedValue;
-            
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
+
             //Act
-            var actual = (StandardImport) standard;
+            var actual = (StandardImport)standard;
 
             //Assert
             actual.IntegratedApprenticeship.Should().Be(expected);
@@ -506,6 +555,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             //Arrange
             standard.Change = string.Empty;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -519,6 +570,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             //Arrange
             standard.Change = "Approved for delivery";
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -532,6 +585,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             //Arrange
             standard.Change = "End-point assessment plan revised";
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -545,6 +600,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             //Arrange
             standard.Change = "Approved for delivery. End-point assessment plan revised";
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act
             var actual = (StandardImport)standard;
@@ -560,10 +617,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData("ST0001 ")]
         public void Then_ifate_reference_is_trimmed_and_mapped(string ifateReference, ImportTypes.Standard standard)
         {
+            //Arrange
             standard.ReferenceNumber = ifateReference;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
+            //Act
             var actual = (StandardImport)standard;
 
+            //Assert
             actual.IfateReferenceNumber.Should().Be("ST0001");
         }
 
@@ -574,10 +636,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData("Withdrawn ", "Withdrawn")]
         public void Then_status_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
         {
+            //Arrange
             standard.Status = source;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
+            //Act
             var actual = (StandardImport)standard;
 
+            //Assert
             actual.Status.Should().Be(expected);
         }
 
@@ -588,10 +655,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData(null, null)]
         public void Then_trail_blazer_contact_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
         {
+            //Arrange
             standard.TbMainContact = source;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
+            //Act
             var actual = (StandardImport)standard;
 
+            //Assert
             actual.TrailBlazerContact.Should().Be(expected);
         }
 
@@ -602,10 +674,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData(null, null)]
         public void Then_provider_name_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
         {
+            //Arrange
             standard.EqaProvider.ProviderName = source;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
+            //Act
             var actual = (StandardImport)standard;
 
+            //Assert
             actual.EqaProviderName.Should().Be(expected);
         }
 
@@ -616,10 +693,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData(null, null)]
         public void Then_provider_contact_name_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
         {
+            //Arrange
             standard.EqaProvider.ContactName = source;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
+            //Act
             var actual = (StandardImport)standard;
 
+            //Assert
             actual.EqaProviderContactName.Should().Be(expected);
         }
 
@@ -630,10 +712,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData(null, null)]
         public void Then_provider_contact_email_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
         {
+            //Arrange
             standard.EqaProvider.ContactEmail = source;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
+            //Act
             var actual = (StandardImport)standard;
 
+            //Assert
             actual.EqaProviderContactEmail.Should().Be(expected);
         }
 
@@ -644,10 +731,15 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [InlineAutoData(null, null)]
         public void Then_regulated_body_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
         {
+            //Arrange
             standard.RegulatedBody = source;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
+            //Act
             var actual = (StandardImport)standard;
 
+            //Assert
             actual.RegulatedBody.Should().Be(expected);
         }
 
@@ -662,12 +754,38 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     DutyDetail = "."
                 }
             };
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
 
             //Act	
             var actual = (StandardImport)standard;
 
             // Assert
             actual.Duties.Should().BeEmpty();
+        }
+
+        [Test]
+        [InlineAutoData(false, "regulator", true, false)]
+        [InlineAutoData(true, "", true, false)]
+        [InlineAutoData(true, "regulator", false, false)]
+        [InlineAutoData(true, "regulator", true, true)]
+        public void Then_Maps_IsRegulatedForProvider_And_IsRegulatedForEPAO_Correctly(bool regulated, string regulator,
+            bool approved, bool expected, ImportTypes.Standard standard)
+        {
+            //Arrange
+            standard.Regulated = regulated;
+            standard.RegulatedBody = regulator;
+            standard.RegulationDetail[0].Name = Constants.ProviderRegulationType;
+            standard.RegulationDetail[1].Name = Constants.EPAORegulationType;
+            standard.RegulationDetail[0].Approved = approved;
+            standard.RegulationDetail[1].Approved = approved;
+
+            //Act
+            var actual = (StandardImport)standard;
+
+            //Assert
+            actual.IsRegulatedForProvider.Should().Be(expected);
+            actual.IsRegulatedForEPAO.Should().Be(expected);
         }
     }
 }

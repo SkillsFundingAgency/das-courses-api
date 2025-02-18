@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -62,6 +63,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 CreatedDate = standard.CreatedDate,
                 EPAChanged = IsEPAChanged(standard),
                 Qualifications = standard.Qualifications,
+                IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
+                IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType)
             };
         }
 
@@ -238,6 +241,21 @@ namespace SFA.DAS.Courses.Domain.Entities
                         .DistinctBy(x => x.Key).ToList()
                 )
             };
+        }
+
+        private static bool GetIsRegulated(Domain.ImportTypes.Standard standard, string name)
+        {
+            if (standard.RegulationDetail == null || !standard.Regulated || string.IsNullOrEmpty(standard.RegulatedBody))
+            {
+                return false;
+            }
+
+            if (standard.RegulationDetail.Any(r => r.Name == name))
+            {
+                return standard.RegulationDetail.First(r => r.Name == name).Approved;
+            }
+
+            return false;
         }
     }
 }

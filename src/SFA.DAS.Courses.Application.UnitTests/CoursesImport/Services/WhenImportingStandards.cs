@@ -6,7 +6,6 @@ using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
-using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -30,15 +29,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             SetStandardsToStatus(standardsImport);
             notImportedStandard.Status = "In development";
             standardsImport.Add(notImportedStandard);
-            var routes = standardsImport.Select(s=>s.Route).Distinct().ToList();
-            service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport.Where(c=>c.Status=="Approved for Delivery"));
+            var routes = standardsImport.Select(s => s.Route).Distinct().ToList();
+            service.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport.Where(c => c.Status == "Approved for Delivery"));
 
             //Act
             await standardsImportService.ImportDataIntoStaging();
 
             //Assert
-            routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(c => c.Count.Equals(routes.Count -1))), Times.Once);
-            importRepository.Verify(x=>x.InsertMany(It.Is<List<StandardImport>>(std=>std.TrueForAll(c=>c.RouteCode != 0))));
+            routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(c => c.Count.Equals(routes.Count - 1))), Times.Once);
+            importRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(std => std.TrueForAll(c => c.RouteCode != 0))));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -51,19 +50,20 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         {
             //Arrange
             SetStandardsToStatus(standardsImport, "In Development");
+
             ifateService.Setup(x => x.GetStandards()).ReturnsAsync(standardsImport);
-            
+
             //Act
             await standardsImportService.ImportDataIntoStaging();
-            
+
             //Assert
-            ifateService.Verify(x=>x.GetStandards(), Times.Once);
-            importRepository.Verify(x=>
-                x.InsertMany(It.Is<List<StandardImport>>(c=>
+            ifateService.Verify(x => x.GetStandards(), Times.Once);
+            importRepository.Verify(x =>
+                x.InsertMany(It.Is<List<StandardImport>>(c =>
                     c.Count.Equals(standardsImport.Count()))), Times.Once);
-            importRouteRepository.Verify(x=>x.InsertMany(It.Is<List<RouteImport>>(c=>c.Count == 0)));
-            importRepository.Verify(x=>x.DeleteAll(), Times.Once);
-            importRouteRepository.Verify(x=>x.DeleteAll(), Times.Once);
+            importRouteRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(c => c.Count == 0)));
+            importRepository.Verify(x => x.DeleteAll(), Times.Once);
+            importRouteRepository.Verify(x => x.DeleteAll(), Times.Once);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             //Assert
             standardImportRepository.Verify(x =>
-                x.InsertMany(It.Is<List<StandardImport>>(c => c.Count(s=> s.EqaProviderName == "Ofqual") == 1)), Times.Once);
+                x.InsertMany(It.Is<List<StandardImport>>(c => c.Count(s => s.EqaProviderName == "Ofqual") == 1)), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -142,7 +142,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
         private static void SetStandardsToStatus(List<Standard> standardsImport, string status = "Approved for Delivery")
         {
-            standardsImport.ForEach(c=>
+            standardsImport.ForEach(c =>
             {
                 c.Status = status;
             });

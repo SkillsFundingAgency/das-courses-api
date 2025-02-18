@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
+using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Services
 {
@@ -148,7 +149,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             await _auditRepository.Insert(auditRecord);
         }
 
-        private void  UpdateEqaProviderName(List<Domain.ImportTypes.Standard> standards)
+        private void UpdateEqaProviderName(List<Domain.ImportTypes.Standard> standards)
         {
             foreach (var standard in standards)
             {

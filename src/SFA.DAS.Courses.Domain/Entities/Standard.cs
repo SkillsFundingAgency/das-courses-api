@@ -51,7 +51,9 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EPAChanged = import.EPAChanged,
                 VersionMajor = import.VersionMajor,
                 VersionMinor = import.VersionMinor,
-                EpaoMustBeApprovedByRegulatorBody = import.QualificationsContainsEpaoMustBeApprovedText()
+                EpaoMustBeApprovedByRegulatorBody = import.QualificationsContainsEpaoMustBeApprovedText(),
+                IsRegulatedForProvider = import.IsRegulatedForProvider,
+                IsRegulatedForEPAO = import.IsRegulatedForEPAO
             };
         }
     }
