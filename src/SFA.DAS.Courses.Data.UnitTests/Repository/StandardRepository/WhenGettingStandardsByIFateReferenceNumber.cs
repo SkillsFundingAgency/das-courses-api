@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -10,7 +9,6 @@ using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.Customisations;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Courses.Domain.Entities;
-using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
@@ -73,7 +71,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Excluding(c => c.CoreAndOptions)
                 .Excluding(c => c.EPAChanged)
                 .Excluding(c => c.CreatedDate)
-                .Excluding(c => c.PublishDate);
+                .Excluding(c => c.PublishDate)
+                .Excluding(c => c.IsRegulatedForProvider)
+                .Excluding(c => c.IsRegulatedForEPAO);
         }
     }
 }

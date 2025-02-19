@@ -45,6 +45,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 Skills = new Settable<List<Skill>>(null),
                 Duties = new Settable<List<Duty>>(null),
                 RegulatedBody = new Settable<string>(null),
+                Regulated = new Settable<bool>(true),
+                RegulationDetail = new Settable<List<RegulationDetail>>(null),
                 TypicalJobTitles = new Settable<List<string>>(null),
                 StandardPageUrl = new Settable<Uri>(null),
                 CoreAndOptions = false,

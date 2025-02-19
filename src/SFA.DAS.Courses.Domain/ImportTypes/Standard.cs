@@ -87,6 +87,12 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("regulatedBody")]
         public Settable<string> RegulatedBody { get; set; }
 
+        [JsonProperty("regulated")]
+        public Settable<bool> Regulated { get; set; }
+
+        [JsonProperty("regulationDetail")]
+        public Settable<List<RegulationDetail>> RegulationDetail { get; set; }
+
         [JsonProperty("route")]
         public Settable<string> Route { get; set; }
 
@@ -180,9 +186,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("mappedSkills")]
         public Settable<List<Guid>> MappedSkills { get; set; }
-
-        [JsonProperty("criteriaForMeasuringPerformance")]
-        public Settable<string> CriteriaForMeasuringPerformance { get; set; }
     }
 
     public class Behaviour
@@ -201,5 +204,17 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("detail")]
         public Settable<string> Detail { get; set; }
+    }
+
+    public class RegulationDetail
+    {
+        [JsonProperty("name")]
+        public Settable<string> Name { get; set; }
+
+        [JsonProperty("webLink")]
+        public Settable<string> WebLink { get; set; }
+
+        [JsonProperty("approved")]
+        public Settable<bool> Approved { get; set; }
     }
 }

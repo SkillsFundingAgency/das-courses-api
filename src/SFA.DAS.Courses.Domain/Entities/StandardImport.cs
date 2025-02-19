@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -36,6 +37,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IfateReferenceNumber = standard.ReferenceNumber.Value?.Trim(),
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
                 IntegratedDegree = standard.IntegratedDegree?.Value,
+                IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
+                IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType),
                 Keywords = (standard.Keywords.Value?.Any() ?? false) ? string.Join("|", standard.Keywords.Value) : null,
                 LarsCode = standard.LarsCode.Value,
                 Level = standard.Level.Value,
@@ -81,6 +84,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IfateReferenceNumber = standard.IfateReferenceNumber,
                 IntegratedApprenticeship = standard.IntegratedApprenticeship,
                 IntegratedDegree = standard.IntegratedDegree,
+                IsRegulatedForProvider = standard.IsRegulatedForProvider,
+                IsRegulatedForEPAO = standard.IsRegulatedForEPAO,
                 Keywords = standard.Keywords,
                 LarsCode = standard.LarsCode,
                 Level = standard.Level,
@@ -297,6 +302,21 @@ namespace SFA.DAS.Courses.Domain.Entities
                         .DistinctBy(x => x.Key).ToList()
                 )
             };
+        }
+
+        private static bool GetIsRegulated(ImportTypes.Standard standard, string name)
+        {
+            if (standard.RegulationDetail.Value == null || !standard.Regulated.Value || string.IsNullOrEmpty(standard.RegulatedBody.Value))
+            {
+                return false;
+            }
+
+            if (standard.RegulationDetail.Value.Any(r => r.Name == name))
+            {
+                return standard.RegulationDetail.Value.First(r => r.Name == name).Approved;
+            }
+
+            return false;
         }
     }
 }

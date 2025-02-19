@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
 using FluentValidation.TestHelper;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
 using SFA.DAS.Courses.Domain.ImportTypes;
@@ -57,6 +57,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 OverviewOfRole = new Settable<string>("Overview"),
                 PublishDate = new Settable<System.DateTime>(System.DateTime.UtcNow),
                 RegulatedBody = new Settable<string>("Regulator"),
+                Regulated = new Settable<bool>(false),
+                RegulationDetail = new Settable<List<RegulationDetail>>(new List<RegulationDetail>()),
                 Route = new Settable<string>("Engineering"),
                 Skills = new Settable<List<Skill>>(new List<Skill>()),
                 StandardPageUrl = new Settable<System.Uri>(new System.Uri("http://standard.com")),
@@ -83,39 +85,45 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-        [TestCase("referenceNumber", "ReferenceNumber")]
-        [TestCase("version", "Version")]
-        [TestCase("approvedForDelivery", "ApprovedForDelivery")]
-        [TestCase("assessmentPlanUrl", "AssessmentPlanUrl")]
-        [TestCase("behaviours", "Behaviours")]
-        [TestCase("change", "Change")]
-        [TestCase("coreAndOptions", "CoreAndOptions")]
-        [TestCase("coronationEmblem", "CoronationEmblem")]
-        [TestCase("createdDate", "CreatedDate")]
-        [TestCase("duties", "Duties")]
-        [TestCase("earliestStartDate", "VersionEarliestStartDate")]
-        [TestCase("keywords", "Keywords")]
-        [TestCase("knowledges", "Knowledges")]
-        [TestCase("latestEndDate", "VersionLatestEndDate")]
-        [TestCase("latestStartDate", "VersionLatestStartDate")]
-        [TestCase("larsCode", "LarsCode")]
-        [TestCase("level", "Level")]
-        [TestCase("maxFunding", "ProposedMaxFunding")]
-        [TestCase("overviewOfRole", "OverviewOfRole")]
-        [TestCase("publishDate", "PublishDate")]
-        [TestCase("regulatedBody", "RegulatedBody")]
-        [TestCase("route", "Route")]
-        [TestCase("skills", "Skills")]
-        [TestCase("standardPageUrl", "StandardPageUrl")]
-        [TestCase("status", "Status")]
-        [TestCase("tbMainContact", "TbMainContact")]
-        [TestCase("title", "Title")]
-        [TestCase("typicalDuration", "ProposedTypicalDuration")]
-        [TestCase("typicalJobTitles", "TypicalJobTitles")]
-        [TestCase("versionNumber", "VersionNumber")]
-        public void Should_Add_Failure_When_Required_Field_Is_Missing(string jsonPropertyName, string propertyName)
+        
+        [TestCase(nameof(Standard.ApprovedForDelivery))]
+        [TestCase(nameof(Standard.AssessmentPlanUrl))]
+        [TestCase(nameof(Standard.Behaviours))]
+        [TestCase(nameof(Standard.Change))]
+        [TestCase(nameof(Standard.CoreAndOptions))]
+        [TestCase(nameof(Standard.CoronationEmblem))]
+        [TestCase(nameof(Standard.CreatedDate))]
+        [TestCase(nameof(Standard.Duties))]
+        [TestCase(nameof(Standard.EqaProvider))]
+        [TestCase(nameof(Standard.Keywords))]
+        [TestCase(nameof(Standard.Knowledges))]
+        [TestCase(nameof(Standard.LarsCode))]
+        [TestCase(nameof(Standard.Level))]
+        [TestCase(nameof(Standard.ProposedMaxFunding))]
+        [TestCase(nameof(Standard.OverviewOfRole))]
+        [TestCase(nameof(Standard.PublishDate))]
+        [TestCase(nameof(Standard.ReferenceNumber))]
+        [TestCase(nameof(Standard.RegulatedBody))]
+        [TestCase(nameof(Standard.Regulated))]
+        [TestCase(nameof(Standard.RegulationDetail))]
+        [TestCase(nameof(Standard.Route))]
+        [TestCase(nameof(Standard.Skills))]
+        [TestCase(nameof(Standard.StandardPageUrl))]
+        [TestCase(nameof(Standard.Status))]
+        [TestCase(nameof(Standard.TbMainContact))]
+        [TestCase(nameof(Standard.Title))]
+        [TestCase(nameof(Standard.ProposedTypicalDuration))]
+        [TestCase(nameof(Standard.TypicalJobTitles))]
+        [TestCase(nameof(Standard.VersionEarliestStartDate))]
+        [TestCase(nameof(Standard.VersionLatestEndDate))]
+        [TestCase(nameof(Standard.VersionLatestStartDate))]
+        [TestCase(nameof(Standard.VersionNumber))]
+        [TestCase(nameof(Standard.Version))]
+        public void Should_Add_Failure_When_Required_Field_Is_Missing(string propertyName)
         {
             // Arrange
+            var jsonPropertyName = GetJsonPropertyName<Standard>(propertyName);
+
             var importedStandard = CreateValidStandard();
             typeof(Standard).GetProperty(propertyName)?.SetValue(importedStandard, Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(Standard).GetProperty(propertyName).PropertyType.GenericTypeArguments[0])));
             var importedStandards = new List<Standard> { importedStandard };
@@ -142,6 +150,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
         public void Should_Add_Failure_When_Options_And_OptionsUnstructuredTemplate_Is_Missing()
         {
             // Arrange
+            var optionsJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.Options));
+            var optionsUnstructuredTemplateJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.OptionsUnstructuredTemplate));
+
             var importedStandard = CreateValidStandard();
             importedStandard.Options = new Settable<List<Option>>();
             importedStandard.OptionsUnstructuredTemplate = new Settable<List<string>>();
@@ -151,7 +162,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             var result = _sut.TestValidate(importedStandards);
 
             // Assert
-            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields 'options or optionsUnstructuredTemplate'"));
+            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{optionsJsonPropertyName} or {optionsUnstructuredTemplateJsonPropertyName}'"));
         }
 
         [Test]
@@ -184,94 +195,175 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-        [Test]
-        public void Should_Add_Failure_When_EqaProvider_Is_Missing()
+        [TestCase(nameof(EqaProvider.ContactAddress))]
+        [TestCase(nameof(EqaProvider.ContactEmail))]
+        [TestCase(nameof(EqaProvider.ContactName))]
+        [TestCase(nameof(EqaProvider.ProviderName))]
+        [TestCase(nameof(EqaProvider.WebLink))]
+        public void Should_Add_Failure_When_EqaProvider_Property_Is_Missing(string propertyName)
         {
             // Arrange
+            var jsonPropertyName = GetJsonPropertyName<EqaProvider>(propertyName);
+            var eQAProviderJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.EqaProvider));
+
             var importedStandard = CreateValidStandard();
-            importedStandard.EqaProvider = new Settable<EqaProvider>();
+            typeof(EqaProvider).GetProperty(propertyName)?.SetValue(importedStandard.EqaProvider.Value, Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(EqaProvider).GetProperty(propertyName).PropertyType.GenericTypeArguments[0])));
             var importedStandards = new List<Standard> { importedStandard };
 
             // Act
             var result = _sut.TestValidate(importedStandards);
 
             // Assert
-            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields 'eQAProvider'"));
+            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{eQAProviderJsonPropertyName}.{jsonPropertyName}'"));
         }
 
-        [Test]
-        public void Should_Add_Failure_When_EqaProvider_ContactAddress_Is_Missing()
+        [TestCase(nameof(Option.OptionId))]
+        [TestCase(nameof(Option.Title))]
+        public void Should_Add_Failure_When_Option_Property_Is_Missing(string propertyName)
         {
             // Arrange
+            var jsonPropertyName = GetJsonPropertyName<Option>(propertyName);
+            var optionsJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.Options));
+
             var importedStandard = CreateValidStandard();
-            importedStandard.EqaProvider.Value.ContactAddress = new Settable<string>();
+            importedStandard.Options.Value.Add(new Option { OptionId = new Settable<Guid>(Guid.NewGuid()), Title = new Settable<string>("Title") });
+            typeof(Option).GetProperty(propertyName)?.SetValue(importedStandard.Options.Value[0], Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(Option).GetProperty(propertyName).PropertyType.GenericTypeArguments[0])));
             var importedStandards = new List<Standard> { importedStandard };
 
             // Act
             var result = _sut.TestValidate(importedStandards);
 
             // Assert
-            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields 'eQAProvider.contactAddress'"));
+            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{optionsJsonPropertyName}[0].{jsonPropertyName}'"));
         }
 
-        [Test]
-        public void Should_Add_Failure_When_EqaProvider_ContactEmail_Is_Missing()
+        [TestCase(nameof(Skill.SkillId))]
+        [TestCase(nameof(Skill.Detail))]
+        public void Should_Add_Failure_When_Skill_Property_Is_Missing(string propertyName)
         {
             // Arrange
+            var jsonPropertyName = GetJsonPropertyName<Skill>(propertyName);
+            var skillsJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.Skills));
+
             var importedStandard = CreateValidStandard();
-            importedStandard.EqaProvider.Value.ContactEmail = new Settable<string>();
+            importedStandard.Skills.Value.Add(new Skill { SkillId = new Settable<Guid>(Guid.NewGuid()), Detail = new Settable<string>("Detail") });
+            typeof(Skill).GetProperty(propertyName)?.SetValue(importedStandard.Skills.Value[0], Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(Skill).GetProperty(propertyName).PropertyType.GenericTypeArguments[0])));
             var importedStandards = new List<Standard> { importedStandard };
 
             // Act
             var result = _sut.TestValidate(importedStandards);
 
             // Assert
-            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields 'eQAProvider.contactEmail'"));
+            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{skillsJsonPropertyName}[0].{jsonPropertyName}'"));
         }
 
-        [Test]
-        public void Should_Add_Failure_When_EqaProvider_ContactName_Is_Missing()
+        [TestCase(nameof(Duty.DutyId))]
+        [TestCase(nameof(Duty.DutyDetail))]
+        [TestCase(nameof(Duty.IsThisACoreDuty))]
+        [TestCase(nameof(Duty.MappedKnowledge))]
+        [TestCase(nameof(Duty.MappedBehaviour))]
+        [TestCase(nameof(Duty.MappedOptions))]
+        [TestCase(nameof(Duty.MappedSkills))]
+        public void Should_Add_Failure_When_Duty_Property_Is_Missing(string propertyName)
         {
             // Arrange
+            var jsonPropertyName = GetJsonPropertyName<Duty>(propertyName);
+            var dutiesJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.Duties));
+
             var importedStandard = CreateValidStandard();
-            importedStandard.EqaProvider.Value.ContactName = new Settable<string>();
+            importedStandard.Duties.Value.Add(new Duty 
+            { 
+                DutyId = new Settable<Guid>(Guid.NewGuid()), 
+                DutyDetail = new Settable<string>("DutyDetail"), 
+                IsThisACoreDuty = new Settable<long>(0), 
+                MappedKnowledge = new Settable<List<Guid>>(new List<Guid>()),
+                MappedBehaviour = new Settable<List<Guid>>(new List<Guid>()),
+                MappedOptions = new Settable<List<Guid>>(new List<Guid>()),
+                MappedSkills = new Settable<List<Guid>>(new List<Guid>())
+            });
+            typeof(Duty).GetProperty(propertyName)?.SetValue(importedStandard.Duties.Value[0], Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(Duty).GetProperty(propertyName).PropertyType.GenericTypeArguments[0])));
             var importedStandards = new List<Standard> { importedStandard };
 
             // Act
             var result = _sut.TestValidate(importedStandards);
 
             // Assert
-            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields 'eQAProvider.contactName'"));
+            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{dutiesJsonPropertyName}[0].{jsonPropertyName}'"));
         }
 
-        [Test]
-        public void Should_Add_Failure_When_EqaProvider_ProviderName_Is_Missing()
+        [TestCase(nameof(Behaviour.BehaviourId))]
+        [TestCase(nameof(Behaviour.Detail))]
+        public void Should_Add_Failure_When_Behaviour_Property_Is_Missing(string propertyName)
         {
             // Arrange
+            var jsonPropertyName = GetJsonPropertyName<Behaviour>(propertyName);
+            var behavioursJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.Behaviours));
+
             var importedStandard = CreateValidStandard();
-            importedStandard.EqaProvider.Value.ProviderName = new Settable<string>();
+            importedStandard.Behaviours.Value.Add(new Behaviour { BehaviourId = new Settable<Guid>(Guid.NewGuid()), Detail = new Settable<string>("Detail") });
+            typeof(Behaviour).GetProperty(propertyName)?.SetValue(importedStandard.Behaviours.Value[0], Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(Behaviour).GetProperty(propertyName).PropertyType.GenericTypeArguments[0])));
             var importedStandards = new List<Standard> { importedStandard };
 
             // Act
             var result = _sut.TestValidate(importedStandards);
 
             // Assert
-            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields 'eQAProvider.providerName'"));
+            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{behavioursJsonPropertyName}[0].{jsonPropertyName}'"));
         }
 
-        [Test]
-        public void Should_Add_Failure_When_EqaProvider_WebLink_Is_Missing()
+        [TestCase(nameof(Knowledge.KnowledgeId))]
+        [TestCase(nameof(Knowledge.Detail))]
+        public void Should_Add_Failure_When_Knowledge_Property_Is_Missing(string propertyName)
         {
             // Arrange
+            var jsonPropertyName = GetJsonPropertyName<Knowledge>(propertyName);
+            var knowledgesJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.Knowledges));
+
             var importedStandard = CreateValidStandard();
-            importedStandard.EqaProvider.Value.WebLink = new Settable<string>();
+            importedStandard.Knowledges.Value.Add(new Knowledge { KnowledgeId = new Settable<Guid>(Guid.NewGuid()), Detail = new Settable<string>("Detail") });
+            typeof(Knowledge).GetProperty(propertyName)?.SetValue(importedStandard.Knowledges.Value[0], Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(Knowledge).GetProperty(propertyName).PropertyType.GenericTypeArguments[0])));
             var importedStandards = new List<Standard> { importedStandard };
 
             // Act
             var result = _sut.TestValidate(importedStandards);
 
             // Assert
-            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields 'eQAProvider.webLink'"));
+            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{knowledgesJsonPropertyName}[0].{jsonPropertyName}'"));
+        }
+
+        [TestCase(nameof(RegulationDetail.Name))]
+        [TestCase(nameof(RegulationDetail.Approved))]
+        public void Should_Add_Failure_When_RegulationDetail_Property_Is_Missing(string propertyName)
+        {
+            // Arrange
+            var jsonPropertyName = GetJsonPropertyName<RegulationDetail>(propertyName);
+            var regulationDetailJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.RegulationDetail));
+
+            var importedStandard = CreateValidStandard();
+            importedStandard.RegulationDetail.Value.Add(new RegulationDetail { Name = new Settable<string>("Name"), Approved = new Settable<bool>(true) });
+            typeof(RegulationDetail).GetProperty(propertyName)?.SetValue(importedStandard.RegulationDetail.Value[0], Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(RegulationDetail).GetProperty(propertyName).PropertyType.GenericTypeArguments[0])));
+            var importedStandards = new List<Standard> { importedStandard };
+
+            // Act
+            var result = _sut.TestValidate(importedStandards);
+
+            // Assert
+            result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{regulationDetailJsonPropertyName}[0].{jsonPropertyName}'"));
+        }
+
+        private static string GetJsonPropertyName<T>(string propertyName)
+        {
+            var property = typeof(T).GetProperty(propertyName);
+            if (property == null)
+            {
+                throw new ArgumentException($"Property '{propertyName}' not found on type '{typeof(T).Name}'.");
+            }
+
+            var jsonPropertyAttribute = property.GetCustomAttributes(typeof(JsonPropertyAttribute), false)
+                                                .Cast<JsonPropertyAttribute>()
+                                                .FirstOrDefault();
+
+            return jsonPropertyAttribute?.PropertyName ?? propertyName;
         }
     }
 }

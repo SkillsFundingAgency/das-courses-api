@@ -46,5 +46,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public bool EPAChanged { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
         public DateTime? PublishDate { get; set; }
+        public bool IsRegulatedForProvider { get; set; } = false;
+        public bool IsRegulatedForEPAO { get; set; } = false;
     }
 }

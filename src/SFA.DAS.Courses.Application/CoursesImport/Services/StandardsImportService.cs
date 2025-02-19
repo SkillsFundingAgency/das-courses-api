@@ -8,6 +8,7 @@ using SFA.DAS.Courses.Application.CoursesImport.Validators;
 using SFA.DAS.Courses.Application.Exceptions;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
+using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Services
 {

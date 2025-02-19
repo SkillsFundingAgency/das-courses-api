@@ -11,5 +11,7 @@
         public static string LarsSectorSubjectAreaTier1FileName => "SectorSubjectAreaTier1.csv";
         public static string SlackStartUploadUrl => "https://slack.com/api/files.getUploadURLExternal";
         public static string SlackCompleteUploadUrl => "https://slack.com/api/files.completeUploadExternal";
+        public static string ProviderRegulationType => "Training Provider";
+        public static string EPAORegulationType => "EPAO";
     }
 }
