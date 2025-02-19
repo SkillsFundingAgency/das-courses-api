@@ -9,66 +9,111 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class StandardImport : StandardBase
     {
         private const string FakeDutyText = ".";
-        public List<string> OptionsUnstructuredTemplate { get; set; }
-        public List<Qualification> Qualifications { get; set; }
-        public DateTime? CreatedDate { get; set; }
 
-        public static implicit operator StandardImport(Domain.ImportTypes.Standard standard)
+        public static implicit operator StandardImport(ImportTypes.Standard standard)
         {
             var coreDuties = new List<string>();
 
-            if (standard.Duties.Any() && standard.Skills.Any())
+            if ((standard.Duties.Value?.Any() ?? false) && (standard.Skills.Value?.Any() ?? false))
             {
-                var mappedSkillsList = GetMappedSkillsList(standard);
-                coreDuties = GetSkillDetailFromMappedCoreSkill(standard, mappedSkillsList);
+                coreDuties = GetSkillDetailFromMappedCoreSkill(standard);
             }
 
             return new StandardImport
             {
-                StandardUId = standard.ReferenceNumber.ToStandardUId(standard.Version),
-                LarsCode = standard.LarsCode,
-                IfateReferenceNumber = standard.ReferenceNumber?.Trim(),
-                Status = standard.Status?.Trim(),
-                VersionEarliestStartDate = standard.VersionEarliestStartDate,
-                VersionLatestStartDate = standard.VersionLatestStartDate,
-                VersionLatestEndDate = standard.VersionLatestEndDate,
-                IntegratedDegree = standard.IntegratedDegree,
-                Level = standard.Level,
-                CoronationEmblem = standard.CoronationEmblem,
-                ProposedTypicalDuration = standard.ProposedTypicalDuration,
-                ProposedMaxFunding = standard.ProposedMaxFunding,
-                OverviewOfRole = standard.OverviewOfRole,
-                StandardPageUrl = standard.StandardPageUrl.AbsoluteUri,
-                Title = standard.Title.Trim(),
-                TypicalJobTitles = string.Join("|", standard.TypicalJobTitles),
-                Version = standard.Version.ToBaselineVersion(),
-                VersionMajor = GetVersionPart(standard.Version, VersionPart.Major),
-                VersionMinor = GetVersionPart(standard.Version, VersionPart.Minor),
-                Keywords = standard.Keywords.Any() ? string.Join("|", standard.Keywords) : null,
-                AssessmentPlanUrl = standard.AssessmentPlanUrl,
-                ApprovedForDelivery = standard.ApprovedForDelivery,
-                TrailBlazerContact = standard.TbMainContact?.Trim(),
-                EqaProviderName = standard.EqaProvider?.ProviderName?.Trim(),
-                EqaProviderContactName = standard.EqaProvider?.ContactName?.Trim(),
-                EqaProviderContactEmail = standard.EqaProvider?.ContactEmail?.Trim(),
-                EqaProviderWebLink = standard.EqaProvider?.WebLink,
-                RegulatedBody = standard.RegulatedBody?.Trim(),
-                Duties = GetDuties(standard),
-                CoreAndOptions = standard.CoreAndOptions,
+                ApprovedForDelivery = standard.ApprovedForDelivery.Value,
+                AssessmentPlanUrl = standard.AssessmentPlanUrl.Value,
+                CoreAndOptions = standard.CoreAndOptions.Value,
                 CoreDuties = coreDuties,
-                IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
-                Options = CreateStructuredOptionsList(standard),
-                OptionsUnstructuredTemplate = standard.OptionsUnstructuredTemplate ?? new List<string>(),
-                RouteCode = standard.RouteCode,
-                CreatedDate = standard.CreatedDate,
+                CoronationEmblem = standard.CoronationEmblem.Value,
+                CreatedDate = standard.CreatedDate.Value,
+                Duties = GetDuties(standard),
                 EPAChanged = IsEPAChanged(standard),
-                Qualifications = standard.Qualifications,
+                EpaoMustBeApprovedByRegulatorBody = QualificationsContainsEpaoMustBeApprovedText(standard.Qualifications?.Value),
+                EqaProviderContactEmail = standard.EqaProvider.Value?.ContactEmail.Value?.Trim(),
+                EqaProviderContactName = standard.EqaProvider.Value?.ContactName.Value?.Trim(),
+                EqaProviderName = standard.EqaProvider.Value?.ProviderName.Value?.Trim(),
+                EqaProviderWebLink = standard.EqaProvider.Value?.WebLink.Value,
+                IfateReferenceNumber = standard.ReferenceNumber.Value?.Trim(),
+                IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
+                IntegratedDegree = standard.IntegratedDegree?.Value,
                 IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
-                IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType)
+                IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType),
+                Keywords = (standard.Keywords.Value?.Any() ?? false) ? string.Join("|", standard.Keywords.Value) : null,
+                LarsCode = standard.LarsCode.Value,
+                Level = standard.Level.Value,
+                Options = CreateStructuredOptionsList(standard),
+                OverviewOfRole = standard.OverviewOfRole.Value,
+                ProposedMaxFunding = standard.ProposedMaxFunding.Value,
+                ProposedTypicalDuration = standard.ProposedTypicalDuration.Value,
+                PublishDate = standard.PublishDate.Value,
+                RegulatedBody = standard.RegulatedBody.Value?.Trim(),
+                RouteCode = standard.RouteCode.Value,
+                StandardPageUrl = standard.StandardPageUrl.Value?.AbsoluteUri,
+                StandardUId = standard.ReferenceNumber.Value?.ToStandardUId(standard.Version?.Value),
+                Status = standard.Status.Value?.Trim(),
+                Title = standard.Title.Value?.Trim(),
+                TrailBlazerContact = standard.TbMainContact.Value?.Trim(),
+                TypicalJobTitles = (standard.TypicalJobTitles.Value?.Any() ?? false) ? string.Join("|", standard.TypicalJobTitles.Value) : string.Empty,
+                Version = (standard.Version?.Value).ToBaselineVersion(),
+                VersionEarliestStartDate = standard.VersionEarliestStartDate.Value,
+                VersionLatestEndDate = standard.VersionLatestEndDate.Value,
+                VersionLatestStartDate = standard.VersionLatestStartDate.Value,
+                VersionMajor = GetVersionPart(standard.Version?.Value, VersionPart.Major),
+                VersionMinor = GetVersionPart(standard.Version?.Value, VersionPart.Minor)
             };
         }
 
-        public bool QualificationsContainsEpaoMustBeApprovedText()
+        public static implicit operator StandardImport(Standard standard)
+        {
+            return new StandardImport
+            {
+                ApprovedForDelivery = standard.ApprovedForDelivery,
+                AssessmentPlanUrl = standard.AssessmentPlanUrl,
+                CoreAndOptions = standard.CoreAndOptions,
+                CoreDuties = standard.CoreDuties,
+                CoronationEmblem = standard.CoronationEmblem,
+                CreatedDate = standard.CreatedDate,
+                Duties = standard.Duties,
+                EPAChanged = standard.EPAChanged,
+                EpaoMustBeApprovedByRegulatorBody = standard.EpaoMustBeApprovedByRegulatorBody,
+                EqaProviderContactEmail = standard.EqaProviderContactEmail,
+                EqaProviderContactName = standard.EqaProviderContactName,
+                EqaProviderName = standard.EqaProviderName,
+                EqaProviderWebLink = standard.EqaProviderWebLink,
+                IfateReferenceNumber = standard.IfateReferenceNumber,
+                IntegratedApprenticeship = standard.IntegratedApprenticeship,
+                IntegratedDegree = standard.IntegratedDegree,
+                IsRegulatedForProvider = standard.IsRegulatedForProvider,
+                IsRegulatedForEPAO = standard.IsRegulatedForEPAO,
+                Keywords = standard.Keywords,
+                LarsCode = standard.LarsCode,
+                Level = standard.Level,
+                Options = standard.Options,
+                OverviewOfRole = standard.OverviewOfRole,
+                ProposedMaxFunding = standard.ProposedMaxFunding,
+                ProposedTypicalDuration = standard.ProposedTypicalDuration,
+                PublishDate = standard.PublishDate,
+                RegulatedBody = standard.RegulatedBody,
+                Route = standard.Route,
+                RouteCode = standard.RouteCode,
+                StandardPageUrl = standard.StandardPageUrl,
+                StandardUId = standard.StandardUId,
+                Status = standard.Status,
+                Title = standard.Title,
+                TrailBlazerContact = standard.TrailBlazerContact,
+                TypicalJobTitles = standard.TypicalJobTitles,
+                Version = standard.Version,
+                VersionEarliestStartDate = standard.VersionEarliestStartDate,
+                VersionLatestEndDate = standard.VersionLatestEndDate,
+                VersionLatestStartDate = standard.VersionLatestStartDate,
+                VersionMajor = standard.VersionMajor,
+                VersionMinor = standard.VersionMinor
+            };
+
+        }
+
+        public static bool QualificationsContainsEpaoMustBeApprovedText(List<Qualification> qualifications)
         {
             var keyStrings = new string[]
             {
@@ -76,13 +121,15 @@ namespace SFA.DAS.Courses.Domain.Entities
                 "EPAO must be approved by the regulator body",
             };
 
-            return Qualifications.Any(q => q.AnyAdditionalInformation.ContainsSubstringIn(keyStrings, StringComparison.OrdinalIgnoreCase));
+            return qualifications
+                .EmptyEnumerableIfNull()
+                .Any(q => q.AnyAdditionalInformation?.ContainsSubstringIn(keyStrings, StringComparison.OrdinalIgnoreCase) ?? false);
         }
 
         private static List<string> GetDuties(ImportTypes.Standard standard)
-            => standard.Duties
+            => standard.Duties.Value
                 .EmptyEnumerableIfNull()
-                .Select(duty => duty.DutyDetail)
+                .Select(duty => duty.DutyDetail?.Value)
                 .Where(dutyText => dutyText != FakeDutyText)
                 .ToList();
 
@@ -117,68 +164,82 @@ namespace SFA.DAS.Courses.Domain.Entities
             return 0;
         }
 
-        private static bool SetIsIntegratedApprenticeship(Domain.ImportTypes.Standard standard)
+        private static bool SetIsIntegratedApprenticeship(ImportTypes.Standard standard)
         {
             if (standard.Level >= 6)
             {
-                return standard.IntegratedDegree.Equals("integrated degree", StringComparison.CurrentCultureIgnoreCase);
+                return standard.IntegratedDegree?.Value?.Equals("integrated degree", StringComparison.CurrentCultureIgnoreCase) ?? false;
             }
 
-            if (standard.Level <= 5 && standard.IntegratedApprenticeship.HasValue)
+            if (standard.Level <= 5 && (standard.IntegratedApprenticeship?.Value.HasValue ?? false))
             {
-                return standard.IntegratedApprenticeship.Value;
+                return standard.IntegratedApprenticeship.Value.Value;
             }
 
             return false;
         }
 
-        private static IEnumerable<Guid> GetMappedSkillsList(Domain.ImportTypes.Standard standard)
+        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard)
         {
-            return standard.Duties
-                .Where(d => d.IsThisACoreDuty.Equals(1) && d.MappedSkills != null)
-                .SelectMany(d => d.MappedSkills)
-                .Select(s => s);
-        }
+            var mappedSkillsList = standard.Duties.Value
+                .EmptyEnumerableIfNull()
+                .Where(d => (d.IsThisACoreDuty?.Value.Equals(1) ?? false) && d.MappedSkills?.Value != null)
+                .SelectMany(d => d.MappedSkills.Value);
 
-        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard, IEnumerable<Guid> mappedSkillsList)
-        {
-            return standard.Skills
-                .Where(s => mappedSkillsList.Contains(s.SkillId))
-                .Select(s => s.Detail).ToList();
+            return standard.Skills.Value
+                .EmptyEnumerableIfNull()
+                .Where(s => mappedSkillsList.Contains(s.SkillId.Value))
+                .Select(s => s.Detail.Value).ToList();
         }
 
         private static bool IsEPAChanged(ImportTypes.Standard standard)
         {
-            if (string.IsNullOrWhiteSpace(standard.Change)) return false;
+            if (string.IsNullOrWhiteSpace(standard.Change.Value)) return false;
 
-            return standard.Change.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
+            return standard.Change.Value.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
         }
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
-            return standard.CoreAndOptions
+            var standardOptions = standard.CoreAndOptions.Value
                 ? CreateStructuredOptionsListWithDutyMapping(standard)
                 : CreateStructuredOptionsListWithoutDutyMapping(standard);
+
+            if (standardOptions.Any())
+            {
+                return standardOptions;
+            }
+            else if (standard.OptionsUnstructuredTemplate?.Value?.Any() ?? false)
+            {
+                return standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+            }
+            
+            return [];
         }
 
         private static List<StandardOption> CreateStructuredOptionsListWithDutyMapping(ImportTypes.Standard standard)
         {
-            var options = standard.Options.EmptyEnumerableIfNull();
-            var coreDuties = standard.Duties.Where(x => x.IsThisACoreDuty == 1).ToList();
+            var options = (standard.Options?.Value)
+                .EmptyEnumerableIfNull();
+
+            var coreDuties = standard.Duties.Value
+                .EmptyEnumerableIfNull()
+                .Where(x => x.IsThisACoreDuty?.Value == 1)
+                .ToList();
 
             return options.Select(MapOption).ToList();
 
             StandardOption MapOption(ImportTypes.Option option)
                 => StandardOption.Create(
-                    option.OptionId,
-                    option.Title?.Trim(),
+                    option.OptionId.Value,
+                    option.Title?.Value?.Trim(),
                     MapKsbs(option));
 
             List<Ksb> MapKsbs(ImportTypes.Option option)
             {
-                var knowledge = MapDuties(option, standard.Knowledge, x => x.MappedKnowledge, x => x.KnowledgeId, x => x.Detail, Ksb.Knowledge);
-                var skills = MapDuties(option, standard.Skills, x => x.MappedSkills, x => x.SkillId, x => x.Detail, Ksb.Skill);
-                var behaviour = MapDuties(option, standard.Behaviours, x => x.MappedBehaviour, x => x.BehaviourId, x => x.Detail, Ksb.Behaviour);
+                var knowledge = MapDuties(option, standard.Knowledges.Value, x => x.MappedKnowledge?.Value, x => x.KnowledgeId.Value, x => x.Detail.Value, Ksb.Knowledge);
+                var skills = MapDuties(option, standard.Skills.Value, x => x.MappedSkills?.Value, x => x.SkillId.Value, x => x.Detail.Value, Ksb.Skill);
+                var behaviour = MapDuties(option, standard.Behaviours.Value, x => x.MappedBehaviour?.Value, x => x.BehaviourId.Value, x => x.Detail.Value, Ksb.Behaviour);
 
                 return knowledge.Union(skills).Union(behaviour).DistinctBy(x => x.Key).ToList();
             }
@@ -217,13 +278,13 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Func<Tksb, Guid> selectId)
             {
                 var dutiesForAllOptions = options.Select(x =>
-                    (x.OptionId, standard.Duties.Where(y => y.MappedOptions?.Contains(x.OptionId) == true)))
+                    (x.OptionId, standard.Duties?.Value.Where(y => y.MappedOptions?.Value?.Contains(x.OptionId.Value) == true)))
                     .ToList();
 
                 return sequence
                     .EmptyEnumerableIfNull()
                     .Select((x, i) => (x, i))
-                    .Where(y => dutiesForAllOptions.Where(z => z.OptionId == option.OptionId)
+                    .Where(y => dutiesForAllOptions.Where(z => z.OptionId.Value == option.OptionId.Value)
                         .SelectMany(z => z.Item2)
                         .SelectMany(z => innerSequence(z).EmptyEnumerableIfNull())
                         .Contains(selectId(y.x)));
@@ -235,24 +296,24 @@ namespace SFA.DAS.Courses.Domain.Entities
             return new List<StandardOption>
             {
                 StandardOption.CreateCorePseudoOption(
-                    standard.Knowledge.Select((x,i) => Ksb.Knowledge(x.KnowledgeId, i + 1, x.Detail))
-                        .Union(standard.Skills.Select((x,i) => Ksb.Skill(x.SkillId, i + 1, x.Detail)))
-                        .Union(standard.Behaviours.Select((x,i) => Ksb.Behaviour(x.BehaviourId, i + 1, x.Detail)))
+                    standard.Knowledges.Value?.Select((x,i) => Ksb.Knowledge(x.KnowledgeId.Value, i + 1, x.Detail.Value))
+                        .Union(standard.Skills.Value?.Select((x,i) => Ksb.Skill(x.SkillId.Value, i + 1, x.Detail.Value)))
+                        .Union(standard.Behaviours.Value?.Select((x,i) => Ksb.Behaviour(x.BehaviourId.Value, i + 1, x.Detail.Value)))
                         .DistinctBy(x => x.Key).ToList()
                 )
             };
         }
 
-        private static bool GetIsRegulated(Domain.ImportTypes.Standard standard, string name)
+        private static bool GetIsRegulated(ImportTypes.Standard standard, string name)
         {
-            if (standard.RegulationDetail == null || !standard.Regulated || string.IsNullOrEmpty(standard.RegulatedBody))
+            if (standard.RegulationDetail.Value == null || !standard.Regulated.Value || string.IsNullOrEmpty(standard.RegulatedBody.Value))
             {
                 return false;
             }
 
-            if (standard.RegulationDetail.Any(r => r.Name == name))
+            if (standard.RegulationDetail.Value.Any(r => r.Name == name))
             {
-                return standard.RegulationDetail.First(r => r.Name == name).Approved;
+                return standard.RegulationDetail.Value.First(r => r.Name == name).Approved;
             }
 
             return false;

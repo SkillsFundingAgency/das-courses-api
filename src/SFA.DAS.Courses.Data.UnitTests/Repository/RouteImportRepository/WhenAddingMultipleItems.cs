@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.RouteImportRepository
             
             //Assert
             _coursesDataContext.Verify(x=>x.RoutesImport.AddRangeAsync(_routes, It.IsAny<CancellationToken>()), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

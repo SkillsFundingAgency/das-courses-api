@@ -6,7 +6,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface ISectorSubjectAreaTier2Repository
     {
-        void DeleteAll();
+        Task DeleteAll();
         Task InsertMany(IEnumerable<SectorSubjectAreaTier2> sectorSubjectAreaTier2Items);
     }
 }

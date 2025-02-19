@@ -95,9 +95,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 await Task.WhenAll(larsStandardImports, sectorSubjectAreaTier2Imports, sectorSubjectAreaTier1Imports);
 
-                _larsStandardRepository.DeleteAll();
-                _sectorSubjectAreaTier2Repository.DeleteAll();
-                _sectorSubjectAreaTier1Repository.DeleteAll();
+                await _larsStandardRepository.DeleteAll();
+                await _sectorSubjectAreaTier2Repository.DeleteAll();
+                await _sectorSubjectAreaTier1Repository.DeleteAll();
 
                 var importLarsStandardTask =
                     _larsStandardRepository.InsertMany(larsStandardImports.Result
@@ -142,7 +142,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 (standard, apprenticeshipFundingImport) => ApprenticeshipFunding.ConvertFrom(apprenticeshipFundingImport, standard.StandardUId))
                 .ToList();
 
-            _apprenticeshipFundingRepository.DeleteAll();
+            await _apprenticeshipFundingRepository.DeleteAll();
 
             var importApprenticeshipFundingResult = _apprenticeshipFundingRepository.InsertMany(fundings);
 

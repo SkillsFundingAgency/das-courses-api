@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
@@ -36,14 +38,14 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingImportR
         }
 
         [Test]
-        public void Then_The_ApprenticeshipFundingImport_Items_Are_Removed()
+        public async Task Then_The_ApprenticeshipFundingImport_Items_Are_Removed()
         {
             //Act
-            _apprenticeshipFundingImportRepository.DeleteAll();
+            await _apprenticeshipFundingImportRepository.DeleteAll();
             
             //Assert
             _coursesDataContext.Verify(x=>x.ApprenticeshipFundingImport.RemoveRange(_coursesDataContext.Object.ApprenticeshipFundingImport), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

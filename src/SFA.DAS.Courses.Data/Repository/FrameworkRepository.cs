@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +19,13 @@ namespace SFA.DAS.Courses.Data.Repository
         public async Task InsertMany(IEnumerable<Framework> frameworks)
         {
             await _coursesDataContext.Frameworks.AddRangeAsync(frameworks);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.Frameworks.RemoveRange(_coursesDataContext.Frameworks);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task<Framework> Get(string id)

@@ -42,7 +42,10 @@ namespace SFA.DAS.Courses.Domain.Entities
         public List<string> CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get; set; }
         public List<StandardOption> Options { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public bool EPAChanged { get; set; }
+        public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
+        public DateTime? PublishDate { get; set; }
         public bool IsRegulatedForProvider { get; set; } = false;
         public bool IsRegulatedForEPAO { get; set; } = false;
     }

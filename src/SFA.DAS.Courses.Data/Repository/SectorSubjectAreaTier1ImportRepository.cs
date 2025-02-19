@@ -22,16 +22,16 @@ namespace SFA.DAS.Courses.Data.Repository
             return items;
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.SectorSubjectAreaTier1Import.RemoveRange(_coursesDataContext.SectorSubjectAreaTier1Import);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task InsertMany(IEnumerable<SectorSubjectAreaTier1Import> sectorSubjectAreaTier1Imports)
         {
             await _coursesDataContext.SectorSubjectAreaTier1Import.AddRangeAsync(sectorSubjectAreaTier1Imports);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
     }
 }

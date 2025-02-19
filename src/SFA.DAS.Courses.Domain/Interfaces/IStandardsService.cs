@@ -8,7 +8,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardsService
     {
-        Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<int> routeIds, IList<int> levels, OrderBy orderBy, StandardFilter filter, bool isExport);
+        Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<int> routeIds, IList<int> levels, OrderBy orderBy, StandardFilter filter, bool includeAllProperties);
         Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber);
         Task<int> Count(StandardFilter filter = StandardFilter.None);
         Task<Standard> GetLatestActiveStandard(int larsCode);

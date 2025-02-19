@@ -30,8 +30,6 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.IntegratedApprenticeship).HasColumnName("IntegratedApprenticeship").HasColumnType("bit").IsRequired();
             builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
             builder.Property(x => x.Options).HasJsonConversion();
-            builder.Property(x => x.OptionsUnstructuredTemplate).HasJsonConversion();
-            builder.Property(x => x.Qualifications).HasJsonConversion();
 
             builder.Ignore(x => x.ApprenticeshipFunding);
             builder.Ignore(x => x.LarsStandard);

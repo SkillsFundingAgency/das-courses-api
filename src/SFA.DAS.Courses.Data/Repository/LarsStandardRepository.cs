@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -17,12 +17,14 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             await _coursesDataContext.LarsStandards.AddRangeAsync(larsStandardImports);
             
-            _coursesDataContext.SaveChanges();
+            
+            await _coursesDataContext.SaveChangesAsync();
         }
-        public void DeleteAll()
+        
+        public async Task DeleteAll()
         {
             _coursesDataContext.LarsStandards.RemoveRange(_coursesDataContext.LarsStandards);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
     }
 }

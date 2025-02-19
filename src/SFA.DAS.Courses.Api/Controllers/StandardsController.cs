@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Api.Controllers
                 Levels = levels,
                 OrderBy = orderBy,
                 Filter = filter,
-                IsExport = false
+                IncludeAllProperties = false
             });
 
             var response = new GetStandardsListResponse

@@ -15,16 +15,16 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public async Task InsertMany(IEnumerable<Route> routes)
+        public async Task<int> InsertMany(IEnumerable<Route> routes)
         {
             await _coursesDataContext.Routes.AddRangeAsync(routes);
-            _coursesDataContext.SaveChanges();
+            return await _coursesDataContext.SaveChangesAsync();
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.Routes.RemoveRange(_coursesDataContext.Routes);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Route>> GetAll()

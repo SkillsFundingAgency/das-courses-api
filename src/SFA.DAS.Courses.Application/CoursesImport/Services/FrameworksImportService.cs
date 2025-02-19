@@ -113,8 +113,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 .Where(c=>c.FundingPeriods!=null)
                 .ToList();
 
-            _frameworkImportRepository.DeleteAll();
-            _frameworkFundingImportRepository.DeleteAll();
+            await _frameworkImportRepository.DeleteAll();
+            await _frameworkFundingImportRepository.DeleteAll();
 
             var frameworkFundingImport = new List<FrameworkFundingImport>();
             foreach (var framework in frameworksFromFile.ToList())
@@ -140,8 +140,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             await Task.WhenAll(frameworkImports, frameworkFundingImports);
 
             _rowsImported = frameworkImports.Result.Count() + frameworkFundingImports.Result.Count();
-            _frameworkRepository.DeleteAll();
-            _frameworkFundingRepository.DeleteAll();
+            await _frameworkRepository.DeleteAll();
+            await _frameworkFundingRepository.DeleteAll();
 
             var frameworkInsertTask = _frameworkRepository
                 .InsertMany(frameworkImports.Result.Select(c => (Domain.Entities.Framework) c).ToList());
