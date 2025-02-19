@@ -7,6 +7,7 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         public float? SearchScore { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
+        public virtual StandardApprenticeshipType StandardApprenticeshipType { get; set; }
 
         public static implicit operator Standard(StandardImport import)
         {

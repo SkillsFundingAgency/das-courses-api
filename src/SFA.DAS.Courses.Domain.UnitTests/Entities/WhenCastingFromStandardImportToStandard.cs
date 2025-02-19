@@ -12,9 +12,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [Test, RecursiveMoqAutoData]
         public void Then_Maps_The_Fields(StandardImport standardImport)
         {
-            var actual = (Standard) standardImport;
-            
-            actual.Should().BeEquivalentTo(standardImport, options=> options
+            var actual = (Standard)standardImport;
+
+            actual.Should().BeEquivalentTo(standardImport, options => options
                 .Excluding(c => c.OptionsUnstructuredTemplate)
                 .Excluding(c => c.ApprenticeshipFunding)
                 .Excluding(c => c.LarsStandard)
@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_If_Options_Do_Not_Exists_Then_OptionsUnstructuredTemplate_Are_Mapped_To_Options(StandardImport standardImport)
         {
             standardImport.Options = new List<StandardOption>();
-            
+
             var actual = (Standard)standardImport;
 
             actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standardImport.OptionsUnstructuredTemplate);
