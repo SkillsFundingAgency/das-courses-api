@@ -53,6 +53,13 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Ignore(x => x.SearchScore);
 
             builder.HasIndex(x => x.StandardUId).IsUnique();
+
+            builder
+                .HasOne(x => x.StandardApprenticeshipType)
+                .WithMany(t => t.Standards)
+                .HasForeignKey(s => s.IfateReferenceNumber)
+                .HasPrincipalKey(t => t.IfateReferenceNumber)
+                .IsRequired(false);
         }
     }
 }

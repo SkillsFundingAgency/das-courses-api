@@ -3,6 +3,7 @@
     public class Standard : StandardBase
     {
         public float? SearchScore { get; set; }
+        public virtual StandardApprenticeshipType StandardApprenticeshipType { get; set; }
 
         public static implicit operator Standard(StandardImport import)
         {
