@@ -50,7 +50,6 @@ namespace SFA.DAS.Courses.Domain.Courses
         public bool IsRegulatedForEPAO { get; set; }
         public string ApprenticeshipType { get; set; }
 
-
         private List<StandardOption> _options = new List<StandardOption>();
         public List<StandardOption> Options
         {
@@ -107,7 +106,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO,
-                ApprenticeshipType = source.StandardApprenticeshipType?.ApprenticeshipType
+                ApprenticeshipType = source.StandardApprenticeshipType?.ApprenticeshipType ?? Domain.Entities.StandardApprenticeshipType.DefaultApprenticeshipType
             };
         }
     }
