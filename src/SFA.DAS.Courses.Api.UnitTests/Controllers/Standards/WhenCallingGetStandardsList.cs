@@ -26,7 +26,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             string keyword,
             OrderBy orderBy,
             StandardFilter filter,
-            GetStandardsListResult queryResult,
+            GetStandardsListQueryResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
         {

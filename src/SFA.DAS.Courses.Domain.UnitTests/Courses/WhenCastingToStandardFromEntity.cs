@@ -59,5 +59,13 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
 
             response.ApprenticeshipType.Should().Be(source.StandardApprenticeshipType.ApprenticeshipType);
         }
+
+        [Test, RecursiveMoqAutoData]
+        public void And_ApprenticeshipType_Is_Null_Then_Maps_ApprenticeshipType_ToApprenticeship(Domain.Entities.Standard source)
+        {
+            source.StandardApprenticeshipType = null;
+            var response = (Standard)source;
+            response.ApprenticeshipType.Should().Be(Domain.Entities.StandardApprenticeshipType.DefaultApprenticeshipType);
+        }
     }
 }
