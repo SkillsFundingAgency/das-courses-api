@@ -4,12 +4,17 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SkillsFundingAgency_das-courses-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=SkillsFundingAgency_das-courses-api)
 
-## Requirements
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
 
-- .net6 and any supported IDE for DEV running.
-- *If you are not wishing to run the in memory database then*
-- SQL Server database.
-- Azure Storage Account
+## ?? Installation
+
+### Pre-Requisites
+* A clone of this repository(https://github.com/SkillsFundingAgency/das-courses-api)
+* A code editor that supports .NetCore 8 and above
+* A storage emulator like Azurite (https://learn.microsoft.com/en-us/azure/storage/common/storage-use-emulator)
+* An Azure Active Directory account with the appropriate roles as per the [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-courses-api/SFA.DAS.Courses.Api.json)
+* SQL Server database.
+
 
 ## About
 
@@ -27,12 +32,46 @@ You are able to run the API by doing the following:
 
 * Run the database deployment publish command to create the database ```SFA.DAS.Courses``` or create the database manually and run in the table creation scripts
 * In your Azure Storage Account, create a table called Configuration and Add the following
-```
+
 ParitionKey: LOCAL
 RowKey: SFA.DAS.Courses.Api_1.0
-Data: {"Courses":{"ConnectionString":"DBCONNECTIONSTRING"}}
+Data:
+```
+{
+	"Courses":{
+		"ConnectionString":"DBCONNECTIONSTRING"
+	},
+	"AzureAd": {
+    "tenant": "********.onmicrosoft.com",
+    "identifier": "https://********.onmicrosoft.com/******"
+  }
+}
 ```
 * Start the api project ```SFA.DAS.Courses.Api```
+
+## How It Works
+
+### Running
+
+* Open command prompt and change directory to _**/src/SFA.DAS.Courses.Api/**_
+* Run the web project _**/src/SFA.DAS.Courses.Api/SFA.DAS.Courses.Api.csproj**_
+
+MacOS
+```
+ASPNETCORE_ENVIRONMENT=Development dotnet run
+```
+Windows cmd
+```
+set ASPNETCORE_ENVIRONMENT=Development
+dotnet run
+```
+
+### Application logs
+Application logs are logged to [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) and can be viewed using [Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/overview) at https://portal.azure.com
+
+## Useful URLs
+
+### Courses Api
 
 Once started, select the `Operations V1` defintion in swagger, and execute the following endpoint
 
@@ -41,3 +80,8 @@ Once started, select the `Operations V1` defintion in swagger, and execute the f
 This will load data from IFATE, LARS and a static Frameworks data file, into the local database.
 
 Switching back to the CoursesApi defintion will then allow you to exectue the other endpoints. Note that if you are running using InMemory then you will need to load the data on each run.
+
+
+## License
+
+Licensed under the [MIT license](LICENSE)
