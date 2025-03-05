@@ -6,13 +6,15 @@ namespace SFA.DAS.Courses.Api.ApiResponses
     {
         public int Id { get ; set ; }
         public string Name { get ; set ; }
+        public bool Active { get; set ; }
 
         public static implicit operator GetRouteResponse(Route source)
         {
             return new GetRouteResponse
             {
                 Id = source.Id,
-                Name = source.Name
+                Name = source.Name,
+                Active = source.Active
             };
         }
     }

@@ -60,17 +60,20 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 new Route
                 {
                     Name = "Engineering and manufacturing",
-                    Id = 1
+                    Id = 1,
+                    Active = true
                 },
                 new Route
                 {
                     Name = "Construction",
-                    Id = 2
+                    Id = 2,
+                    Active = true
                 },
                 new Route
                 {
                     Name = "Creative and design",
-                    Id = 3
+                    Id = 3,
+                    Active = true
                 }
             };
         }

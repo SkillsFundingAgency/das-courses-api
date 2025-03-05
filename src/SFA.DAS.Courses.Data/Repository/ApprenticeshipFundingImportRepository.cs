@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
@@ -18,12 +18,12 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             await _coursesDataContext.ApprenticeshipFundingImport.AddRangeAsync(apprenticeshipFundingImports);
             
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.ApprenticeshipFundingImport.RemoveRange(_coursesDataContext.ApprenticeshipFundingImport);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ApprenticeshipFundingImport>> GetAll()

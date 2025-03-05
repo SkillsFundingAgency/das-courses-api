@@ -7,7 +7,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface ISectorSubjectAreaTier1Repository
     {
-        void DeleteAll();
+        Task DeleteAll();
         Task InsertMany(IEnumerable<SectorSubjectAreaTier1> sectorSubjectAreaTier1Items);
         Task<List<SectorSubjectAreaTier1>> GetAll(CancellationToken cancellationToken);
     }

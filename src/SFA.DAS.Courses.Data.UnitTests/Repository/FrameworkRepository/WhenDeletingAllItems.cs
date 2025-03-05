@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
@@ -36,14 +37,14 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkRepository
         }
 
         [Test]
-        public void Then_The_Frameworks_Are_Removed()
+        public async Task Then_The_Frameworks_Are_Removed()
         {
             //Act
-            _frameworkRepository.DeleteAll();
+            await _frameworkRepository.DeleteAll();
             
             //Assert
             _coursesDataContext.Verify(x=>x.Frameworks.RemoveRange(_coursesDataContext.Object.Frameworks), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

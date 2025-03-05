@@ -4,6 +4,7 @@
     <ProjectGuid>9817A4FE-9D15-4C14-B798-D5717E70CCC1</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />
   </ItemGroup>
   <ItemGroup>

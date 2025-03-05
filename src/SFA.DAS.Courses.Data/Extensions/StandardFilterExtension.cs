@@ -79,15 +79,16 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             var filteredStandards = standards
                 .HasLarsStandard()
-                .StatusIsOneOf("Approved for delivery", "Retired");
+                .StatusIsOneOf(Domain.Courses.Status.ApprovedForDelivery, Domain.Courses.Status.Retired);
 
             return filteredStandards;
         }
 
         private static IQueryable<Standard> FilterNotYetApproved(this IQueryable<Standard> standards)
         {
-            var filteredStandards = standards.Where(ls => ls.LarsCode == 0)
-                                    .StatusIsOneOf("Proposal in development", "In development");
+            var filteredStandards = standards
+                .Where(ls => ls.LarsCode == 0)
+                .StatusIsOneOf(Domain.Courses.Status.ProposalInDevelopment, Domain.Courses.Status.InDevelopment);
 
             return filteredStandards;
         }

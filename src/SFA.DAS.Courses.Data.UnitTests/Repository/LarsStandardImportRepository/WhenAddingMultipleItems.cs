@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardImportRepository
             
             //Assert
             _coursesDataContext.Verify(x=>x.LarsStandardsImport.AddRangeAsync(_larsStandardImports, It.IsAny<CancellationToken>()), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

@@ -14,7 +14,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             var actual = (Route) source;
             
             //Assert
-            actual.Should().BeEquivalentTo(source, options=> options.Excluding(c=>c.Standards));
+            actual.Should().BeEquivalentTo(source, 
+                options => options
+                    .Excluding(c=>c.Standards)
+                    .Excluding(c=>c.Active));
         }
     }
 }
