@@ -81,6 +81,26 @@ This will load data from IFATE, LARS and a static Frameworks data file, into the
 
 Switching back to the CoursesApi defintion will then allow you to exectue the other endpoints. Note that if you are running using InMemory then you will need to load the data on each run.
 
+Here are the definitions for the API endpoints in the StandardsController:
+
+GetList
+Endpoint: GET /api/courses/standards
+Description: Retrieves a list of standards based on the provided query parameters.
+
+
+Get
+Endpoint: GET /api/courses/standards/{id}
+Description: Retrieves the details of a specific standard by its ID.
+
+
+GetOptionKsbs
+Endpoint: GET /api/courses/standards/{id}/options/{option}/ksbs
+Description: Retrieves the knowledge, skills, and behaviors (KSBs) for a specific option of a standard.
+
+GetStandardsByIFateReferenceNumber
+Endpoint: GET /api/courses/standards/versions/{iFateReferenceNumber}
+Description: Retrieves a list of standards by their iFate reference number.
+
 
 ## License
 
