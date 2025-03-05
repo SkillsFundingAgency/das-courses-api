@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
         [Test, MoqAutoData]
         public async Task Then_Sends_GetStandardsListQuery_To_Mediator(
             [Frozen] Mock<IMediator> mockMediator,
-            GetStandardsListResult queryResult,
+            GetStandardsListQueryResult queryResult,
             [Greedy] ExportController controller)
         {
             mockMediator.Setup(mediator => mediator.Send(

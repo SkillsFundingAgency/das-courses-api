@@ -7,7 +7,7 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
 {
-    public class GetStandardsListQueryHandler : IRequestHandler<GetStandardsListQuery, GetStandardsListResult>
+    public class GetStandardsListQueryHandler : IRequestHandler<GetStandardsListQuery, GetStandardsListQueryResult>
     {
         private readonly ILogger<GetStandardsListQueryHandler> _logger;
         private readonly IStandardsService _standardsService;
@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
             _standardsService = standardsService;
         }
 
-        public async Task<GetStandardsListResult> Handle(GetStandardsListQuery request, CancellationToken cancellationToken)
+        public async Task<GetStandardsListQueryResult> Handle(GetStandardsListQuery request, CancellationToken cancellationToken)
         {
             var standards = (await _standardsService.GetStandardsList(request.Keyword, request.RouteIds, request.Levels, request.OrderBy, request.Filter, request.IncludeAllProperties)).ToList();
             var total = await _standardsService.Count(request.Filter);
@@ -30,7 +30,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
                 _logger.LogInformation($"Zero results for searching by keyword [{request.Keyword}]", new {request.Keyword});
             }
 
-            return new GetStandardsListResult
+            return new GetStandardsListQueryResult
             {
                 Standards = standards,
                 Total = total,

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MediatR;
 using SFA.DAS.Courses.Domain.Search;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
 {
-    public class GetStandardsListQuery : IRequest<GetStandardsListResult>
+    public class GetStandardsListQuery : IRequest<GetStandardsListQueryResult>
     {
         public string Keyword { get; set; }
         public IList<int> RouteIds { get; set; } = new List<int>();
