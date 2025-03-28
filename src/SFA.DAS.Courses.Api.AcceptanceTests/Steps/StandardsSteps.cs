@@ -204,6 +204,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.VersionMinor)
                 .Excluding(c => c.IsRegulatedForProvider)
                 .Excluding(c => c.IsRegulatedForEPAO)
-                .Excluding(c => c.StandardApprenticeshipType);
+                .Excluding(c => c.ApprenticeshipType);
     }
 }

@@ -92,7 +92,8 @@ public class FoundationImportService(
                 IsRegulatedForEPAO = true,
                 OptionsUnstructuredTemplate = [],
                 EPAChanged = false,
-                StandardUId = c.StandardUId
+                StandardUId = c.StandardUId,
+                ApprenticeshipType = "Foundation"
             }));
 
         }

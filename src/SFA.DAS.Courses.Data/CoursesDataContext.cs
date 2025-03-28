@@ -113,7 +113,6 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1());
             modelBuilder.ApplyConfiguration(new Route());
             modelBuilder.ApplyConfiguration(new RouteImport());
-            modelBuilder.ApplyConfiguration(new StandardApprenticeshipTypeConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

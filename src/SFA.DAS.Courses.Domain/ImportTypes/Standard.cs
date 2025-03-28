@@ -109,6 +109,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonIgnore]
         public int RouteCode { get; set; }
+        
+        [JsonIgnore]
+        public string ApprenticeshipType { get; set; }
 
         [JsonProperty("change")]
         public string Change { get; set; }

@@ -129,8 +129,7 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Include(c => c.LarsStandard)
                 .ThenInclude(l => l.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
-                .ThenInclude(l => l.SectorSubjectArea1)
-                .Include(s => s.StandardApprenticeshipType);
+                .ThenInclude(l => l.SectorSubjectArea1);
             return query;
         }
 
@@ -145,7 +144,6 @@ namespace SFA.DAS.Courses.Data.Repository
                 .ThenInclude(c => c.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
                 .ThenInclude(c => c.SectorSubjectArea1)
-                .Include(s => s.StandardApprenticeshipType)
                 .Select(c => new Standard
                 {
                     Status = c.Status,
@@ -174,7 +172,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     OverviewOfRole = c.OverviewOfRole,
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
-                    StandardApprenticeshipType = c.StandardApprenticeshipType
+                    ApprenticeshipType = c.ApprenticeshipType
                 });
 
             return query;

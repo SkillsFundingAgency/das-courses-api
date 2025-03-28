@@ -106,7 +106,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO,
-                ApprenticeshipType = source.StandardApprenticeshipType?.ApprenticeshipType ?? Domain.Entities.StandardApprenticeshipType.DefaultApprenticeshipType
+                ApprenticeshipType = source.ApprenticeshipType
             };
         }
     }

@@ -64,7 +64,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EPAChanged = IsEPAChanged(standard),
                 Qualifications = standard.Qualifications,
                 IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
-                IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType)
+                IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType),
+                ApprenticeshipType = "Apprenticeship"
             };
         }
 

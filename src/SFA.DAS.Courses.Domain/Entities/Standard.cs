@@ -7,8 +7,6 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         public float? SearchScore { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
-        public virtual StandardApprenticeshipType StandardApprenticeshipType { get; set; }
-
         public static implicit operator Standard(StandardImport import)
         {
             return new Standard
@@ -54,8 +52,11 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionMinor = import.VersionMinor,
                 EpaoMustBeApprovedByRegulatorBody = import.QualificationsContainsEpaoMustBeApprovedText(),
                 IsRegulatedForProvider = import.IsRegulatedForProvider,
-                IsRegulatedForEPAO = import.IsRegulatedForEPAO
+                IsRegulatedForEPAO = import.IsRegulatedForEPAO,
+                ApprenticeshipType = import.ApprenticeshipType
             };
         }
+
+        
     }
 }
