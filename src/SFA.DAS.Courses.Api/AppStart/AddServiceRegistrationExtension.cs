@@ -55,6 +55,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ISectorSubjectAreaTier1Repository, SectorSubjectAreaTier1Repository>();
             services.AddTransient<IRouteRepository, RouteRepository>();
             services.AddTransient<IRouteImportRepository, RouteImportRepository>();
+            services.AddTransient<IFoundationImportService, FoundationImportService>();
         }
     }
 }
