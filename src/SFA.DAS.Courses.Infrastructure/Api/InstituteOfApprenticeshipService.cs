@@ -31,7 +31,11 @@ namespace SFA.DAS.Courses.Infrastructure.Api
 
             var settings = new JsonSerializerSettings
             {
-                ContractResolver = new SettableContractResolver()
+                ContractResolver = new SettableContractResolver(),
+                Converters =
+                [
+                    new InitializeSettablesJsonConverter()
+                ]
             };
 
             return JsonConvert.DeserializeObject<List<Standard>>(jsonResponse, settings);

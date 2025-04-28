@@ -7,6 +7,7 @@ using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 
 namespace SFA.DAS.Courses.Domain.ImportTypes
 {
+    [InitializeSettables]
     public class Standard
     {
         [JsonProperty("approvedForDelivery")]
