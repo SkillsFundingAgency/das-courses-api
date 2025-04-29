@@ -97,7 +97,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 if (allMessages.Any())
                 {
-                    var lastSuccessfulImport = await LastSuccessfullImport();
+                    var lastSuccessfulImport = await LastSuccessfullImport() ?? DateTime.UtcNow;
                     await _slackNotificationService.UploadFile(
                         allMessages,
                         $"IfATE_Validation_Results_{DateTime.Now.ToFileTimeUtc()}.txt",
@@ -403,10 +403,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             await _auditRepository.Insert(auditRecord);
         }
 
-        private async Task<DateTime> LastSuccessfullImport()
+        private async Task<DateTime?> LastSuccessfullImport()
         {
             var audit = await _auditRepository.GetLastImportByType(ImportType.IFATEImport);
-            return audit.TimeFinished;
+            return audit?.TimeFinished;
         }
     }
 }
