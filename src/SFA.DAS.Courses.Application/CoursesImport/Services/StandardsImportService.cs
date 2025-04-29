@@ -46,7 +46,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
         public async Task<bool> ImportDataIntoStaging()
         {
-            var dataImportedIntoStaging = false;
+            var dataSuccessfullyStaged = false;
 
             try
             {
@@ -83,7 +83,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                         await ImportRouteDataIntoStaging(routeImports, validStandardImports);
                         await ImportStandardDataIntoStaging(validStandardImports);
 
-                        dataImportedIntoStaging = true;
+                        dataSuccessfullyStaged = true;
                     }
                 }
 
@@ -108,10 +108,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
             catch (Exception e)
             {
-                throw new ImportStandardsException($"{nameof(ImportDataIntoStaging)} - error whilst importing data into staging.", e);
+                _logger.LogError(e, "{MethodName} - error whilst importing data into staging", nameof(ImportDataIntoStaging));
+                dataSuccessfullyStaged = false;
             }
 
-            return dataImportedIntoStaging;
+            return dataSuccessfullyStaged;
         }
 
         public async Task ImportStandardDataIntoStaging(Dictionary<string, List<StandardImport>> standardImports)
