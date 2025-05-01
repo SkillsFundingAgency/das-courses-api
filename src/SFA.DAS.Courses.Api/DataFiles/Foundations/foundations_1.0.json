@@ -1,0 +1,70 @@
+[
+  {
+    "standardUId": "ST1391_1.2",
+    "ifateReferenceNumber": "ST1391",
+    "larsCode": 1391,
+    "status": "Approved for delivery",
+    "searchScore": null,
+    "title": "Assistant Electrician",
+    "level": 2,
+    "coronationEmblem": false,
+    "version": "1.2",
+    "overviewOfRole": "Foundation apprenticeship for your start to a career as a electrician",
+    "keywords": "electrician|foundation",
+    "route": "Health and science",
+    "routeCode": 12,
+    "assessmentPlanUrl": "https://instituteforapprenticeships.org/media/ylxmjitn/st1391_foundation_electrician_epa_for-publication_22062023.pdf",
+    "trailBlazerContact": "foundation@skillsforhealth.org.uk",
+    "typicalJobTitles": "Electrician",
+    "skills": [],
+    "ksbs": [],
+    "standardPageUrl": "https://instituteforapprenticeships.org/apprenticeship-standards/st1391-v1-2",
+    "integratedDegree": "",
+    "sectorSubjectAreaTier2": 4.1,
+    "sectorSubjectAreaTier2Description": "Engineering",
+    "sectorSubjectAreaTier1": 4,
+    "sectorSubjectAreaTier1Description": "Engineering and Manufacturing Technologies",
+    "apprenticeshipFunding": 
+      {
+        "maxEmployerLevyCap": 12000,
+        "effectiveTo": null,
+        "effectiveFrom": "2018-12-07T00:00:00",
+        "duration": 9
+      }
+    ,
+    "standardDates": {
+      "lastDateStarts": null,
+      "effectiveTo": null,
+      "effectiveFrom": "2018-12-07T00:00:00"
+    },
+    "versionDetail": {
+      "earliestStartDate": "2023-09-01T00:00:00",
+      "latestStartDate": null,
+      "latestEndDate": null,
+      "approvedForDelivery": "2018-12-07T00:00:00",
+      "proposedTypicalDuration": 9,
+      "proposedMaxFunding": 12000
+    },
+    "eqaProvider": {
+      "name": "Office for Students",
+      "contactName": "",
+      "contactEmail": "apprenticeshipEQA@officeforstudents.org.uk",
+      "webLink": "https://www.officeforstudents.org.uk/"
+    },
+    "otherBodyApprovalRequired": true,
+    "approvalBody": "Health and Care Professions Council",
+    "duties": [],
+    "coreAndOptions": false,
+    "coreDuties": [],
+    "integratedApprenticeship": true,
+    "options": [],
+    "sectorCode": 46,
+    "epaChanged": false,
+    "versionMajor": 1,
+    "versionMinor": 2,
+    "epaoMustBeApprovedByRegulatorBody": false,
+    "isRegulatedForProvider": true,
+    "isRegulatedForEPAO": true,
+    "apprenticeshipType": "Foundation"
+  }
+]

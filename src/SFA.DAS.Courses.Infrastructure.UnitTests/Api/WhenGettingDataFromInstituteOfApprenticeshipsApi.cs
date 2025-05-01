@@ -34,6 +34,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             //Assert
             standards.Should().BeEquivalentTo(importStandards, options => options
                 .Excluding(c=>c.RouteCode)
+                .Excluding(c=>c.ApprenticeshipType)
             );
         }
         

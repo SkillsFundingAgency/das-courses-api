@@ -44,6 +44,7 @@
     [Qualifications] NVARCHAR(MAX) NULL,
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0, 
     [IsRegulatedForEPAO] BIT NOT NULL DEFAULT 0, 
+    [ApprenticeshipType] varchar(150) null
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO

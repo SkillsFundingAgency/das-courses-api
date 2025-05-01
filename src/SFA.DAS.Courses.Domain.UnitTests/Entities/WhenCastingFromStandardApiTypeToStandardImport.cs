@@ -40,9 +40,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.IntegratedApprenticeship)
                 .Excluding(c => c.RegulationDetail)
                 .Excluding(c => c.Regulated)
+                .Excluding(c => c.ApprenticeshipType)
             );
 
             actual.LarsCode.Should().Be(standard.LarsCode);
+            actual.ApprenticeshipType.Should().Be("Apprenticeship");
             actual.StandardPageUrl.Should().Be(standard.StandardPageUrl.AbsoluteUri);
             actual.TypicalJobTitles.Should().Be(string.Join("|", standard.TypicalJobTitles));
             actual.EqaProviderWebLink.Should().Be(standard.EqaProvider.WebLink);
