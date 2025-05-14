@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
@@ -20,9 +21,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly IImportAuditRepository _auditRepository;
         private readonly IRouteRepository _routeRepository;
         private readonly IRouteImportRepository _routeImportRepository;
-        private readonly ILogger<StandardsImportService> _logger;
 
         private readonly ISlackNotificationService _slackNotificationService;
+        private readonly ILogger<StandardsImportService> _logger;
+
+        private static readonly SemaphoreSlim _semaphoreImport = new SemaphoreSlim(1, 1);
 
         public StandardsImportService(
             IInstituteOfApprenticeshipService instituteOfApprenticeshipService,
@@ -48,68 +51,79 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             var dataSuccessfullyStaged = false;
 
-            try
+            if (await _semaphoreImport.WaitAsync(0))
             {
-                _logger.LogInformation("{MethodName} - starting", nameof(ImportDataIntoStaging));
-
-                var importedStandards = RemoveIndevelopmentVersions(await _instituteOfApprenticeshipService.GetStandards());
-
-                _logger.LogInformation("{MethodName} - Retrieved {StandardsCount} standards from API", nameof(ImportDataIntoStaging), importedStandards.Count);
-
-                // if there are any missing fields in any standard or 
-                var validationFailures = new Dictionary<string, ValidationFailures>();
-                ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.Standard>> { { "All", importedStandards } }, 
-                    validationFailures, [new RequiredFieldsPresentValidator(), new ReferenceNumberFormatValidator(), new VersionFormatValidator()]);
-
-                var hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
-                if (!hasValidationErrors)
+                try
                 {
-                    var currentRoutes = await _routeRepository.GetAll();
-                    var currentStandards = await _standardRepository.GetStandards();
+                    _logger.LogInformation("{MethodName} - starting", nameof(ImportDataIntoStaging));
 
-                    var routeImports = await PrepareRouteImports(GetDistinctRoutes(importedStandards));
-                    var groupedImportedStandards = GroupImportedStandards(importedStandards, routeImports);
+                    var importedStandards = RemoveIndevelopmentVersions(await _instituteOfApprenticeshipService.GetStandards());
 
-                    var validStandardImports = IndividuallyValidateStandardGroups(groupedImportedStandards, currentStandards, currentRoutes, validationFailures);
-                    validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
+                    _logger.LogInformation("{MethodName} - Retrieved {StandardsCount} standards from API", nameof(ImportDataIntoStaging), importedStandards.Count);
 
-                    // cross validation must include the retained standards after individual validation
-                    validStandardImports = CrossValidateStandardGroups(validStandardImports, validationFailures);
-                    validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
+                    // if there are any missing fields in any standard or 
+                    var validationFailures = new Dictionary<string, ValidationFailures>();
+                    ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.Standard>> { { "All", importedStandards } },
+                        validationFailures, [new RequiredFieldsPresentValidator(), new ReferenceNumberFormatValidator(), new VersionFormatValidator()]);
 
-                    hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
+                    var hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
                     if (!hasValidationErrors)
                     {
-                        await ImportRouteDataIntoStaging(routeImports, validStandardImports);
-                        await ImportStandardDataIntoStaging(validStandardImports);
+                        var currentRoutes = await _routeRepository.GetAll();
+                        var currentStandards = await _standardRepository.GetStandards();
 
-                        dataSuccessfullyStaged = true;
+                        var routeImports = await PrepareRouteImports(GetDistinctRoutes(importedStandards));
+                        var groupedImportedStandards = GroupImportedStandards(importedStandards, routeImports);
+
+                        var validStandardImports = IndividuallyValidateStandardGroups(groupedImportedStandards, currentStandards, currentRoutes, validationFailures);
+                        validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
+
+                        // cross validation must include the retained standards after individual validation
+                        validStandardImports = CrossValidateStandardGroups(validStandardImports, validationFailures);
+                        validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
+
+                        hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
+                        if (!hasValidationErrors)
+                        {
+                            await ImportRouteDataIntoStaging(routeImports, validStandardImports);
+                            await ImportStandardDataIntoStaging(validStandardImports);
+
+                            dataSuccessfullyStaged = true;
+                        }
                     }
+
+                    // if there were any validation issues then report them via the slack notification
+                    var sortedKeys = validationFailures.Keys.OrderBy(k => k).ToList();
+                    var allMessages = sortedKeys
+                        .SelectMany(key => validationFailures[key].Errors.Select(error => error))
+                        .Concat(sortedKeys.SelectMany(key => validationFailures[key].StandardErrors.Select(standardError => standardError)))
+                        .Concat(sortedKeys.SelectMany(key => validationFailures[key].Warnings.Select(warning => warning)))
+                        .ToList();
+
+                    if (allMessages.Any())
+                    {
+                        var lastSuccessfulImport = await LastSuccessfullImport() ?? DateTime.UtcNow;
+                        await _slackNotificationService.UploadFile(
+                            allMessages,
+                            $"IfATE_Validation_Results_{DateTime.Now.ToFileTimeUtc()}.txt",
+                            $"{_slackNotificationService.FormattedUser()} The standard import from IfATE failed validation, the last successfull run was {(DateTime.UtcNow - lastSuccessfulImport).Days} days ago.");
+                    }
+
+                    _logger.LogInformation("{MethodName} - finished", nameof(ImportDataIntoStaging));
                 }
-
-                // if there were any validation issues then report them via the slack notification
-                var sortedKeys = validationFailures.Keys.OrderBy(k => k).ToList();
-                var allMessages = sortedKeys
-                    .SelectMany(key => validationFailures[key].Errors.Select(error => error))
-                    .Concat(sortedKeys.SelectMany(key => validationFailures[key].StandardErrors.Select(standardError => standardError)))
-                    .Concat(sortedKeys.SelectMany(key => validationFailures[key].Warnings.Select(warning => warning)))
-                    .ToList();
-
-                if (allMessages.Any())
+                catch (Exception e)
                 {
-                    var lastSuccessfulImport = await LastSuccessfullImport() ?? DateTime.UtcNow;
-                    await _slackNotificationService.UploadFile(
-                        allMessages,
-                        $"IfATE_Validation_Results_{DateTime.Now.ToFileTimeUtc()}.txt",
-                        $"{_slackNotificationService.FormattedUser()} The standard import from IfATE failed validation, the last successfull run was {(DateTime.UtcNow - lastSuccessfulImport).Days} days ago.");
+                    _logger.LogError(e, "{MethodName} - error whilst importing data into staging", nameof(ImportDataIntoStaging));
+                    dataSuccessfullyStaged = false;
                 }
-                
-                _logger.LogInformation("{MethodName} - finished", nameof(ImportDataIntoStaging));
+                finally
+                {
+                    _semaphoreImport.Release();
+                }
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e, "{MethodName} - error whilst importing data into staging", nameof(ImportDataIntoStaging));
-                dataSuccessfullyStaged = false;
+                _logger.LogInformation("{MethodName} - importing data into staging is already running", nameof(ImportDataIntoStaging));
             }
 
             return dataSuccessfullyStaged;
