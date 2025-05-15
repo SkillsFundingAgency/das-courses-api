@@ -6,7 +6,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     public interface ISlackNotificationService
     {
         Task UploadFile(List<string> content, string fileName, string message);
-        string FormattedUser();
+        string FormattedTag();
 
     }
 }
