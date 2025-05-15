@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             {
                 BotUserOAuthToken = "test-token",
                 Channel = "test-channel",
-                User = "test-user"
+                User = "@test-user"
             });
         }
 
@@ -63,7 +63,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             var sut = new SlackNotificationService(_config, httpClient.Object);
 
             // Act
-            var result = sut.FormattedUser();
+            var result = sut.FormattedTag();
 
             // Assert
             result.Should().Be("<@test-user>");

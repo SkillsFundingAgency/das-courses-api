@@ -111,9 +111,9 @@ namespace SFA.DAS.Courses.Infrastructure.Api
             }
         }
 
-        public string FormattedUser()
+        public string FormattedTag()
         {
-            return $"<@{_user}>";
+            return $"<{_user}>";
         }
     }
 }
