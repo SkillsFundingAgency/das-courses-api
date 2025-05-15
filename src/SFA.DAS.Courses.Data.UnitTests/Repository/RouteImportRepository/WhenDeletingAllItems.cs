@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
@@ -37,14 +38,14 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.RouteImportRepository
         }
 
         [Test]
-        public void Then_The_RoutesImport_Items_Are_Removed()
+        public async Task Then_The_RoutesImport_Items_Are_Removed()
         {
             //Act
-            _routeImportRepository.DeleteAll();
+            await _routeImportRepository.DeleteAll();
             
             //Assert
             _coursesDataContext.Verify(x=>x.RoutesImport.RemoveRange(_coursesDataContext.Object.RoutesImport), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

@@ -30,9 +30,9 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             IList<int> levels,
             OrderBy orderBy,
             StandardFilter filter,
-            bool isExport)
+            bool includeAllProperties)
         {
-            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, isExport);
+            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties);
 
             if (!string.IsNullOrEmpty(keyword))
             {

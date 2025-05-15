@@ -18,10 +18,10 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.SectorSubjectAreaTier1.RemoveRange(_coursesDataContext.SectorSubjectAreaTier1);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task<List<SectorSubjectAreaTier1>> GetAll(CancellationToken cancellationToken)
@@ -30,8 +30,7 @@ namespace SFA.DAS.Courses.Data.Repository
         public async Task InsertMany(IEnumerable<SectorSubjectAreaTier1> sectorSubjectAreaTier1Items)
         {
             await _coursesDataContext.SectorSubjectAreaTier1.AddRangeAsync(sectorSubjectAreaTier1Items);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
-
     }
 }

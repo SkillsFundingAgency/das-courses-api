@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 Content = new StringContent(JsonConvert.SerializeObject(qualificationItemList)),
                 StatusCode = HttpStatusCode.Accepted
             };
-            var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri($"{Constants.QualificationSectorSubjectAreaUrl}entries/"));
+            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri($"{Constants.QualificationSectorSubjectAreaUrl}entries/"));
             var client = new HttpClient(httpMessageHandler.Object);
             var apprenticeshipService = new QualificationSectorSubjectAreaService(client);
             
@@ -60,7 +60,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 Content = new StringContent(JsonConvert.SerializeObject(qualificationItem)),
                 StatusCode = HttpStatusCode.Accepted
             };
-            var httpMessageHandler = MessageHandler.SetupMessageHandlerMock(response, new Uri($"{Constants.QualificationSectorSubjectAreaUrl}items/{itemHash}"));
+            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri($"{Constants.QualificationSectorSubjectAreaUrl}items/{itemHash}"));
             var client = new HttpClient(httpMessageHandler.Object);
             var apprenticeshipService = new QualificationSectorSubjectAreaService(client);
             

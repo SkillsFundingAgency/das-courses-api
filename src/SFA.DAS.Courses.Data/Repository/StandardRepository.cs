@@ -40,18 +40,16 @@ namespace SFA.DAS.Courses.Data.Repository
             return count;
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.Standards.RemoveRange(_coursesDataContext.Standards);
-
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
-        public async Task InsertMany(IEnumerable<Standard> standards)
+        public async Task<int> InsertMany(IEnumerable<Standard> standards)
         {
             await _coursesDataContext.Standards.AddRangeAsync(standards);
-
-            _coursesDataContext.SaveChanges();
+            return await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber)
@@ -88,9 +86,14 @@ namespace SFA.DAS.Courses.Data.Repository
             return standard;
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool isExport)
+        public async Task<IEnumerable<Standard>> GetStandards()
         {
-            var standards = (isExport
+            return await GetStandards(new List<int>(), new List<int>(), StandardFilter.None, true);
+        }
+
+        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties)
+        {
+            var standards = (includeAllProperties
                 ? GetFullBaseStandardQuery()
                 : GetBaseStandardQuery())
                 .FilterStandards(filter);
@@ -179,6 +182,5 @@ namespace SFA.DAS.Courses.Data.Repository
 
             return query;
         }
-
     }
 }

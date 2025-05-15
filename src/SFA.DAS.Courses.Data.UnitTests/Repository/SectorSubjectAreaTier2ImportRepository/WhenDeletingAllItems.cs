@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -36,14 +36,14 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.SectorSubjectAreaTier2Import
         }
 
         [Test]
-        public void Then_The_SectorSubjectAreaTier2Import_Items_Are_Removed()
+        public async Task Then_The_SectorSubjectAreaTier2Import_Items_Are_Removed()
         {
             //Act
-            _sectorSubjectAreaTier2ImportRepository.DeleteAll();
+            await _sectorSubjectAreaTier2ImportRepository.DeleteAll();
             
             //Assert
             _coursesDataContext.Verify(x=>x.SectorSubjectAreaTier2Import.RemoveRange(_coursesDataContext.Object.SectorSubjectAreaTier2Import), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

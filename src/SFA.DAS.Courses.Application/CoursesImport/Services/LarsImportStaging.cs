@@ -55,7 +55,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             var sectorSubjectAreaTier2Csv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(content, Constants.LarsSectorSubjectAreaTier2FileName);
             var sectorSubjectAreaTier1Csv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier1Csv>(content, Constants.LarsSectorSubjectAreaTier1FileName);
 
-            ClearStagingTables();
+            await ClearStagingTables();
 
             var larsImportTask = _larsStandardImportRepository
                 .InsertMany(standardsCsv.Select(c => (LarsStandardImport)c).ToList());
@@ -81,12 +81,12 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _logger.LogInformation("LARS Import - finished load into Import tables");
         }
 
-        private void ClearStagingTables()
+        private async Task ClearStagingTables()
         {
-            _larsStandardImportRepository.DeleteAll();
-            _apprenticeshipFundingImportRepository.DeleteAll();
-            _sectorSubjectAreaTier2ImportRepository.DeleteAll();
-            _sectorSubjectAreaTier1ImportRepository.DeleteAll();
+            await _larsStandardImportRepository.DeleteAll();
+            await _apprenticeshipFundingImportRepository.DeleteAll();
+            await _sectorSubjectAreaTier2ImportRepository.DeleteAll();
+            await _sectorSubjectAreaTier1ImportRepository.DeleteAll();
         }
     }
 }

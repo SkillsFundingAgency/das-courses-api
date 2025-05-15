@@ -5,7 +5,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardsImportService
     {
-        Task ImportDataIntoStaging();
+        Task<bool> ImportDataIntoStaging();
         Task LoadDataFromStaging(DateTime timeStarted);
     }
 }

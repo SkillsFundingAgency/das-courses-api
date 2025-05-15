@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
@@ -20,16 +20,16 @@ namespace SFA.DAS.Courses.Data.Repository
             return items;
         }
 
-        public void DeleteAll()
+        public async Task DeleteAll()
         {
             _coursesDataContext.SectorSubjectAreaTier2Import.RemoveRange(_coursesDataContext.SectorSubjectAreaTier2Import);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task InsertMany(IEnumerable<SectorSubjectAreaTier2Import> sectorSubjectAreaTier2Imports)
         {
             await _coursesDataContext.SectorSubjectAreaTier2Import.AddRangeAsync(sectorSubjectAreaTier2Imports);
-            _coursesDataContext.SaveChanges();
+            await _coursesDataContext.SaveChangesAsync();
         }
     }
 }

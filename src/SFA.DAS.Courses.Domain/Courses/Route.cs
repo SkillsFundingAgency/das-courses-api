@@ -4,13 +4,15 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool Active { get; set; }
 
         public static implicit operator Route(Domain.Entities.Route route)
         {
             return new Route
             {
                 Id = route.Id,
-                Name = route.Name
+                Name = route.Name,
+                Active = route.Active
             };
         }
     }

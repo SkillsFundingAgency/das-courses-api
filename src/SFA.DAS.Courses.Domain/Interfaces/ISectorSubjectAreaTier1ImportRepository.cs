@@ -7,7 +7,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     public interface ISectorSubjectAreaTier1ImportRepository
     {
         Task<IEnumerable<SectorSubjectAreaTier1Import>> GetAll();
-        void DeleteAll();
+        Task DeleteAll();
         Task InsertMany(IEnumerable<SectorSubjectAreaTier1Import> sectorSubjectAreaTier1Imports);
     }
 }

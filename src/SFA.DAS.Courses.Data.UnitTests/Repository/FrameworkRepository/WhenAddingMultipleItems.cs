@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,7 +45,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkRepository
             
             //Assert
             _coursesDataContext.Verify(x=>x.Frameworks.AddRangeAsync(_frameworks, It.IsAny<CancellationToken>()), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

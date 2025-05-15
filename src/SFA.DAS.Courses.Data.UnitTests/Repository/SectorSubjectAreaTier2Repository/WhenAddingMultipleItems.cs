@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.SectorSubjectAreaTier2Reposi
             
             //Assert
             _coursesDataContext.Verify(x=>x.SectorSubjectAreaTier2.AddRangeAsync(_sectorSubjectAreaTier2Items, It.IsAny<CancellationToken>()), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }
