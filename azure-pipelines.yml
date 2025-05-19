@@ -4,7 +4,7 @@ parameters:
   displayName: Add /p:BlockOnPossibleDataLoss=false argument to DACPAC deployment
   type: boolean
   default: false
-  
+
 trigger:
   batch: true
   branches:
@@ -12,14 +12,17 @@ trigger:
       - "master"
 
 variables:
-- group: Release Management Resources
-- group: RELEASE das-courses-api
 - name: SolutionBaseName
-  value: SFA.DAS.Courses.Api
+  value: SFA.DAS.Courses
 - name: BuildConfiguration
   value: release
 - name: BuildPlatform
   value: any cpu
+- group: RELEASE Management Resources
+- group: RELEASE das-courses-api
+- name: Deploy
+  value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'PullRequest'))]
+
 
 resources:
   repositories:
@@ -32,7 +35,7 @@ resources:
   - repository: das-platform-automation
     type: github
     name: SkillsFundingAgency/das-platform-automation
-    ref: refs/tags/5.1.13
+    ref: refs/tags/5.1.19
     endpoint: SkillsFundingAgency
   pipelines:
   - pipeline: das-employer-config
@@ -47,10 +50,15 @@ stages:
     parameters:
       SolutionBaseName: $(SolutionBaseName)
       BuildConfiguration: $(BuildConfiguration)
+  - template: azure-pipelines-templates/build/job/dacpac-template.yml@das-platform-building-blocks
+    parameters:
+      SolutionBaseName: $(SolutionBaseName)
+      SqlProjectPath: src/$(SolutionBaseName).Database/$(SolutionBaseName).Database.sqlproj
 
 - stage: Deploy_AT
   dependsOn: Build
-  displayName: Deploy to AT  
+  displayName: Deploy to AT
+  condition: and(succeeded(), eq(variables.Deploy, 'true'))
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
@@ -59,9 +67,9 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: AT
-      ServiceConnection: SFA-DAS-DevTest-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+      ServiceConnection: SFA-DAS-DevTest-ARM
+      OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_TEST
   dependsOn: Build
@@ -74,9 +82,9 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: TEST
-      ServiceConnection: SFA-DAS-DevTest-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+      ServiceConnection: SFA-DAS-DevTest-ARM
+      OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_TEST2
   dependsOn: Build
@@ -89,24 +97,24 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: TEST2
-      ServiceConnection: SFA-DAS-DevTest-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+      ServiceConnection: SFA-DAS-DevTest-ARM
+      OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_PP
   dependsOn: Build
   displayName: Deploy to PP
   variables:
-  - group: PREPROD Management Resources
-  - group: PREPROD Shared Resources
-  - group: PREPROD das-courses-api 
+  - group: PreProd Management Resources
+  - group: PreProd Shared Resources
+  - group: PREPROD das-courses-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: PP
-      ServiceConnection: SFA-DIG-PreProd-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
+      ServiceConnection: SFA-DIG-PreProd-ARM
+      OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_PROD
   dependsOn: Build
@@ -119,9 +127,9 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: PROD
-      ServiceConnection: SFA-DIG-Prod-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
+      ServiceConnection: SFA-DIG-Prod-ARM
+      OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_MO
   dependsOn: Build
@@ -134,9 +142,9 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: MO
-      ServiceConnection: SFA-ASM-ModelOffice-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
+      ServiceConnection: SFA-ASM-ModelOffice-ARM
+      OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_DEMO
   dependsOn: Build
@@ -149,6 +157,6 @@ stages:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: DEMO
-      ServiceConnection: SFA-DAS-DevTest-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+      ServiceConnection: SFA-DAS-DevTest-ARM
+      OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
