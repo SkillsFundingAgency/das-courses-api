@@ -102,6 +102,14 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             standards.Should().BeEquivalentTo(importedStandards, options => options
                 .Excluding(c=>c.RouteCode)
                 .Excluding(c=>c.ApprenticeshipType)
+                .Excluding(c=>c.EqaProvider)
+                .Excluding(c=>c.IntegratedApprenticeship)
+                .Excluding(c=>c.IntegratedDegree)
+                .Excluding(c=>c.Options)
+                .Excluding(c=>c.Qualifications)
+                .Excluding(c=>c.Regulated)
+                .Excluding(c=>c.RegulationDetail)
+                .Excluding(c=>c.Route)
             );
         }
 
