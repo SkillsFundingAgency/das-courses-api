@@ -61,7 +61,6 @@ public class FoundationImportService(
                 CoreDuties = c.CoreDuties,
                 IntegratedApprenticeship = c.IntegratedApprenticeship,
                 Options = [],
-                Qualifications = new List<Qualification>(),
                 RouteCode = c.RouteCode,
                 CreatedDate = DateTime.UtcNow,
                 CoronationEmblem = c.CoronationEmblem,
@@ -90,7 +89,6 @@ public class FoundationImportService(
                 VersionLatestEndDate = null,
                 IsRegulatedForProvider = c.IsRegulatedForProvider,
                 IsRegulatedForEPAO = true,
-                OptionsUnstructuredTemplate = [],
                 EPAChanged = false,
                 StandardUId = c.StandardUId,
                 ApprenticeshipType = "Foundation"

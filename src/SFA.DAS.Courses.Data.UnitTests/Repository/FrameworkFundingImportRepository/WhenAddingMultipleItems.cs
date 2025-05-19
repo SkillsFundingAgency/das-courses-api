@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -42,7 +42,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkFundingImportReposi
             
             //Assert
             _coursesDataContext.Verify(x=>x.FrameworkFundingImport.AddRangeAsync(_frameworkFundingImports, It.IsAny<CancellationToken>()), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

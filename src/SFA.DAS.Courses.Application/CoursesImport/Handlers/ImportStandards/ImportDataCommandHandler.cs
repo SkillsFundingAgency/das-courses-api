@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,17 +32,21 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             var frameworksImportTask = _frameworksImportService.ImportDataIntoStaging();
 
             await Task.WhenAll(larsImportTask, standardsImportTask, frameworksImportTask);
-
-            await _foundationImportService.ImportDataIntoStaging();
             
-            var tasks = new List<Task>();
+            await _foundationImportService.ImportDataIntoStaging();
+            var loadTasks = new List<Task>();
+            
 
             var frameworkImportResponse = frameworksImportTask.Result;
-            if (frameworkImportResponse.Success) tasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkImportResponse.LatestFile));
+            if (frameworkImportResponse.Success) loadTasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkImportResponse.LatestFile));
 
-            tasks.Add(_standardsImportService.LoadDataFromStaging(importStartTime));
+            var standardsImportResponse = standardsImportTask.Result;
+            if (standardsImportResponse) loadTasks.Add(_standardsImportService.LoadDataFromStaging(importStartTime));
 
-            await Task.WhenAll(tasks);
+            if (loadTasks.Count > 0)
+            {
+                await Task.WhenAll(loadTasks);
+            }
             
             var larsImportResponse = larsImportTask.Result;
             if (larsImportResponse.Success)  await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);

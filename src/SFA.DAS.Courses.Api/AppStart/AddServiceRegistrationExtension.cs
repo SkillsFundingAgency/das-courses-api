@@ -19,6 +19,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IIndexBuilder, CoursesIndexBuilder>();
             services.AddTransient<ISearchManager, CoursesSearchManager>();
             services.AddHttpClient<IInstituteOfApprenticeshipService, InstituteOfApprenticeshipService>();
+            services.AddHttpClient<ISlackNotificationService, SlackNotificationService>();
             services.AddTransient<IStandardsImportService, StandardsImportService>();
             services.AddTransient<IStandardsService, StandardsService>();
             services.AddTransient<IStandardsSortOrderService, StandardsSortOrderService>();

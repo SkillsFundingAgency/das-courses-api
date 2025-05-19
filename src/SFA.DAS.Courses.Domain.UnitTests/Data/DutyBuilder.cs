@@ -24,9 +24,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Data
             DutyId = Guid.NewGuid(),
             IsThisACoreDuty = 0,
             MappedOptions = _options.Select(x => x.OptionId).ToList(),
-            MappedKnowledge = _options.SelectMany(x => x.Knowledge).Select(x => x.KnowledgeId).ToList(),
-            MappedSkills = _options.SelectMany(x => x.Skills).Select(x => x.SkillId).ToList(),
-            MappedBehaviour = _options.SelectMany(x => x.Behaviours).Select(x => x.BehaviourId).ToList(),
+            MappedKnowledge = _options.SelectMany(x => x.Knowledge).Select(x => x.KnowledgeId.Value).ToList(),
+            MappedSkills = _options.SelectMany(x => x.Skills).Select(x => x.SkillId.Value).ToList(),
+            MappedBehaviour = _options.SelectMany(x => x.Behaviours).Select(x => x.BehaviourId.Value).ToList(),
         };
     }
 
@@ -57,9 +57,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Data
             DutyId = Guid.NewGuid(),
             IsThisACoreDuty = 1,
             MappedOptions = null,
-            MappedKnowledge = _knowledge.Select(x => x.KnowledgeId).ToList(),
-            MappedSkills = _skills.Select(x => x.SkillId).ToList(),
-            MappedBehaviour = _behaviours.Select(x => x.BehaviourId).ToList(),
+            MappedKnowledge = _knowledge.Select(x => x.KnowledgeId.Value).ToList(),
+            MappedSkills = _skills.Select(x => x.SkillId.Value).ToList(),
+            MappedBehaviour = _behaviours.Select(x => x.BehaviourId.Value).ToList(),
         };
     }
 }

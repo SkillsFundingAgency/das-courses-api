@@ -176,7 +176,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standard.Options.Should().BeEmpty();
         }
 
-        private EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>
+        private static EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>
             config
                 .Excluding(c => c.LarsStandard)
                 .Excluding(c => c.ApprenticeshipFunding)
@@ -202,6 +202,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 .Excluding(c => c.EPAChanged)
                 .Excluding(c => c.VersionMajor)
                 .Excluding(c => c.VersionMinor)
+                .Excluding(c => c.CreatedDate)
+                .Excluding(c => c.PublishDate)
                 .Excluding(c => c.IsRegulatedForProvider)
                 .Excluding(c => c.IsRegulatedForEPAO)
                 .Excluding(c => c.ApprenticeshipType);

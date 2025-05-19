@@ -7,7 +7,8 @@
             return new Route
             {
                 Id = source.Id,
-                Name = source.Name
+                Name = source.Name,
+                Active = source.Active
             };
         }
     }

@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingReposit
             
             //Assert
             _coursesDataContext.Verify(x=>x.ApprenticeshipFunding.AddRangeAsync(_apprenticeshipFunding, It.IsAny<CancellationToken>()), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChanges(), Times.Once);
+            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
         }
     }
 }

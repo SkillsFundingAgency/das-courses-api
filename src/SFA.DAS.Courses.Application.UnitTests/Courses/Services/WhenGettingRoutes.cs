@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var sectors = (await service.GetRoutes()).ToList();
 
             sectors.Should().BeEquivalentTo(routeEntities, options=> options
-                .Excluding(c=>c.Standards)
+                .Excluding(c => c.Standards)
             );
 
         }
