@@ -17,12 +17,15 @@ namespace SFA.DAS.Courses.Infrastructure.Api
         private readonly HttpClient _client;
         private readonly string _channel;
         private readonly string _user;
+        private readonly bool _isDisabled = false;
 
         public SlackNotificationService(IOptions<SlackNotificationConfiguration> options, HttpClient httpClient)
         {
             _client = httpClient;
             
             var configuration = options?.Value;
+            _isDisabled = string.IsNullOrWhiteSpace(configuration?.BotUserOAuthToken);
+
             if (configuration != null)
             {
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", configuration.BotUserOAuthToken);
@@ -33,6 +36,8 @@ namespace SFA.DAS.Courses.Infrastructure.Api
 
         public async Task UploadFile(List<string> content, string fileName, string message)
         {
+            if (_isDisabled) return;
+
             using var memoryStream = new MemoryStream();
             using (var writer = new StreamWriter(memoryStream, Encoding.UTF8, leaveOpen: true))
             {
