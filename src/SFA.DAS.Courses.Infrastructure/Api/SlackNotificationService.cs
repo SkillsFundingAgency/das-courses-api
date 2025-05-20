@@ -22,11 +22,11 @@ namespace SFA.DAS.Courses.Infrastructure.Api
         public SlackNotificationService(IOptions<SlackNotificationConfiguration> options, HttpClient httpClient)
         {
             _client = httpClient;
-            
+
             var configuration = options?.Value;
             _isDisabled = string.IsNullOrWhiteSpace(configuration?.BotUserOAuthToken);
 
-            if (configuration != null)
+            if (!_isDisabled)
             {
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", configuration.BotUserOAuthToken);
                 _channel = configuration.Channel;
@@ -72,9 +72,9 @@ namespace SFA.DAS.Courses.Infrastructure.Api
             using var fileUploadContent = new StreamContent(memoryStream);
             var multipartFormContent = new MultipartFormDataContent
             {
-                { 
-                    new ByteArrayContent(memoryStream.ToArray()), 
-                    "file", 
+                {
+                    new ByteArrayContent(memoryStream.ToArray()),
+                    "file",
                     fileName
                 }
             };
