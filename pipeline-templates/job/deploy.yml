@@ -52,6 +52,7 @@ jobs:
             ConfigurationSecrets:
               DefaultSessionRedisConnectionString: $(DefaultSessionRedisConnectionString)
               NServiceBusLicense: $(NServiceBusLicense)
+              SlackNotificationBotUserOAuthToken: $(SlackNotificationBotUserOAuthToken)
         - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
           parameters:
             AzureSubscription: ${{ parameters.ServiceConnection }}
