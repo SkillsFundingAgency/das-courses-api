@@ -3,7 +3,7 @@
     public class Standard : StandardBase
     {
         public float? SearchScore { get; set; }
-        public virtual StandardApprenticeshipType StandardApprenticeshipType { get; set; }
+        public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
 
         public static implicit operator Standard(StandardImport import)
         {
@@ -17,7 +17,6 @@
                 CreatedDate = import.CreatedDate,
                 Duties = import.Duties,
                 EPAChanged = import.EPAChanged,
-                EpaoMustBeApprovedByRegulatorBody = import.EpaoMustBeApprovedByRegulatorBody,
                 EqaProviderContactEmail = import.EqaProviderContactEmail,
                 EqaProviderContactName = import.EqaProviderContactName,
                 EqaProviderName = import.EqaProviderName,
@@ -25,8 +24,6 @@
                 IfateReferenceNumber = import.IfateReferenceNumber,
                 IntegratedApprenticeship = import.IntegratedApprenticeship,
                 IntegratedDegree = import.IntegratedDegree,
-                IsRegulatedForEPAO = import.IsRegulatedForEPAO,
-                IsRegulatedForProvider = import.IsRegulatedForProvider,
                 Keywords = import.Keywords,
                 LarsCode = import.LarsCode,
                 Level = import.Level,
@@ -49,8 +46,13 @@
                 VersionLatestEndDate = import.VersionLatestEndDate,
                 VersionLatestStartDate = import.VersionLatestStartDate,
                 VersionMajor = import.VersionMajor,
-                VersionMinor = import.VersionMinor
+                VersionMinor = import.VersionMinor,
+                IsRegulatedForProvider = import.IsRegulatedForProvider,
+                IsRegulatedForEPAO = import.IsRegulatedForEPAO,
+                ApprenticeshipType = import.ApprenticeshipType
             };
         }
+
+        
     }
 }

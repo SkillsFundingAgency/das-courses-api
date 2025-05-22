@@ -108,7 +108,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionLatestEndDate = standard.VersionLatestEndDate,
                 VersionLatestStartDate = standard.VersionLatestStartDate,
                 VersionMajor = standard.VersionMajor,
-                VersionMinor = standard.VersionMinor
+                VersionMinor = standard.VersionMinor,
+                ApprenticeshipType = "Apprenticeship"
             };
 
         }

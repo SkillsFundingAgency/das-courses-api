@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Standard_Import]
+CREATE TABLE [dbo].[Standard_Import]
 (
     [StandardUId] VARCHAR(20) PRIMARY KEY,
     [IfateReferenceNumber] VARCHAR(10) NOT NULL,
@@ -42,7 +42,8 @@
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0, 
     [IsRegulatedForEPAO] BIT NOT NULL DEFAULT 0, 
     [EpaoMustBeApprovedByRegulatorBody] BIT NOT NULL Default 0,
-    [PublishDate] DATETIME NULL
+    [PublishDate] DATETIME NULL,
+    [ApprenticeshipType] varchar(150) null
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO

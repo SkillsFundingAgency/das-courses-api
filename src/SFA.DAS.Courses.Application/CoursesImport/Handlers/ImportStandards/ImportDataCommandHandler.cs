@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,13 +13,15 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
         private readonly ILarsImportService _larsImportService;
         private readonly IFrameworksImportService _frameworksImportService;
         private readonly IIndexBuilder _indexBuilder;
+        private readonly IFoundationImportService _foundationImportService;
 
-        public ImportDataCommandHandler (IStandardsImportService standardsImportService, ILarsImportService larsImportService, IFrameworksImportService frameworksImportService, IIndexBuilder indexBuilder)
+        public ImportDataCommandHandler (IStandardsImportService standardsImportService, ILarsImportService larsImportService, IFrameworksImportService frameworksImportService, IIndexBuilder indexBuilder, IFoundationImportService foundationImportService)
         {
             _standardsImportService = standardsImportService;
             _larsImportService = larsImportService;
             _frameworksImportService = frameworksImportService;
             _indexBuilder = indexBuilder;
+            _foundationImportService = foundationImportService;
         }
         public async Task<Unit> Handle(ImportDataCommand request, CancellationToken cancellationToken)
         {
@@ -30,8 +32,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             var frameworksImportTask = _frameworksImportService.ImportDataIntoStaging();
 
             await Task.WhenAll(larsImportTask, standardsImportTask, frameworksImportTask);
-
+            
+            await _foundationImportService.ImportDataIntoStaging();
             var loadTasks = new List<Task>();
+            
 
             var frameworkImportResponse = frameworksImportTask.Result;
             if (frameworkImportResponse.Success) loadTasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkImportResponse.LatestFile));

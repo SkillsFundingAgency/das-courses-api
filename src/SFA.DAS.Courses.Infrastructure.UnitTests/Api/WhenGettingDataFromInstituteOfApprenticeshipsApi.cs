@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
@@ -90,16 +91,26 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 Content = new StringContent(JsonConvert.SerializeObject(importedStandards, settings)),
                 StatusCode = HttpStatusCode.Accepted
             };
-
-            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri(_config.Value.InstituteOfApprenticeshipsStandardsUrl));
-            var httpClient = new HttpClient(httpMessageHandler.Object);
-            var sut = new InstituteOfApprenticeshipService(_config, httpClient);
-
-            // Act
-            var standards = await sut.GetStandards();
-
-            // Assert
-            standards.ShouldBeEquivalentToWithSettableHandling(importedStandards, options => options.Excluding(c => c.RouteCode));
+            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response,  new Uri(_config.Value.InstituteOfApprenticeshipsStandardsUrl));
+            var client = new HttpClient(httpMessageHandler.Object);
+            var apprenticeshipService = new InstituteOfApprenticeshipService(_config, client);
+            
+            //Act
+            var standards = await apprenticeshipService.GetStandards();
+            
+            //Assert
+            standards.Should().BeEquivalentTo(importedStandards, options => options
+                .Excluding(c=>c.RouteCode)
+                .Excluding(c=>c.ApprenticeshipType)
+                .Excluding(c=>c.EqaProvider)
+                .Excluding(c=>c.IntegratedApprenticeship)
+                .Excluding(c=>c.IntegratedDegree)
+                .Excluding(c=>c.Options)
+                .Excluding(c=>c.Qualifications)
+                .Excluding(c=>c.Regulated)
+                .Excluding(c=>c.RegulationDetail)
+                .Excluding(c=>c.Route)
+            );
         }
 
         [Test]

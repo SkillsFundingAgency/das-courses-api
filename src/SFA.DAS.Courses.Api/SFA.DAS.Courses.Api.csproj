@@ -41,5 +41,8 @@
     <Content Update="DataFiles\frameworks_2.0.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="DataFiles\Foundations\foundations_1.0.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

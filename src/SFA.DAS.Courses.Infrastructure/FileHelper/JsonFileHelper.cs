@@ -4,26 +4,34 @@ using System.Linq;
 using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Infrastructure.FileHelper
+namespace SFA.DAS.Courses.Infrastructure.FileHelper;
+
+public class JsonFileHelper : IJsonFileHelper
 {
-    public class JsonFileHelper : IJsonFileHelper
+    public IEnumerable<T> ParseJsonFile<T>(string filePath)
     {
-        public IEnumerable<T> ParseJsonFile<T>(string filePath)
+        using (var reader = new StreamReader(filePath))
         {
-            using (var reader = new StreamReader(filePath))
-            {
-                var json = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<IEnumerable<T>>(json).ToList();
-            }
+            var json = reader.ReadToEnd();
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(json).ToList();
         }
+    }
 
-        public string GetLatestFrameworkFileFromDataDirectory()
-        {
-            var directoryInfo = new DirectoryInfo("DataFiles");
+    public string GetLatestFrameworkFileFromDataDirectory()
+    {
+        var directoryInfo = new DirectoryInfo("DataFiles");
 
-            var file = directoryInfo.GetFiles().ToList().OrderByDescending(c => c.Name).FirstOrDefault();
+        var file = directoryInfo.GetFiles().ToList().OrderByDescending(c => c.Name).FirstOrDefault();
 
-            return file?.FullName ?? "";
-        }
+        return file?.FullName ?? "";
+    }
+
+    public string GetLatestFoundationFileFromDirectory()
+    {
+        var directoryInfo = new DirectoryInfo("Datafiles/Foundations");
+
+        var file = directoryInfo.GetFiles().ToList().OrderByDescending(c => c.Name).FirstOrDefault();
+
+        return file?.FullName ?? "";
     }
 }

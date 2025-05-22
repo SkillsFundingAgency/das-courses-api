@@ -41,6 +41,7 @@ CREATE TABLE [dbo].[Standard]
     [CoronationEmblem] BIT NOT NULL DEFAULT 0,
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0, 
     [IsRegulatedForEPAO] BIT NOT NULL DEFAULT 0, 
+    [ApprenticeshipType] varchar(150) null,
     [EpaoMustBeApprovedByRegulatorBody] BIT NOT NULL Default 0,
     [PublishDate] DATETIME NULL
     CONSTRAINT [AK_Standard_Column] UNIQUE ([StandardUId])

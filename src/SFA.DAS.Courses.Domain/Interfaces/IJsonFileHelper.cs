@@ -6,5 +6,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     {
         IEnumerable<T> ParseJsonFile<T>(string filePath);
         string GetLatestFrameworkFileFromDataDirectory();
+        string GetLatestFoundationFileFromDirectory();
     }
 }

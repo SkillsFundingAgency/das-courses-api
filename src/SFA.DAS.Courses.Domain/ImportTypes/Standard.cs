@@ -105,7 +105,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("standardPageUrl")]
         public Settable<Uri> StandardPageUrl { get; set; }
-
+        [JsonIgnore]
+        public string ApprenticeshipType { get; set; }
         [JsonProperty("status")]
         public Settable<string> Status { get; set; }
 
