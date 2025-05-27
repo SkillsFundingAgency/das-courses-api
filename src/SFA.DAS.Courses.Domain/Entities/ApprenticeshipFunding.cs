@@ -15,7 +15,14 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = apprenticeshipFundingImport.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingImport.EffectiveTo,
                 MaxEmployerLevyCap = apprenticeshipFundingImport.MaxEmployerLevyCap,
-                Duration = apprenticeshipFundingImport.Duration
+                Duration = apprenticeshipFundingImport.Duration,
+                Incentive1618 = apprenticeshipFundingImport.Incentive1618,
+                ProviderAdditionalPayment1618 = apprenticeshipFundingImport.ProviderAdditionalPayment1618,
+                EmployerAdditionalPayment1618 = apprenticeshipFundingImport.EmployerAdditionalPayment1618,
+                CareLeaverAdditionalPayment = apprenticeshipFundingImport.CareLeaverAdditionalPayment,
+                FoundationAppFirstEmpPayment = apprenticeshipFundingImport.FoundationAppFirstEmpPayment,
+                FoundationAppSecondEmpPayment = apprenticeshipFundingImport.FoundationAppSecondEmpPayment,
+                FoundationAppThirdEmpPayment = apprenticeshipFundingImport.FoundationAppThirdEmpPayment
             };
         }
     }

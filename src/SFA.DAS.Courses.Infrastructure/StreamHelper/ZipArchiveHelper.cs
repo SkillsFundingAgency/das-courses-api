@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -12,17 +12,17 @@ namespace SFA.DAS.Courses.Infrastructure.StreamHelper
     {
         public IEnumerable<T> ExtractModelFromCsvFileZipStream<T>(Stream stream, string filePath)
         {
-            
-            using(var zip = new ZipArchive(stream, ZipArchiveMode.Read, true))
+
+            using (var zip = new ZipArchive(stream, ZipArchiveMode.Read, true))
             {
                 var entry = zip.Entries.FirstOrDefault(m => m.FullName.EndsWith(filePath));
 
                 if (entry == null)
                 {
-                    return null;
+                    return [];
                 }
 
-                using (var reader = new StreamReader(entry.Open())) 
+                using (var reader = new StreamReader(entry.Open()))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
                     return csv.GetRecords<T>().ToList();
