@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Configuration;
@@ -26,7 +25,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
         {
             _config = Options.Create(new CoursesConfiguration
             {
-                InstituteOfApprenticeshipsStandardsUrl = "https://ifate.org"
+                InstituteOfApprenticeshipsApiConfiguration = new("https://ifate.org", "https://ifate.org/standards", "https://ifate.org/foundation-apprenticeships")
             });
         }
 
@@ -91,7 +90,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 StatusCode = HttpStatusCode.Accepted
             };
 
-            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri(_config.Value.InstituteOfApprenticeshipsStandardsUrl));
+            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri(_config.Value.InstituteOfApprenticeshipsApiConfiguration.StandardsPath));
             var httpClient = new HttpClient(httpMessageHandler.Object);
             var sut = new InstituteOfApprenticeshipService(_config, httpClient);
 
@@ -112,7 +111,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 StatusCode = HttpStatusCode.BadRequest
             };
 
-            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri(_config.Value.InstituteOfApprenticeshipsStandardsUrl));
+            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri(_config.Value.InstituteOfApprenticeshipsApiConfiguration.StandardsPath));
             var httpClient = new HttpClient(httpMessageHandler.Object);
             var sut = new InstituteOfApprenticeshipService(_config, httpClient);
 

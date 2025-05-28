@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Moq.Protected;
-using SFA.DAS.Courses.Domain.Configuration;
 
 namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
 {
