@@ -2,7 +2,10 @@
 {
     public class CoursesConfiguration
     {
-        public string ConnectionString { get ; set ; }
-        public string InstituteOfApprenticeshipsStandardsUrl { get; set; }
+        public string ConnectionString { get; set; }
+
+        public InstituteOfApprenticeshipsApiConfiguration InstituteOfApprenticeshipsApiConfiguration { get; set; }
     }
+
+    public record InstituteOfApprenticeshipsApiConfiguration(string ApiBaseUrl, string StandardsPath, string FoundationApprenticeshipsPath);
 }

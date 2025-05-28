@@ -19,11 +19,12 @@ namespace SFA.DAS.Courses.Infrastructure.Api
         {
             _coursesConfiguration = config.Value;
             _client = client;
+            _client.BaseAddress = new Uri(_coursesConfiguration.InstituteOfApprenticeshipsApiConfiguration.ApiBaseUrl);
         }
 
         public async Task<IEnumerable<Standard>> GetStandards()
         {
-            var response = await _client.GetAsync(_coursesConfiguration.InstituteOfApprenticeshipsStandardsUrl);
+            var response = await _client.GetAsync(_coursesConfiguration.InstituteOfApprenticeshipsApiConfiguration.StandardsPath);
             
             response.EnsureSuccessStatusCode();
             
