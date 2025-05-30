@@ -12,6 +12,11 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
         public static Mock<HttpMessageHandler> SetupGetMessageHandlerMock(HttpResponseMessage response, Uri uri)
         {
             var httpMessageHandler = new Mock<HttpMessageHandler>();
+            return httpMessageHandler.AddHandler(response, uri);
+        }
+
+        public static Mock<HttpMessageHandler> AddHandler(this Mock<HttpMessageHandler> httpMessageHandler, HttpResponseMessage response, Uri uri)
+        {
             httpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
