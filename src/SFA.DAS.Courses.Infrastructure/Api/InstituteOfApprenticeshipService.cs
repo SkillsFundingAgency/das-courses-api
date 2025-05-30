@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -24,10 +26,20 @@ namespace SFA.DAS.Courses.Infrastructure.Api
 
         public async Task<IEnumerable<Standard>> GetStandards()
         {
-            var response = await _client.GetAsync(_coursesConfiguration.InstituteOfApprenticeshipsApiConfiguration.StandardsPath);
-            
+            var standardsTask = GetData(_coursesConfiguration.InstituteOfApprenticeshipsApiConfiguration.StandardsPath, Domain.Entities.ApprenticeshipType.Apprenticeship);
+            var foundationApprenticeshipsTask = GetData(_coursesConfiguration.InstituteOfApprenticeshipsApiConfiguration.FoundationApprenticeshipsPath, Domain.Entities.ApprenticeshipType.FoundationApprenticeship);
+
+            await Task.WhenAll(standardsTask, foundationApprenticeshipsTask);
+
+            return standardsTask.Result.Concat(foundationApprenticeshipsTask.Result);
+        }
+
+        private async Task<IEnumerable<Standard>> GetData(string path, Domain.Entities.ApprenticeshipType apprenticeshipType)
+        {
+            var response = await _client.GetAsync(path);
+
             response.EnsureSuccessStatusCode();
-            
+
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
             var settings = new JsonSerializerSettings
@@ -39,7 +51,14 @@ namespace SFA.DAS.Courses.Infrastructure.Api
                 ]
             };
 
-            return JsonConvert.DeserializeObject<List<Standard>>(jsonResponse, settings);
+            var standards = JsonConvert.DeserializeObject<IEnumerable<Standard>>(jsonResponse, settings);
+
+            foreach (var standard in standards)
+            {
+                standard.ApprenticeshipType = apprenticeshipType;
+            }
+
+            return standards;
         }
     }
 }

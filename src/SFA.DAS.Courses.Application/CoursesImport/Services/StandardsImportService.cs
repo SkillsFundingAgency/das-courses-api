@@ -57,9 +57,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 {
                     _logger.LogInformation("{MethodName} - starting", nameof(ImportDataIntoStaging));
 
-                    var importedStandards = RemoveIndevelopmentVersions(await _instituteOfApprenticeshipService.GetStandards());
+                    var standards = await _instituteOfApprenticeshipService.GetStandards();
+                    var importedStandards = RemoveIndevelopmentVersions(standards);
 
-                    _logger.LogInformation("{MethodName} - Retrieved {StandardsCount} standards from API", nameof(ImportDataIntoStaging), importedStandards.Count);
+                    _logger.LogInformation("{MethodName} - Retrieved Apprenticeships: {ApprenticeshipsCount} Foundation: {FoundationCount}", nameof(ImportDataIntoStaging), importedStandards.Count(c => c.ApprenticeshipType == ApprenticeshipType.Apprenticeship), importedStandards.Count(c => c.ApprenticeshipType == ApprenticeshipType.FoundationApprenticeship));
 
                     // if there are any missing fields in any standard or 
                     var validationFailures = new Dictionary<string, ValidationFailures>();
@@ -144,7 +145,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             var lastRouteId = currentRoutes.OrderBy(c => c.Id).LastOrDefault()?.Id ?? 0;
 
             var updatedRoutes = currentRoutes.Select(c => (RouteImport)c).ToList();
-            foreach(var newRouteName in importedRoutes.ExceptBy(updatedRoutes.Select(x => x.Name), x => x.Name).Select(x => x.Name))
+            foreach (var newRouteName in importedRoutes.ExceptBy(updatedRoutes.Select(x => x.Name), x => x.Name).Select(x => x.Name))
             {
                 updatedRoutes.Add(new RouteImport { Id = ++lastRouteId, Name = newRouteName, Active = true });
             }
@@ -180,9 +181,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 }
 
                 await LoadRouteDataFromStaging();
-                
+
                 await AuditImport(timeStarted, standardsTransfered);
-                
+
                 _logger.LogInformation("{MethodName} - finished", nameof(LoadDataFromStaging));
             }
             catch (Exception e)
@@ -199,7 +200,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 .Where(p =>
                 {
                     var (Major, Minor) = p.Version.Value.ParseVersion();
-                    return 
+                    return
                         Major < 1 ||
                         (Major == 1 && Minor == 0) ||
                         !inDevelopmentStatuses.Contains(p.Status.Value, StringComparer.OrdinalIgnoreCase);
@@ -246,7 +247,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private async Task<int> LoadRouteDataFromStaging()
         {
             await _routeRepository.DeleteAll();
-            
+
             var routesToImport = await _routeImportRepository.GetAll();
             return await _routeRepository.InsertMany(routesToImport.Select(c => (Route)c).ToList());
         }
@@ -254,7 +255,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private static List<Domain.ImportTypes.Route> GetDistinctRoutes(List<Domain.ImportTypes.Standard> standards)
         {
             return standards
-                .Where(c => (c.Status.Value?.Equals(Domain.Courses.Status.ApprovedForDelivery, StringComparison.CurrentCultureIgnoreCase) ?? false) && 
+                .Where(c => (c.Status.Value?.Equals(Domain.Courses.Status.ApprovedForDelivery, StringComparison.CurrentCultureIgnoreCase) ?? false) &&
                             !string.IsNullOrEmpty(c.Route.Value))
                 .Select(c => c.Route.Value)
                 .Distinct()
@@ -328,7 +329,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         }
 
         public static Dictionary<string, List<StandardImport>> IndividuallyValidateStandardGroups
-            (Dictionary<string, List<Domain.ImportTypes.Standard>> importedStandards, 
+            (Dictionary<string, List<Domain.ImportTypes.Standard>> importedStandards,
             IEnumerable<Standard> currentStandards,
             IEnumerable<Route> currentRoutes,
             Dictionary<string, ValidationFailures> validationFailures)
@@ -340,7 +341,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             };
 
             var validStandards = ValidateStandards(importedStandards, validationFailures, fatalValidators);
-           
+
             var otherValidators = new List<ValidatorBase<List<Domain.ImportTypes.Standard>>>
             {
                 new LarsCodeNotZeroTwoWeeksAfterPublishValidator(),
