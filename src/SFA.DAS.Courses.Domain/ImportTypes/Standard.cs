@@ -10,29 +10,21 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     [InitializeSettables]
     public class Standard
     {
+        #region Common properties between standards and foundation apprenticeships
+
+        public ApprenticeshipType ApprenticeshipType { get; set; }
+
         [JsonProperty("approvedForDelivery")]
         public Settable<DateTime?> ApprovedForDelivery { get; set; }
 
         [JsonProperty("assessmentPlanUrl")]
         public Settable<string> AssessmentPlanUrl { get; set; }
 
-        [JsonProperty("behaviours")]
-        public Settable<List<Behaviour>> Behaviours { get; set; } = new Settable<List<Behaviour>>();
-
         [JsonProperty("change")]
         public Settable<string> Change { get; set; }
 
-        [JsonProperty("coreAndOptions")]
-        public Settable<bool> CoreAndOptions { get; set; }
-
-        [JsonProperty("coronationEmblem")]
-        public Settable<bool> CoronationEmblem { get; set; }
-
         [JsonProperty("createdDate")]
         public Settable<DateTime> CreatedDate { get; set; }
-
-        [JsonProperty("duties")]
-        public Settable<List<Duty>> Duties { get; set; }
 
         [JsonProperty("eQAProvider")]
         public Settable<EqaProvider> EqaProvider { get; set; }
@@ -40,17 +32,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonProperty("earliestStartDate")]
         public Settable<DateTime?> VersionEarliestStartDate { get; set; }
 
-        [JsonProperty("integratedApprenticeship")]
-        public Settable<bool?> IntegratedApprenticeship { get; set; }
-
-        [JsonProperty("integratedDegree")]
-        public Settable<string> IntegratedDegree { get; set; }
-
         [JsonProperty("keywords")]
         public Settable<List<string>> Keywords { get; set; }
-
-        [JsonProperty("knowledges")]
-        public Settable<List<Knowledge>> Knowledges { get; set; } = new Settable<List<Knowledge>>();
 
         [JsonProperty("larsCode")]
         public Settable<int> LarsCode { get; set; }
@@ -66,12 +49,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("maxFunding")]
         public Settable<int> ProposedMaxFunding { get; set; }
-
-        [JsonProperty("options")]
-        public Settable<List<Option>> Options { get; set; }
-
-        [JsonProperty("optionsUnstructuredTemplate")]
-        public Settable<List<string>> OptionsUnstructuredTemplate { get; set; } = new Settable<List<string>>();
 
         [JsonProperty("overviewOfRole")]
         public Settable<string> OverviewOfRole { get; set; }
@@ -100,17 +77,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [JsonIgnore]
         public Settable<int> RouteCode { get; set; }
 
-        [JsonProperty("skills")]
-        public Settable<List<Skill>> Skills { get; set; } = new Settable<List<Skill>>();
-
-        [JsonProperty("standardPageUrl")]
-        public Settable<Uri> StandardPageUrl { get; set; }
-
         [JsonProperty("status")]
         public Settable<string> Status { get; set; }
-
-        [JsonProperty("tbMainContact")]
-        public Settable<string> TbMainContact { get; set; }
 
         [JsonProperty("title")]
         public Settable<string> Title { get; set; }
@@ -126,8 +94,68 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("versionNumber")]
         public Settable<string> VersionNumber { get; set; }
-    }
 
+        #endregion Common properties between standards and foundation apprenticeships
+
+        #region Only applicable to standards apprenticeships
+
+        [JsonProperty("behaviours")]
+        public Settable<List<Behaviour>> Behaviours { get; set; } = new Settable<List<Behaviour>>();
+
+        [JsonProperty("coreAndOptions")]
+        public Settable<bool> CoreAndOptions { get; set; }
+
+        [JsonProperty("coronationEmblem")]
+        public Settable<bool> CoronationEmblem { get; set; }
+
+        [JsonProperty("duties")]
+        public Settable<List<Duty>> Duties { get; set; }
+
+        [JsonProperty("integratedApprenticeship")]
+        public Settable<bool?> IntegratedApprenticeship { get; set; }
+
+        [JsonProperty("integratedDegree")]
+        public Settable<string> IntegratedDegree { get; set; }
+
+        [JsonProperty("knowledges")]
+        public Settable<List<Knowledge>> Knowledges { get; set; } = new Settable<List<Knowledge>>();
+
+        [JsonProperty("options")]
+        public Settable<List<Option>> Options { get; set; }
+
+        [JsonProperty("optionsUnstructuredTemplate")]
+        public Settable<List<string>> OptionsUnstructuredTemplate { get; set; } = new Settable<List<string>>();
+
+        [JsonProperty("skills")]
+        public Settable<List<Skill>> Skills { get; set; } = new Settable<List<Skill>>();
+
+        [JsonProperty("standardPageUrl")]
+        public Settable<Uri> StandardPageUrl { get; set; }
+
+        [JsonProperty("tbMainContact")]
+        public Settable<string> TbMainContact { get; set; }
+
+        #endregion Standards apprenticeships
+
+        #region Only applicable to Foundation Apprenticeships
+
+        [JsonProperty("technicalKnowledges")]
+        public Settable<List<IdDetailPair>> TechnicalKnowledges { get; set; } = new Settable<List<IdDetailPair>>();
+
+        [JsonProperty("technicalSkills")]
+        public Settable<List<IdDetailPair>> TechnicalSkills { get; set; } = new Settable<List<IdDetailPair>>();
+
+        [JsonProperty("employabilitySkillsAndBehaviours")]
+        public Settable<List<IdDetailPair>> EmployabilitySkillsAndBehaviours { get; set; } = new Settable<List<IdDetailPair>>();
+
+        [JsonProperty("foundationApprenticeshipUrl")]
+        public Settable<Uri> FoundationApprenticeshipUrl { get; set; }
+
+        [JsonProperty("assessmentChanged")]
+        public Settable<bool> AssessmentChanged { get; set; }
+
+        #endregion Foundation Apprenticeships
+    }
 
     public class EqaProvider
     {
@@ -217,5 +245,13 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
 
         [JsonProperty("approved")]
         public Settable<bool> Approved { get; set; }
+    }
+
+    public class IdDetailPair
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("detail")]
+        public string Detail { get; set; }
     }
 }
