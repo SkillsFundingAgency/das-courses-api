@@ -19,18 +19,22 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             _sut = new ReferenceNumberFormatValidator();
         }
 
-        [Test]
-        public void Should_Not_Add_Failure_When_ReferenceNumber_Is_Valid()
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA0001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, " ST1001 ", Reason = "Spaces around the reference number should be ignored as they are going to be trimmed")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, " FA0001 ")]
+        public void Should_Not_Add_Failure_When_ReferenceNumber_Is_Valid(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
-            var importedStandards = new List<Standard>
-            {
+            List<Standard> importedStandards =
+            [
                 new Standard
                 {
-                    ReferenceNumber = new Settable<string>("ST1001"),
+                    ApprenticeshipType = apprenticeshipType,
+                    ReferenceNumber = new Settable<string>(referenceNumber),
                     Version = new Settable<string>("1.0")
                 }
-            };
+            ];
 
             // Act
             var result = _sut.TestValidate(importedStandards);
@@ -39,25 +43,29 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-        [Test]
-        public void Should_Add_Failure_When_ReferenceNumber_Has_Invalid_Format()
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "ST1001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "FA0001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "INVALID123")]
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "INVALID123")]
+        public void Should_Add_Failure_When_ReferenceNumber_Has_Invalid_Format(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
-            var importedStandards = new List<Standard>
-            {
+            List<Standard> importedStandards =
+            [
                 new Standard
                 {
-                    ReferenceNumber = new Settable<string>("INVALID123"),
+                    ApprenticeshipType = apprenticeshipType,
+                    ReferenceNumber = new Settable<string>(referenceNumber),
                     Version = new Settable<string>("1.0")
                 }
-            };
+            ];
 
             // Act
             var result = _sut.TestValidate(importedStandards);
 
             // Assert
             result.Errors.Should().ContainSingle(error => error.ErrorMessage ==
-                "E1002: INVALID123 version 1.0 referenceNumber is not in the correct format.");
+                $"E1002: {referenceNumber} version 1.0 of type '{apprenticeshipType}' has not got referenceNumber in the correct format.");
         }
     }
 }
