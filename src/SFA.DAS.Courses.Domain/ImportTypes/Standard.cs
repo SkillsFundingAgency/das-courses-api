@@ -149,10 +149,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public Settable<List<IdDetailPair>> EmployabilitySkillsAndBehaviours { get; set; } = new Settable<List<IdDetailPair>>();
 
         [JsonProperty("foundationApprenticeshipUrl")]
-        public Settable<Uri> FoundationApprenticeshipUrl { get; set; }
+        public Settable<Uri> FoundationApprenticeshipUrl { get; set; } = new();
 
         [JsonProperty("assessmentChanged")]
-        public Settable<bool> AssessmentChanged { get; set; }
+        public Settable<bool> AssessmentChanged { get; set; } = new();
 
         #endregion Foundation Apprenticeships
     }
@@ -250,8 +250,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
     public class IdDetailPair
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public Settable<Guid> Id { get; set; }
         [JsonProperty("detail")]
-        public string Detail { get; set; }
+        public Settable<string> Detail { get; set; }
     }
 }
