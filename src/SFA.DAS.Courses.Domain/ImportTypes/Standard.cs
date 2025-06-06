@@ -109,13 +109,13 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public Settable<bool> CoronationEmblem { get; set; }
 
         [JsonProperty("duties")]
-        public Settable<List<Duty>> Duties { get; set; }
+        public Settable<List<Duty>> Duties { get; set; } = new();
 
         [JsonProperty("integratedApprenticeship")]
         public Settable<bool?> IntegratedApprenticeship { get; set; }
 
         [JsonProperty("integratedDegree")]
-        public Settable<string> IntegratedDegree { get; set; }
+        public Settable<string> IntegratedDegree { get; set; } = new Settable<string>(string.Empty);
 
         [JsonProperty("knowledges")]
         public Settable<List<Knowledge>> Knowledges { get; set; } = new Settable<List<Knowledge>>();
@@ -133,7 +133,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public Settable<Uri> StandardPageUrl { get; set; }
 
         [JsonProperty("tbMainContact")]
-        public Settable<string> TbMainContact { get; set; }
+        public Settable<string> TbMainContact { get; set; } = new Settable<string>(string.Empty);
 
         #endregion Standards apprenticeships
 

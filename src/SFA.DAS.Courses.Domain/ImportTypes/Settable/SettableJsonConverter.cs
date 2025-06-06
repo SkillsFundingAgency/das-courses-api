@@ -13,6 +13,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
             try
             {
                 var value = serializer.Deserialize<T>(reader);
+                value = typeof(T) == typeof(string) ? (T)(object)value?.ToString()?.Trim() : value; // Trim string values to avoid leading/trailing spaces
                 return new Settable<T>(value);
             }
             catch (Exception)

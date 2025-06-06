@@ -9,6 +9,7 @@
         {
             return new Standard
             {
+                ApprenticeshipType = import.ApprenticeshipType,
                 ApprovedForDelivery = import.ApprovedForDelivery,
                 AssessmentPlanUrl = import.AssessmentPlanUrl,
                 CoronationEmblem = import.CoronationEmblem,
