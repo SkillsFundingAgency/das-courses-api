@@ -20,7 +20,8 @@ namespace SFA.DAS.Courses.Domain.Entities
                 SectorSubjectAreaTier2 = larsStandardImport.SectorSubjectAreaTier2,
                 OtherBodyApprovalRequired = larsStandardImport.OtherBodyApprovalRequired,
                 SectorCode = larsStandardImport.SectorCode,
-                SectorSubjectAreaTier1 = larsStandardImport.SectorSubjectAreaTier1
+                SectorSubjectAreaTier1 = larsStandardImport.SectorSubjectAreaTier1,
+                ApprenticeshipStandardTypeCode = larsStandardImport.ApprenticeshipStandardTypeCode,
             };
         }
     }

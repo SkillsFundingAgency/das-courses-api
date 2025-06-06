@@ -21,6 +21,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             return new StandardImport
             {
+                ApprenticeshipType = standard.ApprenticeshipType.ToString(),
                 ApprovedForDelivery = standard.ApprovedForDelivery.Value,
                 AssessmentPlanUrl = standard.AssessmentPlanUrl.Value,
                 CoreAndOptions = standard.CoreAndOptions.Value,
@@ -49,7 +50,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 PublishDate = standard.PublishDate.Value,
                 RegulatedBody = standard.RegulatedBody.Value?.Trim(),
                 RouteCode = standard.RouteCode.Value,
-                StandardPageUrl = standard.StandardPageUrl.Value?.AbsoluteUri,
+                StandardPageUrl = GetStandardPageUrl(standard),
                 StandardUId = standard.ReferenceNumber.Value?.ToStandardUId(standard.Version?.Value),
                 Status = standard.Status.Value?.Trim(),
                 Title = standard.Title.Value?.Trim(),
@@ -63,6 +64,13 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionMinor = GetVersionPart(standard.Version?.Value, VersionPart.Minor)
             };
         }
+
+        private static string GetStandardPageUrl(ImportTypes.Standard standard)
+            => standard.ApprenticeshipType switch
+            {
+                Entities.ApprenticeshipType.FoundationApprenticeship => standard.FoundationApprenticeshipUrl?.Value?.AbsoluteUri,
+                _ => standard.StandardPageUrl?.Value?.AbsoluteUri
+            };
 
         public static implicit operator StandardImport(Standard standard)
         {
@@ -194,6 +202,10 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static bool IsEPAChanged(ImportTypes.Standard standard)
         {
+            if (standard.ApprenticeshipType == Entities.ApprenticeshipType.FoundationApprenticeship)
+            {
+                return standard.AssessmentChanged.Value;
+            }
             if (string.IsNullOrWhiteSpace(standard.Change.Value)) return false;
 
             return standard.Change.Value.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
@@ -213,7 +225,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             {
                 return standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
             }
-            
+
             return [];
         }
 
@@ -293,14 +305,17 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsListWithoutDutyMapping(ImportTypes.Standard standard)
         {
+            var ksbs = standard.ApprenticeshipType == Entities.ApprenticeshipType.Apprenticeship
+                ? standard.Knowledges.Value?.Select((x, i) => Ksb.Knowledge(x.KnowledgeId.Value, i + 1, x.Detail.Value))
+                    .Union(standard.Skills.Value?.Select((x, i) => Ksb.Skill(x.SkillId.Value, i + 1, x.Detail.Value)))
+                    .Union(standard.Behaviours.Value?.Select((x, i) => Ksb.Behaviour(x.BehaviourId.Value, i + 1, x.Detail.Value)))
+                : standard.TechnicalKnowledges.Value?.Select((x, i) => Ksb.TechnicalKnowledge(x.Id.Value, i + 1, x.Detail.Value))
+                    .Union(standard.TechnicalSkills.Value?.Select((x, i) => Ksb.TechnicalSkill(x.Id.Value, i + 1, x.Detail.Value)))
+                    .Union(standard.EmployabilitySkillsAndBehaviours.Value?.Select((x, i) => Ksb.EmployabilitySkillsAndBehaviour(x.Id.Value, i + 1, x.Detail.Value)));
+
             return new List<StandardOption>
             {
-                StandardOption.CreateCorePseudoOption(
-                    standard.Knowledges.Value?.Select((x,i) => Ksb.Knowledge(x.KnowledgeId.Value, i + 1, x.Detail.Value))
-                        .Union(standard.Skills.Value?.Select((x,i) => Ksb.Skill(x.SkillId.Value, i + 1, x.Detail.Value)))
-                        .Union(standard.Behaviours.Value?.Select((x,i) => Ksb.Behaviour(x.BehaviourId.Value, i + 1, x.Detail.Value)))
-                        .DistinctBy(x => x.Key).ToList()
-                )
+                StandardOption.CreateCorePseudoOption(ksbs?.DistinctBy(x => x.Key).ToList())
             };
         }
 
