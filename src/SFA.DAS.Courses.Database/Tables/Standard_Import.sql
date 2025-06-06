@@ -43,7 +43,7 @@
     [IsRegulatedForEPAO] BIT NOT NULL DEFAULT 0, 
     [EpaoMustBeApprovedByRegulatorBody] BIT NOT NULL Default 0,
     [PublishDate] DATETIME NULL,
-    [ApprenticeshipType] VARCHAR(50) NOT NULL DEFAULT 'Apprenticeship',
+    [ApprenticeshipType] VARCHAR(50) NULL DEFAULT 'Apprenticeship',
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO
