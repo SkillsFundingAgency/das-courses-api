@@ -14,6 +14,9 @@ namespace SFA.DAS.Courses.Domain.Courses
         public List<Ksb> Knowledge { get; set; }
         public List<Ksb> Skills { get; set; }
         public List<Ksb> Behaviours { get; set; }
+        public List<Ksb> TechnicalKnowledges { get; set; }
+        public List<Ksb> TechnicalSkills { get; set; }
+        public List<Ksb> EmployabilitySkillsAndBehaviours { get; set; }
         public List<Ksb> Ksbs { get; set; }
 
         public static explicit operator StandardOption(Entities.StandardOption source)
@@ -26,6 +29,9 @@ namespace SFA.DAS.Courses.Domain.Courses
                 Skills = source.Skills?.Select(x => (Ksb)x).ToList(),
                 Behaviours = source.Behaviours?.Select(x => (Ksb)x).ToList(),
                 Ksbs = source.Ksbs?.Select(x => (Ksb)x).ToList(),
+                TechnicalKnowledges = source.TechnicalKnowledges?.Select(x => (Ksb)x).ToList(),
+                TechnicalSkills = source.TechnicalSkills?.Select(x => (Ksb)x).ToList(),
+                EmployabilitySkillsAndBehaviours = source.EmployabilitySkillsAndBehaviours?.Select(x => (Ksb)x).ToList()
             };
         }
     }

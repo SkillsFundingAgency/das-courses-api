@@ -12,6 +12,10 @@ namespace SFA.DAS.Courses.Domain.Entities
         public List<Ksb> Knowledge => KsbDetail(KsbType.Knowledge);
         public List<Ksb> Skills => KsbDetail(KsbType.Skill);
         public List<Ksb> Behaviours => KsbDetail(KsbType.Behaviour);
+        public List<Ksb> TechnicalKnowledges => KsbDetail(KsbType.TechnicalKnowledge);
+        public List<Ksb> TechnicalSkills => KsbDetail(KsbType.TechnicalSkill);
+        public List<Ksb> EmployabilitySkillsAndBehaviours => KsbDetail(KsbType.EmployabilitySkillsAndBehaviour);
+
         [JsonProperty]
         public List<Ksb> Ksbs { get; private set; }
 

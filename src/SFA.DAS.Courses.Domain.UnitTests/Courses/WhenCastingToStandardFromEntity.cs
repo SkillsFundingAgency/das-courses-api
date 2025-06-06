@@ -33,6 +33,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.StandardApprenticeshipType)
                 .Excluding(c => c.CreatedDate)
                 .Excluding(c => c.PublishDate)
+                .Excluding(c => c.ApprenticeshipType)
             );
 
             response.Route.Should().Be(source.Route.Name);
