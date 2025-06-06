@@ -13,5 +13,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public string SectorSubjectAreaTier1 { get; set; }
         public string OtherBodyApprovalRequired { get; set; }
         public int StandardSectorCode { get; set; }
+        public string ApprenticeshipStandardTypeCode { get; set; }
     }
 }
