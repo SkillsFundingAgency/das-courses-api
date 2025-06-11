@@ -18,8 +18,11 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         [Name("1618EmployerAdditionalPayment")]
         public decimal? EmployerAdditionalPayment1618 { get; set; }
         public decimal? CareLeaverAdditionalPayment { get; set; }
+        [Optional]
         public decimal? FoundationAppFirstEmpPayment { get; set; }
+        [Optional]
         public decimal? FoundationAppSecondEmpPayment { get; set; }
+        [Optional]
         public decimal? FoundationAppThirdEmpPayment { get; set; }
     }
 }

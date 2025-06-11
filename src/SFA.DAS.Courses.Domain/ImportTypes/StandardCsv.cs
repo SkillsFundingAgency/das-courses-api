@@ -1,4 +1,5 @@
 ﻿using System;
+using CsvHelper.Configuration.Attributes;
 
 namespace SFA.DAS.Courses.Domain.ImportTypes
 {
@@ -13,6 +14,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public string SectorSubjectAreaTier1 { get; set; }
         public string OtherBodyApprovalRequired { get; set; }
         public int StandardSectorCode { get; set; }
+        [Optional]
         public string ApprenticeshipStandardTypeCode { get; set; }
     }
 }
