@@ -33,12 +33,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IRouteService, RouteService>();
             services.AddHttpClient<IQualificationSectorSubjectAreaService, QualificationSectorSubjectAreaService>();
 
-#if DEBUG
-
-            services.AddTransient<IDataDownloadService, DummyDataDownloadService>();
-#else
             services.AddHttpClient<IDataDownloadService, DataDownloadService>();
-#endif
 
             AddDatabaseRegistrations(services);
         }
