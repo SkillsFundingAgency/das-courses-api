@@ -26,5 +26,8 @@ namespace SFA.DAS.Courses.Domain.Courses
         Knowledge = 1,
         Skill = 2,
         Behaviour = 3,
+        TechnicalKnowledge = 4,
+        TechnicalSkill = 5,
+        EmployabilitySkillsAndBehaviour = 6
     }
 }

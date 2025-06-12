@@ -23,7 +23,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 
         public async Task<GetStandardOptionKsbsResult> Handle(GetStandardOptionKsbsQuery request, CancellationToken cancellationToken)
         {
-            var standard = await GetStandard.GetStandard.ByAnyId(_standardsService, request.Id);
+            Standard standard = await GetStandard.GetStandard.ByAnyId(_standardsService, request.Id);
 
             var ksbs = standard?.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
 
