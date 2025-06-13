@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             standard.Route.Should().Be(standardFromRepo.Route.Name);
             standard.EqaProvider.Should().BeEquivalentTo(expectedEqaProvider);
             standard.VersionDetail.Should().BeEquivalentTo(expectedVersionDetail);
-            standard.ApprenticeshipType.Should().Be(standardFromRepo.StandardApprenticeshipType.ApprenticeshipType);
+            standard.ApprenticeshipType.Should().Be(standardFromRepo.ApprenticeshipType);
         }
     }
 }

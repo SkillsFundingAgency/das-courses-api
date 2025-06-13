@@ -9,10 +9,10 @@ using SFA.DAS.Courses.Application.CoursesImport.Validators;
 using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 
-namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
+namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.RequiredFieldPresentValidatorTests
 {
     [TestFixture]
-    public class RequiredFieldsPresentValidatorTests
+    public class ApprenticeshipTypeRequiredFieldsPresentValidatorTests
     {
         private RequiredFieldsPresentValidator _sut;
 
@@ -22,21 +22,21 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             _sut = new RequiredFieldsPresentValidator();
         }
 
-        private Standard CreateValidStandard()
+        private static Standard CreateValidStandard()
         {
             return new Standard
             {
                 ReferenceNumber = new Settable<string>("ST1001"),
                 Version = new Settable<string>("1.0"),
-                ApprovedForDelivery = new Settable<System.DateTime?>(System.DateTime.UtcNow),
+                ApprovedForDelivery = new Settable<DateTime?>(DateTime.UtcNow),
                 AssessmentPlanUrl = new Settable<string>("http://example.com"),
                 Behaviours = new Settable<List<Behaviour>>(new List<Behaviour>()),
                 Change = new Settable<string>("Some change"),
                 CoreAndOptions = new Settable<bool>(true),
                 CoronationEmblem = new Settable<bool>(false),
-                CreatedDate = new Settable<System.DateTime>(System.DateTime.UtcNow),
+                CreatedDate = new Settable<DateTime>(DateTime.UtcNow),
                 Duties = new Settable<List<Duty>>(new List<Duty>()),
-                VersionEarliestStartDate = new Settable<System.DateTime?>(System.DateTime.UtcNow),
+                VersionEarliestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
                 EqaProvider = new Settable<EqaProvider>(new EqaProvider
                 {
                     ContactAddress = new Settable<string>("Address"),
@@ -47,21 +47,21 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 }),
                 Keywords = new Settable<List<string>>(new List<string>()),
                 Knowledges = new Settable<List<Knowledge>>(new List<Knowledge>()),
-                VersionLatestEndDate = new Settable<System.DateTime?>(System.DateTime.UtcNow),
-                VersionLatestStartDate = new Settable<System.DateTime?>(System.DateTime.UtcNow),
+                VersionLatestEndDate = new Settable<DateTime?>(DateTime.UtcNow),
+                VersionLatestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
                 LarsCode = new Settable<int>(12345),
                 Level = new Settable<int>(5),
                 ProposedMaxFunding = new Settable<int>(5000),
                 Options = new Settable<List<Option>>(new List<Option>()),
                 OptionsUnstructuredTemplate = new Settable<List<string>>(new List<string>()),
                 OverviewOfRole = new Settable<string>("Overview"),
-                PublishDate = new Settable<System.DateTime>(System.DateTime.UtcNow),
+                PublishDate = new Settable<DateTime>(DateTime.UtcNow),
                 RegulatedBody = new Settable<string>("Regulator"),
                 Regulated = new Settable<bool>(false),
                 RegulationDetail = new Settable<List<RegulationDetail>>(new List<RegulationDetail>()),
                 Route = new Settable<string>("Engineering"),
                 Skills = new Settable<List<Skill>>(new List<Skill>()),
-                StandardPageUrl = new Settable<System.Uri>(new System.Uri("http://standard.com")),
+                StandardPageUrl = new Settable<Uri>(new Uri("http://standard.com")),
                 Status = new Settable<string>("Approved for delivery"),
                 TbMainContact = new Settable<string>("Main Contact"),
                 Title = new Settable<string>("Title"),
@@ -85,7 +85,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-        
+
         [TestCase(nameof(Standard.ApprovedForDelivery))]
         [TestCase(nameof(Standard.AssessmentPlanUrl))]
         [TestCase(nameof(Standard.Behaviours))]
@@ -271,11 +271,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             var dutiesJsonPropertyName = GetJsonPropertyName<Standard>(nameof(Standard.Duties));
 
             var importedStandard = CreateValidStandard();
-            importedStandard.Duties.Value.Add(new Duty 
-            { 
-                DutyId = new Settable<Guid>(Guid.NewGuid()), 
-                DutyDetail = new Settable<string>("DutyDetail"), 
-                IsThisACoreDuty = new Settable<long>(0), 
+            importedStandard.Duties.Value.Add(new Duty
+            {
+                DutyId = new Settable<Guid>(Guid.NewGuid()),
+                DutyDetail = new Settable<string>("DutyDetail"),
+                IsThisACoreDuty = new Settable<long>(0),
                 MappedKnowledge = new Settable<List<Guid>>(new List<Guid>()),
                 MappedBehaviour = new Settable<List<Guid>>(new List<Guid>()),
                 MappedOptions = new Settable<List<Guid>>(new List<Guid>()),
