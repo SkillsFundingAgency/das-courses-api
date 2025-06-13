@@ -80,12 +80,17 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 TrailBlazerContact = source.TrailBlazerContact,
                 TypicalJobTitles = source.TypicalJobTitles,
                 Skills = source.Options
-                               .SelectManyOrEmptyList(x => x.Skills)
-                               .Select(x => x.Detail)
-                               .Distinct().ToList(),
+                            .SelectManyOrEmptyList(x => x.Skills)
+                            .Select(x => x.Detail)
+                            .Distinct().ToList(),
                 Ksbs = source.Options
-                             .SelectManyOrEmptyList(x => x.Skills.EmptyEnumerableIfNull().Union(x.Knowledge.EmptyEnumerableIfNull()).Union(x.Behaviours.EmptyEnumerableIfNull()))
-                             .Select(x => (KsbResponse)x).ToList(),
+                            .SelectManyOrEmptyList(x => x.Skills.EmptyEnumerableIfNull()
+                            .Union(x.Knowledge.EmptyEnumerableIfNull())
+                            .Union(x.Behaviours.EmptyEnumerableIfNull())
+                            .Union(x.TechnicalSkills.EmptyEnumerableIfNull())
+                            .Union(x.TechnicalKnowledges.EmptyEnumerableIfNull())
+                            .Union(x.EmployabilitySkillsAndBehaviours.EmptyEnumerableIfNull()))
+                            .Select(x => (KsbResponse)x).ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (ApprenticeshipFundingResponse)c).ToList(),
