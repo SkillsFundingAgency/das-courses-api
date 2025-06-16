@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
@@ -15,7 +14,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber);
         Task<Standard> Get(string standardUId);
         Task<IEnumerable<Standard>> GetStandards();
-        Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties);
+        Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, string apprenticeshipType = null);
         Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber);
     }
 }
