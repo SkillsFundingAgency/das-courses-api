@@ -10,5 +10,12 @@ namespace SFA.DAS.Courses.Domain.Entities
         public int MaxEmployerLevyCap { get; set; }
         public virtual Standard Standard { get; set; }
         public int Duration { get; set; }
+        public int? Incentive1618 { get; set; }
+        public int? ProviderAdditionalPayment1618 { get; set; }
+        public int? EmployerAdditionalPayment1618 { get; set; }
+        public int? CareLeaverAdditionalPayment { get; set; }
+        public int? FoundationAppFirstEmpPayment { get; set; }
+        public int? FoundationAppSecondEmpPayment { get; set; }
+        public int? FoundationAppThirdEmpPayment { get; set; }
     }
 }

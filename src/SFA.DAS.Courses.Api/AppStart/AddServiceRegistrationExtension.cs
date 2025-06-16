@@ -25,7 +25,6 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IStandardsSortOrderService, StandardsSortOrderService>();
             services.AddTransient<ILarsPageParser, LarsPageParser>();
             services.AddTransient<ILevelsService, LevelsService>();
-            services.AddHttpClient<IDataDownloadService, DataDownloadService>();
             services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
             services.AddTransient<ILarsImportService, LarsImportService>();
             services.AddTransient<IFrameworksImportService, FrameworksImportService>();
@@ -33,6 +32,8 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IFrameworksService, FrameworksService>();
             services.AddTransient<IRouteService, RouteService>();
             services.AddHttpClient<IQualificationSectorSubjectAreaService, QualificationSectorSubjectAreaService>();
+
+            services.AddHttpClient<IDataDownloadService, DataDownloadService>();
 
             AddDatabaseRegistrations(services);
         }

@@ -91,9 +91,9 @@ namespace SFA.DAS.Courses.Data.Repository
             return await GetStandards(new List<int>(), new List<int>(), StandardFilter.None, true);
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties)
+        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, string apprenticeshipType = null)
         {
-            var standards = (includeAllProperties
+            IQueryable<Standard> standards = (includeAllProperties
                 ? GetFullBaseStandardQuery()
                 : GetBaseStandardQuery())
                 .FilterStandards(filter);
@@ -105,6 +105,10 @@ namespace SFA.DAS.Courses.Data.Repository
             if (levels.Count > 0)
             {
                 standards = standards.Where(standard => levels.Contains(standard.Level));
+            }
+            if (!string.IsNullOrEmpty(apprenticeshipType))
+            {
+                standards = standards.Where(standard => standard.ApprenticeshipType.Equals(apprenticeshipType));
             }
 
             var standardResults = await standards.ToListAsync();
@@ -132,8 +136,7 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Include(c => c.LarsStandard)
                 .ThenInclude(l => l.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
-                .ThenInclude(l => l.SectorSubjectArea1)
-                .Include(s => s.StandardApprenticeshipType);
+                .ThenInclude(l => l.SectorSubjectArea1);
             return query;
         }
 
@@ -141,14 +144,12 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             var query = _coursesDataContext
                 .Standards
-
                 .Include(c => c.Route)
                 .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
                 .ThenInclude(c => c.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
                 .ThenInclude(c => c.SectorSubjectArea1)
-                .Include(s => s.StandardApprenticeshipType)
                 .Select(c => new Standard
                 {
                     Status = c.Status,
@@ -177,7 +178,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     OverviewOfRole = c.OverviewOfRole,
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
-                    StandardApprenticeshipType = c.StandardApprenticeshipType
+                    ApprenticeshipType = c.ApprenticeshipType
                 });
 
             return query;

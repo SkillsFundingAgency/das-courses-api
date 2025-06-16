@@ -22,12 +22,12 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
 
         public async Task<GetStandardsListQueryResult> Handle(GetStandardsListQuery request, CancellationToken cancellationToken)
         {
-            var standards = (await _standardsService.GetStandardsList(request.Keyword, request.RouteIds, request.Levels, request.OrderBy, request.Filter, request.IncludeAllProperties)).ToList();
+            var standards = (await _standardsService.GetStandardsList(request.Keyword, request.RouteIds, request.Levels, request.OrderBy, request.Filter, request.IncludeAllProperties, request.ApprenticeshipType)).ToList();
             var total = await _standardsService.Count(request.Filter);
 
             if (standards.Count == 0 && !string.IsNullOrWhiteSpace(request.Keyword) && request.RouteIds.Count == 0 && request.Levels.Count == 0)
             {
-                _logger.LogInformation($"Zero results for searching by keyword [{request.Keyword}]", new {request.Keyword});
+                _logger.LogInformation("Zero results for searching by keyword: {Keyword}", request.Keyword);
             }
 
             return new GetStandardsListQueryResult

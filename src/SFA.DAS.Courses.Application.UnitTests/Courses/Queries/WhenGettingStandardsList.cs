@@ -28,12 +28,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
         {
             mockStandardsService
                 .Setup(service => service.GetStandardsList(
-                    query.Keyword, 
+                    query.Keyword,
                     query.RouteIds,
                     query.Levels,
                     query.OrderBy,
                     query.Filter,
-                    query.IncludeAllProperties))
+                    query.IncludeAllProperties,
+                    query.ApprenticeshipType))
                 .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count(query.Filter))
@@ -57,14 +58,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             var standards = new List<Standard>();
             query.Levels = new List<int>();
             query.RouteIds = new List<int>();
+            query.ApprenticeshipType = string.Empty;
             mockStandardsService
                 .Setup(service => service.GetStandardsList(
-                    query.Keyword, 
-                    It.Is<List<int>>(c=>c.Count == 0),
-                    It.Is<List<int>>(c=>c.Count == 0),
+                    query.Keyword,
+                    It.Is<List<int>>(c => c.Count == 0),
+                    It.Is<List<int>>(c => c.Count == 0),
                     query.OrderBy,
                     query.Filter,
-                    query.IncludeAllProperties))
+                    query.IncludeAllProperties,
+                    string.Empty))
                 .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count(query.Filter))
@@ -73,11 +76,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             await handler.Handle(query, CancellationToken.None);
 
             mockLogger.Verify(logger => logger.Log(
-                    LogLevel.Information, 
-                    0, 
+                    LogLevel.Information,
+                    0,
                     It.IsAny<It.IsAnyType>(),
                     null,
-                    (Func<It.IsAnyType, Exception, string>) It.IsAny<object>()));
+                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()));
         }
     }
 }

@@ -5,16 +5,23 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 {
     public class ApprenticeshipFundingResponse
     {
-        public int MaxEmployerLevyCap { get ; set ; }
+        public int MaxEmployerLevyCap { get; set; }
 
-        public DateTime? EffectiveTo { get ; set ; }
+        public DateTime? EffectiveTo { get; set; }
 
-        public DateTime EffectiveFrom { get ; set ; }
+        public DateTime EffectiveFrom { get; set; }
         public int Duration { get; set; }
+        public int? Incentive1618 { get; set; }
+        public int? ProviderAdditionalPayment1618 { get; set; }
+        public int? EmployerAdditionalPayment1618 { get; set; }
+        public int? CareLeaverAdditionalPayment { get; set; }
+        public int? FoundationAppFirstEmpPayment { get; set; }
+        public int? FoundationAppSecondEmpPayment { get; set; }
+        public int? FoundationAppThirdEmpPayment { get; set; }
 
-        public static explicit operator ApprenticeshipFundingResponse (ApprenticeshipFunding apprenticeshipFunding)
+        public static explicit operator ApprenticeshipFundingResponse(ApprenticeshipFunding apprenticeshipFunding)
         {
-            if(apprenticeshipFunding == null)
+            if (apprenticeshipFunding == null)
             {
                 return null;
             }
@@ -23,7 +30,14 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 EffectiveFrom = apprenticeshipFunding.EffectiveFrom,
                 EffectiveTo = apprenticeshipFunding.EffectiveTo,
                 MaxEmployerLevyCap = apprenticeshipFunding.MaxEmployerLevyCap,
-                Duration = apprenticeshipFunding.Duration
+                Duration = apprenticeshipFunding.Duration,
+                Incentive1618 = apprenticeshipFunding.Incentive1618,
+                ProviderAdditionalPayment1618 = apprenticeshipFunding.ProviderAdditionalPayment1618,
+                EmployerAdditionalPayment1618 = apprenticeshipFunding.EmployerAdditionalPayment1618,
+                CareLeaverAdditionalPayment = apprenticeshipFunding.CareLeaverAdditionalPayment,
+                FoundationAppFirstEmpPayment = apprenticeshipFunding.FoundationAppFirstEmpPayment,
+                FoundationAppSecondEmpPayment = apprenticeshipFunding.FoundationAppSecondEmpPayment,
+                FoundationAppThirdEmpPayment = apprenticeshipFunding.FoundationAppThirdEmpPayment
             };
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Courses;
@@ -30,9 +29,10 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             IList<int> levels,
             OrderBy orderBy,
             StandardFilter filter,
-            bool includeAllProperties)
+            bool includeAllProperties,
+            string apprenticeshipType)
         {
-            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties);
+            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties, apprenticeshipType);
 
             if (!string.IsNullOrEmpty(keyword))
             {

@@ -13,17 +13,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
         {
             var actual = (StandardDates)larsStandard;
 
-            actual.Should().BeEquivalentTo(larsStandard, options => options
-                .Excluding(c => c.LarsCode)
-                .Excluding(c => c.Version)
-                .Excluding(c => c.Standards)
-                .Excluding(c => c.SectorSubjectArea2)
-                .Excluding(c => c.SectorSubjectAreaTier2)
-                .Excluding(c => c.OtherBodyApprovalRequired)
-                .Excluding(c => c.SectorCode)
-                .Excluding(c => c.SectorSubjectAreaTier1)
-                .Excluding(c => c.SectorSubjectArea1)
-            );
+            actual.Should().BeEquivalentTo(larsStandard, options => options.ExcludingMissingMembers());
         }
     }
 }

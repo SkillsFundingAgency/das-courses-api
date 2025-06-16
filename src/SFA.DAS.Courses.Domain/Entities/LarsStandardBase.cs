@@ -13,5 +13,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public int? SectorSubjectAreaTier1 { get; set; }
         public bool OtherBodyApprovalRequired { get; set; }
         public int SectorCode { get; set; }
+        public string ApprenticeshipStandardTypeCode { get; set; }
     }
 }
