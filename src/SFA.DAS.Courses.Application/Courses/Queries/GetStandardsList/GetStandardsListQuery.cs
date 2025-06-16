@@ -11,6 +11,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
         public IList<int> Levels { get; set; } = new List<int>();
         public OrderBy OrderBy { get; set; }
         public StandardFilter Filter { get; set; }
+        public string ApprenticeshipType { get; set; }
         public bool IncludeAllProperties { get; set; }
     }
 }

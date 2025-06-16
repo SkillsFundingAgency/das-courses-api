@@ -7,6 +7,7 @@ using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
+using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
 
 namespace SFA.DAS.Courses.Api.Controllers
@@ -29,6 +30,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             [FromQuery] string keyword,
             [FromQuery] IList<int> routeIds,
             [FromQuery] IList<int> levels,
+            [FromQuery] string apprenticeshipType,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
             [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
         {
@@ -37,6 +39,7 @@ namespace SFA.DAS.Courses.Api.Controllers
                 Keyword = keyword,
                 RouteIds = routeIds,
                 Levels = levels,
+                ApprenticeshipType = apprenticeshipType,
                 OrderBy = orderBy,
                 Filter = filter,
                 IncludeAllProperties = false

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +25,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             string keyword,
             OrderBy orderBy,
             StandardFilter filter,
+            string apprenticeshipType,
             GetStandardsListQueryResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
@@ -33,17 +33,18 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             filter = StandardFilter.None;
             mockMediator
                 .Setup(mediator => mediator.Send(
-                    It.Is<GetStandardsListQuery>(query => 
-                        query.Keyword == keyword && 
+                    It.Is<GetStandardsListQuery>(query =>
+                        query.Keyword == keyword &&
                         query.RouteIds.Equals(routeIds) &&
                         query.Levels.Equals(levels) &&
                         query.OrderBy.Equals(orderBy) &&
                         query.Filter.Equals(filter) &&
-                        !query.IncludeAllProperties), 
+                        !query.IncludeAllProperties &&
+                        query.ApprenticeshipType.Equals(apprenticeshipType)),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            var controllerResult = await controller.GetList(keyword, routeIds, levels, orderBy, filter) as ObjectResult;
+            var controllerResult = await controller.GetList(keyword, routeIds, levels, apprenticeshipType, orderBy, filter) as ObjectResult;
 
             var model = controllerResult.Value as GetStandardsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
