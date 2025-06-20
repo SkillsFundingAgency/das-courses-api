@@ -12,6 +12,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<int> InsertMany(IEnumerable<Standard> standards);
         Task<Standard> GetLatestActiveStandard(int larsCode);
         Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber);
+        Task<List<Standard>> GetActiveStandardsByIfateReferenceNumber(List<string> ifateReferenceNumbers);
         Task<Standard> Get(string standardUId);
         Task<IEnumerable<Standard>> GetStandards();
         Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, string apprenticeshipType = null);

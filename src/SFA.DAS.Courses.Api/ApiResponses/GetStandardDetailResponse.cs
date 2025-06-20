@@ -56,6 +56,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public bool IsRegulatedForEPAO { get; set; }
         public string ApprenticeshipType { get; set; }
         public string ApprenticeshipStandardTypeCode { get; set; }
+        public List<RelatedOccupation> RelatedOccupations { get; set; } = new();
 
 
         public static implicit operator GetStandardDetailResponse(Standard source)
@@ -117,7 +118,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO,
                 ApprenticeshipType = source.ApprenticeshipType,
-                ApprenticeshipStandardTypeCode = source.ApprenticeshipStandardTypeCode
+                ApprenticeshipStandardTypeCode = source.ApprenticeshipStandardTypeCode,
+                RelatedOccupations = source.RelatedOccupations
             };
         }
     }

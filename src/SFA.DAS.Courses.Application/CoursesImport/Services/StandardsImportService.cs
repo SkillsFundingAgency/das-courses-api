@@ -76,7 +76,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                         var routeImports = await PrepareRouteImports(GetDistinctRoutes(importedStandards));
                         var groupedImportedStandards = GroupImportedStandards(importedStandards, routeImports);
 
-                        var validStandardImports = IndividuallyValidateStandardGroups(groupedImportedStandards, currentStandards, currentRoutes, validationFailures);
+                        Dictionary<string, List<StandardImport>> validStandardImports = IndividuallyValidateStandardGroups(groupedImportedStandards, currentStandards, currentRoutes, validationFailures);
                         validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
 
                         // cross validation must include the retained standards after individual validation
@@ -107,7 +107,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                         await _slackNotificationService.UploadFile(
                             allMessages,
                             $"IfATE_Validation_Results_{DateTime.Now.ToFileTimeUtc()}.txt",
-                            $"{_slackNotificationService.FormattedTag()} The standard import from IfATE failed validation, the last successfull run was {(DateTime.UtcNow - lastSuccessfulImport).Days} days ago.");
+                            $"{_slackNotificationService.FormattedTag()} The standard import from IfATE failed validation, the last successful run was {(DateTime.UtcNow - lastSuccessfulImport).Days} days ago.");
                     }
 
                     _logger.LogInformation("{MethodName} - finished", nameof(ImportDataIntoStaging));

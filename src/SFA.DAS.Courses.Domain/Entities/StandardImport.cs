@@ -61,8 +61,18 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionLatestEndDate = standard.VersionLatestEndDate.Value,
                 VersionLatestStartDate = standard.VersionLatestStartDate.Value,
                 VersionMajor = GetVersionPart(standard.Version?.Value, VersionPart.Major),
-                VersionMinor = GetVersionPart(standard.Version?.Value, VersionPart.Minor)
+                VersionMinor = GetVersionPart(standard.Version?.Value, VersionPart.Minor),
+                RelatedOccupations = GetRelatedOccupationsStandardCodes(standard)
             };
+        }
+
+        private static List<string> GetRelatedOccupationsStandardCodes(ImportTypes.Standard standard)
+        {
+            if (standard.ApprenticeshipType == Entities.ApprenticeshipType.FoundationApprenticeship)
+            {
+                return standard.RelatedOccupations?.Value.Select(r => $"ST{r.Reference.Value.Substring(3, 4)}").Distinct().ToList();
+            }
+            return [];
         }
 
         private static string GetStandardPageUrl(ImportTypes.Standard standard)
