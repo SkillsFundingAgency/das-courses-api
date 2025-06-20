@@ -52,6 +52,17 @@ namespace SFA.DAS.Courses.Data.Repository
             return await _coursesDataContext.SaveChangesAsync();
         }
 
+        public async Task<List<Standard>> GetActiveStandardsByIfateReferenceNumber(List<string> ifateReferenceNumbers)
+        {
+            var query = GetBaseStandardQuery()
+                .FilterStandards(StandardFilter.ActiveAvailable)
+                .Where(s => ifateReferenceNumbers.Contains(s.IfateReferenceNumber));
+            var standards = await query.ToListAsync();
+
+            var filteredStandards = standards.InMemoryFilterIsLatestVersion(StandardFilter.ActiveAvailable);
+            return filteredStandards.ToList();
+        }
+
         public async Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber)
         {
             var standards = await GetFullBaseStandardQuery()

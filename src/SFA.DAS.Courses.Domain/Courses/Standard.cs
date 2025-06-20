@@ -50,6 +50,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public bool IsRegulatedForEPAO { get; set; }
         public string ApprenticeshipType { get; set; }
         public string ApprenticeshipStandardTypeCode { get; set; }
+        public List<RelatedOccupation> RelatedOccupations { get; set; } = [];
 
         private List<StandardOption> _options = new List<StandardOption>();
         public List<StandardOption> Options

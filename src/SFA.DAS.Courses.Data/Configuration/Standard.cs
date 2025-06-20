@@ -31,6 +31,7 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
             builder.Property(x => x.Options).HasJsonConversion();
             builder.Property(x => x.EpaoMustBeApprovedByRegulatorBody).HasColumnType("EpaoMustBeApprovedByRegulatorBody").HasColumnType("bit").IsRequired();
+            builder.Property(x => x.RelatedOccupations).HasJsonConversion();
 
             builder.HasOne(c => c.Route)
                 .WithMany(c => c.Standards)

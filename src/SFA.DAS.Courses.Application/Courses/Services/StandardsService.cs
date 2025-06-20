@@ -61,21 +61,37 @@ namespace SFA.DAS.Courses.Application.Courses.Services
         {
             var standard = await _standardsRepository.GetLatestActiveStandard(larsCode);
 
-            return (Standard)standard;
+            var result = (Standard)standard;
+            result.RelatedOccupations = await GetRelatedOccupations(standard);
+            return result;
         }
 
         public async Task<Standard> GetLatestActiveStandard(string ifateReferenceNumber)
         {
             var standard = await _standardsRepository.GetLatestActiveStandard(ifateReferenceNumber);
 
-            return (Standard)standard;
+            var result = (Standard)standard;
+            result.RelatedOccupations = await GetRelatedOccupations(standard);
+            return result;
         }
 
         public async Task<Standard> GetStandard(string standardUId)
         {
             var standard = await _standardsRepository.Get(standardUId);
 
-            return (Standard)standard;
+            var result = (Standard)standard;
+            result.RelatedOccupations = await GetRelatedOccupations(standard);
+            return result;
+        }
+
+        private async Task<List<RelatedOccupation>> GetRelatedOccupations(Domain.Entities.Standard standard)
+        {
+            if (standard.ApprenticeshipType == Domain.Entities.ApprenticeshipType.FoundationApprenticeship.ToString())
+            {
+                var standards = await _standardsRepository.GetActiveStandardsByIfateReferenceNumber(standard.RelatedOccupations);
+                return standards.ConvertAll(s => (RelatedOccupation)s);
+            }
+            return [];
         }
 
         private IEnumerable<Domain.Entities.Standard> FindByKeyword(IEnumerable<Domain.Entities.Standard> standards, string keyword)

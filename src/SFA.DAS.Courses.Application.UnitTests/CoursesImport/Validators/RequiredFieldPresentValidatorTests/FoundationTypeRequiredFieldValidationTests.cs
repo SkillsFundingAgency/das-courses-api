@@ -51,7 +51,8 @@ public class FoundationTypeRequiredFieldValidationTests
             TechnicalSkills = new Settable<List<IdDetailPair>>(new List<IdDetailPair>()),
             TechnicalKnowledges = new Settable<List<IdDetailPair>>(new List<IdDetailPair>()),
             EmployabilitySkillsAndBehaviours = new Settable<List<IdDetailPair>>(new List<IdDetailPair>()),
-            AssessmentChanged = new Settable<bool>(false)
+            AssessmentChanged = new Settable<bool>(false),
+            RelatedOccupations = new Settable<List<RelatedOccupation>>(new List<RelatedOccupation>())
         };
 
     [Test]
@@ -99,6 +100,7 @@ public class FoundationTypeRequiredFieldValidationTests
     [TestCase(nameof(Standard.EmployabilitySkillsAndBehaviours))]
     [TestCase(nameof(Standard.FoundationApprenticeshipUrl))]
     [TestCase(nameof(Standard.AssessmentChanged))]
+    [TestCase(nameof(Standard.RelatedOccupations))]
     public void Should_Add_Failure_When_Required_Field_Is_Missing(string propertyName)
     {
         RequiredFieldsPresentValidator sut = new();
@@ -181,6 +183,27 @@ public class FoundationTypeRequiredFieldValidationTests
         var importedStandard = CreateValidFoundationApprenticeship();
         importedStandard.EmployabilitySkillsAndBehaviours.Value.Add(new IdDetailPair { Id = new Settable<Guid>(Guid.NewGuid()), Detail = new Settable<string>("Detail") });
         typeof(IdDetailPair).GetProperty(childPropertyName)?.SetValue(importedStandard.EmployabilitySkillsAndBehaviours.Value[0], Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(IdDetailPair).GetProperty(childPropertyName).PropertyType.GenericTypeArguments[0])));
+        var importedStandards = new List<Standard> { importedStandard };
+
+        // Act
+        var result = sut.TestValidate(importedStandards);
+
+        // Assert
+        result.Errors.Should().Contain(error => error.ErrorMessage.Contains($"E1001: {importedStandard.ReferenceNumber} version {importedStandard.Version} has missing fields '{rootJsonPropertyName}[0].{childJsonPropertyName}'"));
+    }
+
+    [TestCase(nameof(RelatedOccupation.Name))]
+    [TestCase(nameof(RelatedOccupation.Reference))]
+    public void Should_Add_Failure_When_RelatedOccupations_Child_Property_Is_Missing(string childPropertyName)
+    {
+        RequiredFieldsPresentValidator sut = new();
+        // Arrange
+        var childJsonPropertyName = RequiredFieldsPresentValidator.GetJsonPropertyName<RelatedOccupation>(childPropertyName);
+        var rootJsonPropertyName = RequiredFieldsPresentValidator.GetJsonPropertyName<Standard>(nameof(Standard.RelatedOccupations));
+
+        var importedStandard = CreateValidFoundationApprenticeship();
+        importedStandard.RelatedOccupations.Value.Add(new RelatedOccupation { Name = new Settable<string>(Guid.NewGuid().ToString()), Reference = new Settable<string>("OCC1001") });
+        typeof(RelatedOccupation).GetProperty(childPropertyName)?.SetValue(importedStandard.RelatedOccupations.Value[0], Activator.CreateInstance(typeof(Settable<>).MakeGenericType(typeof(RelatedOccupation).GetProperty(childPropertyName).PropertyType.GenericTypeArguments[0])));
         var importedStandards = new List<Standard> { importedStandard };
 
         // Act

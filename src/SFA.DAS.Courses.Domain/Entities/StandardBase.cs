@@ -49,5 +49,6 @@ namespace SFA.DAS.Courses.Domain.Entities
         public DateTime? PublishDate { get; set; }
         public bool IsRegulatedForProvider { get; set; } = false;
         public bool IsRegulatedForEPAO { get; set; } = false;
+        public List<string> RelatedOccupations { get; set; } = [];
     }
 }
