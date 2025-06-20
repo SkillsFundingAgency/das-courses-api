@@ -44,6 +44,7 @@ CREATE TABLE [dbo].[Standard]
     [EpaoMustBeApprovedByRegulatorBody] BIT NOT NULL Default 0,
     [PublishDate] DATETIME NULL,
     [ApprenticeshipType] VARCHAR(50) NULL DEFAULT 'Apprenticeship',
+    [RelatedOccupations] NVARCHAR(1000) NULL,
     CONSTRAINT [AK_Standard_Column] UNIQUE ([StandardUId])
 )
 GO

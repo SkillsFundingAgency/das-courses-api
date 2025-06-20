@@ -14,7 +14,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             .Excluding(s => s.VersionMajor)
             .Excluding(s => s.VersionMinor)
             .Excluding(c => c.IsRegulatedForProvider)
-            .Excluding(c => c.IsRegulatedForEPAO);
+            .Excluding(c => c.IsRegulatedForEPAO)
+            .Excluding(c => c.RelatedOccupations);
 
     }
 }

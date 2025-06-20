@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             count.Should().Be(activeValidStandards.Count);
         }
-        
+
         [Test, RecursiveMoqAutoData]
         public async Task Then_Gets_Count_From_Context_Of_Active_Standards(
             [StandardsAreLarsValid] List<Standard> activeValidStandards,
@@ -83,7 +83,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             allStandards.AddRange(retiredStandards);
 
             //set up active version 
-            var newActiveVersion = activeValidStandards.First();
+            var newActiveVersion = activeValidStandards[0];
             newActiveVersion.IfateReferenceNumber = "ST0001";
             newActiveVersion.Version = "2";
             newActiveVersion.LarsCode = 100002;

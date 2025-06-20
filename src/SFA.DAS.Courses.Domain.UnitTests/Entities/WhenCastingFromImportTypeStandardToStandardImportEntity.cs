@@ -13,10 +13,12 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities;
 
 public class WhenCastingFromImportTypeStandardToStandardImportEntity
 {
-    [Test]
-    public void Then_The_Ksbs_Are_Mapped_Correctly()
+    private Standard _source;
+
+    [SetUp]
+    public void SetUp()
     {
-        Standard source = new()
+        _source = new()
         {
             ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship,
             ApprovedForDelivery = new Settable<DateTime?>(DateTime.UtcNow),
@@ -79,26 +81,44 @@ public class WhenCastingFromImportTypeStandardToStandardImportEntity
                     new IdDetailPair { Id = Guid.NewGuid(), Detail = "Employability Skill 1" },
                     new IdDetailPair { Id = Guid.NewGuid(), Detail = "Employability Skill 2" }
                 }
-            }
+            },
+            RelatedOccupations = new Settable<List<RelatedOccupation>>(
+            [
+                new() { Name = Guid.NewGuid().ToString(), Reference="OCC0001"},
+                new() { Name = Guid.NewGuid().ToString(), Reference="OCC0002A"},
+                new() { Name = Guid.NewGuid().ToString(), Reference="OCC0002B"},
+            ])
         };
+    }
 
+    [Test]
+    public void Then_The_Ksbs_Are_Mapped_Correctly()
+    {
         //Act
-        StandardImport actual = source;
+        StandardImport actual = _source;
 
         using (new AssertionScope())
         {
             actual.Should().NotBeNull();
-            actual.Options[0].TechnicalKnowledges.Should().HaveCount(source.TechnicalKnowledges.Value.Count);
-            actual.Options[0].TechnicalSkills.Should().HaveCount(source.TechnicalSkills.Value.Count);
-            actual.Options[0].EmployabilitySkillsAndBehaviours.Should().HaveCount(source.EmployabilitySkillsAndBehaviours.Value.Count);
-
-            var a = actual.Options[0].TechnicalKnowledges.Select(k => k.Detail);
-            var e = source.TechnicalKnowledges.Value.Select(k => k.Detail);
-
-            actual.Options[0].TechnicalKnowledges.Select(k => k.Detail).Should().BeEquivalentTo(source.TechnicalKnowledges.Value.Select(k => k.Detail.Value));
-            actual.Options[0].TechnicalSkills.Select(k => k.Detail).Should().BeEquivalentTo(source.TechnicalSkills.Value.Select(k => k.Detail.Value));
+            actual.Options[0].TechnicalKnowledges.Should().HaveCount(_source.TechnicalKnowledges.Value.Count);
+            actual.Options[0].TechnicalSkills.Should().HaveCount(_source.TechnicalSkills.Value.Count);
+            actual.Options[0].EmployabilitySkillsAndBehaviours.Should().HaveCount(_source.EmployabilitySkillsAndBehaviours.Value.Count);
+            actual.Options[0].TechnicalKnowledges.Select(k => k.Detail).Should().BeEquivalentTo(_source.TechnicalKnowledges.Value.Select(k => k.Detail.Value));
+            actual.Options[0].TechnicalSkills.Select(k => k.Detail).Should().BeEquivalentTo(_source.TechnicalSkills.Value.Select(k => k.Detail.Value));
             actual.Options[0].EmployabilitySkillsAndBehaviours.Select(k => k.Detail)
-                .Should().BeEquivalentTo(source.EmployabilitySkillsAndBehaviours.Value.Select(k => k.Detail.Value));
+                .Should().BeEquivalentTo(_source.EmployabilitySkillsAndBehaviours.Value.Select(k => k.Detail.Value));
+        }
+    }
+
+    [Test]
+    public void Then_The_RelatedOccupations_Are_Mapped_Correctly()
+    {
+        // Act
+        StandardImport actual = _source;
+        using (new AssertionScope())
+        {
+            actual.Should().NotBeNull();
+            actual.RelatedOccupations.Should().BeEquivalentTo("ST0001", "ST0002");
         }
     }
 }

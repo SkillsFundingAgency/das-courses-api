@@ -121,6 +121,23 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                         AddMissingChildProperties(nameof(Standard.EmployabilitySkillsAndBehaviours), undefinedFields, idDetailPair, index);
                     }
                 }
+
+                undefinedFields.Add($"{GetJsonPropertyName<Standard>(nameof(Standard.RelatedOccupations))}", !standard.RelatedOccupations.IsSet);
+                if (standard.RelatedOccupations.HasValue)
+                {
+                    foreach (var (relatedOccupation, index) in standard.RelatedOccupations.Value.Select((s, i) => (s, i)))
+                    {
+                        if (!relatedOccupation.Name.IsSet)
+                        {
+                            undefinedFields.Add($"{GetJsonPropertyName<Standard>(nameof(Standard.RelatedOccupations))}[{index}].{GetJsonPropertyName<RelatedOccupation>(nameof(RelatedOccupation.Name))}", true);
+                        }
+
+                        if (!relatedOccupation.Reference.IsSet)
+                        {
+                            undefinedFields.Add($"{GetJsonPropertyName<Standard>(nameof(Standard.RelatedOccupations))}[{index}].{GetJsonPropertyName<RelatedOccupation>(nameof(RelatedOccupation.Reference))}", true);
+                        }
+                    }
+                }
             }
         }
 

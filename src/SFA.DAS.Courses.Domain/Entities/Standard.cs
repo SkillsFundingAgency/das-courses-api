@@ -49,7 +49,8 @@
                 VersionLatestEndDate = import.VersionLatestEndDate,
                 VersionLatestStartDate = import.VersionLatestStartDate,
                 VersionMajor = import.VersionMajor,
-                VersionMinor = import.VersionMinor
+                VersionMinor = import.VersionMinor,
+                RelatedOccupations = import.RelatedOccupations
             };
         }
     }
