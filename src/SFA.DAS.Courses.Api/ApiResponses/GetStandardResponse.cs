@@ -82,7 +82,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 SectorCode = source.SectorCode,
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
                 ApprenticeshipType = source.ApprenticeshipType,
-                ApprenticeshipStandardTypeCode = source.ApprenticeshipStandardTypeCode
+                ApprenticeshipStandardTypeCode = source.ApprenticeshipStandardTypeCode,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO
             };
