@@ -190,6 +190,8 @@ namespace SFA.DAS.Courses.Data.Repository
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
                     ApprenticeshipType = c.ApprenticeshipType
+                    IsRegulatedForProvider = c.IsRegulatedForProvider,
+                    IsRegulatedForEPAO = c.IsRegulatedForEPAO
                 });
 
             return query;
