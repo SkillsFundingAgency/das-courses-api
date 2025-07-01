@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Routes
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
-                    It.IsAny<GetRoutesQuery>(), 
+                    It.IsAny<GetRoutesQuery>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Routes
 
             var model = controllerResult.Value as GetRoutesListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            model.Routes.Should().BeEquivalentTo(queryResult.Routes);
+            model.Routes.Should().BeEquivalentTo(queryResult.Routes.Where(r => r.Active));
         }
     }
 }
