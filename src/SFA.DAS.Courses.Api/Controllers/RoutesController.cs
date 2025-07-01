@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
             var response = new GetRoutesListResponse
             {
-                Routes = queryResult.Routes.Select(c => (GetRouteResponse)c).Where(c => c.Active)
+                Routes = queryResult.Routes.Select(c => (GetRouteResponse)c)
             };
 
             return Ok(response);

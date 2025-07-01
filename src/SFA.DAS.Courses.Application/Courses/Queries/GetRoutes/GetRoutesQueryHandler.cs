@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -9,17 +10,17 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetRoutes
     {
         private readonly IRouteService _service;
 
-        public GetRoutesQueryHandler (IRouteService service)
+        public GetRoutesQueryHandler(IRouteService service)
         {
             _service = service;
         }
         public async Task<GetRoutesQueryResult> Handle(GetRoutesQuery request, CancellationToken cancellationToken)
         {
             var routes = await _service.GetRoutes();
-            
+
             return new GetRoutesQueryResult
             {
-                Routes = routes
+                Routes = routes.Where(r => r.Active)
             };
         }
     }
