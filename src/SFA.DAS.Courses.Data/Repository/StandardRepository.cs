@@ -189,7 +189,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     OverviewOfRole = c.OverviewOfRole,
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
-                    ApprenticeshipType = c.ApprenticeshipType,
+                    ApprenticeshipType = c.ApprenticeshipType
                     IsRegulatedForProvider = c.IsRegulatedForProvider,
                     IsRegulatedForEPAO = c.IsRegulatedForEPAO
                 });

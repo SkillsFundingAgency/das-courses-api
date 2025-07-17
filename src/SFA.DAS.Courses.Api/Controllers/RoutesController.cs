@@ -14,22 +14,22 @@ namespace SFA.DAS.Courses.Api.Controllers
     {
         private readonly IMediator _mediator;
 
-        public RoutesController (IMediator mediator)
+        public RoutesController(IMediator mediator)
         {
             _mediator = mediator;
         }
-        
+
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> GetList()
         {
             var queryResult = await _mediator.Send(new GetRoutesQuery());
-                
+
             var response = new GetRoutesListResponse
             {
-                Routes = queryResult.Routes.Select(c=>(GetRouteResponse)c)
+                Routes = queryResult.Routes.Select(c => (GetRouteResponse)c)
             };
-                
+
             return Ok(response);
         }
     }

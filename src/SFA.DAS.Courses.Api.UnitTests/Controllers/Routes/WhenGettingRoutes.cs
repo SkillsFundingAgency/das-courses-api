@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -25,15 +24,15 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Routes
         {
             mockMediator
                 .Setup(mediator => mediator.Send(
-                    It.IsAny<GetRoutesQuery>(), 
+                    It.IsAny<GetRoutesQuery>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
             var controllerResult = await controller.GetList() as OkObjectResult;
 
-            var model = controllerResult.Value as GetRoutesListResponse;
+            var model = controllerResult!.Value as GetRoutesListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            model.Routes.Should().BeEquivalentTo(queryResult.Routes);
+            model!.Routes.Should().BeEquivalentTo(queryResult.Routes);
         }
     }
 }
