@@ -126,9 +126,10 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionLatestEndDate = standard.VersionLatestEndDate,
                 VersionLatestStartDate = standard.VersionLatestStartDate,
                 VersionMajor = standard.VersionMajor,
-                VersionMinor = standard.VersionMinor
+                VersionMinor = standard.VersionMinor,
+                RelatedOccupations = standard.RelatedOccupations,
+                ApprenticeshipType = standard.ApprenticeshipType.ToString()
             };
-
         }
 
         public static bool QualificationsContainsEpaoMustBeApprovedText(List<Qualification> qualifications)
