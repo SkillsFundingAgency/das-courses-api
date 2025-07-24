@@ -97,6 +97,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         {
             return new Domain.Entities.Standard
             {
+                ApprenticeshipType = Domain.Entities.ApprenticeshipType.Apprenticeship.ToString(),
                 LarsCode = larsCode,
                 IfateReferenceNumber = referenceNumber,
                 Title = title,
