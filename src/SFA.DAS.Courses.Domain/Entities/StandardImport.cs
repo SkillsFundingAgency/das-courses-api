@@ -223,7 +223,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
-            var standardOptions = standard.CoreAndOptions.Value
+            var standardOptions = standard.CoreAndOptions.Value && standard.Duties.HasValue && standard.Duties.Value.Count > 0
                 ? CreateStructuredOptionsListWithDutyMapping(standard)
                 : CreateStructuredOptionsListWithoutDutyMapping(standard);
 
