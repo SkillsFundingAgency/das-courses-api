@@ -226,53 +226,43 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
-            //var standardOptions = (standard.CoreAndOptions.Value && standard.Duties.Value.Count > 0)
-            //    ? CreateStructuredOptionsListWithDutyMapping(standard)
-            //    : CreateStructuredOptionsListWithoutDutyMapping(standard);
-
-            //if (standardOptions.Any())
-            //{
-            //    return standardOptions;
-            //}
-            //else if (standard.OptionsUnstructuredTemplate?.Value?.Any() ?? false)
-            //{
-            //    var optionsUnstructuredTemplates = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
-            //    return optionsUnstructuredTemplates;
-            //}
-
-            //return [];
-
             var standardOptions = new List<StandardOption>();
 
             if (standard.CoreAndOptions.Value && standard.Duties.Value.Count > 0)
             {
                 standardOptions = CreateStructuredOptionsListWithDutyMapping(standard);
+                return standardOptions;
             }
 
             if (standard.CoreAndOptions.Value && standard.Duties.Value.Count == 0)
             {
                 standardOptions = CreateStructuredOptionsListWithoutDutyMapping(standard);
+                return standardOptions;
             }
 
             if (!standard.CoreAndOptions.Value)
             {
                 standardOptions = CreateStructuredOptionsListWithPseudoOptions(standard);
+                return standardOptions;
             }
 
-            if (!standard.CoreAndOptions.Value && standard.Options.Value?.Count == 0 && standard.OptionsUnstructuredTemplate.Value?.Count > 0)
+            if (!standard.CoreAndOptions.Value && standard.Options?.Value?.Count == 0 && standard.OptionsUnstructuredTemplate?.Value?.Count > 0)
             {
                 standardOptions = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+                return standardOptions;
             }
 
-            if (!standard.CoreAndOptions.Value && standard.Options.Value?.Count == 0 && standard.OptionsUnstructuredTemplate.Value?.Count == 0)
+            if (!standard.CoreAndOptions.Value && standard.Options?.Value?.Count == 0 && standard.OptionsUnstructuredTemplate?.Value?.Count == 0)
             {
                 standardOptions = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+                return standardOptions;
             }
 
             // this should account for FoundationApprenticeships
             if (!standard.CoreAndOptions.Value && standard.Options.Value == null && standard.OptionsUnstructuredTemplate.Value == null)
             {
                 standardOptions = CreateStructuredOptionsListWithPseudoOptions(standard);
+                return standardOptions;
             }
 
             return standardOptions;
