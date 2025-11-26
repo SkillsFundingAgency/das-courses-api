@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CsvHelper.Configuration;
 using SFA.DAS.Courses.Domain.Configuration;
+using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Domain.Entities
@@ -224,20 +226,56 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
-            var standardOptions = standard.CoreAndOptions.Value
-                ? CreateStructuredOptionsListWithDutyMapping(standard)
-                : CreateStructuredOptionsListWithoutDutyMapping(standard);
+            //var standardOptions = (standard.CoreAndOptions.Value && standard.Duties.Value.Count > 0)
+            //    ? CreateStructuredOptionsListWithDutyMapping(standard)
+            //    : CreateStructuredOptionsListWithoutDutyMapping(standard);
 
-            if (standardOptions.Any())
+            //if (standardOptions.Any())
+            //{
+            //    return standardOptions;
+            //}
+            //else if (standard.OptionsUnstructuredTemplate?.Value?.Any() ?? false)
+            //{
+            //    var optionsUnstructuredTemplates = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+            //    return optionsUnstructuredTemplates;
+            //}
+
+            //return [];
+
+            var standardOptions = new List<StandardOption>();
+
+            if (standard.CoreAndOptions.Value && standard.Duties.Value.Count > 0)
             {
-                return standardOptions;
-            }
-            else if (standard.OptionsUnstructuredTemplate?.Value?.Any() ?? false)
-            {
-                return standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+                standardOptions = CreateStructuredOptionsListWithDutyMapping(standard);
             }
 
-            return [];
+            if (standard.CoreAndOptions.Value && standard.Duties.Value.Count == 0)
+            {
+                standardOptions = CreateStructuredOptionsListWithoutDutyMapping(standard);
+            }
+
+            if (!standard.CoreAndOptions.Value)
+            {
+                standardOptions = CreateStructuredOptionsListWithPseudoOptions(standard);
+            }
+
+            if (!standard.CoreAndOptions.Value && standard.Options.Value?.Count == 0 && standard.OptionsUnstructuredTemplate.Value?.Count > 0)
+            {
+                standardOptions = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+            }
+
+            if (!standard.CoreAndOptions.Value && standard.Options.Value?.Count == 0 && standard.OptionsUnstructuredTemplate.Value?.Count == 0)
+            {
+                standardOptions = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+            }
+
+            // this should account for FoundationApprenticeships
+            if (!standard.CoreAndOptions.Value && standard.Options.Value == null && standard.OptionsUnstructuredTemplate.Value == null)
+            {
+                standardOptions = CreateStructuredOptionsListWithPseudoOptions(standard);
+            }
+
+            return standardOptions;
         }
 
         private static List<StandardOption> CreateStructuredOptionsListWithDutyMapping(ImportTypes.Standard standard)
@@ -324,10 +362,41 @@ namespace SFA.DAS.Courses.Domain.Entities
                     .Union(standard.TechnicalSkills.Value?.Select((x, i) => Ksb.TechnicalSkill(x.Id.Value, i + 1, x.Detail.Value)))
                     .Union(standard.EmployabilitySkillsAndBehaviours.Value?.Select((x, i) => Ksb.EmployabilitySkillsAndBehaviour(x.Id.Value, i + 1, x.Detail.Value)));
 
-            return new List<StandardOption>
+            var standardOptions = new List<StandardOption>();
+
+            if (standard.ApprenticeshipType == Entities.ApprenticeshipType.Apprenticeship && standard.CoreAndOptions.Value == true)
             {
-                StandardOption.CreateCorePseudoOption(ksbs?.DistinctBy(x => x.Key).ToList())
-            };
+                foreach (var option in standard.Options.Value)
+                {
+                    var standardOption = StandardOption.Create(option.OptionId, option.Title, ksbs.ToList());
+                    standardOptions.Add(standardOption);
+                }
+            }
+            else
+            {
+                var standardOption = StandardOption.CreateCorePseudoOption(ksbs?.DistinctBy(x => x.Key).ToList());
+                standardOptions.Add(standardOption);
+            }
+
+            return standardOptions;
+        }
+
+        private static List<StandardOption> CreateStructuredOptionsListWithPseudoOptions(ImportTypes.Standard standard)
+        {
+            var ksbs = standard.ApprenticeshipType == Entities.ApprenticeshipType.Apprenticeship
+                ? standard.Knowledges.Value?.Select((x, i) => Ksb.Knowledge(x.KnowledgeId.Value, i + 1, x.Detail.Value))
+                    .Union(standard.Skills.Value?.Select((x, i) => Ksb.Skill(x.SkillId.Value, i + 1, x.Detail.Value)))
+                    .Union(standard.Behaviours.Value?.Select((x, i) => Ksb.Behaviour(x.BehaviourId.Value, i + 1, x.Detail.Value)))
+                : standard.TechnicalKnowledges.Value?.Select((x, i) => Ksb.TechnicalKnowledge(x.Id.Value, i + 1, x.Detail.Value))
+                    .Union(standard.TechnicalSkills.Value?.Select((x, i) => Ksb.TechnicalSkill(x.Id.Value, i + 1, x.Detail.Value)))
+                    .Union(standard.EmployabilitySkillsAndBehaviours.Value?.Select((x, i) => Ksb.EmployabilitySkillsAndBehaviour(x.Id.Value, i + 1, x.Detail.Value)));
+
+            var standardOptions = new List<StandardOption>();
+
+            var standardOption = StandardOption.CreateCorePseudoOption(ksbs?.DistinctBy(x => x.Key).ToList());
+            standardOptions.Add(standardOption);
+
+            return standardOptions;
         }
 
         private static bool GetIsRegulated(ImportTypes.Standard standard, string name)
