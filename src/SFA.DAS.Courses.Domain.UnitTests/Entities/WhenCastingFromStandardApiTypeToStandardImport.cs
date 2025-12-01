@@ -713,7 +713,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Count.Should().Be(1);
+            actual.Options.Count.Should().Be(standard.Options.Value.Count);
             actual.Options[0].Should().NotBeNull();
             actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Value.Select(c => c.Title.Value));
         }
