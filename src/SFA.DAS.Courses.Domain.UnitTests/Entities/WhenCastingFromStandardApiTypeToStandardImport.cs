@@ -696,5 +696,107 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.IsRegulatedForProvider.Should().Be(expected);
             actual.IsRegulatedForEPAO.Should().Be(expected);
         }
+
+
+        /// <summary>
+        /// AC1:Unit test is based on the acceptance criteria as set out in Bug: P2-2923
+        /// </summary>
+        /// <param name="standard"></param>
+        [Test, StandardAutoData]
+        public void And_CoreAndOptionsIsTrue_WithDuties_Then_All_Options_Are_Mapped(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.CoreAndOptions = true;
+            standard.Duties.Value[0].IsThisACoreDuty = 1;
+
+            // Act
+            var actual = (StandardImport)standard;
+
+            // Assert
+            actual.Options.Count.Should().Be(1);
+            actual.Options[0].Should().NotBeNull();
+            actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Value.Select(c => c.Title.Value));
+        }
+
+        /// <summary>
+        /// AC2:Unit test is based on the acceptance criteria as set out in Bug: P2-2923
+        /// </summary>
+        /// <param name="standard"></param>
+        [Test, StandardAutoData]
+        public void And_CoreAndOptionsIsTrue_WithOutDuties_Then_All_Options_Are_Mapped(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.CoreAndOptions = true;
+            standard.Duties = new();
+
+            // Act
+            var actual = (StandardImport)standard;
+
+            // Assert
+            actual.Options.Count.Should().Be(standard.Options.Value.Count);
+            actual.Options[0].Should().NotBeNull();
+            actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Value.Select(c => c.Title.Value));
+            actual.Options[0].Ksbs.Count().Should().Be(standard.Behaviours.Value.Count + standard.Skills.Value.Count + standard.Knowledges.Value.Count);
+        }
+
+        /// <summary>
+        /// AC3:Unit test is based on the acceptance criteria as set out in Bug: P2-2923
+        /// </summary>
+        /// <param name="standard"></param>
+        [Test, StandardAutoData]
+        public void And_CoreAndOptionsIsFalse_And_HasOptions_Then_All_Options_Are_PsuedoType(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.CoreAndOptions = false;
+
+            // Act
+            var actual = (StandardImport)standard;
+
+            // Assert
+            actual.Options.Count.Should().Be(1);
+            actual.Options[0].Should().NotBeNull();
+            actual.Options[0].OptionId.Should().Be(Guid.Empty);
+            actual.Options[0].Ksbs.Count().Should().Be(standard.Behaviours.Value.Count + standard.Skills.Value.Count + standard.Knowledges.Value.Count);
+        }
+
+        /// <summary>
+        /// AC4:Unit test is based on the acceptance criteria as set out in Bug: P2-2923
+        /// </summary>
+        /// <param name="standard"></param>
+        [Test, StandardAutoData]
+        public void And_CoreAndOptionsIsFalse_And_HasNoOptions_Then_All_Options_Are_Based_On_OptionsUnstructuredTemplates(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.CoreAndOptions = false;
+            standard.Options = new();
+
+            // Act
+            var actual = (StandardImport)standard;
+
+            // Assert
+            actual.Options.Count.Should().Be(3);
+            actual.Options[0].Should().NotBeNull();
+            actual.Options[0].OptionId.Should().Be(Guid.Empty);
+            actual.Options[0].Title.Should().Be(standard.OptionsUnstructuredTemplate.Value[0].ToString());
+            actual.Options[0].Ksbs.Should().BeNull();
+        }
+
+        /// <summary>
+        /// AC5:Unit test is based on the acceptance criteria as set out in Bug: P2-2923
+        /// </summary>
+        /// <param name="standard"></param>
+        [Test, StandardAutoData]
+        public void And_HasNoOptions_And_HasNoOptionsUnstructuredTemplates_Then_Options_IsEmpty(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.Options = new();
+            standard.OptionsUnstructuredTemplate = new();
+
+            // Act
+            var actual = (StandardImport)standard;
+
+            // Assert
+            actual.Options.Count.Should().Be(0);
+        }
     }
 }
