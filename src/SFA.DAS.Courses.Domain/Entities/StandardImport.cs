@@ -226,41 +226,34 @@ namespace SFA.DAS.Courses.Domain.Entities
         {
             var standardOptions = new List<StandardOption>();
 
-            if (standard.CoreAndOptions.Value && standard.Duties.Value.Count > 0)
-            {
-                standardOptions = CreateStructuredOptionsListWithDutyMapping(standard);
+            if ((!standard.Behaviours.Value?.Any() ?? true) && (!standard.Skills.Value?.Any() ?? true) && (!standard.Knowledges.Value?.Any() ?? true))
                 return standardOptions;
-            }
 
-            if (standard.CoreAndOptions.Value && standard.Duties.Value.Count == 0)
-            {
-                standardOptions = CreateStructuredOptionsListWithoutDutyMapping(standard);
-                return standardOptions;
-            }
 
-            if (!standard.CoreAndOptions.Value)
+            if (standard.CoreAndOptions)
             {
-                standardOptions = CreateStructuredOptionsListWithPseudoOptions(standard);
-                return standardOptions;
+                if (standard.Duties.Value?.Count > 0)
+                {
+                    standardOptions = CreateStructuredOptionsListWithDutyMapping(standard);
+                }
+                else
+                {
+                    standardOptions = CreateStructuredOptionsListWithoutDutyMapping(standard);
+                }
             }
-
-            if (!standard.CoreAndOptions.Value && standard.Options?.Value?.Count == 0 && standard.OptionsUnstructuredTemplate?.Value?.Count > 0)
+            else
             {
-                standardOptions = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
-                return standardOptions;
-            }
-
-            if (!standard.CoreAndOptions.Value && standard.Options?.Value?.Count == 0 && standard.OptionsUnstructuredTemplate?.Value?.Count == 0)
-            {
-                standardOptions = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
-                return standardOptions;
-            }
-
-            // this should account for FoundationApprenticeships
-            if (!standard.CoreAndOptions.Value && standard.Options.Value == null && standard.OptionsUnstructuredTemplate.Value == null)
-            {
-                standardOptions = CreateStructuredOptionsListWithPseudoOptions(standard);
-                return standardOptions;
+                if(standard.Options.Value?.Count > 0)
+                {
+                    standardOptions = CreateStructuredOptionsListWithPseudoOptions(standard);
+                }
+                else
+                {
+                    if (standard.OptionsUnstructuredTemplate.Value?.Count > 0)
+                    {
+                        standardOptions = standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+                    }
+                }
             }
 
             return standardOptions;
@@ -345,7 +338,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             var ksbs = GetListOfKsbsFromStandard(standard);
             var standardOptions = new List<StandardOption>();
 
-            if (standard.ApprenticeshipType == Entities.ApprenticeshipType.Apprenticeship && standard.CoreAndOptions.Value == true)
+            if (standard.ApprenticeshipType == Entities.ApprenticeshipType.Apprenticeship)
             {
                 foreach (var option in standard.Options.Value)
                 {
@@ -365,10 +358,9 @@ namespace SFA.DAS.Courses.Domain.Entities
         private static List<StandardOption> CreateStructuredOptionsListWithPseudoOptions(ImportTypes.Standard standard)
         {
             var ksbs = GetListOfKsbsFromStandard(standard);
-            var standardOptions = new List<StandardOption>();
 
             var standardOption = StandardOption.CreateCorePseudoOption(ksbs?.DistinctBy(x => x.Key).ToList());
-            standardOptions.Add(standardOption);
+            var standardOptions = new List<StandardOption> { standardOption };
 
             return standardOptions;
         }
