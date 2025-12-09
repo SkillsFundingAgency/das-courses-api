@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
@@ -23,6 +24,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                             c.VersionMajor == parsedVersion.Major &&
                             c.VersionMinor == parsedVersion.Minor);
 
+                        if(parsedVersion.Major < 1)
+                        {
+                            continue;
+                        }
+                        
                         if (currentStandard == null || !currentStandard.Options.Any())
                         {
                             continue;
