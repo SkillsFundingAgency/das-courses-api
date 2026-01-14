@@ -7,6 +7,7 @@
         public static string LarsDownloadPageUrl => $"{LarsBasePageUrl}/find-a-learning-aim/DownloadData";
         public static string LarsStandardsFileName => "Standard.csv";
         public static string LarsApprenticeshipFundingFileName => "ApprenticeshipFunding.csv";
+        public static string LarsFundingFileName => "Funding.csv";
         public static string LarsSectorSubjectAreaTier2FileName => "SectorSubjectAreaTier2.csv";
         public static string LarsSectorSubjectAreaTier1FileName => "SectorSubjectAreaTier1.csv";
         public static string SlackStartUploadUrl => "https://slack.com/api/files.getUploadURLExternal";

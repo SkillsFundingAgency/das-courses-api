@@ -78,6 +78,7 @@
     <Build Include="Tables\SectorSubjectAreaTier1.sql" />
     <Build Include="Tables\SectorSubjectAreaTier1_Import.sql" />
     <Build Include="Tables\StandardApprenticeshipType.sql" />
+    <Build Include="Tables\Funding_Import.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

@@ -21,10 +21,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly ISectorSubjectAreaTier1Repository _sectorSubjectAreaTier1Repository;
         private readonly IStandardImportRepository _standardImportRepository;
         private readonly ILogger<LarsImportService> _logger;
-        private readonly LarsImportStaging _larsImportStaging;
+        private readonly ILarsImportStagingService _larsImportStagingService;
 
         public LarsImportService(ILarsPageParser larsPageParser,
-            IDataDownloadService dataDownloadService,
             IImportAuditRepository importAuditRepository,
             IApprenticeshipFundingImportRepository apprenticeshipFundingImportRepository,
             ILarsStandardImportRepository larsStandardImportRepository,
@@ -33,10 +32,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             ISectorSubjectAreaTier2ImportRepository sectorSubjectAreaTier2ImportRepository,
             ISectorSubjectAreaTier2Repository sectorSubjectAreaTier2Repository,
             IStandardImportRepository standardImportRepository,
-            IZipArchiveHelper zipArchiveHelper,
-            ILogger<LarsImportService> logger,
             ISectorSubjectAreaTier1ImportRepository sectorSubjectAreaTier1ImportRepository,
-            ISectorSubjectAreaTier1Repository sectorSubjectAreaTier1Repository)
+            ISectorSubjectAreaTier1Repository sectorSubjectAreaTier1Repository,
+            ILarsImportStagingService larsImportStaging,
+            ILogger<LarsImportService> logger)
         {
             _larsPageParser = larsPageParser;
             _importAuditRepository = importAuditRepository;
@@ -49,15 +48,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _standardImportRepository = standardImportRepository;
             _sectorSubjectAreaTier1ImportRepository = sectorSubjectAreaTier1ImportRepository;
             _sectorSubjectAreaTier1Repository = sectorSubjectAreaTier1Repository;
+            _larsImportStagingService = larsImportStaging;
             _logger = logger;
-            _larsImportStaging = new LarsImportStaging(
-                dataDownloadService,
-                zipArchiveHelper,
-                _apprenticeshipFundingImportRepository,
-                _larsStandardImportRepository,
-                _sectorSubjectAreaTier2ImportRepository,
-                _sectorSubjectAreaTier1ImportRepository,
-                _logger);
         }
 
         public async Task<(bool Success, string FileName)> ImportDataIntoStaging()
@@ -68,7 +60,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 var filePath = await _larsPageParser.GetCurrentLarsDataDownloadFilePath();
 
-                await _larsImportStaging.Import(filePath);
+                await _larsImportStagingService.Import(filePath);
 
                 _logger.LogInformation("LARS Import - data into staging - finished");
 
