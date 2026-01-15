@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.RegulationDetail.Value[1].Name = Constants.EPAORegulationType;
             var actual = (StandardImport)standard;
 
-            actual.LarsCode.Should().Be(standard.LarsCode.Value);
+            actual.LarsCode.Should().Be(standard.LarsCode.Value.ToString());
             actual.Status.Should().Be(standard.Status);
             actual.VersionEarliestStartDate.Should().Be(standard.VersionEarliestStartDate.Value);
             actual.VersionLatestStartDate.Should().Be(standard.VersionLatestStartDate.Value);

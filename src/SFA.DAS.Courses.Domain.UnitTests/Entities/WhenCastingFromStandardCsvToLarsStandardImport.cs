@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                 .Excluding(c => c.StandardSectorCode)
                 .Excluding(c => c.SectorSubjectAreaTier1)
             );
-            actual.LarsCode.Should().Be(standardCsv.StandardCode);
+            actual.LarsCode.Should().Be(standardCsv.StandardCode.ToString());
             actual.SectorCode.Should().Be(standardCsv.StandardSectorCode);
             actual.OtherBodyApprovalRequired.Should()
                 .Be(expected);

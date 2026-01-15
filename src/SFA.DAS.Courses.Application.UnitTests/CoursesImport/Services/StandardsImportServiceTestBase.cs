@@ -56,7 +56,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             };
         }
 
-        protected static Domain.Entities.StandardImport GetValidStandardImport(int larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
+        protected static Domain.Entities.StandardImport GetValidStandardImport(string larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
         {
             return new Domain.Entities.StandardImport
             {
@@ -93,7 +93,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             };
         }
 
-        protected static Domain.Entities.Standard GetValidStandard(int larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
+        protected static Domain.Entities.Standard GetValidStandard(string larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
         {
             return new Domain.Entities.Standard
             {

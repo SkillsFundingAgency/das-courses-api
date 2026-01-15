@@ -1,13 +1,13 @@
 ﻿CREATE TABLE [dbo].[ApprenticeshipFunding]
 (
     [Id] UNIQUEIDENTIFIER PRIMARY KEY,
-    [LarsCode] VARCHAR(8) NOT NULL,
+    [LarsCode] VARCHAR(8) DEFAULT '' NOT NULL,
     [EffectiveFrom] DATETIME NOT NULL,
     [EffectiveTo] DATETIME NULL,
-    [MaxEmployerLevyCap] DECIMAL(5, 2) NOT NULL,
+    [MaxEmployerLevyCap] DECIMAL(7,2) NOT NULL,
     [Duration] INT NOT NULL DEFAULT 0,
-    [DurationUnits] VARCHAR(6) NOT NULL,
-    [FundingStream] VARCHAR(30) NOT NULL,
+    [DurationUnits] VARCHAR(6) DEFAULT '' NOT NULL,
+    [FundingStream] VARCHAR(30) DEFAULT '' NOT NULL,
     [Incentive1618] INT,
     [ProviderAdditionalPayment1618] INT,
     [EmployerAdditionalPayment1618] INT,

@@ -86,7 +86,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 new Standard
                 {
-                    LarsCode = 1,
+                    LarsCode = "1",
                     StandardUId = "ST0001_1.3",
                     IfateReferenceNumber = "ST0001",
                     Title = "Head Brewer",
@@ -98,7 +98,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        LarsCode = 1,
+                        LarsCode = "1",
                         SectorSubjectAreaTier2 = 1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -114,7 +114,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 2,
+                    LarsCode = "2",
                     StandardUId = "ST0002_1.0",
                     IfateReferenceNumber = "ST0002",
                     Title = "Brewer",
@@ -126,7 +126,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        LarsCode = 2,
+                        LarsCode = "2",
                         SectorSubjectAreaTier2 = 1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -138,7 +138,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 3,
+                    LarsCode = "3",
                     StandardUId = "ST0003_1.0",
                     IfateReferenceNumber = "ST0003",
                     Title = "Senior / head of facilities management (degree)",
@@ -150,7 +150,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        LarsCode = 3,
+                        LarsCode = "3",
                         SectorSubjectAreaTier2 = 1.1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -161,7 +161,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 4,
+                    LarsCode = "4",
                     StandardUId = "ST0004_1.0",
                     IfateReferenceNumber = "ST0004",
                     Title = "Dentist",
@@ -173,7 +173,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        LarsCode = 4,
+                        LarsCode = "4",
                         SectorSubjectAreaTier2 = 1.1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -184,7 +184,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 5,
+                    LarsCode = "5",
                     StandardUId = "ST0005_1.1",
                     IfateReferenceNumber = "ST0005",
                     Title = "Photographic assistant SortOrder",
@@ -196,7 +196,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        LarsCode = 5,
+                        LarsCode = "5",
                         SectorSubjectAreaTier2 = 1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -207,7 +207,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 6,
+                    LarsCode = "6",
                     StandardUId = "ST0006_1.0",
                     IfateReferenceNumber = "ST0006",
                     Title = "Camera prep technician",
@@ -219,7 +219,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        LarsCode = 6,
+                        LarsCode = "6",
                         SectorSubjectAreaTier2 = 1.1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -230,7 +230,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 7,
+                    LarsCode = "7",
                     StandardUId = "ST0007_1.0",
                     IfateReferenceNumber = "ST0007",
                     Title = "Junior animator SortOrder",
@@ -242,7 +242,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
                         LastDateStarts = null,
-                        LarsCode = 7,
+                        LarsCode = "7",
                         SectorSubjectAreaTier2 = 1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -253,7 +253,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 8,
+                    LarsCode = "8",
                     StandardUId = "ST0008_1.0",
                     IfateReferenceNumber = "ST0008",
                     Title = "Standard with option mapped KSBs",
@@ -262,7 +262,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LarsCode = 8,
+                        LarsCode = "8",
                         SectorSubjectAreaTier2 = 1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -297,7 +297,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 new Standard
                 {
-                    LarsCode = 11,
+                    LarsCode = "11",
                     StandardUId = "ST0011_1.0",
                     IfateReferenceNumber = "ST0011",
                     Title = "Structural Engineer - invalid",
@@ -308,7 +308,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
-                        LarsCode = 11,
+                        LarsCode = "11",
                         SectorSubjectAreaTier2 = 1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -319,7 +319,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 14,
+                    LarsCode = "14",
                     StandardUId = "ST0014_1.0",
                     IfateReferenceNumber = "ST0014",
                     Title = "Dentist - invalid",
@@ -330,7 +330,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddDays(1),
-                        LarsCode = 14,
+                        LarsCode = "14",
                         SectorSubjectAreaTier2 = 1m,
                         SectorSubjectAreaTier1 = 1
                     },
@@ -354,7 +354,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 new Standard
                 {
-                    LarsCode = 0,
+                    LarsCode = "0",
                     StandardUId = "ST0015_1.0",
                     IfateReferenceNumber = "ST0015",
                     Title = "Assistant Brewer - Proposal in development",
@@ -370,7 +370,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                  new Standard
                 {
-                    LarsCode = 0,
+                    LarsCode = "0",
                     StandardUId = "ST0016_1.0",
                     IfateReferenceNumber = "ST0016",
                     Title = "Metallurgy Engineer - In development",
@@ -399,7 +399,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 new Standard
                 {
-                    LarsCode = 0,
+                    LarsCode = "0",
                     StandardUId = "ST0030_1.0",
                     IfateReferenceNumber = "ST0030",
                     Title = "Assistant Brewer - Withdrawn",
@@ -427,7 +427,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             {
                 new Standard
                 {
-                    LarsCode = 1,
+                    LarsCode = "1",
                     StandardUId = "ST0001_1.2",
                     IfateReferenceNumber = "ST0001",
                     Title = "Head Brewer",
@@ -447,7 +447,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 1,
+                    LarsCode = "1",
                     StandardUId = "ST0001_1.1",
                     IfateReferenceNumber = "ST0001",
                     Title = "Head Brewer",
@@ -462,7 +462,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 5,
+                    LarsCode = "5",
                     StandardUId = "ST0005_1.0",
                     IfateReferenceNumber = "ST0005",
                     Title = "Photographic assistant SortOrder",
@@ -482,7 +482,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                 },
                 new Standard
                 {
-                    LarsCode = 99,
+                    LarsCode = "99",
                     StandardUId = "ST0099_1.0",
                     IfateReferenceNumber = "ST0099",
                     Title = "Photographic assistant",

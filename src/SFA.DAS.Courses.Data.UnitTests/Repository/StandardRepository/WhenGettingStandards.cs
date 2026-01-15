@@ -120,10 +120,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var newActiveVersion = activeValidStandards.First();
             newActiveVersion.IfateReferenceNumber = "ST0001";
             newActiveVersion.Version = "2";
-            newActiveVersion.LarsCode = 100002;
+            newActiveVersion.LarsCode = "100002";
 
             //add a retired version to have same IfateReferenceNumber and different LarsCode
-            var retiredStandardWithDistinctLarsCode = activeValidStandards.Select(x => new Standard { IfateReferenceNumber = x.IfateReferenceNumber, Status = "Retired", LarsCode = 100001, Version = "1", LarsStandard = newActiveVersion.LarsStandard }).First();
+            var retiredStandardWithDistinctLarsCode = activeValidStandards.Select(x => new Standard { IfateReferenceNumber = x.IfateReferenceNumber, Status = "Retired", LarsCode = "100001", Version = "1", LarsStandard = newActiveVersion.LarsStandard }).First();
             allStandards.Add(retiredStandardWithDistinctLarsCode);
 
             mockDbContext

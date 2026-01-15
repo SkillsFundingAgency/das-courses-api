@@ -21,13 +21,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 {
                     "ST1001", new List<StandardImport>
                     {
-                        new StandardImport { IfateReferenceNumber = "ST1001", Version = "1.0", LarsCode = 12345 }
+                        new StandardImport { IfateReferenceNumber = "ST1001", Version = "1.0", LarsCode = "12345" }
                     }
                 },
                 {
                     "ST1002", new List<StandardImport>
                     {
-                        new StandardImport { IfateReferenceNumber = "ST1002", Version = "1.0", LarsCode = 67890 }
+                        new StandardImport { IfateReferenceNumber = "ST1002", Version = "1.0", LarsCode = "67890" }
                     }
                 }
             };
@@ -41,7 +41,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             // Arrange
             var standardImports = new List<StandardImport>
             {
-                new StandardImport { IfateReferenceNumber = "ST1003", Version = "1.0", LarsCode = 11111 }
+                new StandardImport { IfateReferenceNumber = "ST1003", Version = "1.0", LarsCode = "11111" }
             };
 
             // Act
@@ -57,7 +57,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             // Arrange
             var standardImports = new List<StandardImport>
             {
-                new StandardImport { IfateReferenceNumber = "ST1003", Version = "1.0", LarsCode = 12345 }
+                new StandardImport { IfateReferenceNumber = "ST1003", Version = "1.0", LarsCode = "12345" }
             };
 
             // Act

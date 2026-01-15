@@ -58,8 +58,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var standardsImports = new List<Domain.Entities.StandardImport>
             {
-                GetValidStandardImport(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandardImport(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandardImport("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandardImport("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
             };
 
             routeImportRepository
@@ -128,8 +128,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var standardsImports = new List<Domain.Entities.StandardImport>
             {
-                GetValidStandardImport(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandardImport(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandardImport("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandardImport("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
             };
 
             routeImportRepository

@@ -144,7 +144,10 @@ namespace SFA.DAS.Courses.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IIndexBuilder indexBuilder, ILogger<Startup> logger)
         {
-            indexBuilder.Build();
+            if (!ConfigurationIsLocalOrDev())
+            {
+                indexBuilder.Build();
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -163,7 +166,7 @@ namespace SFA.DAS.Courses.Api
 
             app.UseAuthentication();
 
-            if (!_configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            if (!ConfigurationIsLocalOrDev())
             {
                 app.UseHealthChecks();
             }

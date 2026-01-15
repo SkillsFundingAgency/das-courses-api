@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;
@@ -17,9 +18,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly IApprenticeshipFundingImportRepository _apprenticeshipFundingImportRepository;
         private readonly IFundingImportRepository _fundingImportRepository;
         private readonly ILarsStandardImportRepository _larsStandardImportRepository;
-        private readonly ILogger<LarsImportService> _logger;
         private readonly ISectorSubjectAreaTier2ImportRepository _sectorSubjectAreaTier2ImportRepository;
         private readonly ISectorSubjectAreaTier1ImportRepository _sectorSubjectAreaTier1ImportRepository;
+        private readonly CoursesConfiguration _coursesConfiguration;
+        private readonly ILogger<LarsImportService> _logger;
 
         public LarsImportStagingService(
             IDataDownloadService dataDownloadService,
@@ -29,6 +31,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             ILarsStandardImportRepository larsStandardImportRepository,
             ISectorSubjectAreaTier2ImportRepository sectorSubjectAreaTier2ImportRepository,
             ISectorSubjectAreaTier1ImportRepository sectorSubjectAreaTier1ImportRepository,
+            IOptions<CoursesConfiguration> config,
             ILogger<LarsImportService> logger)
         {
             _dataDownloadService = dataDownloadService;
@@ -38,6 +41,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _larsStandardImportRepository = larsStandardImportRepository;
             _sectorSubjectAreaTier2ImportRepository = sectorSubjectAreaTier2ImportRepository;
             _sectorSubjectAreaTier1ImportRepository = sectorSubjectAreaTier1ImportRepository;
+            _coursesConfiguration = config.Value;
             _logger = logger;
         }
 
@@ -64,16 +68,19 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             var larsImportTask = _larsStandardImportRepository
                 .InsertMany(standardsCsv.Select(c => (LarsStandardImport)c).ToList());
 
-            var filterRecords = apprenticeshipFundingCsv
+            var filteredApprenticeshipFundingCsv = apprenticeshipFundingCsv
                 .Where(c => c.ApprenticeshipType.StartsWith("STD", StringComparison.CurrentCultureIgnoreCase))
                 .Select(c => (ApprenticeshipFundingImport)c).ToList();
 
             var apprenticeFundingImportTask =
-                _apprenticeshipFundingImportRepository.InsertMany(filterRecords);
+                _apprenticeshipFundingImportRepository.InsertMany(filteredApprenticeshipFundingCsv);
+
+            var filteredFundingCsv = fundingCsv
+                .Where(c => c.FundingCategory == _coursesConfiguration.LarsImportConfiguration.LarsFundingCategory)
+                .Select(x => (FundingImport)x).ToList();
 
             var fundingImportTask =
-                _fundingImportRepository.InsertMany(fundingCsv
-                    .Select(x => (FundingImport)x).ToList());
+                _fundingImportRepository.InsertMany(filteredFundingCsv);
 
             var sectorSubjectAreaTier2ImportTask =
                 _sectorSubjectAreaTier2ImportRepository.InsertMany(sectorSubjectAreaTier2Csv

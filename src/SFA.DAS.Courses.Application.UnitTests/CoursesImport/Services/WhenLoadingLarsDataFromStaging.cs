@@ -75,9 +75,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Arrange
             var standardImports = new List<StandardImport>
             {
-                new StandardImport { LarsCode = 1, StandardUId = "ST0001_1.0" },
-                new StandardImport { LarsCode = 2, StandardUId = "ST0002_1.0" },
-                new StandardImport { LarsCode = 2, StandardUId = "ST0002_1.1" }
+                new StandardImport { LarsCode = "1", StandardUId = "ST0001_1.0" },
+                new StandardImport { LarsCode = "2", StandardUId = "ST0002_1.0" },
+                new StandardImport { LarsCode = "2", StandardUId = "ST0002_1.1" }
             };
             standardImportRepository.Setup(s => s.GetAll()).ReturnsAsync(standardImports);
 
@@ -96,9 +96,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             standardImportRepository.Verify(x => x.GetAll(), Times.Once);
             apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Count.Equals(6))), Times.Once);
-            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.StandardUId == "ST0001_1.0").Count().Equals(2))), Times.Once);
-            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.StandardUId == "ST0002_1.0").Count().Equals(2))), Times.Once);
-            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.StandardUId == "ST0002_1.1").Count().Equals(2))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.LarsCode == "1234").Count().Equals(2))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.LarsCode == "2345").Count().Equals(2))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.LarsCode == "3456").Count().Equals(2))), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -113,8 +113,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Arrange
             var standardImports = new List<StandardImport>
             {
-                new StandardImport { LarsCode = 1, StandardUId = "ST0001_1.0" },
-                new StandardImport { LarsCode = 2, StandardUId = "ST0002_1.1" }
+                new StandardImport { LarsCode = "1", StandardUId = "ST0001_1.0" },
+                new StandardImport { LarsCode = "2", StandardUId = "ST0002_1.1" }
             };
             standardImportRepository.Setup(s => s.GetAll()).ReturnsAsync(standardImports);
 
@@ -131,7 +131,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             //Assert
             standardImportRepository.Verify(x => x.GetAll(), Times.Once);
             apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Count.Equals(2))), Times.Once);
-            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.StandardUId == "ST0001_1.0").Count().Equals(2))), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.InsertMany(It.Is<List<ApprenticeshipFunding>>(c => c.Where(s => s.LarsCode == "1234").Count().Equals(2))), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -149,7 +149,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             LarsImportService larsImportService)
         {
-            standards.ForEach(s => s.LarsCode = 1);
+            standards.ForEach(s => s.LarsCode = "1");
             apprenticeshipFundingImports.ForEach(i => i.LarsCode = 1);
             larsStandardImportRepository.Setup(x => x.GetAll()).ReturnsAsync(larsStandardImports);
             apprenticeshipFundingImportRepository.Setup(x => x.GetAll()).ReturnsAsync(apprenticeshipFundingImports);

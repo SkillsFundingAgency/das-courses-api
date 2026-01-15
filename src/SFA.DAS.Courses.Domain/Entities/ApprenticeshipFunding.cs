@@ -4,18 +4,35 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class ApprenticeshipFunding : ApprenticeshipFundingBase
     {
-        public string StandardUId { get; set; }
+        public string LarsCode { get; set; }
 
-        public static ApprenticeshipFunding ConvertFrom(ApprenticeshipFundingImport apprenticeshipFundingImport, string standardUId)
+        public static implicit operator ApprenticeshipFunding(FundingImport FundingImport)
         {
             return new ApprenticeshipFunding
             {
                 Id = Guid.NewGuid(),
-                StandardUId = standardUId,
+                LarsCode = FundingImport.LearnAimRef,
+                EffectiveFrom = FundingImport.EffectiveFrom,
+                EffectiveTo = FundingImport.EffectiveTo,
+                MaxEmployerLevyCap = FundingImport.RateUnWeighted,
+                Duration = FundingImport.FundedGuidedLearningHours.GetValueOrDefault(0),
+                DurationUnits = "Hours",
+                FundingStream = FundingImport.FundingCategory
+            };
+        }
+
+        public static implicit operator ApprenticeshipFunding(ApprenticeshipFundingImport apprenticeshipFundingImport)
+        {
+            return new ApprenticeshipFunding
+            {
+                Id = Guid.NewGuid(),
+                LarsCode = apprenticeshipFundingImport.LarsCode.ToString(),
                 EffectiveFrom = apprenticeshipFundingImport.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingImport.EffectiveTo,
                 MaxEmployerLevyCap = apprenticeshipFundingImport.MaxEmployerLevyCap,
                 Duration = apprenticeshipFundingImport.Duration,
+                DurationUnits = "Months",
+                FundingStream = "Apprenticeship",
                 Incentive1618 = apprenticeshipFundingImport.Incentive1618,
                 ProviderAdditionalPayment1618 = apprenticeshipFundingImport.ProviderAdditionalPayment1618,
                 EmployerAdditionalPayment1618 = apprenticeshipFundingImport.EmployerAdditionalPayment1618,

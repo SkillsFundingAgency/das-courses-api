@@ -38,18 +38,18 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .HasPrincipalKey(c => c.Id)
                 .HasForeignKey(c => c.RouteCode).Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
-            builder.HasOne(c => c.LarsStandard)
+            /*builder.HasOne(c => c.LarsStandard)
                 .WithMany(c => c.Standards)
                 .HasForeignKey(s => s.LarsCode)
                 .HasPrincipalKey(l => l.LarsCode)
                 .IsRequired(false)
-                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;*/
 
-            builder.HasMany(c => c.ApprenticeshipFunding)
+            /*builder.HasMany(c => c.ApprenticeshipFunding)
                 .WithOne(c => c.Standard)
-                .HasForeignKey(c => c.StandardUId)
-                .HasPrincipalKey(c => c.StandardUId)
-                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                .HasForeignKey(c => c.LarsCode)
+                .HasPrincipalKey(c => c.LarsCode)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;*/
 
             builder.Ignore(x => x.SearchScore);
 

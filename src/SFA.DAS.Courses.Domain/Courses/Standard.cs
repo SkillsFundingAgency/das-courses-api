@@ -8,7 +8,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string StandardUId { get; set; }
         public float? SearchScore { get; set; }
         public string IfateReferenceNumber { get; set; }
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string Status { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
