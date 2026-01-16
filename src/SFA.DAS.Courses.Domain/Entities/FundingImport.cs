@@ -5,13 +5,14 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class FundingImport
     {
+        public Guid Id { get; set; }
         public string LearnAimRef { get; set; }
         public string FundingCategory { get; set; }
         public DateTime EffectiveFrom { get; set; }
         public DateTime? EffectiveTo { get; set; }
         public decimal RateWeighted { get; set; }
         public decimal RateUnWeighted { get; set; }
-        public string RatingFactory { get; set; }
+        public string WeightingFactor { get; set; }
         public string AdultSkillsFundingBand { get; set; }
         public int? FundedGuidedLearningHours { get; set; }
         
@@ -19,13 +20,14 @@ namespace SFA.DAS.Courses.Domain.Entities
         {
             return new FundingImport
             {
+                Id = Guid.NewGuid(),
                 LearnAimRef = fundingCsv.LearnAimRef,
                 FundingCategory = fundingCsv.FundingCategory,
                 EffectiveFrom = fundingCsv.EffectiveFrom,
                 EffectiveTo = fundingCsv.EffectiveTo,
                 RateWeighted = fundingCsv.RateWeighted,
                 RateUnWeighted = fundingCsv.RateUnWeighted,
-                RatingFactory = fundingCsv.RatingFactory,
+                WeightingFactor = fundingCsv.WeightingFactor,
                 AdultSkillsFundingBand = fundingCsv.AdultSkillsFundingBand,
                 FundedGuidedLearningHours = fundingCsv.FundedGuidedLearningHours,
             };

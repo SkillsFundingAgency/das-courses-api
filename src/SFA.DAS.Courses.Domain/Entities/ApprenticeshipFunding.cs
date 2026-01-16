@@ -5,6 +5,8 @@ namespace SFA.DAS.Courses.Domain.Entities
     public class ApprenticeshipFunding : ApprenticeshipFundingBase
     {
         public string LarsCode { get; set; }
+        public string DurationUnits { get; set; }
+        public string FundingStream { get; set; }
 
         public static implicit operator ApprenticeshipFunding(FundingImport FundingImport)
         {

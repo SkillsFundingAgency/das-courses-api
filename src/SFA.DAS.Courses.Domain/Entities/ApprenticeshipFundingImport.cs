@@ -15,7 +15,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = apprenticeshipFundingCsv.EffectiveFrom,
                 EffectiveTo = apprenticeshipFundingCsv.EffectiveTo,
                 LarsCode = apprenticeshipFundingCsv.ApprenticeshipCode,
-                MaxEmployerLevyCap = Convert.ToInt32(apprenticeshipFundingCsv.MaxEmployerLevyCap),
+                MaxEmployerLevyCap = apprenticeshipFundingCsv.MaxEmployerLevyCap,
                 Duration = (int)apprenticeshipFundingCsv.Duration,
                 Incentive1618 = (int)apprenticeshipFundingCsv.Incentive1618,
                 ProviderAdditionalPayment1618 = (int?)apprenticeshipFundingCsv.ProviderAdditionalPayment1618,

@@ -8,13 +8,13 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
     {
         public static async Task<Standard> ByAnyId(IStandardsService service, string id)
         {
-            if (IsLarsCode(id, out var larsCode))
+            if (IsLarsCode(id))
             {
-                return await service.GetLatestActiveStandard(larsCode);
+                return await service.GetLatestActiveStandard(id);
             }
             else if (IsIfateReference(id))
             {
-                return await service.GetLatestActiveStandard(id);
+                return await service.GetLatestActiveStandardByIfateReferenceNumber(id);
             }
             else
             {
@@ -25,7 +25,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
         private static bool IsIfateReference(string id)
             => id.Length == 6;
 
-        private static bool IsLarsCode(string id, out int larsCode)
-            => int.TryParse(id, out larsCode);
+        private static bool IsLarsCode(string id)
+         => int.TryParse(id, out _) || id.StartsWith("ZSC");
     }
 }

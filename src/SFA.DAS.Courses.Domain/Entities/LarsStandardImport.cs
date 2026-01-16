@@ -6,6 +6,8 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class LarsStandardImport : LarsStandardBase
     {
+        public int LarsCode { get; set; }
+
         public static implicit operator LarsStandardImport(StandardCsv standardCsv)
         {
             return new LarsStandardImport
@@ -14,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 EffectiveFrom = standardCsv.EffectiveFrom,
                 EffectiveTo = standardCsv.EffectiveTo,
                 LastDateStarts = standardCsv.LastDateStarts,
-                LarsCode = standardCsv.StandardCode.ToString(),
+                LarsCode = standardCsv.StandardCode,
                 SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2,
                 OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(standardCsv.OtherBodyApprovalRequired),
                 SectorCode = standardCsv.StandardSectorCode,

@@ -15,7 +15,7 @@ namespace SFA.DAS.Courses.Infrastructure.StreamHelper
 
             using (var zip = new ZipArchive(stream, ZipArchiveMode.Read, true))
             {
-                var entry = zip.Entries.FirstOrDefault(m => m.FullName.EndsWith(filePath));
+                var entry = zip.Entries.FirstOrDefault(m => m.Name.Equals(filePath));
 
                 if (entry == null)
                 {

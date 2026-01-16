@@ -77,29 +77,11 @@ namespace SFA.DAS.Courses.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            Console.WriteLine(">>> CoursesDbContext.OnConfiguring hit");
-            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Debug);
-
-
             optionsBuilder.UseLazyLoadingProxies();
-
-            // temp
-            optionsBuilder
-    .EnableDetailedErrors()
-    .EnableSensitiveDataLogging()
-    .LogTo(
-        Console.WriteLine,
-        new[]
-        {
-            DbLoggerCategory.Model.Name,
-            DbLoggerCategory.Infrastructure.Name
-        },
-        LogLevel.Debug);
-
 
             if (_configuration == null || _azureServiceTokenProvider == null)
             {
-                //optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 return;
             }
 
@@ -137,31 +119,6 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1());
             modelBuilder.ApplyConfiguration(new Route());
             modelBuilder.ApplyConfiguration(new RouteImport());
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var clrType = entityType.ClrType;
-                if (clrType == null) continue;
-
-                foreach (var prop in clrType.GetProperties())
-                {
-                    var t = prop.PropertyType;
-
-                    if (t == typeof(string)) continue;
-
-                    if (typeof(System.Collections.IDictionary).IsAssignableFrom(t))
-                    {
-                        System.Diagnostics.Debug.WriteLine($"DICT: {clrType.Name}.{prop.Name} ({t.FullName})");
-                        continue;
-                    }
-
-                    if (typeof(System.Collections.IEnumerable).IsAssignableFrom(t))
-                    {
-                        System.Diagnostics.Debug.WriteLine($"ENUM: {clrType.Name}.{prop.Name} ({t.FullName})");
-                    }
-                }
-            }
-
 
             base.OnModelCreating(modelBuilder);
         }

@@ -10,8 +10,8 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<int> routeIds, IList<int> levels, OrderBy orderBy, StandardFilter filter, bool includeAllProperties, string apprenticeshipType);
         Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber);
         Task<int> Count(StandardFilter filter = StandardFilter.None);
-        Task<Standard> GetLatestActiveStandard(int larsCode);
-        Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber);
+        Task<Standard> GetLatestActiveStandard(string larsCode);
+        Task<Standard> GetLatestActiveStandardByIfateReferenceNumber(string iFateReferenceNumber);
         Task<Standard> GetStandard(string standardUId);
     }
 }

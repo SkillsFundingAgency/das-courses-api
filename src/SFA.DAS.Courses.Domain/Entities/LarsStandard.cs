@@ -4,6 +4,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class LarsStandard : LarsStandardBase
     {
+        public string LarsCode { get; set; }
         public virtual SectorSubjectAreaTier2 SectorSubjectArea2 { get; set; }
         public virtual SectorSubjectAreaTier1 SectorSubjectArea1 { get; set; }
         public virtual ICollection<Standard> Standards { get; set; }
@@ -15,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Version = larsStandardImport.Version,
                 EffectiveFrom = larsStandardImport.EffectiveFrom,
                 EffectiveTo = larsStandardImport.EffectiveTo,
-                LarsCode = larsStandardImport.LarsCode,
+                LarsCode = larsStandardImport.LarsCode.ToString(),
                 LastDateStarts = larsStandardImport.LastDateStarts,
                 SectorSubjectAreaTier2 = larsStandardImport.SectorSubjectAreaTier2,
                 OtherBodyApprovalRequired = larsStandardImport.OtherBodyApprovalRequired,

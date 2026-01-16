@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         private List<Standard> _standards;
         private Data.Repository.StandardRepository _standardRepository;
         private const string ExpectedStandardUId = "ST002_1.2";
-        private const int ExpectedLarsCode = 2;
+        private const string ExpectedLarsCode = "2";
         private const string ExpectedIFateReferenceNumber = "ST002";
 
         [SetUp]

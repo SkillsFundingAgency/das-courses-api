@@ -35,7 +35,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
-            var standards = await repository.GetActiveStandardsByIfateReferenceNumber([activeValidStandards[0].IfateReferenceNumber, activeInvalidStandards[0].IfateReferenceNumber]);
+            var standards = await repository.GetActiveStandardsByIfateReferenceNumbers([activeValidStandards[0].IfateReferenceNumber, activeInvalidStandards[0].IfateReferenceNumber]);
 
             standards.Should().HaveCount(1);
             standards[0].IfateReferenceNumber.Should().Be(activeValidStandards[0].IfateReferenceNumber);
