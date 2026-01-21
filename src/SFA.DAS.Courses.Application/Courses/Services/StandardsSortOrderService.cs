@@ -22,14 +22,16 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             return standards.OrderByDescending(c => c.SearchScore)
                 .ThenBy(c => c.Title)
                 .ThenBy(c => c.Level)
-                .ThenBy(c => c.LarsStandard != null ? c.LarsStandard.LarsCode : int.MaxValue.ToString());
+                .ThenBy(c => int.TryParse(c.LarsStandard?.LarsCode, out var intLarsCode) ? intLarsCode : int.MaxValue)
+                .ThenBy(c => c.LarsStandard?.LarsCode);
         }
 
         private static IOrderedEnumerable<Standard> OrderByTitle(IEnumerable<Standard> standards)
         {
             return standards.OrderBy(c => c.Title)
                 .ThenBy(c => c.Level)
-                .ThenBy(c => c.LarsStandard != null ? c.LarsStandard.LarsCode : int.MaxValue.ToString());
+                .ThenBy(c => int.TryParse(c.LarsStandard?.LarsCode, out var intLarsCode) ? intLarsCode : int.MaxValue)
+                .ThenBy(c => c.LarsStandard?.LarsCode);
         }
     }
 }

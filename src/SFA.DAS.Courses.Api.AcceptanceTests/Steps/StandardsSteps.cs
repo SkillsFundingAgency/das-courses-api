@@ -44,7 +44,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             model.Total.Should().Be(DbUtilities.GetValidTestStandards().Count());
 
-            model.Standards.Should().BeEquivalentTo(DbUtilities.GetValidTestStandards(), StandardEquivalencyAssertionOptions);
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(DbUtilities.GetValidTestStandards());
+
+            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetStandardResponse)(Domain.Courses.Standard)s));
         }
 
         [Then("all valid and invalid standards are returned")]
@@ -57,12 +60,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
-            var standardsList = new List<Standard>();
-            standardsList.AddRange(DbUtilities.GetValidTestStandards());
-            standardsList.AddRange(DbUtilities.GetInValidTestStandards());
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(DbUtilities.GetValidTestStandards());
+            expectedStandards.AddRange(DbUtilities.GetInValidTestStandards());
 
-            model.Standards.Should().BeEquivalentTo(standardsList, StandardEquivalencyAssertionOptions);
-            model.Total.Should().Be(standardsList.Count);
+            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetStandardResponse)(Domain.Courses.Standard)s));
+            model.Total.Should().Be(expectedStandards.Count);
         }
 
         [Then("all standards are returned")]
@@ -75,15 +78,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
-            var standardsList = new List<Standard>();
-            standardsList.AddRange(DbUtilities.GetValidTestStandards());
-            standardsList.AddRange(DbUtilities.GetInValidTestStandards());
-            standardsList.AddRange(DbUtilities.GetNotYetApprovedTestStandards());
-            standardsList.AddRange(DbUtilities.GetWithdrawnStandards());
-            standardsList.AddRange(DbUtilities.GetOlderVersionsOfStandards());
-
-            model.Standards.Should().BeEquivalentTo(standardsList, StandardEquivalencyAssertionOptions);
-            model.Total.Should().Be(standardsList.Count);
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(DbUtilities.GetAllTestStandards());
+            
+            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetStandardResponse)(Domain.Courses.Standard)s));
+            model.Total.Should().Be(expectedStandards.Count);
         }
 
         [Then("all not yet approved standards are returned")]
@@ -96,11 +95,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
-            var standardsList = new List<Standard>();
-            standardsList.AddRange(DbUtilities.GetNotYetApprovedTestStandards());
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(DbUtilities.GetNotYetApprovedTestStandards());
 
-            model.Standards.Should().BeEquivalentTo(standardsList, StandardEquivalencyAssertionOptions);
-            model.Total.Should().Be(standardsList.Count);
+            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetStandardResponse)(Domain.Courses.Standard)s));
+            model.Total.Should().Be(expectedStandards.Count);
         }
 
         [Then("the following valid standards are returned")]
@@ -113,8 +112,26 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(GetExpected(table));
+
+            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetStandardResponse)(Domain.Courses.Standard)s), ExcludeSearchScore);
+        }
+
+        [Then("the following valid standard versions are returned")]
+        public async Task ThenTheFollowingValidStandardVersionsReturned(Table table)
+        {
+            if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
+            {
+                Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
+            }
+
+            var model = await HttpUtilities.ReadContent<GetStandardVersionsListResponse>(result.Content);
+
+            var expectedStandards = new List<Standard>(GetExpected(table));
+
             model.Standards.Should().BeEquivalentTo(
-                GetExpected(table), StandardEquivalencyAssertionOptions);
+                expectedStandards.Select(s => (GetStandardDetailResponse)(Domain.Courses.Standard)s), ExcludeSearchScore);
         }
 
         [Then("the following standard is returned")]
@@ -125,13 +142,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
                 Assert.Fail($"scenario context does not contain value for key [{ContextKeys.HttpResponse}]");
             }
 
-            var standard = await HttpUtilities.ReadContent<GetStandardResponse>(result.Content);
+            var model = await HttpUtilities.ReadContent<GetStandardDetailResponse>(result.Content);
 
-            standard.Should().BeEquivalentTo(
-                GetExpected(table).Single(), StandardEquivalencyAssertionOptions);
+            var expectedStandard = GetExpected(table).Single();
+
+            model.Should().BeEquivalentTo((GetStandardDetailResponse)(Domain.Courses.Standard)expectedStandard, ExcludeSearchScore);
         }
 
-        private IEnumerable<Standard> GetExpected(Table table)
+        private static IEnumerable<Standard> GetExpected(Table table)
         {
             var testRoutes = DbUtilities.GetTestRoutes();
             var standards = new List<Standard>();
@@ -176,37 +194,12 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             standard.Options.Should().BeEmpty();
         }
 
-        private static EquivalencyAssertionOptions<Standard> StandardEquivalencyAssertionOptions(EquivalencyAssertionOptions<Standard> config) =>
+        private static EquivalencyAssertionOptions<GetStandardDetailResponse> ExcludeSearchScore(EquivalencyAssertionOptions<GetStandardDetailResponse> config) =>
             config
-                .Excluding(c => c.LarsStandard)
-                .Excluding(c => c.ApprenticeshipFunding)
-                .Excluding(c => c.SearchScore)
-                .Excluding(c => c.Route)
-                .Excluding(c => c.RouteCode)
-                .Excluding(c => c.RegulatedBody)
-                .Excluding(c => c.CoreDuties)
-                .Excluding(c => c.CoronationEmblem)
-                .Excluding(c => c.VersionEarliestStartDate)
-                .Excluding(c => c.VersionLatestStartDate)
-                .Excluding(c => c.VersionLatestEndDate)
-                .Excluding(c => c.ApprovedForDelivery)
-                .Excluding(c => c.ProposedTypicalDuration)
-                .Excluding(c => c.ProposedMaxFunding)
-                .Excluding(c => c.EqaProviderContactEmail)
-                .Excluding(c => c.EqaProviderContactName)
-                .Excluding(c => c.EqaProviderName)
-                .Excluding(c => c.EqaProviderWebLink)
-                .Excluding(c => c.AssessmentPlanUrl)
-                .Excluding(c => c.TrailBlazerContact)
-                .Excluding(c => c.Options)
-                .Excluding(c => c.EPAChanged)
-                .Excluding(c => c.VersionMajor)
-                .Excluding(c => c.VersionMinor)
-                .Excluding(c => c.CreatedDate)
-                .Excluding(c => c.PublishDate)
-                .Excluding(c => c.IsRegulatedForProvider)
-                .Excluding(c => c.IsRegulatedForEPAO)
-                .Excluding(c => c.ApprenticeshipType)
-                .Excluding(c => c.RelatedOccupations);
+                .Excluding(c => c.SearchScore);
+
+        private static EquivalencyAssertionOptions<GetStandardResponse> ExcludeSearchScore(EquivalencyAssertionOptions<GetStandardResponse> config) =>
+            config
+                .Excluding(c => c.SearchScore);
     }
 }

@@ -144,10 +144,7 @@ namespace SFA.DAS.Courses.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IIndexBuilder indexBuilder, ILogger<Startup> logger)
         {
-            if (!ConfigurationIsLocalOrDev())
-            {
-                indexBuilder.Build();
-            }
+            indexBuilder.Build();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

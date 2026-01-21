@@ -16,6 +16,8 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.EffectiveTo).HasColumnName("EffectiveTo").HasColumnType("datetime").IsRequired(false);
             builder.Property(x => x.MaxEmployerLevyCap).HasColumnName("MaxEmployerLevyCap").HasColumnType("decimal").HasPrecision(7, 2).IsRequired();
             builder.Property(x => x.Duration).HasColumnName("Duration").HasColumnType("int").IsRequired();
+            builder.Property(x => x.DurationUnits).HasColumnName("DurationUnits").HasColumnType("varchar").HasMaxLength(6).IsRequired();
+            builder.Property(x => x.FundingStream).HasColumnName("FundingStream").HasColumnType("varchar").HasMaxLength(30).IsRequired();
         }
     }
 }

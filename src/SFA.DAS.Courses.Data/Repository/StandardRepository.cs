@@ -197,6 +197,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
                     ApprenticeshipType = c.ApprenticeshipType,
+                    Options = c.Options,
                     IsRegulatedForProvider = c.IsRegulatedForProvider,
                     IsRegulatedForEPAO = c.IsRegulatedForEPAO
                 });
@@ -228,7 +229,6 @@ namespace SFA.DAS.Courses.Data.Repository
             }
 
             var funding = await _coursesDataContext.ApprenticeshipFunding
-                .AsNoTracking()
                 .Where(f => larsCodes.Contains(f.LarsCode))
                 .ToListAsync();
 

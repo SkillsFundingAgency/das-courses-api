@@ -21,6 +21,9 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private StandardOption() { }
 
+        //[JsonConstructor]
+        //internal StandardOption() { }
+
         public static StandardOption Create(string title)
             => new StandardOption { Title = title };
 

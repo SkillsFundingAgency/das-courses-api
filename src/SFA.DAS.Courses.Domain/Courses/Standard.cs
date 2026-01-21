@@ -88,7 +88,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 TypicalJobTitles = source.TypicalJobTitles,
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
-                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (ApprenticeshipFunding)c).ToList(),
+                ApprenticeshipFunding = source.ApprenticeshipFunding?.Select(c => (ApprenticeshipFunding)c).ToList() ?? [],
                 StandardDates = (StandardDates)source.LarsStandard,
                 SectorSubjectAreaTier2 = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.SectorSubjectAreaTier2 : 0m,
                 SectorSubjectAreaTier2Description = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.Name : "",

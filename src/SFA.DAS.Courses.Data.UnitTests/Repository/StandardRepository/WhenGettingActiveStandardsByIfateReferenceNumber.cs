@@ -24,6 +24,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             [Frozen] Mock<ICoursesDataContext> mockDataContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
             allStandards.AddRange(activeValidStandards);
             allStandards.AddRange(activeInvalidStandards);
@@ -35,8 +36,14 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
+            mockDataContext
+                .Setup(c => c.ApprenticeshipFunding)
+                .ReturnsDbSet(new List<ApprenticeshipFunding>());
+
+            // Act
             var standards = await repository.GetActiveStandardsByIfateReferenceNumbers([activeValidStandards[0].IfateReferenceNumber, activeInvalidStandards[0].IfateReferenceNumber]);
 
+            // Assert
             standards.Should().HaveCount(1);
             standards[0].IfateReferenceNumber.Should().Be(activeValidStandards[0].IfateReferenceNumber);
         }

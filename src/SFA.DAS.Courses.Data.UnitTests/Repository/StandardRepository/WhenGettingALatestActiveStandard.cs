@@ -85,6 +85,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             
             _coursesDataContext = new Mock<ICoursesDataContext>();
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(_standards);
+            _coursesDataContext.Setup(c => c.ApprenticeshipFunding).ReturnsDbSet(new List<ApprenticeshipFunding>());
 
             _standardRepository = new Data.Repository.StandardRepository(_coursesDataContext.Object);
         }
@@ -104,7 +105,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         public async Task Then_The_Standard_Is_Returned_By_IFateReferenceNumber()
         {
             //Act
-            var standards = await _standardRepository.GetLatestActiveStandard(ExpectedIFateReferenceNumber);
+            var standards = await _standardRepository.GetLatestActiveStandardByIfateReferenceNumber(ExpectedIFateReferenceNumber);
 
             //Assert
             Assert.That(standards, Is.Not.Null);

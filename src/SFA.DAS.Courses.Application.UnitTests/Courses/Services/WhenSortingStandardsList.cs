@@ -28,9 +28,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var actual = standardsSortOrderService.OrderBy(standards, orderBy, keyword);
 
             //Assert
-            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo(3));
-            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo(1));
-            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo(2));
+            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo("3"));
+            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo("1"));
+            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo("2"));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -51,9 +51,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var actual = standardsSortOrderService.OrderBy(standards, orderBy, keyword);
 
             //Assert
-            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo(2));
-            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo(3));
-            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo(1));
+            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo("2"));
+            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo("3"));
+            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo("1"));
         }
         
         [Test, RecursiveMoqAutoData]
@@ -74,9 +74,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var actual = standardsSortOrderService.OrderBy(standards, orderBy, keyword);
 
             //Assert
-            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo(2));
-            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo(3));
-            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo(1));
+            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo("2"));
+            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo("3"));
+            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo("1"));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -97,9 +97,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var actual = standardsSortOrderService.OrderBy(standards, orderBy, keyword);
 
             //Assert
-            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo(2));
-            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo(3));
-            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo(1));
+            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo("2"));
+            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo("3"));
+            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo("1"));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -119,9 +119,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var actual = standardsSortOrderService.OrderBy(standards, orderBy, null);
 
             //Assert
-            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo(3));
-            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo(1));
-            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo(2));
+            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo("3"));
+            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo("1"));
+            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo("2"));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -141,9 +141,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var actual = standardsSortOrderService.OrderBy(standards, orderBy, null);
 
             //Assert
-            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo(2));
-            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo(3));
-            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo(1));
+            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo("2"));
+            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo("3"));
+            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo("1"));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -163,9 +163,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var actual = standardsSortOrderService.OrderBy(standards, orderBy, null);
 
             //Assert
-            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo(2));
-            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo(3));
-            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo(1));
+            Assert.That(actual.ElementAt(0).LarsCode, Is.EqualTo("2"));
+            Assert.That(actual.ElementAt(1).LarsCode, Is.EqualTo("3"));
+            Assert.That(actual.ElementAt(2).LarsCode, Is.EqualTo("1"));
         }
     }
 }
