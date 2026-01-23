@@ -224,15 +224,26 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
-            var standardOptions = standard.CoreAndOptions.Value
-                ? CreateStructuredOptionsListWithDutyMapping(standard)
-                : CreateStructuredOptionsListWithoutDutyMapping(standard);
+            List<StandardOption> standardOptions = null;
 
-            if (standardOptions.Any())
+            if (standard.CoreAndOptions.Value && standard.Duties.Value.EmptyEnumerableIfNull().Any())
+            {
+                standardOptions = CreateStructuredOptionsListWithDutyMapping(standard);
+            }
+            else if (standard.CoreAndOptions.Value && !standard.Duties.Value.EmptyEnumerableIfNull().Any())
+            {
+                standardOptions = CreateStructuredOptionsListWithoutDutyMapping(standard);
+            }
+            else if (!standard.CoreAndOptions.Value)
+            {
+                standardOptions = CreateStructuredOptionsListWithCorePseduoOption(standard);
+            }
+
+            if (standardOptions.EmptyEnumerableIfNull().Any())
             {
                 return standardOptions;
             }
-            else if (standard.OptionsUnstructuredTemplate?.Value?.Any() ?? false)
+            else if (standard.OptionsUnstructuredTemplate.Value.EmptyEnumerableIfNull().Any())
             {
                 return standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
             }
@@ -255,10 +266,10 @@ namespace SFA.DAS.Courses.Domain.Entities
             StandardOption MapOption(ImportTypes.Option option)
                 => StandardOption.Create(
                     option.OptionId.Value,
-                    option.Title?.Value?.Trim(),
-                    MapKsbs(option));
+                    option.Title.Value?.Trim(),
+                    MapKsbsFromDuties(option));
 
-            List<Ksb> MapKsbs(ImportTypes.Option option)
+            List<Ksb> MapKsbsFromDuties(ImportTypes.Option option)
             {
                 var knowledge = MapDuties(option, standard.Knowledges.Value, x => x.MappedKnowledge?.Value, x => x.KnowledgeId.Value, x => x.Detail.Value, Ksb.Knowledge);
                 var skills = MapDuties(option, standard.Skills.Value, x => x.MappedSkills?.Value, x => x.SkillId.Value, x => x.Detail.Value, Ksb.Skill);
@@ -316,6 +327,28 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsListWithoutDutyMapping(ImportTypes.Standard standard)
         {
+            var options = (standard.Options?.Value)
+                .EmptyEnumerableIfNull();
+
+            return options.Select(MapOption).ToList();
+
+            StandardOption MapOption(ImportTypes.Option option)
+               => StandardOption.Create(
+                   option.OptionId.Value,
+                   option.Title.Value?.Trim(),
+                   GetAllKsbs(standard));
+        }
+
+        private static List<StandardOption> CreateStructuredOptionsListWithCorePseduoOption(ImportTypes.Standard standard)
+        {
+            return new List<StandardOption>
+            {
+                StandardOption.CreateCorePseudoOption(GetAllKsbs(standard)?.DistinctBy(x => x.Key).ToList())
+            };
+        }
+
+        private static List<Ksb> GetAllKsbs(ImportTypes.Standard standard)
+        {
             var ksbs = standard.ApprenticeshipType == Entities.ApprenticeshipType.Apprenticeship
                 ? standard.Knowledges.Value?.Select((x, i) => Ksb.Knowledge(x.KnowledgeId.Value, i + 1, x.Detail.Value))
                     .Union(standard.Skills.Value?.Select((x, i) => Ksb.Skill(x.SkillId.Value, i + 1, x.Detail.Value)))
@@ -324,10 +357,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                     .Union(standard.TechnicalSkills.Value?.Select((x, i) => Ksb.TechnicalSkill(x.Id.Value, i + 1, x.Detail.Value)))
                     .Union(standard.EmployabilitySkillsAndBehaviours.Value?.Select((x, i) => Ksb.EmployabilitySkillsAndBehaviour(x.Id.Value, i + 1, x.Detail.Value)));
 
-            return new List<StandardOption>
-            {
-                StandardOption.CreateCorePseudoOption(ksbs?.DistinctBy(x => x.Key).ToList())
-            };
+            return ksbs?.ToList();
         }
 
         private static bool GetIsRegulated(ImportTypes.Standard standard, string name)
