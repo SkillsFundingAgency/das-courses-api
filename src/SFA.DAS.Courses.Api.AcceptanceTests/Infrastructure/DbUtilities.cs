@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Entities;
 using Framework = SFA.DAS.Courses.Domain.Entities.Framework;
