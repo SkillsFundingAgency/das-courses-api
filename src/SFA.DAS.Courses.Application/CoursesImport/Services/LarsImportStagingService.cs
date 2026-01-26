@@ -69,14 +69,14 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 .InsertMany(standardsCsv.Select(c => (LarsStandardImport)c).ToList());
 
             var filteredApprenticeshipFundingCsv = apprenticeshipFundingCsv
-                .Where(c => c.ApprenticeshipType.StartsWith("STD", StringComparison.CurrentCultureIgnoreCase))
+                .Where(c => c.ApprenticeshipType?.StartsWith("STD", StringComparison.CurrentCultureIgnoreCase) ?? false)
                 .Select(c => (ApprenticeshipFundingImport)c).ToList();
 
             var apprenticeFundingImportTask =
                 _apprenticeshipFundingImportRepository.InsertMany(filteredApprenticeshipFundingCsv);
 
             var filteredFundingCsv = fundingCsv
-                .Where(c => c.FundingCategory == _coursesConfiguration.LarsImportConfiguration.LarsFundingCategory)
+                .Where(c => c.FundingCategory?.Equals(_coursesConfiguration.LarsImportConfiguration.LarsFundingCategory, StringComparison.CurrentCultureIgnoreCase) ?? false)
                 .Select(x => (FundingImport)x).ToList();
 
             var fundingImportTask =
@@ -88,7 +88,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
             var sectorSubjectAreaTier1ImportTask =
                 _sectorSubjectAreaTier1ImportRepository.InsertMany(sectorSubjectAreaTier1Csv
-                    .Where(s => !s.SectorSubjectAreaTier1.Contains('-'))
+                    .Where(s => !s.SectorSubjectAreaTier1?.Contains('-') ?? false)
                     .Select(x => (SectorSubjectAreaTier1Import)x).ToList());
 
             await Task.WhenAll(larsImportTask, apprenticeFundingImportTask, fundingImportTask, sectorSubjectAreaTier2ImportTask, sectorSubjectAreaTier1ImportTask);
