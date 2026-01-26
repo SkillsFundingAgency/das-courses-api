@@ -30,7 +30,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
     {
         public void Customize(IFixture fixture)
         {
-            fixture.Customize<LarsStandard>(composer => 
+            // the Standard is valid
+            fixture.Customize<Standard>(composer =>
+                composer.With(standard => standard.Status, "Approved for delivery")
+                        .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship.ToString()));
+
+            // but its related LarsStandard is not effective yet
+            fixture.Customize<LarsStandard>(composer =>
                 composer.With(standard => standard.EffectiveFrom, DateTime.Today.AddDays(1)));
         }
     }

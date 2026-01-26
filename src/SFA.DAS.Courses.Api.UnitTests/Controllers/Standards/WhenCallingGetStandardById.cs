@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -24,17 +23,31 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
         {
+            // Arrange int LarsCode
+            queryResult.Standard.LarsCode = 1234.ToString();
+
             mockMediator
                 .Setup(mediator => mediator.Send(
                     It.Is<GetStandardByIdQuery>(x => x.Id == Id),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
+            // Act
             var controllerResult = await controller.Get(Id) as ObjectResult;
 
+            // Assert
             var model = controllerResult.Value as GetStandardDetailResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            model.Should().BeEquivalentTo(queryResult.Standard, StandardToGetStandardResponseOptions.Exclusions);
+
+            // Assert all properties except LarsCode
+            model.Should().BeEquivalentTo(
+                queryResult.Standard,
+                options => StandardToGetStandardResponseOptions
+                    .ExclusionsForGetStandardDetailResponse(options)
+                    .Excluding(s => s.LarsCode));
+
+            // Assert LarsCode conversion with distinct values
+            model.LarsCode.Should().Be(int.Parse(queryResult.Standard.LarsCode));
         }
 
         [Test, MoqAutoData]

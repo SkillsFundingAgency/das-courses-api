@@ -4,7 +4,7 @@
     [LarsCode] INT NOT NULL,
     [EffectiveFrom] DATETIME NOT NULL,
     [EffectiveTo] DATETIME NULL,
-    [MaxEmployerLevyCap] INT NOT NULL,
+    [MaxEmployerLevyCap] DECIMAL(7,2) NOT NULL,
     [Duration] INT NOT NULL DEFAULT 0,
     [Incentive1618] int,
     [ProviderAdditionalPayment1618] int,

@@ -20,16 +20,19 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             {
                 new Standard
                 {
+                    LarsCode = "0",
                     Title = "Not Yet Approved",
                     Status = "In development",
                 },
                 new Standard
                 {
+                    LarsCode = "0",
                     Title = "Not Yet Approved",
                     Status = "Proposal in development",
                 },
                 new Standard
                 {
+                    LarsCode = "1",
                     Title = "Available",
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
                     LarsStandard = new LarsStandard
@@ -41,6 +44,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 },
                 new Standard
                 {
+                    LarsCode = "2",
                     Title = "Available",
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
                     LarsStandard = new LarsStandard
@@ -52,6 +56,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 },
                 new Standard
                 {
+                    LarsCode = "3",
                     Title = "Available",
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
                     LarsStandard =

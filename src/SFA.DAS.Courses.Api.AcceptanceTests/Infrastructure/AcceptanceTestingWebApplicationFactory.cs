@@ -52,10 +52,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     var logger = scopedServices
                         .GetRequiredService<ILogger<AcceptanceTestingWebApplicationFactory<TStartup>>>();
 
-                    db.Database.EnsureCreated();
-
                     try
                     {
+                        db.Database.EnsureCreated();
+
                         DbUtilities.LoadTestData(db);
                     }
                     catch (Exception ex)

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,18 +24,43 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
         {
+            // Arrange – distinct LarsCode
+            var expectedLarsCodes = queryResult.Standards
+                .Select((standard, index) =>
+                {
+                    standard.LarsCode = (1000 + index).ToString();
+                    return 1000 + index;
+                })
+                .ToList();
+
             mockMediator
                 .Setup(mediator => mediator.Send(
-                    It.Is<GetStandardsByIFateReferenceQuery>(query => 
-                        query.IFateReferenceNumber == iFateReferenceNumber), 
+                    It.Is<GetStandardsByIFateReferenceQuery>(q =>
+                        q.IFateReferenceNumber == iFateReferenceNumber),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            var controllerResult = await controller.GetStandardsByIFateReferenceNumber(iFateReferenceNumber) as ObjectResult;
+            // Act
+            var controllerResult =
+                await controller.GetStandardsByIFateReferenceNumber(iFateReferenceNumber) as ObjectResult;
+
+            // Assert
+            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
             var model = controllerResult.Value as GetStandardVersionsListResponse;
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            model.Standards.Should().BeEquivalentTo(queryResult.Standards, StandardToGetStandardResponseOptions.Exclusions);
+
+            // Assert all properties except LarsCode
+            model.Standards.Should().BeEquivalentTo(
+                queryResult.Standards,
+                options => StandardToGetStandardResponseOptions
+                    .ExclusionsForGetStandardDetailResponse(options)
+                    .Excluding(s => s.LarsCode));
+
+            // Assert LarsCode conversion with distinct values
+            model.Standards
+                .Select(s => s.LarsCode)
+                .Should()
+                .BeEquivalentTo(expectedLarsCodes, o => o.WithStrictOrdering());
         }
     }
 }

@@ -27,6 +27,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ILevelsService, LevelsService>();
             services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
             services.AddTransient<ILarsImportService, LarsImportService>();
+            services.AddTransient<ILarsImportStagingService, LarsImportStagingService>();
             services.AddTransient<IFrameworksImportService, FrameworksImportService>();
             services.AddTransient<IJsonFileHelper, JsonFileHelper>();
             services.AddTransient<IFrameworksService, FrameworksService>();
@@ -51,6 +52,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<IFrameworkImportRepository, FrameworkImportRepository>();
             services.AddTransient<IFrameworkFundingImportRepository, FrameworkFundingImportRepository>();
             services.AddTransient<IFrameworkFundingRepository, FrameworkFundingRepository>();
+            services.AddTransient<IFundingImportRepository, FundingImportRepository>();
             services.AddTransient<ISectorSubjectAreaTier2Repository, SectorSubjectAreaTier2Repository>();
             services.AddTransient<ISectorSubjectAreaTier2ImportRepository, SectorSubjectAreaTier2ImportRepository>();
             services.AddTransient<ISectorSubjectAreaTier1ImportRepository, SectorSubjectAreaTier1ImportRepository>();

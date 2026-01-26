@@ -14,10 +14,8 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.LarsCode).HasColumnName("LarsCode").HasColumnType("int").IsRequired();
             builder.Property(x => x.EffectiveFrom).HasColumnName("EffectiveFrom").HasColumnType("datetime").IsRequired();
             builder.Property(x => x.EffectiveTo).HasColumnName("EffectiveTo").HasColumnType("datetime").IsRequired(false);
-            builder.Property(x => x.MaxEmployerLevyCap).HasColumnName("MaxEmployerLevyCap").HasColumnType("int").IsRequired();
+            builder.Property(x => x.MaxEmployerLevyCap).HasColumnName("MaxEmployerLevyCap").HasColumnType("decimal").HasPrecision(7, 2).IsRequired();
             builder.Property(x => x.Duration).HasColumnName("Duration").HasColumnType("int").IsRequired();
-
-            builder.Ignore(c => c.Standard);
         }
     }
 }

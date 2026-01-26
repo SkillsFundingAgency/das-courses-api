@@ -47,6 +47,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
 
+            mockDbContext
+                .Setup(c => c.ApprenticeshipFunding)
+                .ReturnsDbSet(new List<ApprenticeshipFunding>());
+
             var actualStandards = await repository.GetStandards(iFateReferenceNumber);
 
             Assert.That(actualStandards, Is.Not.Null);
@@ -55,6 +59,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         private static Func<EquivalencyAssertionOptions<Standard>, EquivalencyAssertionOptions<Standard>> EquivalentCheckExcludes()
         {
             return options => options
+                .Excluding(c => c.ApprenticeshipFunding)
                 .Excluding(c => c.SearchScore)
                 .Excluding(c => c.ProposedTypicalDuration)
                 .Excluding(c => c.ProposedMaxFunding)

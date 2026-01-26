@@ -87,7 +87,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         private static IQueryable<Standard> FilterNotYetApproved(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards
-                .Where(ls => ls.LarsCode == 0)
+                .Where(ls => ls.LarsCode == "0")
                 .StatusIsOneOf(Domain.Courses.Status.ProposalInDevelopment, Domain.Courses.Status.InDevelopment);
 
             return filteredStandards;

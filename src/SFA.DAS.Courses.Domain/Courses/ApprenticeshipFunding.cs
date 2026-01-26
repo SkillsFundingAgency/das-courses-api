@@ -8,7 +8,7 @@ namespace SFA.DAS.Courses.Domain.Courses
 
         public DateTime? EffectiveTo { get; set; }
 
-        public int MaxEmployerLevyCap { get; set; }
+        public decimal MaxEmployerLevyCap { get; set; }
         public int Duration { get; set; }
         public int? Incentive1618 { get; set; }
         public int? ProviderAdditionalPayment1618 { get; set; }

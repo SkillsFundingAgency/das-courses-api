@@ -12,6 +12,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly ILarsPageParser _larsPageParser;
         private readonly IImportAuditRepository _importAuditRepository;
         private readonly IApprenticeshipFundingImportRepository _apprenticeshipFundingImportRepository;
+        private readonly IFundingImportRepository _fundingImportRepository;
         private readonly ILarsStandardImportRepository _larsStandardImportRepository;
         private readonly IApprenticeshipFundingRepository _apprenticeshipFundingRepository;
         private readonly ILarsStandardRepository _larsStandardRepository;
@@ -19,45 +20,37 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly ISectorSubjectAreaTier2Repository _sectorSubjectAreaTier2Repository;
         private readonly ISectorSubjectAreaTier1ImportRepository _sectorSubjectAreaTier1ImportRepository;
         private readonly ISectorSubjectAreaTier1Repository _sectorSubjectAreaTier1Repository;
-        private readonly IStandardImportRepository _standardImportRepository;
+        private readonly ILarsImportStagingService _larsImportStagingService;
         private readonly ILogger<LarsImportService> _logger;
-        private readonly LarsImportStaging _larsImportStaging;
+        
 
         public LarsImportService(ILarsPageParser larsPageParser,
-            IDataDownloadService dataDownloadService,
             IImportAuditRepository importAuditRepository,
             IApprenticeshipFundingImportRepository apprenticeshipFundingImportRepository,
+            IFundingImportRepository fundingImportRepository,
             ILarsStandardImportRepository larsStandardImportRepository,
             IApprenticeshipFundingRepository apprenticeshipFundingRepository,
             ILarsStandardRepository larsStandardRepository,
             ISectorSubjectAreaTier2ImportRepository sectorSubjectAreaTier2ImportRepository,
             ISectorSubjectAreaTier2Repository sectorSubjectAreaTier2Repository,
-            IStandardImportRepository standardImportRepository,
-            IZipArchiveHelper zipArchiveHelper,
-            ILogger<LarsImportService> logger,
             ISectorSubjectAreaTier1ImportRepository sectorSubjectAreaTier1ImportRepository,
-            ISectorSubjectAreaTier1Repository sectorSubjectAreaTier1Repository)
+            ISectorSubjectAreaTier1Repository sectorSubjectAreaTier1Repository,
+            ILarsImportStagingService larsImportStaging,
+            ILogger<LarsImportService> logger)
         {
             _larsPageParser = larsPageParser;
             _importAuditRepository = importAuditRepository;
             _apprenticeshipFundingImportRepository = apprenticeshipFundingImportRepository;
+            _fundingImportRepository = fundingImportRepository; 
             _larsStandardImportRepository = larsStandardImportRepository;
             _apprenticeshipFundingRepository = apprenticeshipFundingRepository;
             _larsStandardRepository = larsStandardRepository;
             _sectorSubjectAreaTier2ImportRepository = sectorSubjectAreaTier2ImportRepository;
             _sectorSubjectAreaTier2Repository = sectorSubjectAreaTier2Repository;
-            _standardImportRepository = standardImportRepository;
             _sectorSubjectAreaTier1ImportRepository = sectorSubjectAreaTier1ImportRepository;
             _sectorSubjectAreaTier1Repository = sectorSubjectAreaTier1Repository;
+            _larsImportStagingService = larsImportStaging;
             _logger = logger;
-            _larsImportStaging = new LarsImportStaging(
-                dataDownloadService,
-                zipArchiveHelper,
-                _apprenticeshipFundingImportRepository,
-                _larsStandardImportRepository,
-                _sectorSubjectAreaTier2ImportRepository,
-                _sectorSubjectAreaTier1ImportRepository,
-                _logger);
         }
 
         public async Task<(bool Success, string FileName)> ImportDataIntoStaging()
@@ -68,7 +61,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
                 var filePath = await _larsPageParser.GetCurrentLarsDataDownloadFilePath();
 
-                await _larsImportStaging.Import(filePath);
+                await _larsImportStagingService.Import(filePath);
 
                 _logger.LogInformation("LARS Import - data into staging - finished");
 
@@ -130,23 +123,22 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
         private async Task<int> LoadApprenticeshipFunding()
         {
-            var standardsTask = _standardImportRepository.GetAll();
-            var apprenticeshipFundingImportsTask = _apprenticeshipFundingImportRepository.GetAll();
+            var fundingImportTask = _fundingImportRepository.GetAll();
+            var apprenticeshipFundingImportTask = _apprenticeshipFundingImportRepository.GetAll();
 
-            await Task.WhenAll(standardsTask, apprenticeshipFundingImportsTask);
-
-            var fundings = standardsTask.Result.Join(
-                apprenticeshipFundingImportsTask.Result,
-                standard => standard.LarsCode,
-                funding => funding.LarsCode,
-                (standard, apprenticeshipFundingImport) => ApprenticeshipFunding.ConvertFrom(apprenticeshipFundingImport, standard.StandardUId))
-                .ToList();
+            await Task.WhenAll(fundingImportTask, apprenticeshipFundingImportTask);
 
             await _apprenticeshipFundingRepository.DeleteAll();
 
-            var importApprenticeshipFundingResult = _apprenticeshipFundingRepository.InsertMany(fundings);
+            var fundings = fundingImportTask.Result
+                .Select(c => (ApprenticeshipFunding)c).ToList();
+            await _apprenticeshipFundingRepository.InsertMany(fundings);
 
-            return fundings.Count();
+            var apprenticeshipFundings = apprenticeshipFundingImportTask.Result
+                .Select(c => (ApprenticeshipFunding)c).ToList();
+            await _apprenticeshipFundingRepository.InsertMany(apprenticeshipFundings);
+
+            return fundings.Count + apprenticeshipFundings.Count;
         }
     }
 }

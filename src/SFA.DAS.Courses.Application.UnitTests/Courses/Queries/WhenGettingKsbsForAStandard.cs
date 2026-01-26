@@ -35,7 +35,7 @@ public class WhenGettingKsbsForAStandard
             }
         };
         Mock<IStandardsService> standardServiceMock = new();
-        standardServiceMock.Setup(x => x.GetLatestActiveStandard(It.IsAny<int>())).ReturnsAsync(standard);
+        standardServiceMock.Setup(x => x.GetLatestActiveStandard(It.IsAny<string>())).ReturnsAsync(standard);
         var query = new GetStandardOptionKsbsQuery
         {
             Id = "123",

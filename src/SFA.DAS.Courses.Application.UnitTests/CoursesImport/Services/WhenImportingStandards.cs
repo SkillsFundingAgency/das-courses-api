@@ -164,9 +164,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var currentStandards = new List<Domain.Entities.Standard>
             {
-                GetValidStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
-                GetValidStandard(101, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
+                GetValidStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandard("101", "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
             };
 
             routeRepository
@@ -212,9 +212,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var currentStandards = new List<Domain.Entities.Standard>
             {
-                GetValidStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
-                GetValidStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
+                GetValidStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandard("103", "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
             };
 
             routeRepository
@@ -493,9 +493,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var currentStandards = new List<Domain.Entities.Standard>
             {
-                GetValidStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
-                GetValidStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
+                GetValidStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandard("103", "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
             };
 
             routeRepository
@@ -548,9 +548,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var currentStandards = new List<Domain.Entities.Standard>
             {
-                GetValidStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
-                GetValidStandard(0, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
+                GetValidStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandard("0", "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
             };
 
             currentStandards[2].PublishDate = DateTime.Now.AddDays(-14);
@@ -603,9 +603,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var currentStandards = new List<Domain.Entities.Standard>
             {
-                GetValidStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
-                GetValidStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
+                GetValidStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandard("103", "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
             };
 
             routeRepository
@@ -657,9 +657,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var currentStandards = new List<Domain.Entities.Standard>
             {
-                GetValidStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
-                GetValidStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
+                GetValidStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandard("103", "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
             };
 
             routeRepository
@@ -711,9 +711,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var currentStandards = new List<Domain.Entities.Standard>
             {
-                GetValidStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
-                GetValidStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
+                GetValidStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandard("103", "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, 2, "Option 1")
             };
 
             routeRepository
@@ -730,9 +730,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             await standardsImportService.ImportDataIntoStaging();
 
             // Assert
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0101" && p.LarsCode == 103))));
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0102" && p.LarsCode == 102))));
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0103" && p.LarsCode == 101))));
+            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0101" && p.LarsCode == "103"))));
+            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0102" && p.LarsCode == "102"))));
+            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0103" && p.LarsCode == "101"))));
 
             slackNotificationService
                 .Verify(s => s.UploadFile(

@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Courses.Data.Configuration;
 using SFA.DAS.Courses.Domain.Configuration;
+//using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Data
 {
@@ -23,6 +25,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.FrameworkImport> FrameworksImport { get; set; }
         DbSet<Domain.Entities.FrameworkFunding> FrameworkFunding { get; set; }
         DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
+        DbSet<Domain.Entities.FundingImport> FundingImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1> SectorSubjectAreaTier1 { get; set; }
@@ -47,6 +50,7 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.FrameworkImport> FrameworksImport { get; set; }
         public DbSet<Domain.Entities.FrameworkFunding> FrameworkFunding { get; set; }
         public DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
+        public DbSet<Domain.Entities.FundingImport> FundingImport { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
         public DbSet<Domain.Entities.Route> Routes { get; set; }
@@ -93,7 +97,6 @@ namespace SFA.DAS.Courses.Data
                     TimeSpan.FromSeconds(20),
                     null
                 )).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -109,12 +112,14 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new FrameworkImport());
             modelBuilder.ApplyConfiguration(new FrameworkFunding());
             modelBuilder.ApplyConfiguration(new FrameworkFundingImport());
+            modelBuilder.ApplyConfiguration(new FundingImport());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2Import());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1Import());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1());
             modelBuilder.ApplyConfiguration(new Route());
             modelBuilder.ApplyConfiguration(new RouteImport());
+
             base.OnModelCreating(modelBuilder);
         }
     }

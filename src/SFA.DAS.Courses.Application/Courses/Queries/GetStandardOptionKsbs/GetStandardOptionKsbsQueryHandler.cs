@@ -8,12 +8,6 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 {
-    public class GetStandardOptionKsbsQuery : IRequest<GetStandardOptionKsbsResult>
-    {
-        public string Id { get; set; }
-        public string Option { get; set; }
-    }
-
     public class GetStandardOptionKsbsQueryHandler : IRequestHandler<GetStandardOptionKsbsQuery, GetStandardOptionKsbsResult>
     {
         private readonly IStandardsService _standardsService;
@@ -32,10 +26,5 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
                 Ksbs = ksbs.EmptyEnumerableIfNull().ToArray()
             };
         }
-    }
-
-    public class GetStandardOptionKsbsResult
-    {
-        public Ksb[] Ksbs { get; set; }
     }
 }

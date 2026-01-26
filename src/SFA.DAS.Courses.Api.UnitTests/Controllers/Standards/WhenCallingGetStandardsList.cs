@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,6 +31,15 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
         {
+            // Arrange – distinct LarsCode
+            var expectedLarsCodes = queryResult.Standards
+                .Select((standard, index) =>
+                {
+                    standard.LarsCode = (1000 + index).ToString();
+                    return 1000 + index;
+                })
+                .ToList();
+
             filter = StandardFilter.None;
             mockMediator
                 .Setup(mediator => mediator.Send(
@@ -44,13 +54,27 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
+            // Act
             var controllerResult = await controller.GetList(keyword, routeIds, levels, apprenticeshipType, orderBy, filter) as ObjectResult;
 
+            // Assert
             var model = controllerResult.Value as GetStandardsListResponse;
             controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            model.Standards.Should().BeEquivalentTo(queryResult.Standards, StandardToGetStandardResponseOptions.Exclusions);
             model.Total.Should().Be(queryResult.Total);
             model.TotalFiltered.Should().Be(queryResult.TotalFiltered);
+
+            // Assert all properties except LarsCode
+            model.Standards.Should().BeEquivalentTo(
+                queryResult.Standards,
+                options => StandardToGetStandardResponseOptions
+                    .ExclusionsGetStandardResponse(options)
+                    .Excluding(s => s.LarsCode));
+
+            // Assert LarsCode conversion with distinct values
+            model.Standards
+                .Select(s => s.LarsCode)
+                .Should()
+                .BeEquivalentTo(expectedLarsCodes, o => o.WithStrictOrdering());
         }
     }
 }

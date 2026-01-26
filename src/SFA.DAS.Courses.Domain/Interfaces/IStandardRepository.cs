@@ -10,9 +10,9 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<int> Count(StandardFilter filter);
         Task DeleteAll();
         Task<int> InsertMany(IEnumerable<Standard> standards);
-        Task<Standard> GetLatestActiveStandard(int larsCode);
-        Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber);
-        Task<List<Standard>> GetActiveStandardsByIfateReferenceNumber(List<string> ifateReferenceNumbers);
+        Task<Standard> GetLatestActiveStandard(string larsCode);
+        Task<Standard> GetLatestActiveStandardByIfateReferenceNumber(string iFateReferenceNumber);
+        Task<List<Standard>> GetActiveStandardsByIfateReferenceNumbers(List<string> ifateReferenceNumbers);
         Task<Standard> Get(string standardUId);
         Task<IEnumerable<Standard>> GetStandards();
         Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, string apprenticeshipType = null);

@@ -2,7 +2,7 @@
 (
     [StandardUId] VARCHAR(20) PRIMARY KEY,
     [IfateReferenceNumber] VARCHAR(10) NOT NULL,
-    [LarsCode] INT NULL,
+    [LarsCode] VARCHAR(8) NULL,
     [Status] VARCHAR(100) NOT NULL,
     [VersionEarliestStartDate] DATETIME NULL,
     [VersionLatestStartDate] DATETIME NULL,

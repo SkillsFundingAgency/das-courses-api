@@ -6,6 +6,8 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class LarsStandardImport : LarsStandardBase
     {
+        public int LarsCode { get; set; }
+
         public static implicit operator LarsStandardImport(StandardCsv standardCsv)
         {
             return new LarsStandardImport

@@ -67,7 +67,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
             {
                 StandardUId = source.StandardUId,
                 IfateReferenceNumber = source.IfateReferenceNumber,
-                LarsCode = source.LarsCode,
+                LarsCode = int.Parse(source.LarsCode),
                 Status = source.Status,
                 SearchScore = source.SearchScore,
                 Title = source.Title,

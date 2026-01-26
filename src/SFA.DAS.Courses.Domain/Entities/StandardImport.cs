@@ -41,7 +41,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
                 IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType),
                 Keywords = (standard.Keywords.Value?.Any() ?? false) ? string.Join("|", standard.Keywords.Value) : null,
-                LarsCode = standard.LarsCode.Value,
+                LarsCode = standard.LarsCode.Value.ToString(),
                 Level = standard.Level.Value,
                 Options = CreateStructuredOptionsList(standard),
                 OverviewOfRole = standard.OverviewOfRole.Value,
