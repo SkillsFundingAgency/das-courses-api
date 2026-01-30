@@ -15,6 +15,23 @@ namespace SFA.DAS.Courses.Data
         public AzureSqlAccessTokenInterceptor(AzureServiceTokenProvider tokenProvider)
             => _tokenProvider = tokenProvider;
 
+        public override InterceptionResult ConnectionOpening(
+            DbConnection connection,
+            ConnectionEventData eventData,
+            InterceptionResult result)
+        {
+            if (connection is SqlConnection sql && string.IsNullOrEmpty(sql.AccessToken))
+            {
+                // when EF is opening synchronously, set token synchronously, this is
+                // used when the CoursesIndexBuilder runs
+                sql.AccessToken = _tokenProvider.GetAccessTokenAsync(AzureResource)
+                    .GetAwaiter()
+                    .GetResult();
+            }
+
+            return result;
+        }
+
         public override async ValueTask<InterceptionResult> ConnectionOpeningAsync(
             DbConnection connection,
             ConnectionEventData eventData,
@@ -23,6 +40,8 @@ namespace SFA.DAS.Courses.Data
         {
             if (connection is SqlConnection sql && string.IsNullOrEmpty(sql.AccessToken))
             {
+                // when EF is opening asynchronously, set token asynchronously, this
+                // used when requesting data from an endpoint
                 sql.AccessToken = await _tokenProvider
                     .GetAccessTokenAsync(AzureResource)
                     .ConfigureAwait(false);
