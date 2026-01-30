@@ -77,7 +77,7 @@ namespace SFA.DAS.Courses.Data
 
             if (_configuration == null || _azureServiceTokenProvider == null)
             {
-                optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution);
                 return;
             }
 
@@ -92,7 +92,7 @@ namespace SFA.DAS.Courses.Data
                     5,
                     TimeSpan.FromSeconds(20),
                     null
-                )).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                )).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution);
 
         }
 
