@@ -13,22 +13,22 @@ namespace SFA.DAS.Courses.Api.AppStart
         {
             if (environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
-                services.AddDbContext<CoursesDataContext>(options => options.UseInMemoryDatabase("SFA.DAS.Courses"), ServiceLifetime.Transient);
+                services.AddDbContext<CoursesDataContext>(options => options.UseInMemoryDatabase("SFA.DAS.Courses"), ServiceLifetime.Scoped);
             }
             else if (environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
-                services.AddDbContext<CoursesDataContext>(options=>options.UseSqlServer(config.ConnectionString),ServiceLifetime.Transient);
+                services.AddDbContext<CoursesDataContext>(options=>options.UseSqlServer(config.ConnectionString),ServiceLifetime.Scoped);
             }
             else
             {
                 services.AddSingleton(new AzureServiceTokenProvider());
-                services.AddDbContext<CoursesDataContext>(ServiceLifetime.Transient);    
+                services.AddDbContext<CoursesDataContext>(ServiceLifetime.Scoped);    
             }
             
             
 
-            services.AddTransient<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
-            services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
+            services.AddScoped<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
+            services.AddScoped(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
             
         }
     }
