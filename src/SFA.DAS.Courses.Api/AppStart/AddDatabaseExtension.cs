@@ -13,23 +13,34 @@ namespace SFA.DAS.Courses.Api.AppStart
         {
             if (environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
-                services.AddDbContext<CoursesDataContext>(options => options.UseInMemoryDatabase("SFA.DAS.Courses"), ServiceLifetime.Transient);
-            }
-            else if (environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
-            {
-                services.AddDbContext<CoursesDataContext>(options=>options.UseSqlServer(config.ConnectionString),ServiceLifetime.Transient);
+                services.AddDbContext<CoursesDataContext>(
+                    options => options.UseInMemoryDatabase("SFA.DAS.Courses"),
+                    ServiceLifetime.Scoped);
             }
             else
             {
                 services.AddSingleton(new AzureServiceTokenProvider());
-                services.AddDbContext<CoursesDataContext>(ServiceLifetime.Transient);    
-            }
-            
-            
+                services.AddScoped<AzureSqlAccessTokenInterceptor>();
 
-            services.AddTransient<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
-            services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
-            
+                services.AddDbContext<CoursesDataContext>((sp, options) =>
+                {
+                    options.UseLazyLoadingProxies();
+
+                    options.UseSqlServer(
+                        config.ConnectionString,
+                        sql => sql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), null));
+
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+
+                    if (!environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        options.AddInterceptors(sp.GetRequiredService<AzureSqlAccessTokenInterceptor>());
+                    }
+                }, ServiceLifetime.Scoped);
+            }
+
+            services.AddScoped<ICoursesDataContext>(sp => sp.GetRequiredService<CoursesDataContext>());
+            services.AddScoped(sp => new Lazy<CoursesDataContext>(sp.GetRequiredService<CoursesDataContext>()));
         }
     }
 }
