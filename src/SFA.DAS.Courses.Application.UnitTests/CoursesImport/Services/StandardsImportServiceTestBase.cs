@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 
@@ -88,7 +89,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 TypicalJobTitles = null,
                 StandardPageUrl = null,
                 CoreAndOptions = false,
-                Options = new List<Domain.Entities.StandardOption> { Domain.Entities.StandardOption.Create(Guid.NewGuid(), optionTitle, new List<Domain.Entities.Ksb>()) },
+                Options = JsonConvert.SerializeObject(new List<Domain.Entities.StandardOption> { Domain.Entities.StandardOption.Create(Guid.NewGuid(), optionTitle, new List<Domain.Entities.Ksb>()) }),
                 CoronationEmblem = false
             };
         }
@@ -126,7 +127,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 TypicalJobTitles = null,
                 StandardPageUrl = null,
                 CoreAndOptions = false,
-                Options = new List<Domain.Entities.StandardOption> { Domain.Entities.StandardOption.Create(Guid.NewGuid(), optionTitle, new List<Domain.Entities.Ksb>()) },
+                Options = JsonConvert.SerializeObject(new List<Domain.Entities.StandardOption> { Domain.Entities.StandardOption.Create(Guid.NewGuid(), optionTitle, new List<Domain.Entities.Ksb>()) }),
                 CoronationEmblem = false
             };
         }

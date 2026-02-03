@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Extensions;
 
@@ -25,10 +26,10 @@ namespace SFA.DAS.Courses.Domain.Entities
                 ApprovedForDelivery = standard.ApprovedForDelivery.Value,
                 AssessmentPlanUrl = standard.AssessmentPlanUrl.Value,
                 CoreAndOptions = standard.CoreAndOptions.Value,
-                CoreDuties = coreDuties,
+                CoreDuties = JsonConvert.SerializeObject(coreDuties),
                 CoronationEmblem = standard.CoronationEmblem.Value,
                 CreatedDate = standard.CreatedDate.Value,
-                Duties = GetDuties(standard),
+                Duties = JsonConvert.SerializeObject(GetDuties(standard)),
                 EPAChanged = IsEPAChanged(standard),
                 EpaoMustBeApprovedByRegulatorBody = QualificationsContainsEpaoMustBeApprovedText(standard.Qualifications?.Value),
                 EqaProviderContactEmail = standard.EqaProvider.Value?.ContactEmail.Value?.Trim(),
@@ -43,7 +44,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Keywords = (standard.Keywords.Value?.Any() ?? false) ? string.Join("|", standard.Keywords.Value) : null,
                 LarsCode = standard.LarsCode.Value,
                 Level = standard.Level.Value,
-                Options = CreateStructuredOptionsList(standard),
+                Options = JsonConvert.SerializeObject(CreateStructuredOptionsList(standard)),
                 OverviewOfRole = standard.OverviewOfRole.Value,
                 ProposedMaxFunding = standard.ProposedMaxFunding.Value,
                 ProposedTypicalDuration = standard.ProposedTypicalDuration.Value,
@@ -62,7 +63,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionLatestStartDate = standard.VersionLatestStartDate.Value,
                 VersionMajor = GetVersionPart(standard.Version?.Value, VersionPart.Major),
                 VersionMinor = GetVersionPart(standard.Version?.Value, VersionPart.Minor),
-                RelatedOccupations = GetRelatedOccupationsStandardCodes(standard)
+                RelatedOccupations = JsonConvert.SerializeObject(GetRelatedOccupationsStandardCodes(standard))
             };
         }
 
@@ -222,7 +223,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             return standard.Change.Value.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
         }
 
-        private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
+        private static List<string> CreateStructuredOptionsList(ImportTypes.Standard standard)
         {
             var standardOptions = standard.CoreAndOptions.Value
                 ? CreateStructuredOptionsListWithDutyMapping(standard)
@@ -230,11 +231,11 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             if (standardOptions.Any())
             {
-                return standardOptions;
+                return standardOptions?.Select(JsonConvert.SerializeObject).ToList();
             }
             else if (standard.OptionsUnstructuredTemplate?.Value?.Any() ?? false)
             {
-                return standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
+                return standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).Select(JsonConvert.SerializeObject).ToList();
             }
 
             return [];

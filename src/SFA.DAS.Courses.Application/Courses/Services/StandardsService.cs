@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
@@ -97,7 +98,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
         {
             if (standard != null && standard.ApprenticeshipType == Domain.Entities.ApprenticeshipType.FoundationApprenticeship.ToString())
             {
-                var standards = await _standardsRepository.GetActiveStandardsByIfateReferenceNumber(standard.RelatedOccupations);
+                var standards = await _standardsRepository.GetActiveStandardsByIfateReferenceNumber(JsonConvert.DeserializeObject<List<string>>(standard.RelatedOccupations));
                 return standards.ConvertAll(s => (RelatedOccupation)s);
             }
             return [];

@@ -32,6 +32,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Excluding(c => c.CreatedDate)
                 .Excluding(c => c.PublishDate)
                 .Excluding(c => c.ApprenticeshipType)
+                .Excluding(c => c.Duties)
+                .Excluding(c => c.Options)
                 .Excluding(c => c.RelatedOccupations);
     }
 }

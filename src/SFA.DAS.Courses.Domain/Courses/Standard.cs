@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.Courses.Domain.Courses
 {
@@ -96,11 +97,11 @@ namespace SFA.DAS.Courses.Domain.Courses
                 SectorSubjectAreaTier1Description = source.LarsStandard?.SectorSubjectArea1?.SectorSubjectAreaTier1Desc,
                 OtherBodyApprovalRequired = source.LarsStandard != null ? source.LarsStandard.OtherBodyApprovalRequired : false,
                 ApprovalBody = source.RegulatedBody,
-                Duties = source.Duties,
+                Duties = !string.IsNullOrEmpty(source.Duties) ? JsonConvert.DeserializeObject<List<string>>(source.Duties) : null,
                 CoreAndOptions = source.CoreAndOptions,
-                CoreDuties = source.CoreDuties,
+                CoreDuties = !string.IsNullOrEmpty(source.CoreDuties) ? JsonConvert.DeserializeObject<List<string>>(source.CoreDuties) : null,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
-                Options = source.Options?.Select(x => (StandardOption)x).ToList(),
+                Options =  !string.IsNullOrEmpty(source.Options) ? JsonConvert.DeserializeObject<List<StandardOption>>(source.Options)?.ToList() : [],
                 SectorCode = source.LarsStandard?.SectorCode ?? 0,
                 EPAChanged = source.EPAChanged,
                 VersionMajor = source.VersionMajor,

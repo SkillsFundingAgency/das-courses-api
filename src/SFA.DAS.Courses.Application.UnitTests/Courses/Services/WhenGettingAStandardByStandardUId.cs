@@ -19,6 +19,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            standardFromRepo.Options = "[]";
+            standardFromRepo.CoreDuties = "[]";
+            standardFromRepo.Duties = "[]";
+            standardFromRepo.RelatedOccupations = "[]";
             mockStandardsRepository
                 .Setup(repository => repository.Get(standardUId))
                 .ReturnsAsync(standardFromRepo);

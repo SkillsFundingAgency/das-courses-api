@@ -34,8 +34,6 @@ namespace SFA.DAS.Courses.Data
 
     public partial class CoursesDataContext : DbContext, ICoursesDataContext
     {
-        private const string AzureResource = "https://database.windows.net/";
-
         public DbSet<Domain.Entities.Standard> Standards { get; set; }
         public DbSet<Domain.Entities.StandardImport> StandardsImport { get; set; }
         public DbSet<Domain.Entities.ImportAudit> ImportAudit { get; set; }
@@ -55,7 +53,6 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.SectorSubjectAreaTier1> SectorSubjectAreaTier1 { get; set; }
 
         private readonly CoursesConfiguration _configuration;
-        private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
 
         public CoursesDataContext()
         {
@@ -65,17 +62,16 @@ namespace SFA.DAS.Courses.Data
         {
 
         }
-        public CoursesDataContext(IOptions<CoursesConfiguration> config, DbContextOptions options, AzureServiceTokenProvider azureServiceTokenProvider) : base(options)
+        public CoursesDataContext(IOptions<CoursesConfiguration> config, DbContextOptions options) : base(options)
         {
             _configuration = config.Value;
-            _azureServiceTokenProvider = azureServiceTokenProvider;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();
 
-            if (_configuration == null || _azureServiceTokenProvider == null)
+            if (_configuration == null)
             {
                 optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 return;
@@ -83,8 +79,7 @@ namespace SFA.DAS.Courses.Data
 
             var connection = new SqlConnection
             {
-                ConnectionString = _configuration.ConnectionString,
-                AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result,
+                ConnectionString = _configuration.SqlConnectionString
             };
 
             optionsBuilder.UseSqlServer(connection, options =>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes;
@@ -100,12 +101,15 @@ public class WhenCastingFromImportTypeStandardToStandardImportEntity
         using (new AssertionScope())
         {
             actual.Should().NotBeNull();
-            actual.Options[0].TechnicalKnowledges.Should().HaveCount(_source.TechnicalKnowledges.Value.Count);
-            actual.Options[0].TechnicalSkills.Should().HaveCount(_source.TechnicalSkills.Value.Count);
-            actual.Options[0].EmployabilitySkillsAndBehaviours.Should().HaveCount(_source.EmployabilitySkillsAndBehaviours.Value.Count);
-            actual.Options[0].TechnicalKnowledges.Select(k => k.Detail).Should().BeEquivalentTo(_source.TechnicalKnowledges.Value.Select(k => k.Detail.Value));
-            actual.Options[0].TechnicalSkills.Select(k => k.Detail).Should().BeEquivalentTo(_source.TechnicalSkills.Value.Select(k => k.Detail.Value));
-            actual.Options[0].EmployabilitySkillsAndBehaviours.Select(k => k.Detail)
+            var options = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var option = JsonConvert.DeserializeObject<StandardOption>(options.First());
+            
+            option.TechnicalKnowledges.Should().HaveCount(_source.TechnicalKnowledges.Value.Count);
+            option.TechnicalSkills.Should().HaveCount(_source.TechnicalSkills.Value.Count);
+            option.EmployabilitySkillsAndBehaviours.Should().HaveCount(_source.EmployabilitySkillsAndBehaviours.Value.Count);
+            option.TechnicalKnowledges.Select(k => k.Detail).Should().BeEquivalentTo(_source.TechnicalKnowledges.Value.Select(k => k.Detail.Value));
+            option.TechnicalSkills.Select(k => k.Detail).Should().BeEquivalentTo(_source.TechnicalSkills.Value.Select(k => k.Detail.Value));
+            option.EmployabilitySkillsAndBehaviours.Select(k => k.Detail)
                 .Should().BeEquivalentTo(_source.EmployabilitySkillsAndBehaviours.Value.Select(k => k.Detail.Value));
         }
     }
@@ -118,7 +122,7 @@ public class WhenCastingFromImportTypeStandardToStandardImportEntity
         using (new AssertionScope())
         {
             actual.Should().NotBeNull();
-            actual.RelatedOccupations.Should().BeEquivalentTo("ST0001", "ST0002");
+            actual.RelatedOccupations.Should().BeEquivalentTo("[\"ST0001\",\"ST0002\"]");
         }
     }
 }

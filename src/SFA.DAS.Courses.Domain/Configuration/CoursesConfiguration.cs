@@ -2,7 +2,7 @@
 {
     public class CoursesConfiguration
     {
-        public string ConnectionString { get; set; }
+        public string SqlConnectionString { get; set; }
 
         public InstituteOfApprenticeshipsApiConfiguration InstituteOfApprenticeshipsApiConfiguration { get; set; }
     }

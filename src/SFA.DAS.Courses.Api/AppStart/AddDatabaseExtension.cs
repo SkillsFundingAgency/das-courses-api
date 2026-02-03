@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,11 +17,10 @@ namespace SFA.DAS.Courses.Api.AppStart
             }
             else if (environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
-                services.AddDbContext<CoursesDataContext>(options=>options.UseSqlServer(config.ConnectionString),ServiceLifetime.Transient);
+                services.AddDbContext<CoursesDataContext>(options=>options.UseSqlServer(config.SqlConnectionString),ServiceLifetime.Transient);
             }
             else
             {
-                services.AddSingleton(new AzureServiceTokenProvider());
                 services.AddDbContext<CoursesDataContext>(ServiceLifetime.Transient);    
             }
             

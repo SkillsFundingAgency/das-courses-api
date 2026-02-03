@@ -25,13 +25,13 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
             builder.Property(x => x.Keywords).HasColumnName("Keywords");
             builder.Property(x => x.RegulatedBody).HasColumnName("RegulatedBody").HasColumnType("varchar").HasMaxLength(1000).IsRequired(false);
-            builder.Property(x => x.Duties).HasJsonConversion();
-            builder.Property(x => x.CoreDuties).HasJsonConversion();
+            builder.Property(x => x.Duties).HasColumnType("nvarchar(max)");
+            builder.Property(x => x.CoreDuties).HasColumnType("nvarchar(max)");
             builder.Property(x => x.IntegratedApprenticeship).HasColumnName("IntegratedApprenticeship").HasColumnType("bit").IsRequired();
             builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
-            builder.Property(x => x.Options).HasJsonConversion();
+            builder.Property(x => x.Options).HasColumnType("nvarchar(max)");
             builder.Property(x => x.EpaoMustBeApprovedByRegulatorBody).HasColumnType("EpaoMustBeApprovedByRegulatorBody").HasColumnType("bit").IsRequired();
-            builder.Property(x => x.RelatedOccupations).HasJsonConversion();
+            builder.Property(x => x.RelatedOccupations).HasColumnType("nvarchar(max)");
 
             builder.HasOne(c => c.Route)
                 .WithMany(c => c.Standards)
