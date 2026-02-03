@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using FluentValidation.TestHelper;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
 using SFA.DAS.Courses.Domain.Entities;
@@ -26,12 +27,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                     IfateReferenceNumber = "ST001",
                     VersionMajor = 1,
                     VersionMinor = 0,
-                    Options = new List<StandardOption>
+                    Options = JsonConvert.SerializeObject(new List<StandardOption>
                     {
                         StandardOption.Create("Option A"),
                         StandardOption.Create("Option B"),
                         StandardOption.Create("Option C")
-                    }
+                    })
                 }
             };
 

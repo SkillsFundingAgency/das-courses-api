@@ -10,6 +10,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
         [Test, RecursiveMoqAutoData]
         public void Then_Maps_Fields_Appropriately(Domain.Entities.Standard source)
         {
+            source.Duties = "[]";
+            source.CoreDuties = "[]";
+            source.Options = "[]";
             var response = (Standard)source;
 
             response.Should().BeEquivalentTo(source, options => options
@@ -34,6 +37,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
                 .Excluding(c => c.PublishDate)
                 .Excluding(c => c.ApprenticeshipType)
                 .Excluding(c => c.RelatedOccupations)
+                .Excluding(c => c.Duties)
+                .Excluding(c => c.CoreDuties)
+                .Excluding(c => c.Options)
             );
 
             response.Route.Should().Be(source.Route.Name);

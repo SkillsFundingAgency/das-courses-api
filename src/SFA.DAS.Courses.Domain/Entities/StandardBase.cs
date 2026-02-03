@@ -38,17 +38,17 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string RegulatedBody { get; set; }
         public virtual LarsStandard LarsStandard { get; set; }
         public virtual ICollection<ApprenticeshipFunding> ApprenticeshipFunding { get; set; }
-        public List<string> Duties { get; set; }
+        public string Duties { get; set; }
         public bool CoreAndOptions { get; set; }
-        public List<string> CoreDuties { get; set; }
+        public string CoreDuties { get; set; }
         public bool IntegratedApprenticeship { get; set; }
-        public List<StandardOption> Options { get; set; }
+        public string Options { get; set; }
         public DateTime? CreatedDate { get; set; }
         public bool EPAChanged { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
         public DateTime? PublishDate { get; set; }
         public bool IsRegulatedForProvider { get; set; } = false;
         public bool IsRegulatedForEPAO { get; set; } = false;
-        public List<string> RelatedOccupations { get; set; } = [];
+        public string RelatedOccupations { get; set; } = "[]";
     }
 }

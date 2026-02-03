@@ -25,6 +25,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            foreach (var standard in standardsFromRepo)
+            {
+                InitializeStandardProperties(standard);
+            }
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, string.Empty))
                 .ReturnsAsync(standardsFromRepo);
@@ -51,6 +55,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            foreach (var standard in standardsFromRepo)
+            {
+                InitializeStandardProperties(standard);
+            }
             filter = StandardFilter.Active;
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, string.Empty))
@@ -81,6 +89,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            foreach (var standard in standardsFromRepo)
+            {
+                InitializeStandardProperties(standard);
+            }
             searchResult.Standards = new List<StandardSearchResult>
             {
                 new StandardSearchResult{StandardUId = standardsFromRepo[0].StandardUId}
@@ -116,6 +128,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            foreach (var standard in standardsFromRepo)
+            {
+                InitializeStandardProperties(standard);
+            }
             searchResult.Standards = new List<StandardSearchResult>
             {
                 new StandardSearchResult{StandardUId = standardsFromRepo[0].StandardUId}
@@ -151,6 +167,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            foreach (var standard in standardsFromRepo)
+            {
+                InitializeStandardProperties(standard);
+            }
             searchResult.Standards = new List<StandardSearchResult>
             {
                 new StandardSearchResult{StandardUId = standardsFromRepo[0].StandardUId}
@@ -184,6 +204,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            foreach (var standard in standardsFromRepo)
+            {
+                InitializeStandardProperties(standard);
+            }
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, string.Empty))
                 .ReturnsAsync(standardsFromRepo);
@@ -206,6 +230,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            foreach (var standard in standardsFromRepo)
+            {
+                InitializeStandardProperties(standard);
+            }
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, "Apprenticeship"))
                 .ReturnsAsync(standardsFromRepo);
@@ -229,6 +257,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
         {
+            foreach (var standard in standardsFromRepo)
+            {
+                InitializeStandardProperties(standard);
+            }
+            foreach (var standard in standardsFromSortService)
+            {
+                InitializeStandardProperties(standard);
+            }
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, false, string.Empty))
                 .ReturnsAsync(standardsFromRepo);
@@ -240,6 +276,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             getStandardsListResult
                 .Should().BeEquivalentTo(standardsFromSortService.OrderBy(standard => standard.SearchScore), StandardEquivalencyAssertionOptions.ExcludingFieldsWithStrictOrdering);
+        }
+        
+        private static void InitializeStandardProperties(Standard standardFromRepo)
+        {
+            standardFromRepo.Options = "[]";
+            standardFromRepo.CoreDuties = "[]";
+            standardFromRepo.Duties = "[]";
+            standardFromRepo.RelatedOccupations = "[]";
         }
     }
 }

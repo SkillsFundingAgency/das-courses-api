@@ -39,7 +39,7 @@ Data:
 ```
 {
 	"Courses":{
-		"ConnectionString":"DBCONNECTIONSTRING"
+		"SqlConnectionString":"DBCONNECTIONSTRING"
 	},
 	"AzureAd": {
     "tenant": "********.onmicrosoft.com",

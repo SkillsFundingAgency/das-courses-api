@@ -19,23 +19,17 @@ namespace SFA.DAS.Courses.Api.AppStart
             }
             else
             {
-                services.AddSingleton(new AzureServiceTokenProvider());
-                services.AddScoped<AzureSqlAccessTokenInterceptor>();
 
                 services.AddDbContext<CoursesDataContext>((sp, options) =>
                 {
                     options.UseLazyLoadingProxies();
 
                     options.UseSqlServer(
-                        config.ConnectionString,
+                        config.SqlConnectionString,
                         sql => sql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), null));
 
                     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
-                    if (!environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        options.AddInterceptors(sp.GetRequiredService<AzureSqlAccessTokenInterceptor>());
-                    }
                 }, ServiceLifetime.Scoped);
             }
 

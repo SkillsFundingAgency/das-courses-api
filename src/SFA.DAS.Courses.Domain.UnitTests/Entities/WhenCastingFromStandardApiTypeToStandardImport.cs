@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
@@ -83,7 +84,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert	
-            actual.CoreDuties.Should().BeEquivalentTo(new List<string> { detail });
+            actual.CoreDuties.Should().BeEquivalentTo(JsonConvert.SerializeObject(new List<string> { detail }));
         }
 
         [Test, StandardAutoData]
@@ -108,7 +109,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             standard.Skills.Value.RemoveAll(s => !actual.CoreDuties.Contains(s.Detail.Value));
 
             // Assert
-            standard.Skills.Value.Select(s => s.Detail.Value).Should().BeEquivalentTo(actual.CoreDuties);
+            var dutiesString = JsonConvert.DeserializeObject<List<Guid>>(actual.CoreDuties);
+            var actualSkills = dutiesString.Select(c=>c.ToString()).ToList();
+            standard.Skills.Value.Select(s => s.Detail.Value).Should().BeEquivalentTo(actualSkills);
         }
 
         [Test, StandardAutoData]
@@ -157,11 +160,14 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            
+            actualOptions.Should().Contain(x => x.OptionId == options[0].OptionId)
                 .Which.Knowledge.Should().BeEquivalentTo(new []{
                     new { Id = standard.Knowledges.Value[0].KnowledgeId.Value, Detail = "k1" },
                     new { Id = standard.Knowledges.Value[1].KnowledgeId.Value, Detail = "k2" }});
-            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
+            actualOptions.Should().Contain(x => x.OptionId == options[1].OptionId)
                 .Which.Knowledge.Should().BeEquivalentTo( new [] {
                     new { Id = standard.Knowledges.Value[2].KnowledgeId.Value, Detail = "k3" },
                     new { Id = standard.Knowledges.Value[3].KnowledgeId.Value, Detail = "k4" }});
@@ -189,11 +195,13 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            actualOptions.Should().Contain(x => x.OptionId == options[0].OptionId)
                 .Which.Skills.Should().BeEquivalentTo(new []{
                     new { Id = standard.Skills.Value[0].SkillId.Value, Detail = "s1" },
                     new { Id = standard.Skills.Value[1].SkillId.Value, Detail = "s2" }});
-            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
+            actualOptions.Should().Contain(x => x.OptionId == options[1].OptionId)
                 .Which.Skills.Should().BeEquivalentTo( new []{
                     new { Id = standard.Skills.Value[2].SkillId.Value, Detail = "s3" },
                     new { Id = standard.Skills.Value[3].SkillId.Value, Detail = "s4" },
@@ -223,19 +231,21 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            actualOptions.Should().Contain(x => x.OptionId == options[0].OptionId)
                 .Which.Behaviours.Should().BeEquivalentTo( new []{
                     new { Id = standard.Behaviours.Value[0].BehaviourId.Value, Detail = "b1" },
                     new { Id = standard.Behaviours.Value[2].BehaviourId.Value, Detail = "b3" },
                     new { Id = standard.Behaviours.Value[3].BehaviourId.Value, Detail = "b4" },
                     new { Id = standard.Behaviours.Value[4].BehaviourId.Value, Detail = "b5" }});
-            actual.Options.Should().Contain(x => x.OptionId == options[1].OptionId)
+            actualOptions.Should().Contain(x => x.OptionId == options[1].OptionId)
                 .Which.Behaviours.Should().BeEquivalentTo(new []{
                     new { Id = standard.Behaviours.Value[0].BehaviourId.Value, Detail = "b1" },
                     new { Id = standard.Behaviours.Value[2].BehaviourId.Value, Detail = "b3" },
                     new { Id = standard.Behaviours.Value[3].BehaviourId.Value, Detail = "b4" },
                     new { Id = standard.Behaviours.Value[4].BehaviourId.Value, Detail = "b5" }});
-            actual.Options.Should().Contain(x => x.OptionId == options[2].OptionId)
+            actualOptions.Should().Contain(x => x.OptionId == options[2].OptionId)
                 .Which.Behaviours.Should().BeEquivalentTo(new []{
                     new { Id = standard.Behaviours.Value[3].BehaviourId.Value, Detail = "b4" },
                     new { Id = standard.Behaviours.Value[4].BehaviourId.Value, Detail = "b5" },
@@ -268,7 +278,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            var mappedOption = actual.Options.Should().Contain(x => x.OptionId == option.OptionId).Which;
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            var mappedOption = actualOptions.Should().Contain(x => x.OptionId == option.OptionId).Which;
             mappedOption.Ksbs.Should().BeEquivalentTo(new[]
             {
                 new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
@@ -332,9 +344,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             // Act
             var actual = (StandardImport)standard;
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
 
-            var mappedOpt1 = actual.Options.Single(o => o.OptionId == opt1.OptionId);
-            var mappedOpt2 = actual.Options.Single(o => o.OptionId == opt2.OptionId);
+            var mappedOpt1 = actualOptions.Single(o => o.OptionId == opt1.OptionId);
+            var mappedOpt2 = actualOptions.Single(o => o.OptionId == opt2.OptionId);
 
             // Assert — CORE KSBs
             mappedOpt1.Ksbs.Should().Contain(x => x.Detail == "core-k");
@@ -388,9 +402,11 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             // Act
             var actual = (StandardImport)standard;
-
-            var mappedOpt1 = actual.Options.Single(o => o.OptionId == opt1.OptionId.Value);
-            var mappedOpt2 = actual.Options.Single(o => o.OptionId == opt2.OptionId.Value);
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            
+            var mappedOpt1 = actualOptions.Single(o => o.OptionId == opt1.OptionId.Value);
+            var mappedOpt2 = actualOptions.Single(o => o.OptionId == opt2.OptionId.Value);
 
             var expectedKsbDetails = new[] { "k1", "k2", "s1", "s2", "b1", "b2" };
 
@@ -412,7 +428,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            var mappedOption = actual.Options.Should().Contain(x => x.Title == "core").Which;
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            var mappedOption = actualOptions.Should().Contain(x => x.Title == "core").Which;
             mappedOption.Ksbs.Should().BeEquivalentTo(new[]
             {
                 new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
@@ -448,7 +466,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Should().Contain(x => x.OptionId == options[0].OptionId)
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            actualOptions.Should().Contain(x => x.OptionId == options[0].OptionId)
                 .Which.Knowledge.Should().OnlyHaveUniqueItems();
         }
 
@@ -469,7 +489,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Should().Contain(x => x.OptionId == standard.Options.Value.First().OptionId.Value)
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            actualOptions.Should().Contain(x => x.OptionId == standard.Options.Value.First().OptionId.Value)
                 .Which.Behaviours.Should().BeEmpty();
         }
 
@@ -493,7 +515,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Should().Contain(x => x.OptionId == standard.Options.Value.First().OptionId.Value)
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            actualOptions.Should().Contain(x => x.OptionId == standard.Options.Value.First().OptionId.Value)
                 .Which.Behaviours.Should().BeEmpty();
         }
 
@@ -504,7 +528,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Duties.Should().BeEquivalentTo(standard.Duties.Value.Select(c => c.DutyDetail.Value));
+            actual.Duties.Should().BeEquivalentTo( JsonConvert.SerializeObject(standard.Duties.Value.Select(c => c.DutyDetail.Value)));
         }
 
         [Test, StandardAutoData]
@@ -517,7 +541,9 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Value.Select(c => c.Title.Value));
+            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
+            actualOptions.Select(c => c.Title).Should().BeEquivalentTo(standard.Options.Value.Select(c => c.Title.Value));
         }
 
         [Test]
@@ -535,7 +561,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options[0].Should().NotBeNull()
+            var actualOptions = JsonConvert.DeserializeObject<List<string>>(actual.Options);
+            var actualOption = JsonConvert.DeserializeObject<StandardOption>(actualOptions.First());
+            
+            actualOption.Should().NotBeNull()
                 .And.BeAssignableTo<StandardOption>()
                 .Which.Title.Should().Be("Option");
         }
@@ -552,7 +581,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Options.Should().BeEmpty();
+            actual.Options.Should().Be("[]");
         }
 
         [Test]
@@ -790,7 +819,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             var actual = (StandardImport)standard;
 
             // Assert
-            actual.Duties.Should().BeEmpty();
+            actual.Duties.Should().Be("[]");
         }
 
         [Test]

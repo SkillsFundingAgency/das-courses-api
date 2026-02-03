@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Entities;
 using Framework = SFA.DAS.Courses.Domain.Entities.Framework;
@@ -104,11 +105,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.3",
-                    Options = new List<StandardOption>
+                    Options = JsonConvert.SerializeObject(new List<StandardOption>
                     {
                         StandardOption.Create("Beer"),
                         StandardOption.Create("Cider"),
-                    },
+                    }),
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
                 },
@@ -130,7 +131,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         SectorSubjectAreaTier2 = 1m,
                         SectorSubjectAreaTier1 = 1
                     },
-                    Options = new List<StandardOption> { StandardOption.Create("core") },
+                    Options = JsonConvert.SerializeObject(new List<StandardOption> { StandardOption.Create("core") }),
                     Status = "Approved for delivery",
                     Version = "1.0",
                     OverviewOfRole = "test",
@@ -268,7 +269,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    Options = JsonConvert.SerializeObject(new List<StandardOption>
                     {
                         StandardOption.Create(
                             Guid.NewGuid(),
@@ -283,7 +284,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             }),
                         StandardOption.Create(
                             "Option 2")
-                    },
+                    }),
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
                 }
@@ -336,11 +337,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     },
                     Status = "Approved for delivery",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    Options = JsonConvert.SerializeObject(new List<StandardOption>
                     {
                         StandardOption.Create("Cosmetic"),
                         StandardOption.Create("Orthodontist"),
-                    },
+                    }),
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
                 }
@@ -381,11 +382,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = null,
                     Status = "In development",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    Options =JsonConvert.SerializeObject( new List<StandardOption>
                     {
                         StandardOption.Create("Ferrous"),
                         StandardOption.Create("Non-ferroes"),
-                    },
+                    }),
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
                 }
@@ -410,11 +411,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     LarsStandard = null,
                     Status = "Withdrawn",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    Options = JsonConvert.SerializeObject(new List<StandardOption>
                     {
                         StandardOption.Create("Wine"),
                         StandardOption.Create("Spirits"),
-                    },
+                    }),
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
                 }
@@ -437,11 +438,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[0].Id,
                     Status = "Retired",
                     Version = "1.2",
-                    Options = new List<StandardOption>
+                    Options = JsonConvert.SerializeObject(new List<StandardOption>
                     {
                         StandardOption.Create("Beer"),
                         StandardOption.Create("Cider"),
-                    },
+                    }),
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
                 },
@@ -472,11 +473,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    Options = JsonConvert.SerializeObject(new List<StandardOption>
                     {
                         StandardOption.Create("Studio"),
                         StandardOption.Create("Landscape"),
-                    },
+                    }),
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
                 },
@@ -492,11 +493,11 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     RouteCode = routes[2].Id,
                     Status = "Retired",
                     Version = "1.0",
-                    Options = new List<StandardOption>
+                    Options = JsonConvert.SerializeObject(new List<StandardOption>
                     {
                         StandardOption.Create("Studio"),
                         StandardOption.Create("Landscape"),
-                    },
+                    }),
                     OverviewOfRole = "test",
                     StandardPageUrl = "https://tempuri.org"
                 }

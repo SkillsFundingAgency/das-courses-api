@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.Courses.Services;
 using SFA.DAS.Courses.Domain.Entities;
@@ -21,6 +22,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            InitializeStandardProperties(standardFromRepo);
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandard(larsCode))
                 .ReturnsAsync(standardFromRepo);
@@ -53,14 +55,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            InitializeStandardProperties(standardFromRepo);
             standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
-            standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
+            var ifateReferenceNumbers = new List<string>{"ST1001", "ST1002"};
+            standardFromRepo.RelatedOccupations = JsonConvert.SerializeObject(ifateReferenceNumbers);
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandard(larsCode))
                 .ReturnsAsync(standardFromRepo);
 
             mockStandardsRepository
-                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(standardFromRepo.RelatedOccupations))
+                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(ifateReferenceNumbers))
                 .ReturnsAsync(relatedOccupations);
 
             var standard = await service.GetLatestActiveStandard(larsCode);
@@ -77,8 +81,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            var ifateReferenceNumbers = new List<string>{"ST1001", "ST1002"};
+            InitializeStandardProperties(standardFromRepo);
             standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
-            standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
+            standardFromRepo.RelatedOccupations = JsonConvert.SerializeObject(ifateReferenceNumbers);
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandard(larsCode))
                 .ReturnsAsync(standardFromRepo);
@@ -97,6 +103,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            InitializeStandardProperties(standardFromRepo);
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandard(iFateReferenceNumber))
                 .ReturnsAsync(standardFromRepo);
@@ -130,13 +137,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
-            standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
+            InitializeStandardProperties(standardFromRepo);
+            var ifateReferenceNumbers = new List<string>{"ST1001", "ST1002"};
+            standardFromRepo.RelatedOccupations = JsonConvert.SerializeObject(ifateReferenceNumbers);
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandard(iFateReferenceNumber))
                 .ReturnsAsync(standardFromRepo);
 
             mockStandardsRepository
-                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(standardFromRepo.RelatedOccupations))
+                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(ifateReferenceNumbers))
                 .ReturnsAsync(relatedOccupations);
 
             var standard = await service.GetLatestActiveStandard(iFateReferenceNumber);
@@ -154,7 +163,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
-            standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
+            var ifateReferenceNumbers = new List<string>{"ST1001", "ST1002"};
+            InitializeStandardProperties(standardFromRepo);
+            standardFromRepo.RelatedOccupations = JsonConvert.SerializeObject(ifateReferenceNumbers);
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandard(iFateReferenceNumber))
                 .ReturnsAsync(standardFromRepo);
@@ -175,13 +186,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
-            standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
+            var ifateReferenceNumbers = new List<string>{"ST1001", "ST1002"};
+            InitializeStandardProperties(standardFromRepo);
+            standardFromRepo.RelatedOccupations = JsonConvert.SerializeObject(ifateReferenceNumbers);
             mockStandardsRepository
                 .Setup(repository => repository.Get(standardUId))
                 .ReturnsAsync(standardFromRepo);
 
             mockStandardsRepository
-                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(standardFromRepo.RelatedOccupations))
+                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(ifateReferenceNumbers))
                 .ReturnsAsync(relatedOccupations);
 
             var standard = await service.GetStandard(standardUId);
@@ -197,6 +210,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            InitializeStandardProperties(standardFromRepo);
             mockStandardsRepository
                 .Setup(repository => repository.Get(standardUId))
                 .ReturnsAsync(standardFromRepo);
@@ -231,7 +245,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
-            standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
+            InitializeStandardProperties(standardFromRepo);
+            var ifateReferenceNumbers = new List<string>{"ST1001", "ST1002"};
+            standardFromRepo.RelatedOccupations = JsonConvert.SerializeObject(ifateReferenceNumbers);
             mockStandardsRepository
                 .Setup(repository => repository.Get(standardUId))
                 .ReturnsAsync(standardFromRepo);
@@ -241,6 +257,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             standard.RelatedOccupations.Should().BeEmpty();
             mockStandardsRepository
                 .Verify(repository => repository.GetActiveStandardsByIfateReferenceNumber(It.IsAny<List<string>>()), Times.Never);
+        }
+
+        private static void InitializeStandardProperties(Standard standardFromRepo)
+        {
+            standardFromRepo.Options = "[]";
+            standardFromRepo.CoreDuties = "[]";
+            standardFromRepo.Duties = "[]";
+            standardFromRepo.RelatedOccupations = "[]";
         }
     }
 }
