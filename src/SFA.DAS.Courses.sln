@@ -36,15 +36,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Courses.Api.Accepta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Courses.Domain.TestHelper", "SFA.DAS.Courses.Domain.TestHelper\SFA.DAS.Courses.Domain.TestHelper.csproj", "{DAEF27E1-373E-45AD-88AF-8E5D8D5B2EAF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Scripts", "Test Scripts", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		Test Scripts\CompareDifferencesCourseApiStandardsAndRoutes2.sql = Test Scripts\CompareDifferencesCourseApiStandardsAndRoutes2.sql
-		Test Scripts\CreateRoute_Import_Master.sql = Test Scripts\CreateRoute_Import_Master.sql
-		Test Scripts\CreateRoute_Master.sql = Test Scripts\CreateRoute_Master.sql
-		Test Scripts\CreateStandard_Import_Master.sql = Test Scripts\CreateStandard_Import_Master.sql
-		Test Scripts\CreateStandard_Master.sql = Test Scripts\CreateStandard_Master.sql
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,7 +108,6 @@ Global
 		{2E00722A-B191-4E96-9D18-2838E4666E40} = {2D5BA2D4-5473-4661-B8DA-16F7C31BD5BD}
 		{1F705E03-48E9-45F7-BDC8-6F4E8546FACA} = {2D5BA2D4-5473-4661-B8DA-16F7C31BD5BD}
 		{DAEF27E1-373E-45AD-88AF-8E5D8D5B2EAF} = {2D5BA2D4-5473-4661-B8DA-16F7C31BD5BD}
-		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {2D5BA2D4-5473-4661-B8DA-16F7C31BD5BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F2696654-8E1B-47D0-8283-6D38B7D18F98}
