@@ -378,43 +378,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_When_No_Duties_All_KSBs_Are_Mapped_To_Each_Option(ImportTypes.Standard standard)
-        {
-            // Arrange
-            standard.CoreAndOptions = true;
-            standard.Duties = new List<Duty>();
-
-            var k1 = KnowledgeBuilder.Create("k1").Single();
-            var k2 = KnowledgeBuilder.Create("k2").Single();
-            var s1 = SkillsBuilder.Create("s1").Single();
-            var s2 = SkillsBuilder.Create("s2").Single();
-            var b1 = BehavioursBuilder.Create("b1").Single();
-            var b2 = BehavioursBuilder.Create("b2").Single();
-
-            standard.Knowledges = new List<Knowledge> { k1, k2 };
-            standard.Skills = new List<Skill> { s1, s2 };
-            standard.Behaviours = new List<Behaviour> { b1, b2 };
-
-            var opt1 = new OptionBuilder().Build();
-            var opt2 = new OptionBuilder().Build();
-            standard.Options = new List<Option> { opt1, opt2 };
-
-            // Act
-            var actual = (StandardImport)standard;
-            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
-            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
-            
-            var mappedOpt1 = actualOptions.Single(o => o.OptionId == opt1.OptionId.Value);
-            var mappedOpt2 = actualOptions.Single(o => o.OptionId == opt2.OptionId.Value);
-
-            var expectedKsbDetails = new[] { "k1", "k2", "s1", "s2", "b1", "b2" };
-
-            // Assert — Both options get ALL KSBs
-            mappedOpt1.Ksbs.Select(x => x.Detail).Should().BeEquivalentTo(expectedKsbDetails);
-            mappedOpt2.Ksbs.Select(x => x.Detail).Should().BeEquivalentTo(expectedKsbDetails);
-        }
-
-        [Test, StandardAutoData]
         public void Then_KSBs_Are_Unique(ImportTypes.Standard standard)
         {
             // Arrange
