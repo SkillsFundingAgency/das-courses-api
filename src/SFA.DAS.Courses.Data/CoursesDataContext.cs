@@ -1,7 +1,12 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SFA.DAS.Courses.Data.Configuration;
+using SFA.DAS.Courses.Domain.Configuration;
 
 namespace SFA.DAS.Courses.Data
 {
@@ -47,12 +52,43 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier1> SectorSubjectAreaTier1 { get; set; }
 
+        private readonly CoursesConfiguration _configuration;
+
         public CoursesDataContext()
         {
         }
 
         public CoursesDataContext(DbContextOptions options) : base(options)
         {
+
+        }
+        public CoursesDataContext(IOptions<CoursesConfiguration> config, DbContextOptions options) : base(options)
+        {
+            _configuration = config.Value;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+
+            if (_configuration == null)
+            {
+                optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                return;
+            }
+
+            var connection = new SqlConnection
+            {
+                ConnectionString = _configuration.SqlConnectionString
+            };
+
+            optionsBuilder.UseSqlServer(connection, options =>
+                options.EnableRetryOnFailure(
+                    5,
+                    TimeSpan.FromSeconds(20),
+                    null
+                )).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -8,7 +8,6 @@ using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.ImportTypes;
-using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 using SFA.DAS.Courses.Domain.TestHelper.AutoFixture;
 using SFA.DAS.Courses.Domain.UnitTests.Data;
 
@@ -416,33 +415,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Core_KSBs_Are_Mapped_To_Standard_Without_Options(ImportTypes.Standard standard)
-        {
-            // Arrange
-            standard.Knowledges = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
-            standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
-            standard.Behaviours = BehavioursBuilder.Create("b1-detail");
-            standard.CoreAndOptions = false;
-
-            // Act
-            var actual = (StandardImport)standard;
-
-            // Assert
-            var actualOptionString = JsonConvert.DeserializeObject<List<string>>(actual.Options);
-            var actualOptions = actualOptionString.Select(JsonConvert.DeserializeObject<StandardOption>).ToList();
-            var mappedOption = actualOptions.Should().Contain(x => x.Title == "core").Which;
-            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
-            {
-                new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
-                new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },
-                new { Type = KsbType.Knowledge, Key = "K3", Detail = "k3-detail" },
-                new { Type = KsbType.Skill, Key = "S1", Detail = "s1-detail" },
-                new { Type = KsbType.Skill, Key = "S2", Detail = "s2-detail" },
-                new { Type = KsbType.Behaviour, Key = "B1", Detail = "b1-detail" },
-            });
-        }
-
-        [Test, StandardAutoData]
         public void Then_KSBs_Are_Unique(ImportTypes.Standard standard)
         {
             // Arrange
@@ -574,8 +546,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             // Arrange
             standard.CoreAndOptions = true;
-            standard.Options = new Settable<List<Option>>(null);
-            standard.OptionsUnstructuredTemplate = new Settable<List<string>>(null);
+            standard.Options = null;
+            standard.OptionsUnstructuredTemplate = null;
 
             // Act
             var actual = (StandardImport)standard;
