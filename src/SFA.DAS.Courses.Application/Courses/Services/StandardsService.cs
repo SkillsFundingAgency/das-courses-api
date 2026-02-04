@@ -63,7 +63,10 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             var standard = await _standardsRepository.GetLatestActiveStandard(larsCode);
 
             var result = (Standard)standard;
-            result.RelatedOccupations = await GetRelatedOccupations(standard);
+            if (result != null)
+            {
+                result.RelatedOccupations = await GetRelatedOccupations(standard);
+            }
             return result;
         }
 
@@ -72,7 +75,10 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             var standard = await _standardsRepository.GetLatestActiveStandardByIfateReferenceNumber(ifateReferenceNumber);
 
             var result = (Standard)standard;
-            result.RelatedOccupations = await GetRelatedOccupations(standard);
+            if (result != null)
+            {
+                result.RelatedOccupations = await GetRelatedOccupations(standard);
+            }
             return result;
         }
 
@@ -81,13 +87,16 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             var standard = await _standardsRepository.Get(standardUId);
 
             var result = (Standard)standard;
-            result.RelatedOccupations = await GetRelatedOccupations(standard);
+            if (result != null)
+            {
+                result.RelatedOccupations = await GetRelatedOccupations(standard);
+            }
             return result;
         }
 
         private async Task<List<RelatedOccupation>> GetRelatedOccupations(Domain.Entities.Standard standard)
         {
-            if (standard.ApprenticeshipType == Domain.Entities.ApprenticeshipType.FoundationApprenticeship)
+            if (standard != null && standard.ApprenticeshipType == Domain.Entities.ApprenticeshipType.FoundationApprenticeship)
             {
                 var standards = await _standardsRepository.GetActiveStandardsByIfateReferenceNumbers(standard.RelatedOccupations);
                 return standards.ConvertAll(s => (RelatedOccupation)s);

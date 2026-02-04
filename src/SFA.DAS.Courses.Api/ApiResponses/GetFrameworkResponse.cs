@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Domain.Courses;
@@ -31,6 +31,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         
         public static implicit operator GetFrameworkResponse(Framework source)
         {
+            if (source == null)
+                return null;
+
             return new GetFrameworkResponse
             {
                 Duration = source.Duration,
@@ -68,6 +71,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public static implicit operator TypicalLengthResponse(TypicalLength source)
         {
+            if (source == null)
+                return null;
+
             return new TypicalLengthResponse
             {
                 To = source.To,
@@ -87,6 +93,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public static implicit operator FrameworkFundingResponse(FrameworkFunding source)
         {
+            if (source == null)
+                return null;
+
             return new FrameworkFundingResponse
             {
                 EffectiveFrom = source.EffectiveFrom,
