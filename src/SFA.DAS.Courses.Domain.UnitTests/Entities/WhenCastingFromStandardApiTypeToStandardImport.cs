@@ -7,7 +7,6 @@ using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.ImportTypes;
-using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 using SFA.DAS.Courses.Domain.TestHelper.AutoFixture;
 using SFA.DAS.Courses.Domain.UnitTests.Data;
 
@@ -168,6 +167,69 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
+        public void Then_Core_KSBs_Are_Mapped_To_All_Options(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.CoreAndOptions = true;
+            standard.Knowledges = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
+            standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
+            standard.Behaviours = BehavioursBuilder.Create("b1-detail");
+            var option = new OptionBuilder()
+                .WithKnowledge(standard.Knowledges.Value.Take(1))
+                .WithSkills(standard.Skills.Value.Take(1));
+            standard.Options = new List<Option> { option.Build() };
+            standard.Duties = new List<Duty>
+            {
+                new OptionDutyBuilder().ForOptions(option).Build(),
+                new CoreDutyBuilder()
+                    .WithKnowledge(standard.Knowledges.Value.Skip(1))
+                    .WithSkills(standard.Skills.Value.Skip(1))
+                    .WithBehaviour(standard.Behaviours.Value)
+                    .Build(),
+            };
+
+            // Act
+            var actual = (StandardImport)standard;
+
+            // Assert
+            var mappedOption = actual.Options.Should().Contain(x => x.OptionId == option.OptionId).Which;
+            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
+            {
+                new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
+                new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },
+                new { Type = KsbType.Knowledge, Key = "K3", Detail = "k3-detail" },
+                new { Type = KsbType.Skill, Key = "S1", Detail = "s1-detail" },
+                new { Type = KsbType.Skill, Key = "S2", Detail = "s2-detail" },
+                new { Type = KsbType.Behaviour, Key = "B1", Detail = "b1-detail" },
+            });
+        }
+
+        [Test, StandardAutoData]
+        public void Then_Core_KSBs_Are_Mapped_To_Standard_Without_Options(ImportTypes.Standard standard)
+        {
+            // Arrange
+            standard.Knowledges = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
+            standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
+            standard.Behaviours = BehavioursBuilder.Create("b1-detail");
+            standard.CoreAndOptions = false;
+
+            // Act
+            var actual = (StandardImport)standard;
+
+            // Assert
+            var mappedOption = actual.Options.Should().Contain(x => x.Title == "core").Which;
+            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
+            {
+                new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
+                new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },
+                new { Type = KsbType.Knowledge, Key = "K3", Detail = "k3-detail" },
+                new { Type = KsbType.Skill, Key = "S1", Detail = "s1-detail" },
+                new { Type = KsbType.Skill, Key = "S2", Detail = "s2-detail" },
+                new { Type = KsbType.Behaviour, Key = "B1", Detail = "b1-detail" },
+            });
+        }
+
+        [Test, StandardAutoData]
         public void Then_All_Skills_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
         {
             // Arrange
@@ -240,188 +302,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
                     new { Id = standard.Behaviours.Value[3].BehaviourId.Value, Detail = "b4" },
                     new { Id = standard.Behaviours.Value[4].BehaviourId.Value, Detail = "b5" },
                     new { Id = standard.Behaviours.Value[5].BehaviourId.Value, Detail = "b6" }});
-        }
-
-        [Test, StandardAutoData]
-        public void Then_Core_KSBs_Are_Mapped_To_All_Options(ImportTypes.Standard standard)
-        {
-            // Arrange
-            standard.CoreAndOptions = true;
-            standard.Knowledges = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
-            standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
-            standard.Behaviours = BehavioursBuilder.Create("b1-detail");
-            var option = new OptionBuilder()
-                .WithKnowledge(standard.Knowledges.Value.Take(1))
-                .WithSkills(standard.Skills.Value.Take(1));
-            standard.Options = new List<Option> { option.Build() };
-            standard.Duties = new List<Duty>
-            {
-                new OptionDutyBuilder().ForOptions(option).Build(),
-                new CoreDutyBuilder()
-                    .WithKnowledge(standard.Knowledges.Value.Skip(1))
-                    .WithSkills(standard.Skills.Value.Skip(1))
-                    .WithBehaviour(standard.Behaviours.Value)
-                    .Build(),
-            };
-
-            // Act
-            var actual = (StandardImport)standard;
-
-            // Assert
-            var mappedOption = actual.Options.Should().Contain(x => x.OptionId == option.OptionId).Which;
-            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
-            {
-                new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
-                new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },
-                new { Type = KsbType.Knowledge, Key = "K3", Detail = "k3-detail" },
-                new { Type = KsbType.Skill, Key = "S1", Detail = "s1-detail" },
-                new { Type = KsbType.Skill, Key = "S2", Detail = "s2-detail" },
-                new { Type = KsbType.Behaviour, Key = "B1", Detail = "b1-detail" },
-            });
-        }
-
-        [Test, StandardAutoData]
-        public void Then_Each_Option_Gets_Core_And_Its_Own_OptionSpecific_KSBs_For_Knowledge_Skills_And_Behaviours(ImportTypes.Standard standard)
-        {
-            // Arrange
-            standard.CoreAndOptions = true;
-
-            var kCore = KnowledgeBuilder.Create("core-k").Single();
-            var k1 = KnowledgeBuilder.Create("opt1-k").Single();
-            var k2 = KnowledgeBuilder.Create("opt2-k").Single();
-
-            var sCore = SkillsBuilder.Create("core-s").Single();
-            var s1 = SkillsBuilder.Create("opt1-s").Single();
-            var s2 = SkillsBuilder.Create("opt2-s").Single();
-
-            var bCore = BehavioursBuilder.Create("core-b").Single();
-            var b1 = BehavioursBuilder.Create("opt1-b").Single();
-            var b2 = BehavioursBuilder.Create("opt2-b").Single();
-
-            standard.Knowledges = new List<Knowledge> { kCore, k1, k2 };
-            standard.Skills = new List<Skill> { sCore, s1, s2 };
-            standard.Behaviours = new List<Behaviour> { bCore, b1, b2 };
-
-            var opt1 = new OptionBuilder()
-                .WithKnowledge([k1])
-                .WithSkills([s1])
-                .WithBehaviours([b1]);
-
-            var opt2 = new OptionBuilder()
-                .WithKnowledge([k2])
-                .WithSkills([s2])
-                .WithBehaviours([b2]);
-
-            standard.Options = new List<Option> { opt1.Build(), opt2.Build() };
-
-            var coreDuty = new CoreDutyBuilder()
-                .WithKnowledge(new[] { kCore })
-                .WithSkills(new[] { sCore })
-                .WithBehaviour(new[] { bCore })
-                .Build();
-
-            var duty1 = new OptionDutyBuilder()
-                .ForOptions(opt1)
-                .Build(); // brings opt1-k, opt1-s, opt1-b
-
-            var duty2 = new OptionDutyBuilder()
-                .ForOptions(opt2)
-                .Build(); // brings opt2-k, opt2-s, opt2-b
-
-            standard.Duties = new List<Duty> { coreDuty, duty1, duty2 };
-
-            // Act
-            var actual = (StandardImport)standard;
-
-            var mappedOpt1 = actual.Options.Single(o => o.OptionId == opt1.OptionId);
-            var mappedOpt2 = actual.Options.Single(o => o.OptionId == opt2.OptionId);
-
-            // Assert — CORE KSBs
-            mappedOpt1.Ksbs.Should().Contain(x => x.Detail == "core-k");
-            mappedOpt1.Ksbs.Should().Contain(x => x.Detail == "core-s");
-            mappedOpt1.Ksbs.Should().Contain(x => x.Detail == "core-b");
-
-            mappedOpt2.Ksbs.Should().Contain(x => x.Detail == "core-k");
-            mappedOpt2.Ksbs.Should().Contain(x => x.Detail == "core-s");
-            mappedOpt2.Ksbs.Should().Contain(x => x.Detail == "core-b");
-
-            // Assert — OPTION-SPECIFIC KSBs
-            mappedOpt1.Ksbs.Should().Contain(x => x.Detail == "opt1-k");
-            mappedOpt1.Ksbs.Should().Contain(x => x.Detail == "opt1-s");
-            mappedOpt1.Ksbs.Should().Contain(x => x.Detail == "opt1-b");
-
-            mappedOpt2.Ksbs.Should().Contain(x => x.Detail == "opt2-k");
-            mappedOpt2.Ksbs.Should().Contain(x => x.Detail == "opt2-s");
-            mappedOpt2.Ksbs.Should().Contain(x => x.Detail == "opt2-b");
-
-            // Assert — NO CROSS-CONTAMINATION
-            mappedOpt1.Ksbs.Should().NotContain(x => x.Detail == "opt2-k");
-            mappedOpt1.Ksbs.Should().NotContain(x => x.Detail == "opt2-s");
-            mappedOpt1.Ksbs.Should().NotContain(x => x.Detail == "opt2-b");
-
-            mappedOpt2.Ksbs.Should().NotContain(x => x.Detail == "opt1-k");
-            mappedOpt2.Ksbs.Should().NotContain(x => x.Detail == "opt1-s");
-            mappedOpt2.Ksbs.Should().NotContain(x => x.Detail == "opt1-b");
-        }
-
-        [Test, StandardAutoData]
-        public void Then_When_No_Duties_All_KSBs_Are_Mapped_To_Each_Option(ImportTypes.Standard standard)
-        {
-            // Arrange
-            standard.CoreAndOptions = true;
-            standard.Duties = new List<Duty>();
-
-            var k1 = KnowledgeBuilder.Create("k1").Single();
-            var k2 = KnowledgeBuilder.Create("k2").Single();
-            var s1 = SkillsBuilder.Create("s1").Single();
-            var s2 = SkillsBuilder.Create("s2").Single();
-            var b1 = BehavioursBuilder.Create("b1").Single();
-            var b2 = BehavioursBuilder.Create("b2").Single();
-
-            standard.Knowledges = new List<Knowledge> { k1, k2 };
-            standard.Skills = new List<Skill> { s1, s2 };
-            standard.Behaviours = new List<Behaviour> { b1, b2 };
-
-            var opt1 = new OptionBuilder().Build();
-            var opt2 = new OptionBuilder().Build();
-            standard.Options = new List<Option> { opt1, opt2 };
-
-            // Act
-            var actual = (StandardImport)standard;
-
-            var mappedOpt1 = actual.Options.Single(o => o.OptionId == opt1.OptionId.Value);
-            var mappedOpt2 = actual.Options.Single(o => o.OptionId == opt2.OptionId.Value);
-
-            var expectedKsbDetails = new[] { "k1", "k2", "s1", "s2", "b1", "b2" };
-
-            // Assert — Both options get ALL KSBs
-            mappedOpt1.Ksbs.Select(x => x.Detail).Should().BeEquivalentTo(expectedKsbDetails);
-            mappedOpt2.Ksbs.Select(x => x.Detail).Should().BeEquivalentTo(expectedKsbDetails);
-        }
-
-        [Test, StandardAutoData]
-        public void Then_Core_KSBs_Are_Mapped_To_Standard_Without_Options(ImportTypes.Standard standard)
-        {
-            // Arrange
-            standard.Knowledges = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
-            standard.Skills = SkillsBuilder.Create("s1-detail", "s2-detail");
-            standard.Behaviours = BehavioursBuilder.Create("b1-detail");
-            standard.CoreAndOptions = false;
-
-            // Act
-            var actual = (StandardImport)standard;
-
-            // Assert
-            var mappedOption = actual.Options.Should().Contain(x => x.Title == "core").Which;
-            mappedOption.Ksbs.Should().BeEquivalentTo(new[]
-            {
-                new { Type = KsbType.Knowledge, Key = "K1", Detail = "k1-detail" },
-                new { Type = KsbType.Knowledge, Key = "K2", Detail = "k2-detail" },
-                new { Type = KsbType.Knowledge, Key = "K3", Detail = "k3-detail" },
-                new { Type = KsbType.Skill, Key = "S1", Detail = "s1-detail" },
-                new { Type = KsbType.Skill, Key = "S2", Detail = "s2-detail" },
-                new { Type = KsbType.Behaviour, Key = "B1", Detail = "b1-detail" },
-            });
         }
 
         [Test, StandardAutoData]
@@ -545,8 +425,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         {
             // Arrange
             standard.CoreAndOptions = true;
-            standard.Options = new Settable<List<Option>>(null);
-            standard.OptionsUnstructuredTemplate = new Settable<List<string>>(null);
+            standard.Options = null;
+            standard.OptionsUnstructuredTemplate = null;
 
             // Act
             var actual = (StandardImport)standard;
