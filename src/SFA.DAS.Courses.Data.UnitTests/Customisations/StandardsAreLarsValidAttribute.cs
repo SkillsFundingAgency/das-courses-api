@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
 
             fixture.Customize<Standard>(composer =>
                 composer.With(standard => standard.Status, "Approved for delivery")
-                        .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship.ToString()));
+                        .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship));
         }
     }
 }

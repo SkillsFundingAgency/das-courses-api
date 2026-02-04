@@ -2,12 +2,13 @@
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Search;
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IStandardsService
     {
-        Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<int> routeIds, IList<int> levels, OrderBy orderBy, StandardFilter filter, bool includeAllProperties, string apprenticeshipType);
+        Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<int> routeIds, IList<int> levels, OrderBy orderBy, StandardFilter filter, bool includeAllProperties, ApprenticeshipType? apprenticeshipType);
         Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber);
         Task<int> Count(StandardFilter filter = StandardFilter.None);
         Task<Standard> GetLatestActiveStandard(string larsCode);

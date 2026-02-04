@@ -5,9 +5,9 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Entities;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
-using Standard = SFA.DAS.Courses.Domain.ImportTypes.Standard;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
+using Standard = SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland.Standard;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Entities;
 
@@ -39,7 +39,7 @@ public class WhenCastingFromImportTypeStandardToStandardImportEntity
             RouteCode = new Settable<int>(0),
             VersionEarliestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
             Keywords = new Settable<List<string>>(new List<string>()),
-            LarsCode = new Settable<int>(12345),
+            LarsCode = new Settable<string>("12345"),
             VersionLatestEndDate = new Settable<DateTime?>(DateTime.UtcNow),
             VersionLatestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
             Level = new Settable<int>(5),

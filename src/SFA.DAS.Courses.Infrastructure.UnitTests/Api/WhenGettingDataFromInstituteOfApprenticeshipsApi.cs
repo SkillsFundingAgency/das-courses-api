@@ -10,16 +10,14 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Configuration;
-using SFA.DAS.Courses.Domain.Courses;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 using SFA.DAS.Courses.Domain.TestHelper.Extensions;
 using SFA.DAS.Courses.Infrastructure.Api;
 
-
 namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
 {
-    public class WhenGettingDataFromInstituteOfApprenticeshipsApi
+    public class WhenGettingDataFromSkillsEnglandApi
     {
         private IOptions<CoursesConfiguration> _config;
 
@@ -28,7 +26,11 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
         {
             _config = Options.Create(new CoursesConfiguration
             {
-                InstituteOfApprenticeshipsApiConfiguration = new("https://ifate.org", "https://ifate.org/standards", "https://ifate.org/foundation-apprenticeships")
+                SkillsEnglandApiConfiguration = new(
+                    "https://skillsengland.test.gov.uk",
+                    "https://skillsengland.gov.uk/apprenticeships",
+                    "https://skillsengland.gov.uk/foundation-apprenticeships",
+                    "https://skillsengland.gov.uk/apprenticeship-units")
             });
         }
 
@@ -36,143 +38,154 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
         public async Task Then_The_Endpoint_Is_Called_And_Standards_Returned()
         {
             // Arrange
-            var importedStandards = new List<Domain.ImportTypes.Standard>()
+            var now = DateTime.UtcNow;
+
+            var apprenticeshipsApiPayload = new[]
             {
-                new Domain.ImportTypes.Standard
+                new
                 {
-                    LarsCode = 1,
-                    ReferenceNumber = "ST0101",
-                    Title = "Title 1",
-                    Status = Status.ApprovedForDelivery,
-                    CreatedDate = DateTime.Now,
-                    PublishDate = DateTime.Now,
-                    Version = "1.0",
-                    VersionNumber = "1.0",
-                    Change = new Settable<string>(null),
-                    VersionEarliestStartDate = new Settable<DateTime?>(null),
-                    VersionLatestStartDate = new Settable<DateTime?>(null),
-                    VersionLatestEndDate = new Settable<DateTime?>(null),
-                    OverviewOfRole = new Settable<string>(null),
-                    Level = 1,
-                    ProposedTypicalDuration = 1,
-                    ProposedMaxFunding = 1,
-                    Keywords = new Settable<List<string>>(null),
-                    AssessmentPlanUrl = "http://plan.html",
-                    EqaProvider = new Domain.ImportTypes.EqaProvider
+                    larsCode = 1,
+                    referenceNumber = "ST0101",
+                    title = "Standard 1",
+                    status = "Approved for delivery",
+                    createdDate = now,
+                    publishDate = now,
+                    version = "1.0",
+                    versionNumber = "1.0",
+                    assessmentPlanUrl = "http://plan.html",
+                    coreAndOptions = false,
+                    options = new[]
                     {
-                        ProviderName = new Settable<string>(null),
-                        ContactName = new Settable<string>(null),
-                        ContactAddress = new Settable<string>(null),
-                        ContactEmail = new Settable<string>(null),
-                        WebLink = new Settable<string>(null),
-                    },
-                    ApprovedForDelivery = new Settable<DateTime?>(null),
-                    TbMainContact = new Settable<string>(null),
-                    Knowledges = new Settable<List<Knowledge>>(null),
-                    Behaviours = new Settable<List<Behaviour>>(null),
-                    Skills = new Settable<List<Skill>>(null),
-                    Duties = new Settable<List<Duty>>(null),
-                    RegulatedBody = new Settable<string>(null),
-                    TypicalJobTitles = new Settable<List<string>>(null),
-                    StandardPageUrl = new Settable<Uri>(null),
-                    CoreAndOptions = false,
-                    Options = new List<Option> { new Option { OptionId = Guid.NewGuid(), Title = "Option 1" } },
-                    OptionsUnstructuredTemplate = new Settable<List<string>>(null),
-                    CoronationEmblem = false,
-                    TechnicalKnowledges = new Settable<List<IdDetailPair>>(null),
-                    TechnicalSkills = new Settable<List<IdDetailPair>>(null),
-                    EmployabilitySkillsAndBehaviours = new Settable<List<IdDetailPair>>(null),
-                    FoundationApprenticeshipUrl = new Settable<Uri>(null),
-                    AssessmentChanged = false
+                        new { optionId = Guid.NewGuid(), title = "Option 1" }
+                    }
                 }
             };
 
-            var importedFoundationApprenticeships = new List<Domain.ImportTypes.Standard>()
+            var foundationsApiPayload = new[]
             {
-                new Domain.ImportTypes.Standard
+                new
                 {
-                    LarsCode = 805,
-                    ReferenceNumber = "FA0001",
-                    Title = "Building service engineering foundation apprenticeship",
-                    Status = Status.ApprovedForDelivery,
-                    CreatedDate = DateTime.Now,
-                    PublishDate = DateTime.Now,
-                    Version = "1.0",
-                    VersionNumber = "1.0",
-                    Change = new Settable<string>(null),
-                    VersionEarliestStartDate = new Settable<DateTime?>(null),
-                    VersionLatestStartDate = new Settable<DateTime?>(null),
-                    VersionLatestEndDate = new Settable<DateTime?>(null),
-                    OverviewOfRole = new Settable<string>(null),
-                    Level = 1,
-                    ProposedTypicalDuration = 1,
-                    ProposedMaxFunding = 1,
-                    Keywords = new Settable<List<string>>(null),
-                    AssessmentPlanUrl = "http://plan.html",
-                    EqaProvider = new Domain.ImportTypes.EqaProvider
+                    larsCode = 10,
+                    referenceNumber = "FA0110",
+                    title = "Foundation 1",
+                    status = "Approved for delivery",
+                    createdDate = now,
+                    publishDate = now,
+                    version = "1.0",
+                    versionNumber = "1.0",
+                    assessmentPlanUrl = "http://plan.html",
+                    technicalKnowledges = new[]
                     {
-                        ProviderName = new Settable<string>(null),
-                        ContactName = new Settable<string>(null),
-                        ContactAddress = new Settable<string>(null),
-                        ContactEmail = new Settable<string>(null),
-                        WebLink = new Settable<string>(null),
+                        new { id = Guid.NewGuid(), detail = "Knowledge 1" }
                     },
-                    ApprovedForDelivery = new Settable<DateTime?>(null),
-                    TbMainContact = new Settable<string>(null),
-                    Knowledges = new Settable<List<Knowledge>>(null),
-                    Behaviours = new Settable<List<Behaviour>>(null),
-                    Skills = new Settable<List<Skill>>(null),
-                    Duties = new Settable<List<Duty>>(null),
-                    RegulatedBody = new Settable<string>(null),
-                    TypicalJobTitles = new Settable<List<string>>(null),
-                    StandardPageUrl = new Settable<Uri>(null),
-                    CoreAndOptions = false,
-                    Options = new List<Option> { new Option { OptionId = Guid.NewGuid(), Title = "Option 1" } },
-                    OptionsUnstructuredTemplate = new Settable<List<string>>(null),
-                    CoronationEmblem = false,
-                    TechnicalKnowledges = new Settable<List<IdDetailPair>>(null),
-                    TechnicalSkills = new Settable<List<IdDetailPair>>(null),
-                    EmployabilitySkillsAndBehaviours = new Settable<List<IdDetailPair>>(null),
-                    FoundationApprenticeshipUrl = new Settable<Uri>(null),
-                    AssessmentChanged = false
+                    technicalSkills = new[]
+                    {
+                        new { id = Guid.NewGuid(), detail = "Skill 1" }
+                    },
+                    employabilitySkillsAndBehaviours = new[]
+                    {
+                        new { id = Guid.NewGuid(), detail = "Skill and Behaviour 1" }
+                    },
+                    assessmentChanged = false
                 }
             };
 
-            var settings = new JsonSerializerSettings
+            var unitsApiPayload = new[]
+            {
+                new
+                {
+                    larsCode = "ZSC00123",
+                    referenceNumber = "SC0123",
+                    title = "Apprenticeship Unit 1",
+                    status = "Approved for delivery",
+                    createdDate = now,
+                    publishDate = now,
+                    version = "1.0",
+                    versionNumber = "1.0",
+                    learningHours = 12,
+                    level = 2,
+                    maxFunding = 500,
+                    overviewOfRole = "Aprenticeship unit overview",
+                    url = "https://skillsengland.gov.uk/apprenticeship-units/SC0001"
+                }
+            };
+
+            var apprenticeshipsJson = JsonConvert.SerializeObject(apprenticeshipsApiPayload);
+            var foundationsJson = JsonConvert.SerializeObject(foundationsApiPayload);
+            var unitsJson = JsonConvert.SerializeObject(unitsApiPayload);
+
+            var deserialiseSettings = new JsonSerializerSettings
             {
                 ContractResolver = new SettableContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore
-
+                Converters = [new InitializeSettablesJsonConverter()]
             };
+
+            var expectedApprenticeships =
+                JsonConvert.DeserializeObject<IEnumerable<Apprenticeship>>(apprenticeshipsJson, deserialiseSettings)!
+                    .Select(x => (Standard)x);
+
+            var expectedFoundations =
+                JsonConvert.DeserializeObject<IEnumerable<FoundationApprenticeship>>(foundationsJson, deserialiseSettings)!
+                    .Select(x => (Standard)x);
+
+            var expectedUnits =
+                JsonConvert.DeserializeObject<IEnumerable<ApprenticeshipUnit>>(unitsJson, deserialiseSettings)!
+                    .Select(x => (Standard)x);
+
+            var expected = expectedApprenticeships
+                .Concat(expectedFoundations)
+                .Concat(expectedUnits)
+                .ToList();
 
             var standardsResponse = new HttpResponseMessage
             {
-                Content = new StringContent(JsonConvert.SerializeObject(importedStandards, settings)),
+                Content = new StringContent(apprenticeshipsJson),
                 StatusCode = HttpStatusCode.Accepted
             };
 
             var foundationResponse = new HttpResponseMessage
             {
-                Content = new StringContent(JsonConvert.SerializeObject(importedFoundationApprenticeships, settings)),
+                Content = new StringContent(foundationsJson),
+                StatusCode = HttpStatusCode.Accepted
+            };
+
+            var unitsResponse = new HttpResponseMessage
+            {
+                Content = new StringContent(unitsJson),
                 StatusCode = HttpStatusCode.Accepted
             };
 
             Mock<HttpMessageHandler> httpMessageHandler = MessageHandler
-                .SetupGetMessageHandlerMock(standardsResponse, new Uri(_config.Value.InstituteOfApprenticeshipsApiConfiguration.StandardsPath))
-                .AddHandler(foundationResponse, new Uri(_config.Value.InstituteOfApprenticeshipsApiConfiguration.FoundationApprenticeshipsPath));
+                .SetupGetMessageHandlerMock(
+                    standardsResponse,
+                    new Uri(_config.Value.SkillsEnglandApiConfiguration.StandardsPath))
+                .AddHandler(
+                    foundationResponse,
+                    new Uri(_config.Value.SkillsEnglandApiConfiguration.FoundationApprenticeshipsPath))
+                .AddHandler(
+                    unitsResponse,
+                    new Uri(_config.Value.SkillsEnglandApiConfiguration.ApprenticeshipUnitsPath));
 
             var httpClient = new HttpClient(httpMessageHandler.Object);
-            var sut = new InstituteOfApprenticeshipService(_config, httpClient);
-
-            var expected = importedStandards.Concat(importedFoundationApprenticeships);
+            var sut = new SkillsEnglandService(_config, httpClient);
 
             // Act
-            var actual = await sut.GetStandards();
+            var actual = (await sut.GetStandards()).ToList();
 
             // Assert
-            actual.ShouldBeEquivalentToWithSettableHandling(expected, options => options.Excluding(c => c.RouteCode).Excluding(c => c.ApprenticeshipType));
-            actual.First(s => s.LarsCode == 1).ApprenticeshipType.Should().Be(Domain.Entities.ApprenticeshipType.Apprenticeship);
-            actual.First(s => s.LarsCode == 805).ApprenticeshipType.Should().Be(Domain.Entities.ApprenticeshipType.FoundationApprenticeship);
+            actual.ShouldBeEquivalentToWithSettableHandling(
+                expected,
+                options => options.Excluding(c => c.RouteCode)
+            );
+
+            actual.First(s => s.LarsCode == "1").ApprenticeshipType
+                .Should().Be(SFA.DAS.Courses.Domain.Entities.ApprenticeshipType.Apprenticeship);
+
+            actual.First(s => s.LarsCode == "10").ApprenticeshipType
+                .Should().Be(SFA.DAS.Courses.Domain.Entities.ApprenticeshipType.FoundationApprenticeship);
+
+            actual.First(s => s.LarsCode == "ZSC00123").ApprenticeshipType
+                .Should().Be(SFA.DAS.Courses.Domain.Entities.ApprenticeshipType.ApprenticeshipUnit);
         }
 
         [Test]
@@ -185,9 +198,12 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 StatusCode = HttpStatusCode.BadRequest
             };
 
-            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(response, new Uri(_config.Value.InstituteOfApprenticeshipsApiConfiguration.StandardsPath));
+            var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(
+                response,
+                new Uri(_config.Value.SkillsEnglandApiConfiguration.StandardsPath));
+
             var httpClient = new HttpClient(httpMessageHandler.Object);
-            var sut = new InstituteOfApprenticeshipService(_config, httpClient);
+            var sut = new SkillsEnglandService(_config, httpClient);
 
             // Act & Assert
             Assert.ThrowsAsync<HttpRequestException>(() => sut.GetStandards());

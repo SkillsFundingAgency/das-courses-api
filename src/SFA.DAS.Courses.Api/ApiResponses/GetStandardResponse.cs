@@ -2,6 +2,7 @@
 using System.Linq;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Extensions;
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
@@ -41,7 +42,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public bool IntegratedApprenticeship { get; set; }
         public int SectorCode { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
-        public string ApprenticeshipType { get; set; }
+        public ApprenticeshipType ApprenticeshipType { get; set; }
         public string ApprenticeshipStandardTypeCode { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool IsRegulatedForEPAO { get; set; }

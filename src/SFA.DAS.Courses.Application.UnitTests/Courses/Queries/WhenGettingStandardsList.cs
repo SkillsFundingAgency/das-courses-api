@@ -58,7 +58,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             var standards = new List<Standard>();
             query.Levels = new List<int>();
             query.RouteIds = new List<int>();
-            query.ApprenticeshipType = string.Empty;
+            query.ApprenticeshipType = null;
             mockStandardsService
                 .Setup(service => service.GetStandardsList(
                     query.Keyword,
@@ -67,7 +67,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.OrderBy,
                     query.Filter,
                     query.IncludeAllProperties,
-                    string.Empty))
+                    null))
                 .ReturnsAsync(standards);
             mockStandardsService
                 .Setup(service => service.Count(query.Filter))

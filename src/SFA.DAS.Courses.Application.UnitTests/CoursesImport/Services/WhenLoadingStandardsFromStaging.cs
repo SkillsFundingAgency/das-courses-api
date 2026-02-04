@@ -20,14 +20,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Domain.ImportTypes.Standard>
+            var importedStandards = new List<Domain.ImportTypes.SkillsEngland.Standard>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                GetValidImportedStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                GetValidImportedStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
             };
 
             service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
@@ -47,7 +47,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
@@ -86,7 +86,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
@@ -117,7 +117,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange

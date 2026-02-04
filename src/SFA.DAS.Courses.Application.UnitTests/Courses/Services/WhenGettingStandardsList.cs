@@ -11,6 +11,7 @@ using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
+using static Lucene.Net.Util.Fst.Util;
 
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 {
@@ -26,20 +27,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, string.Empty))
+                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, null))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
-            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false, string.Empty)).ToList();
+            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false, null)).ToList();
 
-            result.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
-
-            foreach (var standard in result)
-            {
-                standard.Route.Should().Be(standardsFromRepo.Single(c => c.LarsCode.Equals(standard.LarsCode)).Route.Name);
-            }
+            result.Should().BeEquivalentTo(
+                standardsFromRepo.Select(s => (Domain.Courses.Standard)s));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -53,20 +50,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             filter = StandardFilter.Active;
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, string.Empty))
+                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, null))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
-            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false, string.Empty)).ToList();
+            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false, null)).ToList();
 
-            result.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
-
-            foreach (var standard in result)
-            {
-                standard.Route.Should().Be(standardsFromRepo.Single(c => c.LarsCode.Equals(standard.LarsCode)).Route.Name);
-            }
+            result.Should().BeEquivalentTo(
+                standardsFromRepo.Select(s => (Domain.Courses.Standard)s));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -89,7 +82,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, string.Empty))
+                .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, null))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -98,9 +91,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(orderService => orderService.OrderBy(standardsFoundInSearch, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
-            var standards = await service.GetStandardsList(keyword, new List<int>(), new List<int>(), orderBy, filter, false, string.Empty);
+            var result = await service.GetStandardsList(keyword, new List<int>(), new List<int>(), orderBy, filter, false, null);
 
-            standards.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
+            result.Should().BeEquivalentTo(
+                standardsFoundInSearch.Select(s => (Domain.Courses.Standard)s));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -124,7 +118,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter, true, string.Empty))
+                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter, true, null))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -133,9 +127,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(orderService => orderService.OrderBy(standardsFoundInSearch, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, true, string.Empty);
+            var result = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, true, null);
 
-            getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
+            result.Should().BeEquivalentTo(
+                standardsFoundInSearch.Select(s => (Domain.Courses.Standard)s));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -160,7 +155,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Where(standard => searchResult.Standards.Select(result => result.StandardUId).Contains(standard.StandardUId))
                 .ToList();
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter, false, string.Empty))
+                .Setup(repository => repository.GetStandards(routeIds, new List<int>(), filter, false, null))
                 .ReturnsAsync(standardsFromRepo);
             mockSearchManager
                 .Setup(manager => manager.Query(keyword))
@@ -169,9 +164,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(orderService => orderService.OrderBy(standardsFoundInSearch, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, false, string.Empty);
+            var result = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, false, null);
 
-            getStandardsListResult.Should().BeEquivalentTo(standardsFoundInSearch, StandardEquivalencyAssertionOptions.ExcludingFields);
+            result.Should().BeEquivalentTo(
+                standardsFoundInSearch.Select(s => (Domain.Courses.Standard)s));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -185,15 +181,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, string.Empty))
+                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, null))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true, string.Empty);
+            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true, null);
 
-            getStandardsListResult.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
+            result.Should().BeEquivalentTo(
+                standardsFromRepo.Select(s => (Domain.Courses.Standard)s));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -207,15 +204,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, "Apprenticeship"))
+                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, ApprenticeshipType.Apprenticeship))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true, "Apprenticeship");
+            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true, ApprenticeshipType.Apprenticeship);
 
-            getStandardsListResult.Should().BeEquivalentTo(standardsFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
+            result.Should().BeEquivalentTo(
+                standardsFromRepo.Select(s => (Domain.Courses.Standard)s));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -230,16 +228,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             StandardsService service)
         {
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, false, string.Empty))
+                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, false, null))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, orderBy, ""))
                 .Returns(standardsFromSortService.OrderBy(standard => standard.SearchScore));
 
-            var getStandardsListResult = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, false, string.Empty);
+            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, false, null);
 
-            getStandardsListResult
-                .Should().BeEquivalentTo(standardsFromSortService.OrderBy(standard => standard.SearchScore), StandardEquivalencyAssertionOptions.ExcludingFieldsWithStrictOrdering);
+            result.Should().BeEquivalentTo(
+                standardsFromSortService.Select(s => (Domain.Courses.Standard)s));
         }
     }
 }

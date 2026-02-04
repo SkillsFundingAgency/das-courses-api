@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using FluentAssertions.Equivalency;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.Customisations;
@@ -44,7 +42,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, false);
 
             Assert.That(actualStandards, Is.Not.Null);
-            actualStandards.Should().BeEquivalentTo(activeValidStandards, EquivalentCheckExcludes());
+            actualStandards.Should().BeEquivalentTo(activeValidStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -108,7 +106,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             expectedList.AddRange(activeValidStandards);
             expectedList.AddRange(activeInvalidStandards);
             expectedList.AddRange(retiredStandards);
-            actualStandards.Should().BeEquivalentTo(expectedList, EquivalentCheckExcludes());
+            actualStandards.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -154,7 +152,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             expectedList.AddRange(activeInvalidStandards);
             expectedList.AddRange(retiredStandards);
             expectedList.Add(retiredStandardWithDistinctLarsCode);
-            actualStandards.Should().BeEquivalentTo(expectedList, EquivalentCheckExcludes());
+            actualStandards.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -186,7 +184,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             Assert.That(actualStandards, Is.Not.Null);
             var expectedList = new List<Standard>();
             expectedList.AddRange(notYetApprovedStandards);
-            actualStandards.Should().BeEquivalentTo(expectedList, EquivalentCheckExcludes());
+            actualStandards.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -222,7 +220,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             expectedList.AddRange(activeInvalidStandards);
             expectedList.AddRange(withdrawnStandards);
             expectedList.AddRange(retiredStandards);
-            actualStandards.Should().BeEquivalentTo(expectedList, EquivalentCheckExcludes());
+            actualStandards.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -257,7 +255,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             //Assert
             Assert.That(actual, Is.Not.Null);
-            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] }, EquivalentCheckExcludes());
+            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -324,7 +322,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int> { activeValidStandards[0].Level },
                 StandardFilter.ActiveAvailable, false);
 
-            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] }, EquivalentCheckExcludes());
+            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -349,10 +347,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(),
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
-                false,
-                ApprenticeshipType.Apprenticeship.ToString());
+                includeAllProperties: false,
+                ApprenticeshipType.Apprenticeship);
 
-            actual.Should().BeEquivalentTo(activeValidStandards, EquivalentCheckExcludes());
+            actual.Should().BeEquivalentTo(activeValidStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -378,9 +376,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
                 false,
-                ApprenticeshipType.FoundationApprenticeship.ToString());
+                ApprenticeshipType.FoundationApprenticeship);
 
-            actual.Should().BeEquivalentTo(validFoundationApprenticeships, EquivalentCheckExcludes());
+            actual.Should().BeEquivalentTo(validFoundationApprenticeships, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -406,9 +404,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
                 false,
-                string.Empty);
+                null);
 
-            actual.Should().BeEquivalentTo(allStandards, EquivalentCheckExcludes());
+            actual.Should().BeEquivalentTo(allStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
@@ -446,34 +444,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 activeValidStandards[0],
                 activeInvalidStandards[0]
             };
-            actual.Should().BeEquivalentTo(expectedList, EquivalentCheckExcludes());
-        }
-
-        private static Func<EquivalencyAssertionOptions<Standard>, EquivalencyAssertionOptions<Standard>> EquivalentCheckExcludes()
-        {
-            return options => options
-                .Excluding(c => c.ApprenticeshipFunding)
-                .Excluding(c => c.SearchScore)
-                .Excluding(c => c.ProposedTypicalDuration)
-                .Excluding(c => c.ProposedMaxFunding)
-                .Excluding(c => c.OverviewOfRole)
-                .Excluding(c => c.AssessmentPlanUrl)
-                .Excluding(c => c.TrailBlazerContact)
-                .Excluding(c => c.EqaProviderName)
-                .Excluding(c => c.EqaProviderContactEmail)
-                .Excluding(c => c.EqaProviderContactName)
-                .Excluding(c => c.EqaProviderWebLink)
-                .Excluding(c => c.Duties)
-                .Excluding(c => c.CoreDuties)
-                .Excluding(c => c.Options)
-                .Excluding(c => c.CoreAndOptions)
-                .Excluding(c => c.EPAChanged)
-                .Excluding(c => c.CreatedDate)
-                .Excluding(c => c.PublishDate)
-                .Excluding(c => c.IsRegulatedForProvider)
-                .Excluding(c => c.IsRegulatedForEPAO)
-                .Excluding(c => c.ApprenticeshipType)
-                .Excluding(c => c.RelatedOccupations);
+            actual.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
     }
 }

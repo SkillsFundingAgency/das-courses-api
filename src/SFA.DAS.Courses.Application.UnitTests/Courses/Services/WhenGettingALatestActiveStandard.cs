@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var standard = await service.GetLatestActiveStandard(larsCode);
 
-            standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
+            standard.Should().BeEquivalentTo((Domain.Courses.Standard)standardFromRepo);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var standard = await service.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber);
 
-            standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
+            standard.Should().BeEquivalentTo((Domain.Courses.Standard)standardFromRepo);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -54,7 +54,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber))
@@ -78,7 +78,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber))
@@ -99,7 +99,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandard(larsCode))
@@ -123,7 +123,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
                 .Setup(repository => repository.GetLatestActiveStandard(larsCode))
@@ -144,7 +144,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
                 .Setup(repository => repository.Get(standardUId))
@@ -168,7 +168,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
                 .Setup(repository => repository.Get(standardUId))

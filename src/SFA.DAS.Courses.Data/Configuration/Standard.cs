@@ -11,27 +11,32 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.ToTable("Standard");
             builder.HasKey(x => x.StandardUId);
 
-            builder.Property(x => x.StandardUId).HasColumnName("StandardUId").HasColumnType("varchar").HasMaxLength(20).IsRequired();
-            builder.Property(x => x.LarsCode).HasColumnName("LarsCode").HasColumnType("varchar").HasMaxLength(8).IsRequired(false);
+            builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
+            builder.Property(x => x.CoreDuties).HasJsonConversion();
+            builder.Property(x => x.Duties).HasJsonConversion();
+            builder.Property(x => x.EpaoMustBeApprovedByRegulatorBody).HasComputedColumnSql("[IsRegulatedForEPAO]", stored: true);
             builder.Property(x => x.IfateReferenceNumber).HasColumnName("IfateReferenceNumber").HasColumnType("varchar").HasMaxLength(10).IsRequired();
+            builder.Property(x => x.IntegratedApprenticeship).HasColumnName("IntegratedApprenticeship").HasColumnType("bit").IsRequired();
+            builder.Property(x => x.IntegratedDegree).HasColumnName("IntegratedDegree").HasColumnType("varchar").HasMaxLength(100).IsRequired(false);
+            builder.Property(x => x.Keywords).HasColumnName("Keywords");
+            builder.Property(x => x.LarsCode).HasColumnName("LarsCode").HasColumnType("varchar").HasMaxLength(8).IsRequired(false);
+            builder.Property(x => x.Level).HasColumnName("Level").HasColumnType("int").IsRequired();
+            builder.Property(x => x.Options).HasJsonConversion();
+            builder.Property(x => x.OverviewOfRole).HasColumnName("OverviewOfRole").IsRequired();
+            builder.Property(x => x.RegulatedBody).HasColumnName("RegulatedBody").HasColumnType("varchar").HasMaxLength(1000).IsRequired(false);
+            builder.Property(x => x.RelatedOccupations).HasJsonConversion();
+            builder.Property(x => x.RouteCode).HasColumnName("RouteCode").HasColumnType("int").IsRequired();
+            builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
+            builder.Property(x => x.StandardUId).HasColumnName("StandardUId").HasColumnType("varchar").HasMaxLength(20).IsRequired();
             builder.Property(x => x.Status).HasColumnName("Status").HasColumnType("varchar").HasMaxLength(100).IsRequired();
             builder.Property(x => x.Title).HasColumnName("Title").HasColumnType("varchar").HasMaxLength(1000).IsRequired();
-            builder.Property(x => x.IntegratedDegree).HasColumnName("IntegratedDegree").HasColumnType("varchar").HasMaxLength(100).IsRequired(false);
-            builder.Property(x => x.Level).HasColumnName("Level").HasColumnType("int").IsRequired();
-            builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("varchar").HasMaxLength(20);
-            builder.Property(x => x.OverviewOfRole).HasColumnName("OverviewOfRole").IsRequired();
-            builder.Property(x => x.RouteCode).HasColumnName("RouteCode").HasColumnType("int").IsRequired();
             builder.Property(x => x.TypicalJobTitles).HasColumnName("TypicalJobTitles");
-            builder.Property(x => x.StandardPageUrl).HasColumnName("StandardPageUrl").IsRequired();
-            builder.Property(x => x.Keywords).HasColumnName("Keywords");
-            builder.Property(x => x.RegulatedBody).HasColumnName("RegulatedBody").HasColumnType("varchar").HasMaxLength(1000).IsRequired(false);
-            builder.Property(x => x.Duties).HasJsonConversion();
-            builder.Property(x => x.CoreDuties).HasJsonConversion();
-            builder.Property(x => x.IntegratedApprenticeship).HasColumnName("IntegratedApprenticeship").HasColumnType("bit").IsRequired();
-            builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
-            builder.Property(x => x.Options).HasJsonConversion();
-            builder.Property(x => x.EpaoMustBeApprovedByRegulatorBody).HasColumnType("EpaoMustBeApprovedByRegulatorBody").HasColumnType("bit").IsRequired();
-            builder.Property(x => x.RelatedOccupations).HasJsonConversion();
+            builder.Property(x => x.Version).HasColumnName("Version").HasColumnType("varchar").HasMaxLength(20);
+
+            builder.Ignore(x => x.ApprenticeshipFunding);
+            builder.Ignore(x => x.SearchScore);
+
+            builder.HasIndex(x => x.StandardUId).IsUnique();
 
             builder.HasOne(c => c.Route)
                 .WithMany(c => c.Standards)
@@ -44,11 +49,6 @@ namespace SFA.DAS.Courses.Data.Configuration
                 .HasPrincipalKey(l => l.LarsCode)
                 .IsRequired(false)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
-
-            builder.Ignore(x => x.ApprenticeshipFunding);
-            builder.Ignore(x => x.SearchScore);
-
-            builder.HasIndex(x => x.StandardUId).IsUnique();
         }
     }
 }

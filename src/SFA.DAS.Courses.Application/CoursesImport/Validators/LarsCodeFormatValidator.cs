@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using FluentValidation;
+using SFA.DAS.Courses.Domain.Identifiers;
 using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class LarsCodeIsNumberValidator : ValidatorBase<List<Standard>>
+    public class LarsCodeFormatValidator : ValidatorBase<List<Standard>>
     {
-        public LarsCodeIsNumberValidator()
+        public LarsCodeFormatValidator()
             : base(ValidationFailureType.StandardError)
         {
             RuleFor(importedStandards => importedStandards)
@@ -15,12 +16,12 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                 {
                     foreach (var standard in importedStandards)
                     {
-                        if (standard.ApprenticeshipType is not (ApprenticeshipType.Apprenticeship or ApprenticeshipType.FoundationApprenticeship))
+                        if (standard.ApprenticeshipType is not ApprenticeshipType.ApprenticeshipUnit)
                             continue;
                         
-                        if (standard.LarsCode.HasInvalidValue || !int.TryParse(standard.LarsCode, out _))
+                        if (standard.ReferenceNumber.HasInvalidValue || !IdentifierRegexes.ShortCourseLarsCode.IsMatch(standard.LarsCode.Value.Trim()))
                         {
-                            context.AddFailure($"S1005: {standard.ReferenceNumber.Value} version {standard.Version.Value} larsCode is not a number");
+                            context.AddFailure($"E1005: {ReferenceNumber(standard)} version {Version(standard)} of type '{standard.ApprenticeshipType}' has not got larsCode in the correct format.");
                         }
                     }
                 });

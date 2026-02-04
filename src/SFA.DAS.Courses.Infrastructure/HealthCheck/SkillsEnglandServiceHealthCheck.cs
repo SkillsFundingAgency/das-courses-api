@@ -10,12 +10,12 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Infrastructure.HealthCheck
 {
-    public class InstituteOfApprenticeshipServiceHealthCheck : IHealthCheck
+    public class SkillsEnglandServiceHealthCheck : IHealthCheck
     {
-        private const string HealthCheckResultDescription = "iFate Input Health Check";
+        private const string HealthCheckResultDescription = "Skills England Input Health Check";
         private readonly IImportAuditRepository _importData;
 
-        public InstituteOfApprenticeshipServiceHealthCheck(IImportAuditRepository importData)
+        public SkillsEnglandServiceHealthCheck(IImportAuditRepository importData)
         {
             _importData = importData;
         }
@@ -23,17 +23,17 @@ namespace SFA.DAS.Courses.Infrastructure.HealthCheck
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
             var timer = Stopwatch.StartNew();
-            var latestIfateData = await _importData.GetLastImportByType(ImportType.IFATEImport);
+            var latestSkillsEnglandData = await _importData.GetLastImportByType(ImportType.SkillsEnglandImport);
 
             timer.Stop();
             var durationString = timer.Elapsed.ToHumanReadableString();
 
-            if (DateTime.UtcNow >= latestIfateData.TimeStarted.AddHours(25))
+            if (DateTime.UtcNow >= latestSkillsEnglandData.TimeStarted.AddHours(25))
             {
                 return new HealthCheckResult(HealthStatus.Degraded, "Course data load is over 25 hours old", null, new Dictionary<string, object> { { "Duration", durationString } });
             }
 
-            if (latestIfateData.RowsImported == 0)
+            if (latestSkillsEnglandData.RowsImported == 0)
             {
                 return new HealthCheckResult(HealthStatus.Degraded, "Course data load has imported zero rows", null, new Dictionary<string, object> { { "Duration", durationString } });
             }

@@ -98,7 +98,7 @@ namespace SFA.DAS.Courses.Api
                     .AddCheck<LarsHealthCheck>("Lars Data Health Check",
                         failureStatus: HealthStatus.Unhealthy,
                         tags: new[] {"ready"})
-                    .AddCheck<InstituteOfApprenticeshipServiceHealthCheck>("IFATE Health Check",
+                    .AddCheck<SkillsEnglandServiceHealthCheck>("Skills England Health Check",
                         failureStatus: HealthStatus.Unhealthy,
                         tags: new[] {"ready"})
                     .AddCheck<FrameworksHealthCheck>("Frameworks Health Check",

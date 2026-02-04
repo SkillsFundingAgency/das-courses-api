@@ -23,17 +23,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Setup(repository => repository.Get(standardUId))
                 .ReturnsAsync(standardFromRepo);
 
-            var expectedEqaProvider = (Domain.Courses.EqaProvider)standardFromRepo;
-            var expectedVersionDetail = (Domain.Courses.StandardVersionDetail)standardFromRepo;
-
             var standard = await service.GetStandard(standardUId);
 
-            standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
-
-            standard.Route.Should().Be(standardFromRepo.Route.Name);
-            standard.EqaProvider.Should().BeEquivalentTo(expectedEqaProvider);
-            standard.VersionDetail.Should().BeEquivalentTo(expectedVersionDetail);
-            standard.ApprenticeshipType.Should().Be(standardFromRepo.ApprenticeshipType);
+            standard.Should().BeEquivalentTo((Domain.Courses.Standard)standardFromRepo);
         }
     }
 }

@@ -14,6 +14,7 @@ using SFA.DAS.Courses.Api.Controllers;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 {
@@ -26,7 +27,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             string keyword,
             OrderBy orderBy,
             StandardFilter filter,
-            string apprenticeshipType,
+            ApprenticeshipType apprenticeshipType,
             GetStandardsListQueryResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)

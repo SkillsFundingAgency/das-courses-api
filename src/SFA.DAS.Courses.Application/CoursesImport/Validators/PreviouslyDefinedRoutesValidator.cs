@@ -4,7 +4,7 @@ using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class PreviouslyDefinedRoutesValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class PreviouslyDefinedRoutesValidator : ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>
     {
         public PreviouslyDefinedRoutesValidator(List<Route> currentRoutes)
             : base(ValidationFailureType.Warning)

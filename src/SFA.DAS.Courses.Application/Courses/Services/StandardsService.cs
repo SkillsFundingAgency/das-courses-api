@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Application.Courses.Services
 {
@@ -30,7 +31,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             OrderBy orderBy,
             StandardFilter filter,
             bool includeAllProperties,
-            string apprenticeshipType)
+            ApprenticeshipType? apprenticeshipType)
         {
             var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties, apprenticeshipType);
 
@@ -86,7 +87,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 
         private async Task<List<RelatedOccupation>> GetRelatedOccupations(Domain.Entities.Standard standard)
         {
-            if (standard.ApprenticeshipType == Domain.Entities.ApprenticeshipType.FoundationApprenticeship.ToString())
+            if (standard.ApprenticeshipType == Domain.Entities.ApprenticeshipType.FoundationApprenticeship)
             {
                 var standards = await _standardsRepository.GetActiveStandardsByIfateReferenceNumbers(standard.RelatedOccupations);
                 return standards.ConvertAll(s => (RelatedOccupation)s);

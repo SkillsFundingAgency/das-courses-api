@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Extensions;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -10,7 +11,7 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         private const string FakeDutyText = ".";
 
-        public static implicit operator StandardImport(ImportTypes.Standard standard)
+        public static implicit operator StandardImport(ImportTypes.SkillsEngland.Standard standard)
         {
             var coreDuties = new List<string>();
 
@@ -21,16 +22,17 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             return new StandardImport
             {
-                ApprenticeshipType = standard.ApprenticeshipType.ToString(),
+                ApprenticeshipType = standard.ApprenticeshipType,
                 ApprovedForDelivery = standard.ApprovedForDelivery.Value,
                 AssessmentPlanUrl = standard.AssessmentPlanUrl.Value,
+                CourseType = standard.CourseType,
                 CoreAndOptions = standard.CoreAndOptions.Value,
                 CoreDuties = coreDuties,
                 CoronationEmblem = standard.CoronationEmblem.Value,
                 CreatedDate = standard.CreatedDate.Value,
+                DurationUnits = standard.DurationUnits,
                 Duties = GetDuties(standard),
                 EPAChanged = IsEPAChanged(standard),
-                EpaoMustBeApprovedByRegulatorBody = QualificationsContainsEpaoMustBeApprovedText(standard.Qualifications?.Value),
                 EqaProviderContactEmail = standard.EqaProvider.Value?.ContactEmail.Value?.Trim(),
                 EqaProviderContactName = standard.EqaProvider.Value?.ContactName.Value?.Trim(),
                 EqaProviderName = standard.EqaProvider.Value?.ProviderName.Value?.Trim(),
@@ -41,13 +43,15 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
                 IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType),
                 Keywords = (standard.Keywords.Value?.Any() ?? false) ? string.Join("|", standard.Keywords.Value) : null,
-                LarsCode = standard.LarsCode.Value.ToString(),
+                LarsCode = standard.LarsCode.Value,
+                LastUpdated = standard.LastUpdated,
                 Level = standard.Level.Value,
                 Options = CreateStructuredOptionsList(standard),
                 OverviewOfRole = standard.OverviewOfRole.Value,
                 ProposedMaxFunding = standard.ProposedMaxFunding.Value,
                 ProposedTypicalDuration = standard.ProposedTypicalDuration.Value,
                 PublishDate = standard.PublishDate.Value,
+                RelatedOccupations = GetRelatedOccupationsStandardCodes(standard),
                 RegulatedBody = standard.RegulatedBody.Value?.Trim(),
                 RouteCode = standard.RouteCode.Value,
                 StandardPageUrl = GetStandardPageUrl(standard),
@@ -61,12 +65,11 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionLatestEndDate = standard.VersionLatestEndDate.Value,
                 VersionLatestStartDate = standard.VersionLatestStartDate.Value,
                 VersionMajor = GetVersionPart(standard.Version?.Value, VersionPart.Major),
-                VersionMinor = GetVersionPart(standard.Version?.Value, VersionPart.Minor),
-                RelatedOccupations = GetRelatedOccupationsStandardCodes(standard)
+                VersionMinor = GetVersionPart(standard.Version?.Value, VersionPart.Minor)
             };
         }
 
-        private static List<string> GetRelatedOccupationsStandardCodes(ImportTypes.Standard standard)
+        private static List<string> GetRelatedOccupationsStandardCodes(ImportTypes.SkillsEngland.Standard standard)
         {
             if (standard.ApprenticeshipType == Entities.ApprenticeshipType.FoundationApprenticeship)
             {
@@ -75,7 +78,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             return [];
         }
 
-        private static string GetStandardPageUrl(ImportTypes.Standard standard)
+        private static string GetStandardPageUrl(ImportTypes.SkillsEngland.Standard standard)
             => standard.ApprenticeshipType switch
             {
                 Entities.ApprenticeshipType.FoundationApprenticeship => standard.FoundationApprenticeshipUrl?.Value?.AbsoluteUri,
@@ -87,14 +90,16 @@ namespace SFA.DAS.Courses.Domain.Entities
             return new StandardImport
             {
                 ApprovedForDelivery = standard.ApprovedForDelivery,
+                ApprenticeshipType = standard.ApprenticeshipType,
                 AssessmentPlanUrl = standard.AssessmentPlanUrl,
+                CourseType = standard.CourseType,
                 CoreAndOptions = standard.CoreAndOptions,
                 CoreDuties = standard.CoreDuties,
                 CoronationEmblem = standard.CoronationEmblem,
                 CreatedDate = standard.CreatedDate,
+                DurationUnits = standard.DurationUnits,
                 Duties = standard.Duties,
                 EPAChanged = standard.EPAChanged,
-                EpaoMustBeApprovedByRegulatorBody = standard.EpaoMustBeApprovedByRegulatorBody,
                 EqaProviderContactEmail = standard.EqaProviderContactEmail,
                 EqaProviderContactName = standard.EqaProviderContactName,
                 EqaProviderName = standard.EqaProviderName,
@@ -106,12 +111,14 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IsRegulatedForEPAO = standard.IsRegulatedForEPAO,
                 Keywords = standard.Keywords,
                 LarsCode = standard.LarsCode,
+                LastUpdated = standard.LastUpdated,
                 Level = standard.Level,
                 Options = standard.Options,
                 OverviewOfRole = standard.OverviewOfRole,
                 ProposedMaxFunding = standard.ProposedMaxFunding,
                 ProposedTypicalDuration = standard.ProposedTypicalDuration,
                 PublishDate = standard.PublishDate,
+                RelatedOccupations = standard.RelatedOccupations,
                 RegulatedBody = standard.RegulatedBody,
                 Route = standard.Route,
                 RouteCode = standard.RouteCode,
@@ -126,26 +133,11 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionLatestEndDate = standard.VersionLatestEndDate,
                 VersionLatestStartDate = standard.VersionLatestStartDate,
                 VersionMajor = standard.VersionMajor,
-                VersionMinor = standard.VersionMinor,
-                RelatedOccupations = standard.RelatedOccupations,
-                ApprenticeshipType = standard.ApprenticeshipType.ToString()
+                VersionMinor = standard.VersionMinor
             };
         }
 
-        public static bool QualificationsContainsEpaoMustBeApprovedText(List<Qualification> qualifications)
-        {
-            var keyStrings = new string[]
-            {
-                "EPAO must be approved by regulator body",
-                "EPAO must be approved by the regulator body",
-            };
-
-            return qualifications
-                .EmptyEnumerableIfNull()
-                .Any(q => q.AnyAdditionalInformation?.ContainsSubstringIn(keyStrings, StringComparison.OrdinalIgnoreCase) ?? false);
-        }
-
-        private static List<string> GetDuties(ImportTypes.Standard standard)
+        private static List<string> GetDuties(ImportTypes.SkillsEngland.Standard standard)
             => standard.Duties.Value
                 .EmptyEnumerableIfNull()
                 .Select(duty => duty.DutyDetail?.Value)
@@ -183,7 +175,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             return 0;
         }
 
-        private static bool SetIsIntegratedApprenticeship(ImportTypes.Standard standard)
+        private static bool SetIsIntegratedApprenticeship(ImportTypes.SkillsEngland.Standard standard)
         {
             if (standard.Level >= 6)
             {
@@ -198,7 +190,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             return false;
         }
 
-        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.Standard standard)
+        private static List<string> GetSkillDetailFromMappedCoreSkill(ImportTypes.SkillsEngland.Standard standard)
         {
             var mappedSkillsList = standard.Duties.Value
                 .EmptyEnumerableIfNull()
@@ -211,7 +203,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 .Select(s => s.Detail.Value).ToList();
         }
 
-        private static bool IsEPAChanged(ImportTypes.Standard standard)
+        private static bool IsEPAChanged(ImportTypes.SkillsEngland.Standard standard)
         {
             if (standard.ApprenticeshipType == Entities.ApprenticeshipType.FoundationApprenticeship)
             {
@@ -222,7 +214,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             return standard.Change.Value.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
         }
 
-        private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.Standard standard)
+        private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.SkillsEngland.Standard standard)
         {
             List<StandardOption> standardOptions = null;
 
@@ -251,7 +243,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             return [];
         }
 
-        private static List<StandardOption> CreateStructuredOptionsListWithDutyMapping(ImportTypes.Standard standard)
+        private static List<StandardOption> CreateStructuredOptionsListWithDutyMapping(ImportTypes.SkillsEngland.Standard standard)
         {
             var options = (standard.Options?.Value)
                 .EmptyEnumerableIfNull();
@@ -263,13 +255,13 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             return options.Select(MapOption).ToList();
 
-            StandardOption MapOption(ImportTypes.Option option)
+            StandardOption MapOption(Option option)
                 => StandardOption.Create(
                     option.OptionId.Value,
                     option.Title.Value?.Trim(),
                     MapKsbsFromDuties(option));
 
-            List<Ksb> MapKsbsFromDuties(ImportTypes.Option option)
+            List<Ksb> MapKsbsFromDuties(Option option)
             {
                 var knowledge = MapDuties(option, standard.Knowledges.Value, x => x.MappedKnowledge?.Value, x => x.KnowledgeId.Value, x => x.Detail.Value, Ksb.Knowledge);
                 var skills = MapDuties(option, standard.Skills.Value, x => x.MappedSkills?.Value, x => x.SkillId.Value, x => x.Detail.Value, Ksb.Skill);
@@ -279,9 +271,9 @@ namespace SFA.DAS.Courses.Domain.Entities
             }
 
             List<Ksb> MapDuties<Tksb>(
-                ImportTypes.Option option,
+                Option option,
                 IEnumerable<Tksb> sequence,
-                Func<ImportTypes.Duty, IEnumerable<Guid>> mappedSequence,
+                Func<Duty, IEnumerable<Guid>> mappedSequence,
                 Func<Tksb, Guid> selectId,
                 Func<Tksb, string> selectDetail,
                 Func<Guid, int, string, Ksb> createKsb)
@@ -294,7 +286,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
             IEnumerable<(Tksb ksb, int index)> MapCoreDuties<Tksb>(
                 IEnumerable<Tksb> sequence,
-                Func<ImportTypes.Duty, IEnumerable<Guid>> innerSequence,
+                Func<Duty, IEnumerable<Guid>> innerSequence,
                 Func<Tksb, Guid> selectId)
             {
                 return sequence
@@ -306,9 +298,9 @@ namespace SFA.DAS.Courses.Domain.Entities
             }
 
             IEnumerable<(Tksb ksb, int index)> MapOptionDuties<Tksb>(
-                ImportTypes.Option option,
+                Option option,
                 IEnumerable<Tksb> sequence,
-                Func<ImportTypes.Duty, IEnumerable<Guid>> innerSequence,
+                Func<Duty, IEnumerable<Guid>> innerSequence,
                 Func<Tksb, Guid> selectId)
             {
                 var dutiesForAllOptions = options.Select(x =>
@@ -325,21 +317,21 @@ namespace SFA.DAS.Courses.Domain.Entities
             }
         }
 
-        private static List<StandardOption> CreateStructuredOptionsListWithoutDutyMapping(ImportTypes.Standard standard)
+        private static List<StandardOption> CreateStructuredOptionsListWithoutDutyMapping(ImportTypes.SkillsEngland.Standard standard)
         {
             var options = (standard.Options?.Value)
                 .EmptyEnumerableIfNull();
 
             return options.Select(MapOption).ToList();
 
-            StandardOption MapOption(ImportTypes.Option option)
+            StandardOption MapOption(Option option)
                => StandardOption.Create(
                    option.OptionId.Value,
                    option.Title.Value?.Trim(),
                    GetAllKsbs(standard));
         }
 
-        private static List<StandardOption> CreateStructuredOptionsListWithCorePseduoOption(ImportTypes.Standard standard)
+        private static List<StandardOption> CreateStructuredOptionsListWithCorePseduoOption(ImportTypes.SkillsEngland.Standard standard)
         {
             return new List<StandardOption>
             {
@@ -347,7 +339,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             };
         }
 
-        private static List<Ksb> GetAllKsbs(ImportTypes.Standard standard)
+        private static List<Ksb> GetAllKsbs(ImportTypes.SkillsEngland.Standard standard)
         {
             var ksbs = standard.ApprenticeshipType == Entities.ApprenticeshipType.Apprenticeship
                 ? standard.Knowledges.Value?.Select((x, i) => Ksb.Knowledge(x.KnowledgeId.Value, i + 1, x.Detail.Value))
@@ -360,7 +352,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             return ksbs?.ToList();
         }
 
-        private static bool GetIsRegulated(ImportTypes.Standard standard, string name)
+        private static bool GetIsRegulated(ImportTypes.SkillsEngland.Standard standard, string name)
         {
             if (standard.RegulationDetail.Value == null || !standard.Regulated.Value || string.IsNullOrEmpty(standard.RegulatedBody.Value))
             {

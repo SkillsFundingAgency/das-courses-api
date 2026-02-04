@@ -4,8 +4,8 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 {
@@ -30,7 +30,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 {
                     ReferenceNumber = new Settable<string>("ST1001"),
                     Version = new Settable<string>("1.0"),
-                    LarsCode = new Settable<int>(12345),
+                    LarsCode = new Settable<string>("12345"),
                     PublishDate = new Settable<DateTime>(DateTime.Now.AddDays(-20))
                 }
             };
@@ -52,7 +52,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 {
                     ReferenceNumber = new Settable<string>("ST1002"),
                     Version = new Settable<string>("1.0"),
-                    LarsCode = new Settable<int>(0),
+                    LarsCode = new Settable<string>("0"),
                     PublishDate = new Settable<DateTime>(DateTime.Now.AddDays(-20))
                 }
             };
@@ -75,7 +75,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 {
                     ReferenceNumber = new Settable<string>("ST1003"),
                     Version = new Settable<string>("1.0"),
-                    LarsCode = new Settable<int>(0),
+                    LarsCode = new Settable<string>("0"),
                     PublishDate = new Settable<DateTime>(DateTime.Now.AddDays(-10))
                 }
             };

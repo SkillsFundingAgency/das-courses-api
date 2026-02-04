@@ -1,10 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.Courses.Domain.ImportTypes;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Domain.Interfaces
 {
-    public interface IInstituteOfApprenticeshipService
+    public interface ISkillsEnglandService
     {
         Task<IEnumerable<Standard>> GetStandards();
     }

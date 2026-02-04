@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
             // the Standard is valid
             fixture.Customize<Standard>(composer =>
                 composer.With(standard => standard.Status, "Approved for delivery")
-                        .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship.ToString()));
+                        .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship));
 
             // but its related LarsStandard is not effective yet
             fixture.Customize<LarsStandard>(composer =>

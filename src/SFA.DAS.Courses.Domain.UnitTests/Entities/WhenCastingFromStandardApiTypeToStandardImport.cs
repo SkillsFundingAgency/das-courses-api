@@ -6,8 +6,8 @@ using NUnit.Framework;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 using SFA.DAS.Courses.Domain.TestHelper.AutoFixture;
 using SFA.DAS.Courses.Domain.UnitTests.Data;
 
@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
     public class WhenCastingFromStandardApiTypeToStandardImport
     {
         [Test, StandardAutoData]
-        public void Then_Maps_The_Fields(ImportTypes.Standard standard)
+        public void Then_Maps_The_Fields(ImportTypes.SkillsEngland.Standard standard)
         {
             standard.Version = "1.0";
             standard.RegulationDetail.Value[0].Name = Constants.ProviderRegulationType;
@@ -51,7 +51,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Leading_And_Trailing_Whitespace_Is_Removed_From_The_Course_Title(ImportTypes.Standard standard)
+        public void Then_Leading_And_Trailing_Whitespace_Is_Removed_From_The_Course_Title(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             var expectedTitle = standard.Title;
@@ -65,7 +65,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown(ImportTypes.Standard standard, string detail, Guid skillId, Duty duty)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Shown(ImportTypes.SkillsEngland.Standard standard, string detail, Guid skillId, Duty duty)
         {
             // Arrange	
             standard.Skills.Value.Add(new Skill
@@ -87,7 +87,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Mapped_In_Same_Order_As_Skills_List(ImportTypes.Standard standard)
+        public void Then_All_Skills_That_Are_Mapped_To_A_Core_Duty_Are_Mapped_In_Same_Order_As_Skills_List(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange	
             foreach (var skill in standard.Skills.Value)
@@ -112,7 +112,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_If_The_Version_Is_Null_It_Is_Set_To_DefaultVersion(ImportTypes.Standard standard)
+        public void Then_If_The_Version_Is_Null_It_Is_Set_To_DefaultVersion(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Version = null;
@@ -125,7 +125,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Major_and_Minor_versions_are_mapped(ImportTypes.Standard standard)
+        public void Then_Major_and_Minor_versions_are_mapped(ImportTypes.SkillsEngland.Standard standard)
         {
             standard.Version = "1.2";
 
@@ -136,7 +136,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_All_Knowledge_Is_Mapped_To_Correct_Options(ImportTypes.Standard standard)
+        public void Then_All_Knowledge_Is_Mapped_To_Correct_Options(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -168,7 +168,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_All_Skills_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
+        public void Then_All_Skills_Are_Mapped_To_Correct_Options(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -201,7 +201,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_All_Behaviours_Are_Mapped_To_Correct_Options(ImportTypes.Standard standard)
+        public void Then_All_Behaviours_Are_Mapped_To_Correct_Options(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -243,7 +243,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Core_KSBs_Are_Mapped_To_All_Options(ImportTypes.Standard standard)
+        public void Then_Core_KSBs_Are_Mapped_To_All_Options(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -281,7 +281,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Each_Option_Gets_Core_And_Its_Own_OptionSpecific_KSBs_For_Knowledge_Skills_And_Behaviours(ImportTypes.Standard standard)
+        public void Then_Each_Option_Gets_Core_And_Its_Own_OptionSpecific_KSBs_For_Knowledge_Skills_And_Behaviours(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -365,7 +365,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_When_No_Duties_All_KSBs_Are_Mapped_To_Each_Option(ImportTypes.Standard standard)
+        public void Then_When_No_Duties_All_KSBs_Are_Mapped_To_Each_Option(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -400,7 +400,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Core_KSBs_Are_Mapped_To_Standard_Without_Options(ImportTypes.Standard standard)
+        public void Then_Core_KSBs_Are_Mapped_To_Standard_Without_Options(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Knowledges = KnowledgeBuilder.Create("k1-detail", "k2-detail", "k3-detail");
@@ -425,7 +425,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_KSBs_Are_Unique(ImportTypes.Standard standard)
+        public void Then_KSBs_Are_Unique(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -453,7 +453,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Null_MappedOptions_Are_OK(ImportTypes.Standard standard)
+        public void Then_Null_MappedOptions_Are_OK(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -474,7 +474,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Null_KSBs_For_Options_Are_OK(ImportTypes.Standard standard)
+        public void Then_Null_KSBs_For_Options_Are_OK(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -498,7 +498,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_All_Duties_Are_Mapped(ImportTypes.Standard standard)
+        public void Then_All_Duties_Are_Mapped(ImportTypes.SkillsEngland.Standard standard)
         {
             // Act
             var actual = (StandardImport)standard;
@@ -508,7 +508,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_All_Options_Are_Mapped(ImportTypes.Standard standard)
+        public void Then_All_Options_Are_Mapped(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -525,7 +525,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" Option")]
         [StandardInlineAutoData("  Option")]
         [StandardInlineAutoData("Option ")]
-        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle,ImportTypes.Standard standard)
+        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle,ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -541,7 +541,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_Options_Are_Mapped_To_Empty_List(ImportTypes.Standard standard)
+        public void Then_Options_Are_Mapped_To_Empty_List(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
@@ -567,7 +567,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(6, "abc", false, false)]
         [StandardInlineAutoData(7, "Integrated Degree", false, true)]
         public void Then_If_The_Standard_Is_Level_Six_Or_Above_The_Integrated_Degree_Field_Is_Used_To_Set_The_Standard_As_IntegratedApprenticeship(
-            int level, string integratedDegreeValue, bool integratedApprenticeship, bool expected, ImportTypes.Standard standard)
+            int level, string integratedDegreeValue, bool integratedApprenticeship, bool expected, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Level = level;
@@ -589,7 +589,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(6, false, false)]
         [StandardInlineAutoData(6, null, false)]
         public void Then_If_The_Standard_Is_Level_Five_Or_Below_Then_The_IntegratedApprenticeship_Field_Is_Used_To_Set_The_Standard_As_IntegratedApprenticeship(
-            int level, bool? integratedValue, bool expected, ImportTypes.Standard standard)
+            int level, bool? integratedValue, bool expected, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Level = level;
@@ -603,7 +603,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_If_Change_Is_Empty_Then_EPAChanged_Is_False(ImportTypes.Standard standard)
+        public void Then_If_Change_Is_Empty_Then_EPAChanged_Is_False(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Change = string.Empty;
@@ -616,7 +616,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_If_Change_Does_Not_Contain_Magic_Value_Then_EPAChanged_Is_False(ImportTypes.Standard standard)
+        public void Then_If_Change_Does_Not_Contain_Magic_Value_Then_EPAChanged_Is_False(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Change = "Approved for delivery";
@@ -629,7 +629,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_If_Change_Equals_Magic_Value_Then_EPAChanged_Is_True(ImportTypes.Standard standard)
+        public void Then_If_Change_Equals_Magic_Value_Then_EPAChanged_Is_True(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Change = "End-point assessment plan revised";
@@ -642,7 +642,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_If_Change_Contains_Magic_Value_Then_EPAChanged_Is_True(ImportTypes.Standard standard)
+        public void Then_If_Change_Contains_Magic_Value_Then_EPAChanged_Is_True(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Change = "Approved for delivery. End-point assessment plan revised";
@@ -659,7 +659,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" ST0001")]
         [StandardInlineAutoData("  ST0001")]
         [StandardInlineAutoData("ST0001 ")]
-        public void Then_ifate_reference_is_trimmed_and_mapped(string ifateReference, ImportTypes.Standard standard)
+        public void Then_ifate_reference_is_trimmed_and_mapped(string ifateReference, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.ReferenceNumber = ifateReference;
@@ -676,7 +676,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" Approved for delivery", "Approved for delivery")]
         [StandardInlineAutoData("  Retired ", "Retired")]
         [StandardInlineAutoData("Withdrawn ", "Withdrawn")]
-        public void Then_status_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        public void Then_status_is_trimmed_and_mapped(string source, string expected, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Status = source;
@@ -693,7 +693,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" trailblazer@contact.com", "trailblazer@contact.com")]
         [StandardInlineAutoData("  trailblazer@contact.com ", "trailblazer@contact.com")]
         [StandardInlineAutoData(null, null)]
-        public void Then_trail_blazer_contact_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        public void Then_trail_blazer_contact_is_trimmed_and_mapped(string source, string expected, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.TbMainContact = source;
@@ -710,7 +710,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" Provider name", "Provider name")]
         [StandardInlineAutoData("  Provider name ", "Provider name")]
         [StandardInlineAutoData(null, null)]
-        public void Then_provider_name_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        public void Then_provider_name_is_trimmed_and_mapped(string source, string expected, ImportTypes.SkillsEngland.Standard standard)
         {
             standard.EqaProvider.Value.ProviderName = source;
             
@@ -726,7 +726,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" Contact name", "Contact name")]
         [StandardInlineAutoData("  Contact name ", "Contact name")]
         [StandardInlineAutoData(null, null)]
-        public void Then_provider_contact_name_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        public void Then_provider_contact_name_is_trimmed_and_mapped(string source, string expected, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.EqaProvider.Value.ContactName = source;
@@ -743,7 +743,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" contact@email.com", "contact@email.com")]
         [StandardInlineAutoData("  contact@email.com ", "contact@email.com")]
         [StandardInlineAutoData(null, null)]
-        public void Then_provider_contact_email_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        public void Then_provider_contact_email_is_trimmed_and_mapped(string source, string expected, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.EqaProvider.Value.ContactEmail = source;
@@ -760,7 +760,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" Regulated body", "Regulated body")]
         [StandardInlineAutoData("  Regulated body ", "Regulated body")]
         [StandardInlineAutoData(null, null)]
-        public void Then_regulated_body_is_trimmed_and_mapped(string source, string expected, ImportTypes.Standard standard)
+        public void Then_regulated_body_is_trimmed_and_mapped(string source, string expected, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.RegulatedBody = source;
@@ -775,7 +775,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         }
 
         [Test, StandardAutoData]
-        public void Then_fake_duties_are_omitted(ImportTypes.Standard standard)
+        public void Then_fake_duties_are_omitted(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Duties = new List<Duty>
@@ -799,7 +799,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(true, "regulator", false, false)]
         [StandardInlineAutoData(true, "regulator", true, true)]
         public void Then_Maps_IsRegulatedForProvider_And_IsRegulatedForEPAO_Correctly(bool regulated, string regulator,
-            bool approved, bool expected, ImportTypes.Standard standard)
+            bool approved, bool expected, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.Regulated = regulated;

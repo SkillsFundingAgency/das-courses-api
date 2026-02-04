@@ -4,10 +4,10 @@
     {
         public string ConnectionString { get; set; }
 
-        public InstituteOfApprenticeshipsApiConfiguration InstituteOfApprenticeshipsApiConfiguration { get; set; }
+        public SkillsEnglandApiConfiguration SkillsEnglandApiConfiguration { get; set; }
         public LarsImportConfiguration LarsImportConfiguration { get; set; }
     }
 
-    public record InstituteOfApprenticeshipsApiConfiguration(string ApiBaseUrl, string StandardsPath, string FoundationApprenticeshipsPath);
+    public record SkillsEnglandApiConfiguration(string ApiBaseUrl, string StandardsPath, string FoundationApprenticeshipsPath, string ApprenticeshipUnitsPath);
     public record LarsImportConfiguration(string LarsFundingCategory);
 }
