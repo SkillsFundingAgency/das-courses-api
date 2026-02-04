@@ -61,7 +61,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public static implicit operator GetStandardDetailResponse(Standard source)
         {
-            if (source == null) return null;
+            if (source == null) 
+                return null;
 
             return new GetStandardDetailResponse
             {

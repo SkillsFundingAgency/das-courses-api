@@ -48,6 +48,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public static implicit operator GetStandardResponse(Standard source)
         {
+            if (source == null)
+                return null;
+
             return new GetStandardResponse
             {
                 StandardUId = source.StandardUId,

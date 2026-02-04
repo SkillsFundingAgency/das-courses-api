@@ -1,4 +1,4 @@
-using SFA.DAS.Courses.Domain.ImportTypes;
+﻿using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -6,6 +6,9 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         public static implicit operator SectorSubjectAreaTier2Import(SectorSubjectAreaTier2Csv source)
         {
+            if (source == null)
+                return null;
+
             return new SectorSubjectAreaTier2Import
             {
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,

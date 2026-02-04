@@ -10,59 +10,62 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         private const string FakeDutyText = ".";
 
-        public static implicit operator StandardImport(ImportTypes.Standard standard)
+        public static implicit operator StandardImport(ImportTypes.Standard source)
         {
+            if (source == null)
+                return null;
+
             var coreDuties = new List<string>();
 
-            if ((standard.Duties.Value?.Any() ?? false) && (standard.Skills.Value?.Any() ?? false))
+            if ((source.Duties.Value?.Any() ?? false) && (source.Skills.Value?.Any() ?? false))
             {
-                coreDuties = GetSkillDetailFromMappedCoreSkill(standard);
+                coreDuties = GetSkillDetailFromMappedCoreSkill(source);
             }
 
             return new StandardImport
             {
-                ApprenticeshipType = standard.ApprenticeshipType.ToString(),
-                ApprovedForDelivery = standard.ApprovedForDelivery.Value,
-                AssessmentPlanUrl = standard.AssessmentPlanUrl.Value,
-                CoreAndOptions = standard.CoreAndOptions.Value,
+                ApprenticeshipType = source.ApprenticeshipType.ToString(),
+                ApprovedForDelivery = source.ApprovedForDelivery.Value,
+                AssessmentPlanUrl = source.AssessmentPlanUrl.Value,
+                CoreAndOptions = source.CoreAndOptions.Value,
                 CoreDuties = coreDuties,
-                CoronationEmblem = standard.CoronationEmblem.Value,
-                CreatedDate = standard.CreatedDate.Value,
-                Duties = GetDuties(standard),
-                EPAChanged = IsEPAChanged(standard),
-                EpaoMustBeApprovedByRegulatorBody = QualificationsContainsEpaoMustBeApprovedText(standard.Qualifications?.Value),
-                EqaProviderContactEmail = standard.EqaProvider.Value?.ContactEmail.Value?.Trim(),
-                EqaProviderContactName = standard.EqaProvider.Value?.ContactName.Value?.Trim(),
-                EqaProviderName = standard.EqaProvider.Value?.ProviderName.Value?.Trim(),
-                EqaProviderWebLink = standard.EqaProvider.Value?.WebLink.Value,
-                IfateReferenceNumber = standard.ReferenceNumber.Value?.Trim(),
-                IntegratedApprenticeship = SetIsIntegratedApprenticeship(standard),
-                IntegratedDegree = standard.IntegratedDegree?.Value,
-                IsRegulatedForProvider = GetIsRegulated(standard, Constants.ProviderRegulationType),
-                IsRegulatedForEPAO = GetIsRegulated(standard, Constants.EPAORegulationType),
-                Keywords = (standard.Keywords.Value?.Any() ?? false) ? string.Join("|", standard.Keywords.Value) : null,
-                LarsCode = standard.LarsCode.Value.ToString(),
-                Level = standard.Level.Value,
-                Options = CreateStructuredOptionsList(standard),
-                OverviewOfRole = standard.OverviewOfRole.Value,
-                ProposedMaxFunding = standard.ProposedMaxFunding.Value,
-                ProposedTypicalDuration = standard.ProposedTypicalDuration.Value,
-                PublishDate = standard.PublishDate.Value,
-                RegulatedBody = standard.RegulatedBody.Value?.Trim(),
-                RouteCode = standard.RouteCode.Value,
-                StandardPageUrl = GetStandardPageUrl(standard),
-                StandardUId = standard.ReferenceNumber.Value?.ToStandardUId(standard.Version?.Value),
-                Status = standard.Status.Value?.Trim(),
-                Title = standard.Title.Value?.Trim(),
-                TrailBlazerContact = standard.TbMainContact.Value?.Trim(),
-                TypicalJobTitles = (standard.TypicalJobTitles.Value?.Any() ?? false) ? string.Join("|", standard.TypicalJobTitles.Value) : string.Empty,
-                Version = (standard.Version?.Value).ToBaselineVersion(),
-                VersionEarliestStartDate = standard.VersionEarliestStartDate.Value,
-                VersionLatestEndDate = standard.VersionLatestEndDate.Value,
-                VersionLatestStartDate = standard.VersionLatestStartDate.Value,
-                VersionMajor = GetVersionPart(standard.Version?.Value, VersionPart.Major),
-                VersionMinor = GetVersionPart(standard.Version?.Value, VersionPart.Minor),
-                RelatedOccupations = GetRelatedOccupationsStandardCodes(standard)
+                CoronationEmblem = source.CoronationEmblem.Value,
+                CreatedDate = source.CreatedDate.Value,
+                Duties = GetDuties(source),
+                EPAChanged = IsEPAChanged(source),
+                EpaoMustBeApprovedByRegulatorBody = QualificationsContainsEpaoMustBeApprovedText(source.Qualifications?.Value),
+                EqaProviderContactEmail = source.EqaProvider.Value?.ContactEmail.Value?.Trim(),
+                EqaProviderContactName = source.EqaProvider.Value?.ContactName.Value?.Trim(),
+                EqaProviderName = source.EqaProvider.Value?.ProviderName.Value?.Trim(),
+                EqaProviderWebLink = source.EqaProvider.Value?.WebLink.Value,
+                IfateReferenceNumber = source.ReferenceNumber.Value?.Trim(),
+                IntegratedApprenticeship = SetIsIntegratedApprenticeship(source),
+                IntegratedDegree = source.IntegratedDegree?.Value,
+                IsRegulatedForProvider = GetIsRegulated(source, Constants.ProviderRegulationType),
+                IsRegulatedForEPAO = GetIsRegulated(source, Constants.EPAORegulationType),
+                Keywords = (source.Keywords.Value?.Any() ?? false) ? string.Join("|", source.Keywords.Value) : null,
+                LarsCode = source.LarsCode.Value.ToString(),
+                Level = source.Level.Value,
+                Options = CreateStructuredOptionsList(source),
+                OverviewOfRole = source.OverviewOfRole.Value,
+                ProposedMaxFunding = source.ProposedMaxFunding.Value,
+                ProposedTypicalDuration = source.ProposedTypicalDuration.Value,
+                PublishDate = source.PublishDate.Value,
+                RegulatedBody = source.RegulatedBody.Value?.Trim(),
+                RouteCode = source.RouteCode.Value,
+                StandardPageUrl = GetStandardPageUrl(source),
+                StandardUId = source.ReferenceNumber.Value?.ToStandardUId(source.Version?.Value),
+                Status = source.Status.Value?.Trim(),
+                Title = source.Title.Value?.Trim(),
+                TrailBlazerContact = source.TbMainContact.Value?.Trim(),
+                TypicalJobTitles = (source.TypicalJobTitles.Value?.Any() ?? false) ? string.Join("|", source.TypicalJobTitles.Value) : string.Empty,
+                Version = (source.Version?.Value).ToBaselineVersion(),
+                VersionEarliestStartDate = source.VersionEarliestStartDate.Value,
+                VersionLatestEndDate = source.VersionLatestEndDate.Value,
+                VersionLatestStartDate = source.VersionLatestStartDate.Value,
+                VersionMajor = GetVersionPart(source.Version?.Value, VersionPart.Major),
+                VersionMinor = GetVersionPart(source.Version?.Value, VersionPart.Minor),
+                RelatedOccupations = GetRelatedOccupationsStandardCodes(source)
             };
         }
 
@@ -82,53 +85,56 @@ namespace SFA.DAS.Courses.Domain.Entities
                 _ => standard.StandardPageUrl?.Value?.AbsoluteUri
             };
 
-        public static implicit operator StandardImport(Standard standard)
+        public static implicit operator StandardImport(Standard source)
         {
+            if (source == null)
+                return null;
+
             return new StandardImport
             {
-                ApprovedForDelivery = standard.ApprovedForDelivery,
-                AssessmentPlanUrl = standard.AssessmentPlanUrl,
-                CoreAndOptions = standard.CoreAndOptions,
-                CoreDuties = standard.CoreDuties,
-                CoronationEmblem = standard.CoronationEmblem,
-                CreatedDate = standard.CreatedDate,
-                Duties = standard.Duties,
-                EPAChanged = standard.EPAChanged,
-                EpaoMustBeApprovedByRegulatorBody = standard.EpaoMustBeApprovedByRegulatorBody,
-                EqaProviderContactEmail = standard.EqaProviderContactEmail,
-                EqaProviderContactName = standard.EqaProviderContactName,
-                EqaProviderName = standard.EqaProviderName,
-                EqaProviderWebLink = standard.EqaProviderWebLink,
-                IfateReferenceNumber = standard.IfateReferenceNumber,
-                IntegratedApprenticeship = standard.IntegratedApprenticeship,
-                IntegratedDegree = standard.IntegratedDegree,
-                IsRegulatedForProvider = standard.IsRegulatedForProvider,
-                IsRegulatedForEPAO = standard.IsRegulatedForEPAO,
-                Keywords = standard.Keywords,
-                LarsCode = standard.LarsCode,
-                Level = standard.Level,
-                Options = standard.Options,
-                OverviewOfRole = standard.OverviewOfRole,
-                ProposedMaxFunding = standard.ProposedMaxFunding,
-                ProposedTypicalDuration = standard.ProposedTypicalDuration,
-                PublishDate = standard.PublishDate,
-                RegulatedBody = standard.RegulatedBody,
-                Route = standard.Route,
-                RouteCode = standard.RouteCode,
-                StandardPageUrl = standard.StandardPageUrl,
-                StandardUId = standard.StandardUId,
-                Status = standard.Status,
-                Title = standard.Title,
-                TrailBlazerContact = standard.TrailBlazerContact,
-                TypicalJobTitles = standard.TypicalJobTitles,
-                Version = standard.Version,
-                VersionEarliestStartDate = standard.VersionEarliestStartDate,
-                VersionLatestEndDate = standard.VersionLatestEndDate,
-                VersionLatestStartDate = standard.VersionLatestStartDate,
-                VersionMajor = standard.VersionMajor,
-                VersionMinor = standard.VersionMinor,
-                RelatedOccupations = standard.RelatedOccupations,
-                ApprenticeshipType = standard.ApprenticeshipType.ToString()
+                ApprovedForDelivery = source.ApprovedForDelivery,
+                AssessmentPlanUrl = source.AssessmentPlanUrl,
+                CoreAndOptions = source.CoreAndOptions,
+                CoreDuties = source.CoreDuties,
+                CoronationEmblem = source.CoronationEmblem,
+                CreatedDate = source.CreatedDate,
+                Duties = source.Duties,
+                EPAChanged = source.EPAChanged,
+                EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
+                EqaProviderContactEmail = source.EqaProviderContactEmail,
+                EqaProviderContactName = source.EqaProviderContactName,
+                EqaProviderName = source.EqaProviderName,
+                EqaProviderWebLink = source.EqaProviderWebLink,
+                IfateReferenceNumber = source.IfateReferenceNumber,
+                IntegratedApprenticeship = source.IntegratedApprenticeship,
+                IntegratedDegree = source.IntegratedDegree,
+                IsRegulatedForProvider = source.IsRegulatedForProvider,
+                IsRegulatedForEPAO = source.IsRegulatedForEPAO,
+                Keywords = source.Keywords,
+                LarsCode = source.LarsCode,
+                Level = source.Level,
+                Options = source.Options,
+                OverviewOfRole = source.OverviewOfRole,
+                ProposedMaxFunding = source.ProposedMaxFunding,
+                ProposedTypicalDuration = source.ProposedTypicalDuration,
+                PublishDate = source.PublishDate,
+                RegulatedBody = source.RegulatedBody,
+                Route = source.Route,
+                RouteCode = source.RouteCode,
+                StandardPageUrl = source.StandardPageUrl,
+                StandardUId = source.StandardUId,
+                Status = source.Status,
+                Title = source.Title,
+                TrailBlazerContact = source.TrailBlazerContact,
+                TypicalJobTitles = source.TypicalJobTitles,
+                Version = source.Version,
+                VersionEarliestStartDate = source.VersionEarliestStartDate,
+                VersionLatestEndDate = source.VersionLatestEndDate,
+                VersionLatestStartDate = source.VersionLatestStartDate,
+                VersionMajor = source.VersionMajor,
+                VersionMinor = source.VersionMinor,
+                RelatedOccupations = source.RelatedOccupations,
+                ApprenticeshipType = source.ApprenticeshipType.ToString()
             };
         }
 

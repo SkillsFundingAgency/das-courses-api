@@ -16,20 +16,23 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string AdultSkillsFundingBand { get; set; }
         public int? FundedGuidedLearningHours { get; set; }
         
-        public static implicit operator FundingImport(FundingCsv fundingCsv)
+        public static implicit operator FundingImport(FundingCsv source)
         {
+            if (source == null)
+                return null;
+
             return new FundingImport
             {
                 Id = Guid.NewGuid(),
-                LearnAimRef = fundingCsv.LearnAimRef,
-                FundingCategory = fundingCsv.FundingCategory,
-                EffectiveFrom = fundingCsv.EffectiveFrom,
-                EffectiveTo = fundingCsv.EffectiveTo,
-                RateWeighted = fundingCsv.RateWeighted,
-                RateUnWeighted = fundingCsv.RateUnWeighted,
-                WeightingFactor = fundingCsv.WeightingFactor,
-                AdultSkillsFundingBand = fundingCsv.AdultSkillsFundingBand,
-                FundedGuidedLearningHours = fundingCsv.FundedGuidedLearningHours,
+                LearnAimRef = source.LearnAimRef,
+                FundingCategory = source.FundingCategory,
+                EffectiveFrom = source.EffectiveFrom,
+                EffectiveTo = source.EffectiveTo,
+                RateWeighted = source.RateWeighted,
+                RateUnWeighted = source.RateUnWeighted,
+                WeightingFactor = source.WeightingFactor,
+                AdultSkillsFundingBand = source.AdultSkillsFundingBand,
+                FundedGuidedLearningHours = source.FundedGuidedLearningHours,
             };
         }
     }

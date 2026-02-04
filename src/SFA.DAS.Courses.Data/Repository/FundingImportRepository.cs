@@ -14,10 +14,10 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             _coursesDataContext = coursesDataContext;
         }
+
         public async Task InsertMany(IEnumerable<FundingImport> fundingImports)
         {
             await _coursesDataContext.FundingImport.AddRangeAsync(fundingImports);
-            
             await _coursesDataContext.SaveChangesAsync();
         }
         public async Task DeleteAll()

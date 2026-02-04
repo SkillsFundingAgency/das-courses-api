@@ -14,5 +14,4 @@ namespace SFA.DAS.Courses.Domain.ImportTypes
         public string AdultSkillsFundingBand { get; set; }
         public int? FundedGuidedLearningHours { get; set; }
     }
-
 }
