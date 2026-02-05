@@ -1,10 +1,12 @@
-﻿using J2N.Collections.Generic;
+﻿using System.Linq;
+using J2N.Collections.Generic;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Miscellaneous;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Util;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
 

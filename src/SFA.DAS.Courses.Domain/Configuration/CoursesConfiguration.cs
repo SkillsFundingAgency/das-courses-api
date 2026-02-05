@@ -8,6 +8,6 @@
         public LarsImportConfiguration LarsImportConfiguration { get; set; }
     }
 
-    public record SkillsEnglandApiConfiguration(string ApiBaseUrl, string StandardsPath, string FoundationApprenticeshipsPath, string ApprenticeshipUnitsPath);
+    public record SkillsEnglandApiConfiguration(string ApprenticeshipsApiUrl, string FoundationApprenticeshipsApiUrl, string ApprenticeshipUnitsApiUrl);
     public record LarsImportConfiguration(string LarsFundingCategory);
 }

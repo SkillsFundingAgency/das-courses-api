@@ -20,6 +20,7 @@
                 CoronationEmblem = source.CoronationEmblem,
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
+                CourseType = source.CourseType,
                 CreatedDate = source.CreatedDate,
                 Duties = source.Duties,
                 DurationUnits = source.DurationUnits,

@@ -11,8 +11,11 @@ namespace SFA.DAS.Courses.Data.Configuration
             builder.ToTable("Standard");
             builder.HasKey(x => x.StandardUId);
 
+            builder.Property(x => x.ApprenticeshipType).HasColumnName("ApprenticeshipType").HasConversion<string>().HasMaxLength(50);
             builder.Property(x => x.CoreAndOptions).HasColumnName("CoreAndOptions").IsRequired();
             builder.Property(x => x.CoreDuties).HasJsonConversion();
+            builder.Property(x => x.CourseType).HasColumnName("CourseType").HasConversion<string>().HasMaxLength(25).IsRequired();
+            builder.Property(x => x.DurationUnits).HasColumnName("DurationUnits").HasConversion<string>().HasMaxLength(6).IsRequired();
             builder.Property(x => x.Duties).HasJsonConversion();
             builder.Property(x => x.EpaoMustBeApprovedByRegulatorBody).HasComputedColumnSql("[IsRegulatedForEPAO]", stored: true);
             builder.Property(x => x.IfateReferenceNumber).HasColumnName("IfateReferenceNumber").HasColumnType("varchar").HasMaxLength(10).IsRequired();

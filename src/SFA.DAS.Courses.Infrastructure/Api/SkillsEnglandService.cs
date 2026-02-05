@@ -21,14 +21,13 @@ namespace SFA.DAS.Courses.Infrastructure.Api
         {
             _coursesConfiguration = config.Value;
             _client = client;
-            _client.BaseAddress = new Uri(_coursesConfiguration.SkillsEnglandApiConfiguration.ApiBaseUrl);
         }
 
         public async Task<IEnumerable<Standard>> GetStandards()
         {
-            var apprenticeshipsTask = GetData<Apprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.StandardsPath);
-            var foundationApprenticeshipsTask = GetData<FoundationApprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.FoundationApprenticeshipsPath);
-            var apprenticeshipUnitsTask = GetData<ApprenticeshipUnit>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipUnitsPath);
+            var apprenticeshipsTask = GetData<Apprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipsApiUrl);
+            var foundationApprenticeshipsTask = GetData<FoundationApprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.FoundationApprenticeshipsApiUrl);
+            var apprenticeshipUnitsTask = GetData<ApprenticeshipUnit>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipUnitsApiUrl);
 
             await Task.WhenAll(apprenticeshipsTask, foundationApprenticeshipsTask, apprenticeshipUnitsTask);
 

@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<string> Change { get; set; }
 
         [JsonProperty("changedDate")]
-        public Settable<DateTime> ChangedDate { get; set; }
+        public Settable<DateTime?> ChangedDate { get; set; }
 
         [JsonProperty("coreAndOptions")]
         public Settable<bool> CoreAndOptions { get; set; }
@@ -58,7 +58,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<int> LarsCode { get; set; }
 
         [JsonProperty("lastUpdated")]
-        public Settable<DateTime> LastUpdated { get; set; }
+        public Settable<DateTime?> LastUpdated { get; set; }
 
         [JsonProperty("latestEndDate")]
         public Settable<DateTime?> VersionLatestEndDate { get; set; }

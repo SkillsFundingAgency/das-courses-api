@@ -27,7 +27,6 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             _config = Options.Create(new CoursesConfiguration
             {
                 SkillsEnglandApiConfiguration = new(
-                    "https://skillsengland.test.gov.uk",
                     "https://skillsengland.gov.uk/apprenticeships",
                     "https://skillsengland.gov.uk/foundation-apprenticeships",
                     "https://skillsengland.gov.uk/apprenticeship-units")
@@ -158,13 +157,13 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             Mock<HttpMessageHandler> httpMessageHandler = MessageHandler
                 .SetupGetMessageHandlerMock(
                     standardsResponse,
-                    new Uri(_config.Value.SkillsEnglandApiConfiguration.StandardsPath))
+                    new Uri(_config.Value.SkillsEnglandApiConfiguration.ApprenticeshipsApiUrl))
                 .AddHandler(
                     foundationResponse,
-                    new Uri(_config.Value.SkillsEnglandApiConfiguration.FoundationApprenticeshipsPath))
+                    new Uri(_config.Value.SkillsEnglandApiConfiguration.FoundationApprenticeshipsApiUrl))
                 .AddHandler(
                     unitsResponse,
-                    new Uri(_config.Value.SkillsEnglandApiConfiguration.ApprenticeshipUnitsPath));
+                    new Uri(_config.Value.SkillsEnglandApiConfiguration.ApprenticeshipUnitsApiUrl));
 
             var httpClient = new HttpClient(httpMessageHandler.Object);
             var sut = new SkillsEnglandService(_config, httpClient);
@@ -185,7 +184,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 .Should().Be(SFA.DAS.Courses.Domain.Entities.ApprenticeshipType.FoundationApprenticeship);
 
             actual.First(s => s.LarsCode == "ZSC00123").ApprenticeshipType
-                .Should().Be(SFA.DAS.Courses.Domain.Entities.ApprenticeshipType.ApprenticeshipUnit);
+                .Should().Be(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit);
         }
 
         [Test]
@@ -200,7 +199,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
 
             var httpMessageHandler = MessageHandler.SetupGetMessageHandlerMock(
                 response,
-                new Uri(_config.Value.SkillsEnglandApiConfiguration.StandardsPath));
+                new Uri(_config.Value.SkillsEnglandApiConfiguration.ApprenticeshipsApiUrl));
 
             var httpClient = new HttpClient(httpMessageHandler.Object);
             var sut = new SkillsEnglandService(_config, httpClient);

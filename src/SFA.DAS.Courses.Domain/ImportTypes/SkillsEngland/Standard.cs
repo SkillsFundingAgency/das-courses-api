@@ -14,14 +14,14 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<DateTime?> ApprovedForDelivery { get; set; }
         public Settable<string> AssessmentPlanUrl { get; set; }
         public Settable<string> Change { get; set; }
-        public Settable<DateTime> ChangedDate { get; set; }
+        public Settable<DateTime?> ChangedDate { get; set; }
         public CourseType CourseType { get; set; }
         public Settable<DateTime> CreatedDate { get; set; }
         public DurationUnits DurationUnits { get; set; }
         public Settable<EqaProvider> EqaProvider { get; set; }
         public Settable<List<string>> Keywords { get; set; }
         public Settable<string> LarsCode { get; set; }
-        public Settable<DateTime> LastUpdated { get; set; }
+        public Settable<DateTime?> LastUpdated { get; set; }
         public Settable<int> Level { get; set; }
         public Settable<string> OverviewOfRole { get; set; }
         public Settable<int> ProposedMaxFunding { get; set; }

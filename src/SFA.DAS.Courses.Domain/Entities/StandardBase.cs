@@ -50,7 +50,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         public string LarsCode { get; set; }
 
-        public DateTime LastUpdated { get; set; }
+        public DateTime? LastUpdated { get; set; }
 
         public virtual LarsStandard LarsStandard { get; set; }
 
