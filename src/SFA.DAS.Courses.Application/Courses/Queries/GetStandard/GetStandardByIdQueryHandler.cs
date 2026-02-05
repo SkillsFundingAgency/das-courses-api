@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
+using SFA.DAS.Courses.Domain.Policies;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
 {
@@ -11,13 +11,14 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
         private readonly IStandardsService _standardsService;
 
         public GetStandardByIdQueryHandler(IStandardsService standardsService)
-        {
-            _standardsService = standardsService;
-        }
+            => _standardsService = standardsService;
 
         public async Task<GetStandardByIdResult> Handle(GetStandardByIdQuery request, CancellationToken cancellationToken)
         {
-            Standard standard = await GetStandard.ByAnyId(_standardsService, request.Id);
+            var standard = await GetStandard.ByAnyId(_standardsService, request.Id);
+
+            if (standard == null || !AllowedApprenticeshipTypesPolicy.IsStandard(standard.ApprenticeshipType))
+                standard = null;
 
             return new GetStandardByIdResult { Standard = standard };
         }

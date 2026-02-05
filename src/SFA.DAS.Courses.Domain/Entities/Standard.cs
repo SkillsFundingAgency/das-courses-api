@@ -32,6 +32,7 @@
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
                 IntegratedDegree = source.IntegratedDegree,
+                IsLatestVersion = source.IsLatestVersion,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 Keywords = source.Keywords,

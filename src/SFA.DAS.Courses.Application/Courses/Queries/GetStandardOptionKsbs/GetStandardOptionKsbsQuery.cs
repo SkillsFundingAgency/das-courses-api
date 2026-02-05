@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 {

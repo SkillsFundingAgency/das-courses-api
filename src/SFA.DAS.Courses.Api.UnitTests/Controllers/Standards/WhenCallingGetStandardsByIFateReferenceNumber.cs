@@ -10,7 +10,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Api.Controllers;
-using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsByIFateReference;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards

@@ -42,6 +42,8 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         public string IntegratedDegree { get; set; }
 
+        public bool IsLatestVersion { get; set; }
+
         public bool IsRegulatedForEPAO { get; set; } = false;
 
         public bool IsRegulatedForProvider { get; set; } = false;

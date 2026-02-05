@@ -43,6 +43,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 IfateReferenceNumber = source.ReferenceNumber.Value?.Trim(),
                 IntegratedApprenticeship = SetIsIntegratedApprenticeship(source),
                 IntegratedDegree = source.IntegratedDegree?.Value,
+                IsLatestVersion = false, // populated later from a group of standard imports
                 IsRegulatedForProvider = GetIsRegulated(source, Constants.ProviderRegulationType),
                 IsRegulatedForEPAO = GetIsRegulated(source, Constants.EPAORegulationType),
                 Keywords = (source.Keywords.Value?.Any() ?? false) ? string.Join("|", source.Keywords.Value) : null,

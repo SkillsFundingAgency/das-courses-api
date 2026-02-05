@@ -76,12 +76,16 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                         var routeImports = await PrepareRouteImports(GetDistinctRoutes(importedStandards));
                         var groupedImportedStandards = GroupImportedStandards(importedStandards, routeImports);
 
+                        // first the standard groups are validated between versions, invalid standard groups are replaced by retaining those previously imported
                         Dictionary<string, List<StandardImport>> validStandardImports = IndividuallyValidateStandardGroups(groupedImportedStandards, currentStandards, currentRoutes, validationFailures);
                         validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
 
-                        // cross validation must include the retained standards after individual validation
+                        // then the standard groups are cross validated with eachother, invalid standard groups are again replaced by retaining those previously imported
                         validStandardImports = CrossValidateStandardGroups(validStandardImports, validationFailures);
                         validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
+
+                        // finally the standard groups are assessed to determine which version is the latest
+                        validStandardImports = PopulateIsLatestVersions(validStandardImports);
 
                         hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
                         if (!hasValidationErrors)
@@ -224,6 +228,31 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
             return validStandardImports.Concat(groupedCurrentStandardsToRetain).ToDictionary();
         }
+
+        private static Dictionary<string, List<StandardImport>> PopulateIsLatestVersions(Dictionary<string, List<StandardImport>> validStandardImports)
+        {
+            if (validStandardImports == null || validStandardImports.Count == 0)
+                return validStandardImports ?? [];
+
+            foreach (var standards in validStandardImports.Values)
+            {
+                if (standards == null || standards.Count == 0)
+                    continue;
+
+                var ordered = standards
+                    .OrderByDescending(s => s.Version.ParseVersion())
+                    .ToList();
+
+                var latestVersion = ordered[0].Version.ParseVersion();
+                foreach (var s in ordered)
+                {
+                    s.IsLatestVersion = s.Version.ParseVersion().Equals(latestVersion);
+                }
+            }
+
+            return validStandardImports;
+        }
+
 
         private async Task<int> LoadStandardDataFromStaging()
         {
