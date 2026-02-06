@@ -218,7 +218,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             }
             if (string.IsNullOrWhiteSpace(standard.Change.Value)) return false;
 
-            return standard.Change.Value.Contains("End-point assessment plan revised", StringComparison.OrdinalIgnoreCase);
+            return standard.Change.Value.Contains("assessment plan", StringComparison.OrdinalIgnoreCase);
         }
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.SkillsEngland.Standard standard)

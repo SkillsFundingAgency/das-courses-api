@@ -526,7 +526,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         public void Then_If_Change_Contains_Magic_Value_Then_EPAChanged_Is_True(ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
-            standard.Change = "Approved for delivery. End-point assessment plan revised";
+            standard.Change = "Approved for delivery. Assessment plan has been revised";
 
             // Act
             var actual = (StandardImport)standard;
