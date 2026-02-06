@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
             {
                 EffectiveFrom = apprenticeshipFunding.EffectiveFrom,
                 EffectiveTo = apprenticeshipFunding.EffectiveTo,
-                MaxEmployerLevyCap = (int)apprenticeshipFunding.MaxEmployerLevyCap,
+                MaxEmployerLevyCap = Convert.ToInt32(apprenticeshipFunding.MaxEmployerLevyCap),
                 Duration = apprenticeshipFunding.Duration,
                 Incentive1618 = apprenticeshipFunding.Incentive1618,
                 ProviderAdditionalPayment1618 = apprenticeshipFunding.ProviderAdditionalPayment1618,
