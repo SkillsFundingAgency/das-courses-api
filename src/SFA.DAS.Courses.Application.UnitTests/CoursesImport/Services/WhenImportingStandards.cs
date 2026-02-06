@@ -40,10 +40,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -81,10 +83,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -125,15 +129,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
-            //Act
+            // Act
             await standardsImportService.ImportDataIntoStaging();
 
-            //Assert
+            // Assert
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0101" && p.Status == Status.ApprovedForDelivery))));
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0102" && p.Status == Status.ApprovedForDelivery))));
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0103" && p.Status == Status.Retired))));
@@ -174,15 +180,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
-            //Act
+            // Act
             await standardsImportService.ImportDataIntoStaging();
 
-            //Assert
+            // Assert
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 1 && p.Active))));
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 2 && !p.Active))));
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 3 && p.Active))));
@@ -222,15 +230,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
-            //Act
+            // Act
             await standardsImportService.ImportDataIntoStaging();
 
-            //Assert
+            // Assert
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 1 && p.Active))));
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 2 && p.Active))));
 
@@ -272,15 +282,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
-            //Act
+            // Act
             await standardsImportService.ImportDataIntoStaging();
 
-            //Assert
+            // Assert
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0101" && p.EqaProviderName == "Ofqual"))));
         }
 
@@ -306,10 +318,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -344,10 +358,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -379,10 +395,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -414,7 +432,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
             service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
@@ -452,10 +470,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -503,10 +523,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -560,10 +582,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -613,10 +637,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -667,10 +693,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -721,10 +749,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetStandards())
+                .ReturnsAsync(importedStandards);
 
             // Act
             await standardsImportService.ImportDataIntoStaging();

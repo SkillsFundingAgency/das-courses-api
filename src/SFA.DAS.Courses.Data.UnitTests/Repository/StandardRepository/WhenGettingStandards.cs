@@ -17,20 +17,23 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
     {
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Available_Standards_Are_Returned_When_ActiveAvailableFilter_IsSpecified(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -39,28 +42,33 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, false);
+            // Act
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, 
+                false, null, CourseType.Apprenticeship);
 
-            Assert.That(actualStandards, Is.Not.Null);
-            actualStandards.Should().BeEquivalentTo(activeValidStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            actualStandards.Should().BeEquivalentTo(activeValidApprenticeshipStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Available_Standards_Are_Returned_When_ActiveAvailableFilter_IsSpecified_For_Export(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -69,28 +77,31 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, true);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, true, null, CourseType.Apprenticeship);
 
-            Assert.That(actualStandards, Is.Not.Null);
-            actualStandards.Should().BeEquivalentTo(activeValidStandards);
+            actualStandards.Should().NotBeNull();
+            actualStandards.Should().BeEquivalentTo(activeValidApprenticeshipStandards);
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_Active_Standards_Are_Returned_Including_Not_Available_To_Start_When_ActiveFilter_Specified(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -99,41 +110,45 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false);
+            // Act
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false, null, CourseType.Apprenticeship);
 
-            Assert.That(actualStandards, Is.Not.Null);
-            var expectedList = new List<Standard>();
-            expectedList.AddRange(activeValidStandards);
-            expectedList.AddRange(activeInvalidStandards);
-            expectedList.AddRange(retiredStandards);
-            actualStandards.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(activeValidApprenticeshipStandards);
+            expectedStandards.AddRange(activeInvalidApprenticeshipStandards);
+            expectedStandards.AddRange(retiredApprenticeshipStandards);
+            actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_Active_Standards_Are_Returned_Including_Retired_With_Distinct_LarsCode_When_ActiveFilter_Specified(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
 
-            //set up active version 
-            var newActiveVersion = activeValidStandards.First();
+            // set up active version 
+            var newActiveVersion = activeValidApprenticeshipStandards.First();
             newActiveVersion.IfateReferenceNumber = "ST0001";
             newActiveVersion.Version = "2";
             newActiveVersion.LarsCode = "100002";
 
-            //add a retired version to have same IfateReferenceNumber and different LarsCode
-            var retiredStandardWithDistinctLarsCode = activeValidStandards.Select(x => new Standard { IfateReferenceNumber = x.IfateReferenceNumber, Status = "Retired", LarsCode = "100001", Version = "1", LarsStandard = newActiveVersion.LarsStandard }).First();
+            // add a retired version to have same IfateReferenceNumber and different LarsCode
+            var retiredStandardWithDistinctLarsCode = activeValidApprenticeshipStandards.Select(x => new Standard { IfateReferenceNumber = x.IfateReferenceNumber, Status = "Retired", LarsCode = "100001", Version = "1", LarsStandard = newActiveVersion.LarsStandard }).First();
             allStandards.Add(retiredStandardWithDistinctLarsCode);
 
             mockDbContext
@@ -144,33 +159,44 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false);
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int>(), 
+                new List<int>(), 
+                StandardFilter.Active, 
+                false, 
+                null, 
+                CourseType.Apprenticeship);
 
-            Assert.That(actualStandards, Is.Not.Null);
-            var expectedList = new List<Standard>();
-            expectedList.AddRange(activeValidStandards);
-            expectedList.AddRange(activeInvalidStandards);
-            expectedList.AddRange(retiredStandards);
-            expectedList.Add(retiredStandardWithDistinctLarsCode);
-            actualStandards.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(activeValidApprenticeshipStandards);
+            expectedStandards.AddRange(activeInvalidApprenticeshipStandards);
+            expectedStandards.AddRange(retiredApprenticeshipStandards);
+            expectedStandards.Add(retiredStandardWithDistinctLarsCode);
+            actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_NotYetApproved_Standards_Are_Returned_When_NotYetApprovedFilter_Specified(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -179,30 +205,41 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.NotYetApproved, false);
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int>(), 
+                new List<int>(), 
+                StandardFilter.NotYetApproved, 
+                false,
+                null,
+                CourseType.Apprenticeship);
 
-            Assert.That(actualStandards, Is.Not.Null);
-            var expectedList = new List<Standard>();
-            expectedList.AddRange(notYetApprovedStandards);
-            actualStandards.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_All_Standards_Are_Returned_When_NoneFilter_Specified(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -211,34 +248,45 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.None, false);
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int>(), 
+                new List<int>(), 
+                StandardFilter.None, 
+                false,
+                null,
+                CourseType.Apprenticeship);
 
-            Assert.That(actualStandards, Is.Not.Null);
-            var expectedList = new List<Standard>();
-            expectedList.AddRange(notYetApprovedStandards);
-            expectedList.AddRange(activeValidStandards);
-            expectedList.AddRange(activeInvalidStandards);
-            expectedList.AddRange(withdrawnStandards);
-            expectedList.AddRange(retiredStandards);
-            actualStandards.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            var expectedStandards = new List<Standard>();
+            expectedStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            expectedStandards.AddRange(activeValidApprenticeshipStandards);
+            expectedStandards.AddRange(activeInvalidApprenticeshipStandards);
+            expectedStandards.AddRange(withdrawnApprenticeshipStandards);
+            expectedStandards.AddRange(retiredApprenticeshipStandards);
+            actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Standards_Are_Filtered_By_Sector(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -247,33 +295,39 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            //Act
-            var actual = await repository.GetStandards(
-                new List<int> { activeValidStandards[0].RouteCode },
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int> { activeValidApprenticeshipStandards[0].RouteCode },
                 new List<int>(),
-                StandardFilter.ActiveAvailable, false);
+                StandardFilter.ActiveAvailable, 
+                false,
+                null,
+                CourseType.Apprenticeship);
 
-            //Assert
-            Assert.That(actual, Is.Not.Null);
-            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            actualStandards.Should().BeEquivalentTo(new List<Standard> { activeValidApprenticeshipStandards[0] }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task And_Standard_Not_Valid_And_Does_Match_Route_Filter_Then_Standard_Not_Returned(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -282,33 +336,39 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            //Act
-            var actual = await repository.GetStandards(
-                new List<int> { activeInvalidStandards[0].RouteCode },
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int> { activeInvalidApprenticeshipStandards[0].RouteCode },
                 new List<int>(),
-                StandardFilter.ActiveAvailable, false);
+                StandardFilter.ActiveAvailable, 
+                false,
+                null,
+                CourseType.Apprenticeship);
 
-            //Assert
-            Assert.That(actual, Is.Not.Null);
-            actual.Should().BeEquivalentTo(new List<Standard>());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            actualStandards.Should().BeEquivalentTo(new List<Standard>());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Standards_Are_Filtered_By_Level(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -317,24 +377,33 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actual = await repository.GetStandards(
+            // Act
+            var actualStandards = await repository.GetStandards(
                 new List<int>(),
-                new List<int> { activeValidStandards[0].Level },
-                StandardFilter.ActiveAvailable, false);
+                new List<int> { activeValidApprenticeshipStandards[0].Level },
+                StandardFilter.ActiveAvailable, 
+                false,
+                null,
+                CourseType.Apprenticeship);
 
-            actual.Should().BeEquivalentTo(new List<Standard> { activeValidStandards[0] }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            actualStandards.Should().BeEquivalentTo(new List<Standard> { activeValidApprenticeshipStandards[0] }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task When_Filtering_By_Apprenticeship_Type_Then_Only_Apprenticeship_Standards_Are_Returned(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [ValidFoundationApprenticeships] List<Standard> validFoundationApprenticeships,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [FoundationApprenticeshipStandardsLarsValid] List<Standard> validFoundationApprenticeships,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
             allStandards.AddRange(validFoundationApprenticeships);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -343,26 +412,33 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actual = await repository.GetStandards(
+            // Act
+            var actualStandards = await repository.GetStandards(
                 new List<int>(),
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
                 includeAllProperties: false,
-                ApprenticeshipType.Apprenticeship);
+                ApprenticeshipType.Apprenticeship,
+                CourseType.Apprenticeship);
 
-            actual.Should().BeEquivalentTo(activeValidStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            actualStandards.Should().BeEquivalentTo(activeValidApprenticeshipStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task When_Filtering_By_FoundationApprenticeship_Type_Then_Only_FoundationApprenticeship_Standards_Are_Returned(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [ValidFoundationApprenticeships] List<Standard> validFoundationApprenticeships,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [FoundationApprenticeshipStandardsLarsValid] List<Standard> validFoundationApprenticeships,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
             allStandards.AddRange(validFoundationApprenticeships);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -371,26 +447,33 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actual = await repository.GetStandards(
+            // Act
+            var actualStandards = await repository.GetStandards(
                 new List<int>(),
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
                 false,
-                ApprenticeshipType.FoundationApprenticeship);
+                ApprenticeshipType.FoundationApprenticeship,
+                CourseType.Apprenticeship);
 
-            actual.Should().BeEquivalentTo(validFoundationApprenticeships, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            actualStandards.Should().BeEquivalentTo(validFoundationApprenticeships, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task When_Not_Filtering_By_ApprenticeshipType_Then_Only_All_Apprenticeships_Are_Returned(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [ValidFoundationApprenticeships] List<Standard> validFoundationApprenticeships,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [FoundationApprenticeshipStandardsLarsValid] List<Standard> validFoundationApprenticeships,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
             allStandards.AddRange(validFoundationApprenticeships);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -399,33 +482,41 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actual = await repository.GetStandards(
+            // Act
+            var actualStandards = await repository.GetStandards(
                 new List<int>(),
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
                 false,
-                null);
+                null,
+                CourseType.Apprenticeship);
 
-            actual.Should().BeEquivalentTo(allStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+            // Assert
+            actualStandards.Should().NotBeNull();
+            var expectedStandards = activeValidApprenticeshipStandards.Concat(validFoundationApprenticeships);
+            actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_Standards_Are_Filtered_By_Level_And_Include_Not_Available_To_Start(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
-            activeInvalidStandards[0].Level = activeValidStandards[0].Level;
+            // Arrange
+            activeInvalidApprenticeshipStandards[0].Level = activeValidApprenticeshipStandards[0].Level;
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCourseStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -434,17 +525,24 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actual = await repository.GetStandards(
+            // Act
+            var actualStandards = await repository.GetStandards(
                 new List<int>(),
-                new List<int> { activeValidStandards[0].Level },
-                StandardFilter.Active, false);
+                new List<int> { activeValidApprenticeshipStandards[0].Level },
+                StandardFilter.Active, 
+                false,
+                null,
+                CourseType.Apprenticeship);
 
-            var expectedList = new List<Standard>
+            var expectedStandards = new List<Standard>
             {
-                activeValidStandards[0],
-                activeInvalidStandards[0]
+                activeValidApprenticeshipStandards[0],
+                activeInvalidApprenticeshipStandards[0]
             };
-            actual.Should().BeEquivalentTo(expectedList, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+
+            // Assert
+            actualStandards.Should().NotBeNull();
+            actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
     }
 }

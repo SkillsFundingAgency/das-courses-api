@@ -8,7 +8,7 @@ using SFA.DAS.Courses.Domain.Entities;
 namespace SFA.DAS.Courses.Data.UnitTests.Customisations
 {
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class StandardsNotYetApprovedAttribute : CustomizeAttribute
+    public class ApprenticeshipStandardsLarsValidAttribute : CustomizeAttribute
     {
         public override ICustomization GetCustomization(ParameterInfo parameter)
         {
@@ -22,17 +22,24 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
                 throw new ArgumentException(nameof(parameter));
             }
 
-            return new StandardsNotYetApprovedCustomisation();
+            return new ApprenticeshipStandardsLarsValidCustomization();
         }
     }
 
-    public class StandardsNotYetApprovedCustomisation : ICustomization
+    public class ApprenticeshipStandardsLarsValidCustomization : ICustomization
     {
         public void Customize(IFixture fixture)
         {
+            fixture.Customize<LarsStandard>(composer =>
+                composer
+                    .With(standard => standard.EffectiveFrom, DateTime.Today.AddDays(-1))
+                    .Without(standard => standard.LastDateStarts));
+
             fixture.Customize<Standard>(composer =>
-                composer.With(standard => standard.Status, "In development")
-                        .With(standard => standard.LarsCode, "0"));
+                composer
+                    .With(standard => standard.Status, "Approved for delivery")
+                    .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship)
+                    .With(standard => standard.CourseType, CourseType.Apprenticeship));
         }
     }
 }

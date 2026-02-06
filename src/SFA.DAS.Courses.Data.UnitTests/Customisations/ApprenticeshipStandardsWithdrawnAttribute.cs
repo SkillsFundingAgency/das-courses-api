@@ -8,7 +8,7 @@ using SFA.DAS.Courses.Domain.Entities;
 namespace SFA.DAS.Courses.Data.UnitTests.Customisations
 {
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class StandardsRetiredAttribute : CustomizeAttribute
+    public class ApprenticeshipStandardsWithdrawnAttribute : CustomizeAttribute
     {
         public override ICustomization GetCustomization(ParameterInfo parameter)
         {
@@ -22,16 +22,19 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
                 throw new ArgumentException(nameof(parameter));
             }
 
-            return new StandardsRetiredCustomisation();
+            return new ApprenticeshipStandardsWithdrawnCustomization();
         }
     }
 
-    public class StandardsRetiredCustomisation : ICustomization
+    public class ApprenticeshipStandardsWithdrawnCustomization : ICustomization
     {
         public void Customize(IFixture fixture)
         {
             fixture.Customize<Standard>(composer =>
-                composer.With(standard => standard.Status, "Retired"));
+                composer
+                    .With(standard => standard.Status, "Withdrawn")
+                    .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship)
+                    .With(standard => standard.CourseType, CourseType.Apprenticeship));
         }
     }
 }

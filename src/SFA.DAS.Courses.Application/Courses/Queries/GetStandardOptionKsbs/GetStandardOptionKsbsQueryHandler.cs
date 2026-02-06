@@ -6,7 +6,8 @@ using MediatR;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
-using SFA.DAS.Courses.Domain.Policies;
+
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 {
@@ -21,9 +22,9 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
         {
             List<Ksb> ksbs = null;
 
-            var standard = await GetStandard.GetStandard.ByAnyId(_standardsService, request.Id);
+            var standard = await _standardsService.GetStandardByAnyId(request.Id, CourseType.Apprenticeship);
 
-            if (standard != null && AllowedApprenticeshipTypesPolicy.IsStandard(standard.ApprenticeshipType))
+            if (standard != null)
             {
                 ksbs = standard.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
             }

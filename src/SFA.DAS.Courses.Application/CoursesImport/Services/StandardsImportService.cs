@@ -71,7 +71,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     if (!hasValidationErrors)
                     {
                         var currentRoutes = await _routeRepository.GetAll();
-                        var currentStandards = await _standardRepository.GetStandards();
+                        var currentStandards = await _standardRepository.GetStandards(null);
 
                         var routeImports = await PrepareRouteImports(GetDistinctRoutes(importedStandards));
                         var groupedImportedStandards = GroupImportedStandards(importedStandards, routeImports);

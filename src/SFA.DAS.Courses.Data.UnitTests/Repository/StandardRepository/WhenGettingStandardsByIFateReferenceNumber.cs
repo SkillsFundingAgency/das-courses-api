@@ -17,32 +17,35 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
     {
         [Test, RecursiveMoqAutoData]
         public async Task Then_All_Versions_Of_That_Standard_Are_Returned(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
+            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
+            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
+            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
+            [ShortCourseStandards] List<Standard> activeValidShortCoursesStandards,
             [Frozen] Mock<ICoursesDataContext> mockDbContext,
             Data.Repository.StandardRepository repository)
         {
+            // Arrange
             var iFateReferenceNumber = "ST001";
-            var active = activeValidStandards[0];
+            var active = activeValidApprenticeshipStandards[0];
             active.IfateReferenceNumber = iFateReferenceNumber;
             active.Version = "1.1";
             active.StandardUId = "ST001_1.1";
 
-            var retired = retiredStandards[0];
+            var retired = retiredApprenticeshipStandards[0];
             retired.IfateReferenceNumber = iFateReferenceNumber;
             retired.Version = "1.0";
             retired.StandardUId = "ST001_1.0";
 
 
             var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
+            allStandards.AddRange(activeValidApprenticeshipStandards);
+            allStandards.AddRange(activeInvalidApprenticeshipStandards);
+            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
+            allStandards.AddRange(withdrawnApprenticeshipStandards);
+            allStandards.AddRange(retiredApprenticeshipStandards);
+            allStandards.AddRange(activeValidShortCoursesStandards);
             mockDbContext
                 .Setup(context => context.Standards)
                 .ReturnsDbSet(allStandards);
@@ -51,8 +54,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actualStandards = await repository.GetStandards(iFateReferenceNumber);
+            // Act
+            var actualStandards = await repository.GetStandards(iFateReferenceNumber, CourseType.Apprenticeship);
 
+            // Assert
             Assert.That(actualStandards, Is.Not.Null);
             actualStandards.Should().BeEquivalentTo(new List<Standard> { active, retired }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }

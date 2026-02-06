@@ -18,22 +18,26 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public async Task<int> Count(StandardFilter filter)
+        public async Task<int> Count(StandardFilter filter, 
+            CourseType? courseType)
         {
             // Tweak to the count query to perform a count rather than query actual fields.
             // The in memory filter causes this query to become more resource intensive
             // To get around that for the Active and Active Available filters
             // We perform the normal filter that we can, then select distinct lars code to get latest version count
             int count;
-            var standards = _coursesDataContext.Standards.FilterStandards(filter);
+            var query = _coursesDataContext.Standards
+                .FilterStandards(filter)
+                .FilterCourseType(courseType);
+
             switch (filter)
             {
                 case StandardFilter.Active:
                 case StandardFilter.ActiveAvailable:
-                    count = await standards.Select(c => c.LarsCode).Distinct().CountAsync();
+                    count = await query.Select(c => c.LarsCode).Distinct().CountAsync();
                     break;
                 default:
-                    count = await standards.Select(c => c.StandardUId).CountAsync();
+                    count = await query.Select(c => c.StandardUId).CountAsync();
                     break;
             }
 
@@ -52,11 +56,13 @@ namespace SFA.DAS.Courses.Data.Repository
             return await _coursesDataContext.SaveChangesAsync();
         }
 
-        public async Task<List<Standard>> GetActiveStandardsByIfateReferenceNumbers(List<string> ifateReferenceNumbers)
+        public async Task<List<Standard>> GetActiveStandardsByIfateReferenceNumbers(List<string> ifateReferenceNumbers,
+            CourseType? courseType)
         {
-            var query = GetBaseStandardQuery()
+            var query = GetBaseStandardQuery(courseType)
                 .FilterStandards(StandardFilter.ActiveAvailable)
                 .Where(s => ifateReferenceNumbers.Contains(s.IfateReferenceNumber));
+
             var standards = await query.ToListAsync();
 
             var filteredStandards = standards.InMemoryFilterIsLatestVersion(StandardFilter.ActiveAvailable);
@@ -64,11 +70,14 @@ namespace SFA.DAS.Courses.Data.Repository
             return (await IncludeApprenticeshipFunding(filteredStandards)).ToList();
         }
 
-        public async Task<Standard> GetLatestActiveStandardByIfateReferenceNumber(string iFateReferenceNumber)
+        public async Task<Standard> GetLatestActiveStandardByIfateReferenceNumber(string iFateReferenceNumber,
+            CourseType? courseType)
         {
-            var standards = await GetFullBaseStandardQuery()
+            var query = GetFullBaseStandardQuery(courseType)
                 .FilterStandards(StandardFilter.Active)
-                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber)).ToListAsync();
+                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber));
+
+            var standards = await query.ToListAsync();
 
             // In Memory Filter for get latest version due to limitations in EF query translation
             // into expression tree
@@ -79,11 +88,14 @@ namespace SFA.DAS.Courses.Data.Repository
             return (await IncludeApprenticeshipFunding(new List<Standard> { standard })).First();
         }
 
-        public async Task<Standard> GetLatestActiveStandard(string larsCode)
+        public async Task<Standard> GetLatestActiveStandard(string larsCode,
+            CourseType? courseType)
         {
-            var standards = await GetFullBaseStandardQuery()
+            var query = GetFullBaseStandardQuery(courseType)
                 .FilterStandards(StandardFilter.Active)
-                .Where(c => c.LarsCode == larsCode)
+                .Where(c => c.LarsCode == larsCode);
+
+            var standards = await query
                 .ToListAsync();
 
             // In Memory Filter for get latest version due to limitations in EF query translation
@@ -95,46 +107,53 @@ namespace SFA.DAS.Courses.Data.Repository
             return (await IncludeApprenticeshipFunding(new List<Standard> { standard })).First();
         }
 
-        public async Task<Standard> Get(string standardUId)
+        public async Task<Standard> Get(string standardUId,
+            CourseType? courseType)
         {
-            var standard = await GetFullBaseStandardQuery()
-                .SingleOrDefaultAsync(c => c.StandardUId.Equals(standardUId));
+            var query = GetFullBaseStandardQuery(courseType);
+
+            var standard = await query.SingleOrDefaultAsync(c => c.StandardUId.Equals(standardUId));
 
             if (standard is null) return null;
 
             return (await IncludeApprenticeshipFunding(new List<Standard> { standard })).First();
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards()
+        public async Task<IEnumerable<Standard>> GetStandards(CourseType? courseType)
         {
-            return await GetStandards(new List<int>(), new List<int>(), StandardFilter.None, true);
+            return await GetStandards(new List<int>(), new List<int>(), StandardFilter.None, true, null, courseType);
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, ApprenticeshipType? apprenticeshipType = null)
+        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, 
+            IList<int> levels, 
+            StandardFilter filter, 
+            bool includeAllProperties, 
+            ApprenticeshipType? apprenticeshipType = null,
+            CourseType? courseType = null)
         {
-            IQueryable<Standard> standards = (includeAllProperties
-                    ? GetFullBaseStandardQuery()
-                    : GetBaseStandardQuery())
+            IQueryable<Standard> query = (includeAllProperties
+                    ? GetFullBaseStandardQuery(courseType)
+                    : GetBaseStandardQuery(courseType))
                 .FilterStandards(filter);
 
             if (routeIds.Count > 0)
             {
-                standards = standards.Where(standard => routeIds.Contains(standard.RouteCode));
+                query = query.Where(standard => routeIds.Contains(standard.RouteCode));
             }
             if (levels.Count > 0)
             {
-                standards = standards.Where(standard => levels.Contains(standard.Level));
+                query = query.Where(standard => levels.Contains(standard.Level));
             }
             if (apprenticeshipType != null)
             {
-                standards = standards.Where(standard => standard.ApprenticeshipType.Equals(apprenticeshipType));
+                query = query.Where(standard => standard.ApprenticeshipType == apprenticeshipType.Value);
             }
 
-            var standardResults = await standards.ToListAsync();
+            var standards = await query.ToListAsync();
 
             // Secondary filter performed in memory due to limitations in 
             // EF Core query translation on Group By selecting top row of each.
-            var filtered = standardResults.InMemoryFilterIsLatestVersion(filter);
+            var filtered = standards.InMemoryFilterIsLatestVersion(filter);
 
             if (!includeAllProperties)
                 return filtered;
@@ -142,16 +161,18 @@ namespace SFA.DAS.Courses.Data.Repository
             return (await IncludeApprenticeshipFunding(filtered)).ToList();
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber)
+        public async Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber,
+            CourseType? courseType)
         {
-            var standards = await GetBaseStandardQuery()
-                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber))
-                .ToListAsync();
+            var query = GetBaseStandardQuery(courseType)
+                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber));
+
+            var standards = await query.ToListAsync();
 
             return (await IncludeApprenticeshipFunding(standards));
         }
 
-        private IQueryable<Standard> GetFullBaseStandardQuery()
+        private IQueryable<Standard> GetFullBaseStandardQuery(CourseType? courseType)
         {
             var query = _coursesDataContext
                 .Standards
@@ -159,11 +180,13 @@ namespace SFA.DAS.Courses.Data.Repository
                 .Include(c => c.LarsStandard)
                     .ThenInclude(l => l.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
-                    .ThenInclude(l => l.SectorSubjectArea1);
-            return query;
+                    .ThenInclude(l => l.SectorSubjectArea1)
+                .FilterCourseType(courseType);
+            
+                return query;
         }
 
-        private IQueryable<Standard> GetBaseStandardQuery()
+        private IQueryable<Standard> GetBaseStandardQuery(CourseType? courseType)
         {
             var query = _coursesDataContext
                 .Standards
@@ -172,6 +195,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     .ThenInclude(c => c.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
                     .ThenInclude(c => c.SectorSubjectArea1)
+                .FilterCourseType(courseType)
                 .Select(c => new Standard
                 {
                     Status = c.Status,

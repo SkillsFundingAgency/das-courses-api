@@ -107,6 +107,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.3",
                             IfateReferenceNumber = "ST0001",
@@ -136,6 +138,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "2",
                             StandardUId = "ST0002_1.0",
                             IfateReferenceNumber = "ST0002",
@@ -161,6 +165,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "3",
                             StandardUId = "ST0003_1.0",
                             IfateReferenceNumber = "ST0003",
@@ -185,6 +191,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "4",
                             StandardUId = "ST0004_1.0",
                             IfateReferenceNumber = "ST0004",
@@ -209,6 +217,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "5",
                             StandardUId = "ST0005_1.1",
                             IfateReferenceNumber = "ST0005",
@@ -233,6 +243,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "6",
                             StandardUId = "ST0006_1.0",
                             IfateReferenceNumber = "ST0006",
@@ -257,6 +269,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "7",
                             StandardUId = "ST0007_1.0",
                             IfateReferenceNumber = "ST0007",
@@ -281,6 +295,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "8",
                             StandardUId = "ST0008_1.0",
                             IfateReferenceNumber = "ST0008",
@@ -335,6 +351,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "11",
                             StandardUId = "ST0011_1.0",
                             IfateReferenceNumber = "ST0011",
@@ -358,6 +376,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "14",
                             StandardUId = "ST0014_1.0",
                             IfateReferenceNumber = "ST0014",
@@ -404,6 +424,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "0",
                             StandardUId = "ST0015_1.0",
                             IfateReferenceNumber = "ST0015",
@@ -421,6 +443,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                          new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "0",
                             StandardUId = "ST0016_1.0",
                             IfateReferenceNumber = "ST0016",
@@ -461,6 +485,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "0",
                             StandardUId = "ST0030_1.0",
                             IfateReferenceNumber = "ST0030",
@@ -501,6 +527,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.2",
                             IfateReferenceNumber = "ST0001",
@@ -522,6 +550,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.1",
                             IfateReferenceNumber = "ST0001",
@@ -538,6 +568,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "5",
                             StandardUId = "ST0005_1.0",
                             IfateReferenceNumber = "ST0005",
@@ -559,6 +591,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "99",
                             StandardUId = "ST0099_1.0",
                             IfateReferenceNumber = "ST0099",

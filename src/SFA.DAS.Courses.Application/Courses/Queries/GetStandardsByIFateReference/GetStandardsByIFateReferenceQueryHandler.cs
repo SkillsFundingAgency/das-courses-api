@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
-using SFA.DAS.Courses.Domain.Policies;
+
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsByIFateReference
 {
@@ -16,10 +16,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsByIFateReferen
 
         public async Task<GetStandardsByIFateReferenceResult> Handle(GetStandardsByIFateReferenceQuery request, CancellationToken cancellationToken)
         {
-            var standards = (await _standardsService.GetAllVersionsOfAStandard(request.IFateReferenceNumber))
-                .Where(s => AllowedApprenticeshipTypesPolicy.IsStandard(s.ApprenticeshipType))
-                .ToList();
-
+            var standards = await _standardsService.GetAllVersionsOfAStandard(request.IFateReferenceNumber, CourseType.Apprenticeship);
             return new GetStandardsByIFateReferenceResult
             {
                 Standards = standards

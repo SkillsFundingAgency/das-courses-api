@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Courses.Domain.Interfaces;
-using SFA.DAS.Courses.Domain.Policies;
+
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
 {
@@ -30,11 +31,11 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
                     request.OrderBy,
                     request.Filter,
                     request.IncludeAllProperties,
-                    request.ApprenticeshipType))
-                .Where(s => AllowedApprenticeshipTypesPolicy.IsStandard(s.ApprenticeshipType))
+                    request.ApprenticeshipType,
+                    CourseType.Apprenticeship))
                 .ToList();
 
-            var total = await _standardsService.Count(request.Filter);
+            var total = await _standardsService.Count(request.Filter, CourseType.Apprenticeship);
 
             if (standards.Count == 0 &&
                 !string.IsNullOrWhiteSpace(request.Keyword) &&

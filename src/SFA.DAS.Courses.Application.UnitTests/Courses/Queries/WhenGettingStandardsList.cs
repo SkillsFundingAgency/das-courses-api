@@ -13,6 +13,8 @@ using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
+
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 {
     public class WhenGettingStandardsList
@@ -27,9 +29,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             [Frozen] Mock<IStandardsService> mockStandardsService,
             GetStandardsListQueryHandler handler)
         {
-            var allowableStandards = standards
-                .Where(p => p.ApprenticeshipType == Domain.Entities.ApprenticeshipType.Apprenticeship || p.ApprenticeshipType == Domain.Entities.ApprenticeshipType.FoundationApprenticeship);
-
+            // Arrange
             mockStandardsService
                 .Setup(service => service.GetStandardsList(
                     query.Keyword,
@@ -38,18 +38,21 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.OrderBy,
                     query.Filter,
                     query.IncludeAllProperties,
-                    query.ApprenticeshipType))
-                .ReturnsAsync(allowableStandards);
+                    query.ApprenticeshipType,
+                    CourseType.Apprenticeship))
+                .ReturnsAsync(standards);
             
             mockStandardsService
-                .Setup(service => service.Count(query.Filter))
+                .Setup(service => service.Count(query.Filter, CourseType.Apprenticeship))
                 .ReturnsAsync(count);
 
+            // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
-            result.Standards.Should().BeEquivalentTo(allowableStandards);
+            // Assert
+            result.Standards.Should().BeEquivalentTo(standards);
             result.Total.Should().Be(count);
-            result.TotalFiltered.Should().Be(allowableStandards.Count());
+            result.TotalFiltered.Should().Be(standards.Count);
         }
 
         [Test, MoqAutoData]
@@ -60,6 +63,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             [Frozen] Mock<IStandardsService> mockStandardsService,
             GetStandardsListQueryHandler handler)
         {
+            // Arrange
             var standards = new List<Standard>();
             query.Levels = new List<int>();
             query.RouteIds = new List<int>();
@@ -72,14 +76,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.OrderBy,
                     query.Filter,
                     query.IncludeAllProperties,
-                    null))
+                    null,
+                    CourseType.Apprenticeship))
                 .ReturnsAsync(standards);
             mockStandardsService
-                .Setup(service => service.Count(query.Filter))
+                .Setup(service => service.Count(query.Filter, CourseType.Apprenticeship))
                 .ReturnsAsync(count);
-
+            
+            // Act
             await handler.Handle(query, CancellationToken.None);
 
+            // Assert
             mockLogger.Verify(logger => logger.Log(
                     LogLevel.Information,
                     0,
