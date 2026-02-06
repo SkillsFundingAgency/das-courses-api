@@ -136,6 +136,9 @@ namespace SFA.DAS.Courses.Data.Repository
             // EF Core query translation on Group By selecting top row of each.
             var filtered = standardResults.InMemoryFilterIsLatestVersion(filter);
 
+            if (!includeAllProperties)
+                return filtered;
+
             return (await IncludeApprenticeshipFunding(filtered)).ToList();
         }
 
