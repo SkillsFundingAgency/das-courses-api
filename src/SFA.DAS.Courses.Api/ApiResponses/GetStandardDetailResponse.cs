@@ -53,6 +53,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
+        public bool IsLatestVersion { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool IsRegulatedForEPAO { get; set; }
         public ApprenticeshipType ApprenticeshipType { get; set; }
@@ -117,6 +118,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 VersionMajor = source.VersionMajor,
                 VersionMinor = source.VersionMinor,
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
+                IsLatestVersion = source.IsLatestVersion,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO,
                 ApprenticeshipType = source.ApprenticeshipType,

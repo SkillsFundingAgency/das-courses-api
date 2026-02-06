@@ -21,6 +21,7 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string IfateReferenceNumber { get; set; }
         public bool IntegratedApprenticeship { get; set; }
         public string IntegratedDegree { get; set; }
+        public bool IsLatestVersion { get; set; }
         public bool IsRegulatedForEPAO { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public string Keywords { get; set; }
@@ -80,6 +81,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
                 IntegratedDegree = source.IntegratedDegree,
+                IsLatestVersion = source.IsLatestVersion,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 Keywords = source.Keywords,

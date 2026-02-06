@@ -44,6 +44,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
         public ApprenticeshipType ApprenticeshipType { get; set; }
         public string ApprenticeshipStandardTypeCode { get; set; }
+        public bool IsLatestVersion { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool IsRegulatedForEPAO { get; set; }
 
@@ -87,6 +88,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
                 ApprenticeshipType = source.ApprenticeshipType,
                 ApprenticeshipStandardTypeCode = source.ApprenticeshipStandardTypeCode,
+                IsLatestVersion = source.IsLatestVersion,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO
             };

@@ -224,6 +224,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
                     ApprenticeshipType = c.ApprenticeshipType,
+                    IsLatestVersion = c.IsLatestVersion,
                     IsRegulatedForProvider = c.IsRegulatedForProvider,
                     IsRegulatedForEPAO = c.IsRegulatedForEPAO
                 });
