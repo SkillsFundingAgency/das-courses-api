@@ -8,7 +8,7 @@ namespace SFA.DAS.Courses.Domain.Entities
         public string ApprenticeshipType { get; set; }
         public string StandardUId { get; set; }
         public string IfateReferenceNumber { get; set; }
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string Status { get; set; }
         public DateTime? VersionEarliestStartDate { get; set; }
         public DateTime? VersionLatestStartDate { get; set; }

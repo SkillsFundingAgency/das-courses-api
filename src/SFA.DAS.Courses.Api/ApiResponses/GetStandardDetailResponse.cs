@@ -61,13 +61,14 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public static implicit operator GetStandardDetailResponse(Standard source)
         {
-            if (source == null) return null;
+            if (source == null) 
+                return null;
 
             return new GetStandardDetailResponse
             {
                 StandardUId = source.StandardUId,
                 IfateReferenceNumber = source.IfateReferenceNumber,
-                LarsCode = source.LarsCode,
+                LarsCode = int.Parse(source.LarsCode),
                 Status = source.Status,
                 SearchScore = source.SearchScore,
                 Title = source.Title,

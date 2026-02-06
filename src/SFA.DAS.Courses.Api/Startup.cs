@@ -163,7 +163,7 @@ namespace SFA.DAS.Courses.Api
 
             app.UseAuthentication();
 
-            if (!_configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
+            if (!ConfigurationIsLocalOrDev())
             {
                 app.UseHealthChecks();
             }

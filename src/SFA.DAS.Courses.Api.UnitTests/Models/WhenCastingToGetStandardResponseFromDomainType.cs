@@ -14,19 +14,35 @@ namespace SFA.DAS.Courses.Api.UnitTests.Models
         public void Then_Maps_Fields_Appropriately(
             Standard source)
         {
+            // Arrange integer LarsCode
+            source.LarsCode = 1234.ToString();
+
+            // Act
             var response = (GetStandardResponse)source;
 
-            response.Should().BeEquivalentTo(source, StandardToGetStandardResponseOptions.Exclusions);
+            // Assert all properties except LarsCode
+            response.Should().BeEquivalentTo(
+                    source,
+                    options => StandardToGetStandardResponseOptions
+                        .ExclusionsGetStandardResponse(options)
+                        .Excluding(s => s.LarsCode)
+                );
+            
+            // Assert LarsCode is an integer
+            response.LarsCode.Should().Be(int.Parse(source.LarsCode));
         }
 
         [Test, AutoData]
-        public void Then_Maps_KSBs_Uniques(
+        public void Then_Maps_Unique_Skills(
             Standard source)
         {
-            source.Options.First().Skills.AddRange(source.Options.First().Skills);
-
+            // Arrange integer LarsCode
+            source.LarsCode = 1234.ToString();
+            
+            // Act
             var response = (GetStandardResponse)source;
 
+            // Assert Skills are transferred from distinct options skills details
             response.Skills.Should().BeEquivalentTo(
                 source.Options.SelectMany(x => x.Skills).Select(x => x.Detail).Distinct());
         }

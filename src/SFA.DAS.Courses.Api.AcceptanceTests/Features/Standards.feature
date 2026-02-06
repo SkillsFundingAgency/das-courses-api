@@ -138,7 +138,7 @@
     Given I have an http client
     When I GET the following url: /api/courses/standards/versions/ST0001
     Then an http status code of 200 is returned
-    And the following valid standards are returned
+    And the following valid standard versions are returned
     | title                                      | level | route                        | version | status                 |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.3     | Approved for delivery  |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.2     | Retired                |

@@ -1,15 +1,18 @@
-namespace SFA.DAS.Courses.Domain.Entities
+﻿namespace SFA.DAS.Courses.Domain.Entities
 {
     public class FrameworkFunding : FrameworkFundingBase
     {
-        public static implicit operator FrameworkFunding(FrameworkFundingImport frameworkFundingImport)
+        public static implicit operator FrameworkFunding(FrameworkFundingImport source)
         {
+            if (source == null)
+                return null;
+
             return new FrameworkFunding
             {
-                FrameworkId = frameworkFundingImport.FrameworkId,
-                EffectiveFrom = frameworkFundingImport.EffectiveFrom,
-                EffectiveTo = frameworkFundingImport.EffectiveTo,
-                FundingCap = frameworkFundingImport.FundingCap
+                FrameworkId = source.FrameworkId,
+                EffectiveFrom = source.EffectiveFrom,
+                EffectiveTo = source.EffectiveTo,
+                FundingCap = source.FundingCap
             };
         }
     }

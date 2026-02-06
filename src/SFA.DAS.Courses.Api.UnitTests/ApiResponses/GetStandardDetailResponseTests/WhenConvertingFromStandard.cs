@@ -11,8 +11,19 @@ public class WhenConvertingFromStandard
     [Test, AutoData]
     public void ThenTransformsFromStandard(Standard standard)
     {
+        // Act
+        standard.LarsCode = 12345.ToString();
         GetStandardDetailResponse sut = standard;
 
-        sut.Should().BeEquivalentTo(standard, options => options.ExcludingMissingMembers());
+        // Assert: everything except LarsCode
+        sut.Should().BeEquivalentTo(
+            standard,
+            options => options
+                .ExcludingMissingMembers()
+                .Excluding(s => s.LarsCode)
+        );
+
+        // Assert: LarsCode separately (backwards-compat behaviour)
+        sut.LarsCode.Should().Be(12345);
     }
 }

@@ -32,7 +32,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
         {
             fixture.Customize<Standard>(composer =>
                 composer.With(standard => standard.Status, "In development")
-                        .With(standard => standard.LarsCode, 0));
+                        .With(standard => standard.LarsCode, "0"));
         }
     }
 }
