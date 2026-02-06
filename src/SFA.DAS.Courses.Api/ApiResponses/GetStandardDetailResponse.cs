@@ -2,6 +2,7 @@
 using System.Linq;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Extensions;
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
@@ -52,22 +53,24 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
+        public bool IsLatestVersion { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool IsRegulatedForEPAO { get; set; }
-        public string ApprenticeshipType { get; set; }
+        public ApprenticeshipType ApprenticeshipType { get; set; }
         public string ApprenticeshipStandardTypeCode { get; set; }
         public List<RelatedOccupation> RelatedOccupations { get; set; } = new();
 
 
         public static implicit operator GetStandardDetailResponse(Standard source)
         {
-            if (source == null) return null;
+            if (source == null) 
+                return null;
 
             return new GetStandardDetailResponse
             {
                 StandardUId = source.StandardUId,
                 IfateReferenceNumber = source.IfateReferenceNumber,
-                LarsCode = source.LarsCode,
+                LarsCode = int.Parse(source.LarsCode),
                 Status = source.Status,
                 SearchScore = source.SearchScore,
                 Title = source.Title,
@@ -115,6 +118,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 VersionMajor = source.VersionMajor,
                 VersionMinor = source.VersionMinor,
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
+                IsLatestVersion = source.IsLatestVersion,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO,
                 ApprenticeshipType = source.ApprenticeshipType,

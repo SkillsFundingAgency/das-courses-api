@@ -8,32 +8,48 @@ using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
+
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 {
     public class WhenGettingAStandardByStandardUId
     {
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_A_Standard_From_The_Repository(
+        public async Task Then_Gets_A_ApprenticeshipStandard_Filtered_From_The_Repository(
             string standardUId,
             Standard standardFromRepo,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            // Arrange
             mockStandardsRepository
-                .Setup(repository => repository.Get(standardUId))
+                .Setup(repository => repository.Get(standardUId, CourseType.Apprenticeship))
                 .ReturnsAsync(standardFromRepo);
 
-            var expectedEqaProvider = (Domain.Courses.EqaProvider)standardFromRepo;
-            var expectedVersionDetail = (Domain.Courses.StandardVersionDetail)standardFromRepo;
+            // Act
+            var standard = await service.GetStandard(standardUId, CourseType.Apprenticeship);
 
-            var standard = await service.GetStandard(standardUId);
+            // Assert
+            standard.Should().BeEquivalentTo((Domain.Courses.Standard)standardFromRepo);
+        }
 
-            standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_A_Standard_Unfiltered_From_The_Repository(
+            string standardUId,
+            Standard standardFromRepo,
+            [Frozen] Mock<IStandardRepository> mockStandardsRepository,
+            StandardsService service)
+        {
+            // Arrange
+            mockStandardsRepository
+                .Setup(repository => repository.Get(standardUId, null))
+                .ReturnsAsync(standardFromRepo);
 
-            standard.Route.Should().Be(standardFromRepo.Route.Name);
-            standard.EqaProvider.Should().BeEquivalentTo(expectedEqaProvider);
-            standard.VersionDetail.Should().BeEquivalentTo(expectedVersionDetail);
-            standard.ApprenticeshipType.Should().Be(standardFromRepo.ApprenticeshipType);
+            // Act
+            var standard = await service.GetStandard(standardUId, null);
+
+            // Assert
+            standard.Should().BeEquivalentTo((Domain.Courses.Standard)standardFromRepo);
         }
     }
 }

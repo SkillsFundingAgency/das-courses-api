@@ -14,7 +14,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         private Mock<ICoursesDataContext> _coursesDataContext;
         private List<Standard> _standards;
         private Data.Repository.StandardRepository _standardRepository;
+        
         private const string ExpectedStandardUId = "ST0001_1.0";
+        private const string OtherStandardUId = "ST0010_2.0";
 
         [SetUp]
         public void Arrange()
@@ -23,10 +25,12 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             {
                 new Standard()
                 {
-                    StandardUId = "unknown"
+                    StandardUId = OtherStandardUId
                 },
                 new Standard
                 {
+                    ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    CourseType = CourseType.Apprenticeship,
                     StandardUId = ExpectedStandardUId
                 }
             };
@@ -40,10 +44,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         [Test]
         public async Task Then_The_Standard_Is_Returned_By_StandardUId()
         {
-            //Act
-            var standard = await _standardRepository.Get(ExpectedStandardUId);
+            // Act
+            var standard = await _standardRepository.Get(ExpectedStandardUId, CourseType.Apprenticeship);
 
-            //Assert
+            // Assert
             Assert.That(standard, Is.Not.Null);
             standard.StandardUId.Should().Be(ExpectedStandardUId);
         }
@@ -51,11 +55,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         [Test]
         public async Task Then_Null_Is_Returned()
         {
-            //Arrange
+            // Arrange
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(new List<Standard>());
 
-            //Act Assert
-            var result = await _standardRepository.Get(ExpectedStandardUId);
+            // Act & Assert
+            var result = await _standardRepository.Get(ExpectedStandardUId, CourseType.Apprenticeship);
             result.Should().BeNull();
         }
     }

@@ -2,14 +2,14 @@
 using System.Linq;
 using FluentValidation;
 using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
-using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
 
-    public class CourseOptionsPreservedValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class CourseOptionsPreservedValidator : ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>
     {
-        public CourseOptionsPreservedValidator(List<Standard> currentStandards)
+        public CourseOptionsPreservedValidator(List<Domain.Entities.Standard> currentStandards)
             : base(ValidationFailureType.StandardError)
         {
             RuleFor(importedStandards => importedStandards)
@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                             continue;
                         }
 
-                        var importedOptions = standard.Options.Value ?? new List<Domain.ImportTypes.Option>();
+                        var importedOptions = standard.Options.Value ?? new List<Option>();
                         var currentTitles = currentStandard.Options
                             .Select(cso => cso.Title)
                             .Where(title => title != Domain.Courses.StandardOption.CoreTitle)

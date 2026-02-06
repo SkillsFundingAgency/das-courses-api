@@ -20,11 +20,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardImportRepository
             {
                 new StandardImport()
                 {
-                    LarsCode = 1
+                    LarsCode = "1"
                 },
                 new StandardImport
                 {
-                    LarsCode = 2
+                    LarsCode = "2"
                 }
             };
             

@@ -2,9 +2,12 @@
 {
     public record RelatedOccupation(string Title, int Level)
     {
-        public static implicit operator RelatedOccupation(Entities.Standard standard)
+        public static implicit operator RelatedOccupation(Entities.Standard source)
         {
-            return new RelatedOccupation(standard.Title, standard.Level);
+            if (source == null)
+                return null;
+
+            return new RelatedOccupation(source.Title, source.Level);
         }
     }
 }

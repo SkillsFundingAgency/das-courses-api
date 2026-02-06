@@ -19,23 +19,23 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
         public async Task Then_The_Latest_ImportAudit_Record_is_Read_From_IFATE(
             [Frozen] Mock<IImportAuditRepository> mock, 
             HealthCheckContext healthCheckContext, 
-            InstituteOfApprenticeshipServiceHealthCheck handler)
+            SkillsEnglandServiceHealthCheck handler)
         {
             //Act
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
             //Assert
-            mock.Verify(x => x.GetLastImportByType(ImportType.IFATEImport), Times.Once);
+            mock.Verify(x => x.GetLastImportByType(ImportType.SkillsEnglandImport), Times.Once);
         }
 
         [Test, MoqAutoData]
         public async Task Then_If_The_Data_Is_Greater_Than_Twenty_Five_Hours_Then_HealthCheck_Return_Degraded(
             [Frozen] Mock<IImportAuditRepository> mock, 
             HealthCheckContext healthCheckContext, 
-            InstituteOfApprenticeshipServiceHealthCheck handler)
+            SkillsEnglandServiceHealthCheck handler)
         {
             // Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new ImportAudit(
+            mock.Setup(x => x.GetLastImportByType(ImportType.SkillsEnglandImport)).ReturnsAsync(new ImportAudit(
             DateTime.UtcNow.AddHours(26), 0));
 
             // Act
@@ -50,10 +50,10 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
         public async Task Then_If_The_Data_Is_Less_Than_Twenty_Five_Hours_Then_HealthCheck_Return_Healthy(
             [Frozen] Mock<IImportAuditRepository> mock, 
             HealthCheckContext healthCheckContext, 
-            InstituteOfApprenticeshipServiceHealthCheck handler)
+            SkillsEnglandServiceHealthCheck handler)
         {
             // Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new ImportAudit(
+            mock.Setup(x => x.GetLastImportByType(ImportType.SkillsEnglandImport)).ReturnsAsync(new ImportAudit(
             DateTime.UtcNow.AddHours(10), 10));
 
             // Act
@@ -67,10 +67,10 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
         public async Task Then_If_The_Data_Is_Less_Than_Two_Weeks_And_An_Hour_But_Has_No_Imported_Rows_Then_HealthCheck_Return_Degraded(
             [Frozen] Mock<IImportAuditRepository> mock,
             HealthCheckContext healthCheckContext,
-             InstituteOfApprenticeshipServiceHealthCheck handler)
+             SkillsEnglandServiceHealthCheck handler)
         {
             //Arrange
-            mock.Setup(x => x.GetLastImportByType(ImportType.IFATEImport)).ReturnsAsync(new ImportAudit(
+            mock.Setup(x => x.GetLastImportByType(ImportType.SkillsEnglandImport)).ReturnsAsync(new ImportAudit(
                 DateTime.UtcNow.AddDays(10), 0));
             //Act
             var actual = await handler.CheckHealthAsync(healthCheckContext);

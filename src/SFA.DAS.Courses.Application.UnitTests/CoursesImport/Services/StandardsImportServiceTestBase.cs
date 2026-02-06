@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 {
     public class StandardsImportServiceTestBase
     {
-        protected static Standard GetValidImportedStandard(int larsCode, string referenceNumber, string version, string title, string status, string route, string optionTitle)
+        protected static Standard GetValidImportedStandard(string larsCode, string referenceNumber, string version, string title, string status, string route, string optionTitle)
         {
             return new Standard
             {
@@ -30,7 +30,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 Route = route,
                 Keywords = new Settable<List<string>>(null),
                 AssessmentPlanUrl = "http://plan.html",
-                EqaProvider = new Domain.ImportTypes.EqaProvider
+                EqaProvider = new Domain.ImportTypes.SkillsEngland.EqaProvider
                 {
                     ProviderName = new Settable<string>(null),
                     ContactName = new Settable<string>(null),
@@ -56,7 +56,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             };
         }
 
-        protected static Domain.Entities.StandardImport GetValidStandardImport(int larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
+        protected static Domain.Entities.StandardImport GetValidStandardImport(string larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
         {
             return new Domain.Entities.StandardImport
             {
@@ -93,11 +93,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             };
         }
 
-        protected static Domain.Entities.Standard GetValidStandard(int larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
+        protected static Domain.Entities.Standard GetValidStandard(string larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
         {
             return new Domain.Entities.Standard
             {
-                ApprenticeshipType = Domain.Entities.ApprenticeshipType.Apprenticeship.ToString(),
+                ApprenticeshipType = Domain.Entities.ApprenticeshipType.Apprenticeship,
                 LarsCode = larsCode,
                 IfateReferenceNumber = referenceNumber,
                 Title = title,

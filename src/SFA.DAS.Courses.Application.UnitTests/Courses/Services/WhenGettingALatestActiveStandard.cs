@@ -15,232 +15,195 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
     public class WhenGettingALatestActiveStandard
     {
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_A_Standard_From_The_Repository_By_LarsCode(
-            int larsCode,
+        public async Task Then_Gets_A_Standard_Filtered_From_The_Repository_By_LarsCode(
+            string larsCode,
             Standard standardFromRepo,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            // Arrange
             mockStandardsRepository
-                .Setup(repository => repository.GetLatestActiveStandard(larsCode))
+                .Setup(repository => repository.GetLatestActiveStandard(larsCode, CourseType.Apprenticeship))
                 .ReturnsAsync(standardFromRepo);
 
-            var standard = await service.GetLatestActiveStandard(larsCode);
+            // Act
+            var standard = await service.GetLatestActiveStandard(larsCode, CourseType.Apprenticeship);
 
-            standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
+            // Assert
+            standard.Should().BeEquivalentTo((Domain.Courses.Standard)standardFromRepo);
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Returns_Null_When_No_Standard_Found_In_Repository_By_LarsCode(
-            int larsCode,
+        public async Task Then_Gets_A_Standard_Filterd_From_The_Repository_By_IFateReferenceNumber(
+            string iFateReferenceNumber,
+            Standard standardFromRepo,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
+            // Arrange
             mockStandardsRepository
-                .Setup(repository => repository.GetLatestActiveStandard(larsCode))
-                .ReturnsAsync((Standard)null);
+                .Setup(repository => repository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, CourseType.Apprenticeship))
+                .ReturnsAsync(standardFromRepo);
 
-            var standard = await service.GetLatestActiveStandard(larsCode);
+            // Act
+            var standard = await service.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, CourseType.Apprenticeship);
 
-            standard.Should().BeNull();
+            // Assert
+            standard.Should().BeEquivalentTo((Domain.Courses.Standard)standardFromRepo);
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_Standard_With_RelatedOccupations_From_The_Repository_By_LarsCode(
-            int larsCode,
+        public async Task Then_Gets_Standard_Filtered_With_RelatedOccupations_From_The_Repository_By_IFateReferenceNumber(
+            string iFateReferenceNumber,
             Standard standardFromRepo,
             List<Standard> relatedOccupations,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
+            // Arrange
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
-                .Setup(repository => repository.GetLatestActiveStandard(larsCode))
+                .Setup(repository => repository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, CourseType.Apprenticeship))
                 .ReturnsAsync(standardFromRepo);
 
             mockStandardsRepository
-                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(standardFromRepo.RelatedOccupations))
+                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumbers(standardFromRepo.RelatedOccupations, CourseType.Apprenticeship))
                 .ReturnsAsync(relatedOccupations);
 
-            var standard = await service.GetLatestActiveStandard(larsCode);
+            // Act
+            var standard = await service.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, CourseType.Apprenticeship);
 
+            // Assert
             standard.RelatedOccupations.Should().HaveCount(relatedOccupations.Count);
             standard.RelatedOccupations.Should().BeEquivalentTo(relatedOccupations.Select(ro => new Domain.Courses.RelatedOccupation(ro.Title, ro.Level)));
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_Standard_Without_RelatedOccupations_From_The_Repository_By_LarsCode(
-            int larsCode,
+        public async Task Then_Gets_Standard_Filtered_Without_RelatedOccupations_From_The_Repository_By_IFateReferenceNumber(
+            string iFateReferenceNumber,
             Standard standardFromRepo,
             List<Standard> relatedOccupations,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
+            // Arrange
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
-                .Setup(repository => repository.GetLatestActiveStandard(larsCode))
+                .Setup(repository => repository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, CourseType.Apprenticeship))
                 .ReturnsAsync(standardFromRepo);
 
-            var standard = await service.GetLatestActiveStandard(larsCode);
+            // Act
+            var standard = await service.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, CourseType.Apprenticeship);
 
+            // Assert
             standard.RelatedOccupations.Should().BeEmpty();
             mockStandardsRepository
-                .Verify(repository => repository.GetActiveStandardsByIfateReferenceNumber(It.IsAny<List<string>>()), Times.Never);
+                .Verify(repository => repository.GetActiveStandardsByIfateReferenceNumbers(It.IsAny<List<string>>(), CourseType.Apprenticeship), Times.Never);
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_A_Standard_From_The_Repository_By_IFateReferenceNumber(
-            string iFateReferenceNumber,
-            Standard standardFromRepo,
-            [Frozen] Mock<IStandardRepository> mockStandardsRepository,
-            StandardsService service)
-        {
-            mockStandardsRepository
-                .Setup(repository => repository.GetLatestActiveStandard(iFateReferenceNumber))
-                .ReturnsAsync(standardFromRepo);
-
-            var standard = await service.GetLatestActiveStandard(iFateReferenceNumber);
-
-            standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_Returns_Null_When_No_Standard_Found_In_Repository_By_IFateReferenceNumber(
-            string iFateReferenceNumber,
-            [Frozen] Mock<IStandardRepository> mockStandardsRepository,
-            StandardsService service)
-        {
-            mockStandardsRepository
-                .Setup(repository => repository.GetLatestActiveStandard(iFateReferenceNumber))
-                .ReturnsAsync((Standard)null);
-
-            var standard = await service.GetLatestActiveStandard(iFateReferenceNumber);
-
-            standard.Should().BeNull();
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_Standard_With_RelatedOccupations_From_The_Repository_By_IFateReferenceNumber(
-            string iFateReferenceNumber,
+        public async Task Then_Gets_Standard_Filtered_With_RelatedOccupations_From_The_Repository_By_LarsCode(
+            string larsCode,
             Standard standardFromRepo,
             List<Standard> relatedOccupations,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
+            // Arrange
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
-                .Setup(repository => repository.GetLatestActiveStandard(iFateReferenceNumber))
+                .Setup(repository => repository.GetLatestActiveStandard(larsCode, CourseType.Apprenticeship))
                 .ReturnsAsync(standardFromRepo);
 
             mockStandardsRepository
-                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(standardFromRepo.RelatedOccupations))
+                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumbers(standardFromRepo.RelatedOccupations, CourseType.Apprenticeship))
                 .ReturnsAsync(relatedOccupations);
 
-            var standard = await service.GetLatestActiveStandard(iFateReferenceNumber);
+            // Act
+            var standard = await service.GetLatestActiveStandard(larsCode, CourseType.Apprenticeship);
 
+            // Assert
             standard.RelatedOccupations.Should().HaveCount(relatedOccupations.Count);
             standard.RelatedOccupations.Should().BeEquivalentTo(relatedOccupations.Select(ro => new Domain.Courses.RelatedOccupation(ro.Title, ro.Level)));
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_Standard_Without_RelatedOccupations_From_The_Repository_By_IFateReferenceNumber(
-            string iFateReferenceNumber,
+        public async Task Then_Gets_Standard_Filtered_Without_RelatedOccupations_From_The_Repository_By_LarsCode(
+            string larsCode,
             Standard standardFromRepo,
             List<Standard> relatedOccupations,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
+            // Arrange
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
-                .Setup(repository => repository.GetLatestActiveStandard(iFateReferenceNumber))
+                .Setup(repository => repository.GetLatestActiveStandard(larsCode, CourseType.Apprenticeship))
                 .ReturnsAsync(standardFromRepo);
 
-            var standard = await service.GetLatestActiveStandard(iFateReferenceNumber);
+            // Act
+            var standard = await service.GetLatestActiveStandard(larsCode, CourseType.Apprenticeship);
 
+            // Assert
             standard.RelatedOccupations.Should().BeEmpty();
             mockStandardsRepository
-                .Verify(repository => repository.GetActiveStandardsByIfateReferenceNumber(It.IsAny<List<string>>()), Times.Never);
+                .Verify(repository => repository.GetActiveStandardsByIfateReferenceNumbers(It.IsAny<List<string>>(), CourseType.Apprenticeship), Times.Never);
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_Standard_With_RelatedOccupations_From_The_Repository_By_StandardUId(
+        public async Task Then_Gets_Standard_Filtered_With_RelatedOccupations_From_The_Repository_By_StandardUId(
             string standardUId,
             Standard standardFromRepo,
             List<Standard> relatedOccupations,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship.ToString();
+            // Arrange
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
-                .Setup(repository => repository.Get(standardUId))
+                .Setup(repository => repository.Get(standardUId, CourseType.Apprenticeship))
                 .ReturnsAsync(standardFromRepo);
 
             mockStandardsRepository
-                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumber(standardFromRepo.RelatedOccupations))
+                .Setup(repository => repository.GetActiveStandardsByIfateReferenceNumbers(standardFromRepo.RelatedOccupations, CourseType.Apprenticeship))
                 .ReturnsAsync(relatedOccupations);
 
-            var standard = await service.GetStandard(standardUId);
+            // Act
+            var standard = await service.GetStandard(standardUId, CourseType.Apprenticeship);
 
+            // Assert
             standard.RelatedOccupations.Should().HaveCount(relatedOccupations.Count);
             standard.RelatedOccupations.Should().BeEquivalentTo(relatedOccupations.Select(ro => new Domain.Courses.RelatedOccupation(ro.Title, ro.Level)));
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_A_Standard_From_The_Repository_By_StandardUId(
-            string standardUId,
-            Standard standardFromRepo,
-            [Frozen] Mock<IStandardRepository> mockStandardsRepository,
-            StandardsService service)
-        {
-            mockStandardsRepository
-                .Setup(repository => repository.Get(standardUId))
-                .ReturnsAsync(standardFromRepo);
-
-            var standard = await service.GetStandard(standardUId);
-
-            standard.Should().BeEquivalentTo(standardFromRepo, StandardEquivalencyAssertionOptions.ExcludingFields);
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_Returns_Null_When_No_Standard_Found_In_Repository_By_StandardUId(
-            string standardUId,
-            Standard standardFromRepo,
-            [Frozen] Mock<IStandardRepository> mockStandardsRepository,
-            StandardsService service)
-        {
-            mockStandardsRepository
-                .Setup(repository => repository.Get(standardUId))
-                .ReturnsAsync((Standard)null);
-
-            var standard = await service.GetStandard(standardUId);
-
-            standard.Should().BeNull();
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_Standard_Without_RelatedOccupations_From_The_Repository_By_StandardUId(
+        public async Task Then_Gets_Standard_Filtered_Without_RelatedOccupations_From_The_Repository_By_StandardUId(
             string standardUId,
             Standard standardFromRepo,
             List<Standard> relatedOccupations,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             StandardsService service)
         {
-            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship.ToString();
+            // Arrange
+            standardFromRepo.ApprenticeshipType = ApprenticeshipType.Apprenticeship;
             standardFromRepo.RelatedOccupations = ["ST1001", "ST1002"];
             mockStandardsRepository
-                .Setup(repository => repository.Get(standardUId))
+                .Setup(repository => repository.Get(standardUId, CourseType.Apprenticeship))
                 .ReturnsAsync(standardFromRepo);
 
-            var standard = await service.GetStandard(standardUId);
+            // Act
+            var standard = await service.GetStandard(standardUId, CourseType.Apprenticeship);
 
+
+            // Assert
             standard.RelatedOccupations.Should().BeEmpty();
             mockStandardsRepository
-                .Verify(repository => repository.GetActiveStandardsByIfateReferenceNumber(It.IsAny<List<string>>()), Times.Never);
+                .Verify(repository => repository.GetActiveStandardsByIfateReferenceNumbers(It.IsAny<List<string>>(), CourseType.Apprenticeship), Times.Never);
         }
     }
 }

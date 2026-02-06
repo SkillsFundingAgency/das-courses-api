@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
-    public class Qualification
+    /*public class Qualification
     {
         [JsonProperty("qualificationId")]
         public string QualificationId { get; set; }
@@ -16,5 +16,5 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         [JsonProperty("anyAdditionalInformation")]
         public string AnyAdditionalInformation { get; set; }
-    }
+    }*/
 }

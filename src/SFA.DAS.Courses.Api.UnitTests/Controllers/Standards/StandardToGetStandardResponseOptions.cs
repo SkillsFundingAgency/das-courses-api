@@ -4,7 +4,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 {
     public static class StandardToGetStandardResponseOptions
     {
-        public static EquivalencyAssertionOptions<Domain.Courses.Standard> Exclusions(EquivalencyAssertionOptions<Domain.Courses.Standard> config) => config
+        public static EquivalencyAssertionOptions<Domain.Courses.Standard> ExclusionsGetStandardResponse(EquivalencyAssertionOptions<Domain.Courses.Standard> config) => config
             .Excluding(s => s.AssessmentPlanUrl)
             .Excluding(s => s.VersionDetail)
             .Excluding(s => s.EqaProvider)
@@ -17,5 +17,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             .Excluding(c => c.IsRegulatedForEPAO)
             .Excluding(c => c.RelatedOccupations);
 
+        public static EquivalencyAssertionOptions<Domain.Courses.Standard> ExclusionsForGetStandardDetailResponse(EquivalencyAssertionOptions<Domain.Courses.Standard> config) => config
+            .Excluding(t => t.Options);
     }
 }

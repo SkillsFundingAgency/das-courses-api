@@ -4,8 +4,8 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.RequiredFieldPresentValidatorTests;
 
@@ -29,7 +29,7 @@ public class FoundationTypeRequiredFieldValidationTests
             }),
             VersionEarliestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
             Keywords = new Settable<List<string>>(new List<string>()),
-            LarsCode = new Settable<int>(12345),
+            LarsCode = new Settable<string>("12345"),
             VersionLatestEndDate = new Settable<DateTime?>(DateTime.UtcNow),
             VersionLatestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
             Level = new Settable<int>(5),

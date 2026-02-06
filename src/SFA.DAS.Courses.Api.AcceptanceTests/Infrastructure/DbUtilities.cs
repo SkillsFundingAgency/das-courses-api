@@ -11,509 +11,616 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 {
     public static class DbUtilities
     {
+        public static Dictionary<string, List<Standard>> Standards = [];
+        public static List<Route> Routes = [];
+        public static List<SectorSubjectAreaTier2> SectorSubjectAreaTier2s = [];
+
         public static void LoadTestData(CoursesDataContext context)
         {
-            context.Routes.AddRange(GetTestRoutes().ToList());
-            context.SectorSubjectAreaTier2.AddRange(GetSectorSubjectAreaTier2Items());
-            context.Standards.AddRange(GetValidTestStandards());
-            context.Standards.AddRange(GetInValidTestStandards());
-            context.Standards.AddRange(GetNotYetApprovedTestStandards());
-            context.Standards.AddRange(GetOlderVersionsOfStandards());
-            context.Standards.AddRange(GetWithdrawnStandards());
+            LoadTestRoutes();
+            LoadSectorSubjectAreaTier2Items();
+
+            context.Routes.AddRange(Routes);
+            context.SectorSubjectAreaTier2.AddRange(SectorSubjectAreaTier2s);
+
+            context.Standards.AddRange(LoadValidTestStandards(Routes));
+            context.Standards.AddRange(LoadInValidTestStandards(Routes));
+            context.Standards.AddRange(LoadNotYetApprovedTestStandards(Routes));
+            context.Standards.AddRange(LoadOlderVersionsOfStandards(Routes));
+            context.Standards.AddRange(LoadWithdrawnStandards(Routes));
+
             context.Frameworks.AddRange(GetFrameworks());
             context.SaveChanges();
         }
 
-        public static void ClearTestData(CoursesDataContext context)
+        private static void LoadSectorSubjectAreaTier2Items()
         {
-            context.Standards.RemoveRange(context.Standards.ToList());
-            context.SectorSubjectAreaTier2.RemoveRange(context.SectorSubjectAreaTier2.ToList());
-            context.Frameworks.RemoveRange(context.Frameworks.ToList());
-            context.SaveChanges();
-        }
-
-        public static IEnumerable<SectorSubjectAreaTier2> GetSectorSubjectAreaTier2Items()
-        {
-            return new List<SectorSubjectAreaTier2>
+            if (SectorSubjectAreaTier2s.Count == 0)
             {
-                new SectorSubjectAreaTier2
-                {
-                    EffectiveFrom = DateTime.Today,
-                    SectorSubjectAreaTier2Desc = "Test Sector",
-                    SectorSubjectAreaTier2 = 1m,
-                    Name = "Test Sector"
-                },
-                new SectorSubjectAreaTier2
-                {
-                    EffectiveFrom = DateTime.Today,
-                    SectorSubjectAreaTier2Desc = "Test Sector 2",
-                    SectorSubjectAreaTier2 = 1.1m,
-                    Name = "Test Sector 2"
-                }
-            };
+                SectorSubjectAreaTier2s.AddRange(
+                    new List<SectorSubjectAreaTier2>
+                    {
+                        new SectorSubjectAreaTier2
+                        {
+                            EffectiveFrom = DateTime.Today,
+                            SectorSubjectAreaTier2Desc = "Test Sector",
+                            SectorSubjectAreaTier2 = 1m,
+                            Name = "Test Sector"
+                        },
+                        new SectorSubjectAreaTier2
+                        {
+                            EffectiveFrom = DateTime.Today,
+                            SectorSubjectAreaTier2Desc = "Test Sector 2",
+                            SectorSubjectAreaTier2 = 1.1m,
+                            Name = "Test Sector 2"
+                        }
+                    });
+            }
         }
 
         public static IEnumerable<Route> GetTestRoutes()
         {
-            return new List<Route>
+            return Routes;
+        }
+
+        public static void LoadTestRoutes()
+        {
+            if(Routes.Count == 0)
             {
-                new Route
-                {
-                    Name = "Engineering and manufacturing",
-                    Id = 1,
-                    Active = true
-                },
-                new Route
-                {
-                    Name = "Construction",
-                    Id = 2,
-                    Active = true
-                },
-                new Route
-                {
-                    Name = "Creative and design",
-                    Id = 3,
-                    Active = true
-                }
-            };
+                Routes.AddRange(
+                    new List<Route>
+                    {
+                        new Route
+                        {
+                            Name = "Engineering and manufacturing",
+                            Id = 1,
+                            Active = true
+                        },
+                        new Route
+                        {
+                            Name = "Construction",
+                            Id = 2,
+                            Active = true
+                        },
+                        new Route
+                        {
+                            Name = "Creative and design",
+                            Id = 3,
+                            Active = true
+                        }
+                    });
+            }
         }
 
         public static IEnumerable<Standard> GetValidTestStandards()
         {
-            var routes = GetTestRoutes().ToList();
-            var subjectSectorArea = GetSectorSubjectAreaTier2Items().ToList();
-            return new List<Standard>
+            return Standards[nameof(GetValidTestStandards)];
+        }
+
+
+        private static IEnumerable<Standard> LoadValidTestStandards(IReadOnlyList<Route> routes)
+        {
+            if (!Standards.ContainsKey(nameof(GetValidTestStandards)))
             {
-                new Standard
-                {
-                    LarsCode = 1,
-                    StandardUId = "ST0001_1.3",
-                    IfateReferenceNumber = "ST0001",
-                    Title = "Head Brewer",
-                    Keywords = "Head, Brewer, Beer",
-                    TypicalJobTitles = "Overseer of brewery operations",
-                    Level = 2,
-                    RouteCode = routes[0].Id,
-                    LarsStandard = new LarsStandard
+                Standards.Add(nameof(GetValidTestStandards),
+                    new List<Standard>
                     {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LastDateStarts = null,
-                        LarsCode = 1,
-                        SectorSubjectAreaTier2 = 1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.3",
-                    Options = new List<StandardOption>
-                    {
-                        StandardOption.Create("Beer"),
-                        StandardOption.Create("Cider"),
-                    },
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 2,
-                    StandardUId = "ST0002_1.0",
-                    IfateReferenceNumber = "ST0002",
-                    Title = "Brewer",
-                    Keywords = "Brewer, Beer",
-                    TypicalJobTitles = "Brewery operations",
-                    Level = 1,
-                    RouteCode = routes[0].Id,
-                    LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LastDateStarts = null,
-                        LarsCode = 2,
-                        SectorSubjectAreaTier2 = 1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Options = new List<StandardOption> { StandardOption.Create("core") },
-                    Status = "Approved for delivery",
-                    Version = "1.0",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 3,
-                    StandardUId = "ST0003_1.0",
-                    IfateReferenceNumber = "ST0003",
-                    Title = "Senior / head of facilities management (degree)",
-                    Keywords = "Head",
-                    TypicalJobTitles = "Overseer of brewery operations",
-                    Level = 6,
-                    RouteCode = routes[1].Id,
-                    LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LastDateStarts = null,
-                        LarsCode = 3,
-                        SectorSubjectAreaTier2 = 1.1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.0",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 4,
-                    StandardUId = "ST0004_1.0",
-                    IfateReferenceNumber = "ST0004",
-                    Title = "Dentist",
-                    Keywords = "Dentist|Dentistry",
-                    TypicalJobTitles = "Dentist",
-                    Level = 7,
-                    RouteCode = routes[1].Id,
-                    LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LastDateStarts = null,
-                        LarsCode = 4,
-                        SectorSubjectAreaTier2 = 1.1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.0",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 5,
-                    StandardUId = "ST0005_1.1",
-                    IfateReferenceNumber = "ST0005",
-                    Title = "Photographic assistant SortOrder",
-                    Keywords = null,
-                    TypicalJobTitles = "Assistant Photographer|Photographic Technician",
-                    Level = 3,
-                    RouteCode = routes[2].Id,
-                    LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LastDateStarts = null,
-                        LarsCode = 5,
-                        SectorSubjectAreaTier2 = 1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.1",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 6,
-                    StandardUId = "ST0006_1.0",
-                    IfateReferenceNumber = "ST0006",
-                    Title = "Camera prep technician",
-                    Keywords = "SortOrder",
-                    TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
-                    Level = 3,
-                    RouteCode = routes[2].Id,
-                    LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LastDateStarts = null,
-                        LarsCode = 6,
-                        SectorSubjectAreaTier2 = 1.1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.0",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 7,
-                    StandardUId = "ST0007_1.0",
-                    IfateReferenceNumber = "ST0007",
-                    Title = "Junior animator SortOrder",
-                    Keywords = "SortOrder",
-                    TypicalJobTitles = "Junior animator|SortOrder",
-                    Level = 4,
-                    RouteCode = routes[2].Id,
-                    LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LastDateStarts = null,
-                        LarsCode = 7,
-                        SectorSubjectAreaTier2 = 1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.0",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 8,
-                    StandardUId = "ST0008_1.0",
-                    IfateReferenceNumber = "ST0008",
-                    Title = "Standard with option mapped KSBs",
-                    Level = 3,
-                    RouteCode = routes[2].Id,
-                    LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(-1),
-                        LarsCode = 8,
-                        SectorSubjectAreaTier2 = 1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.0",
-                    Options = new List<StandardOption>
-                    {
-                        StandardOption.Create(
-                            Guid.NewGuid(),
-                            "Option 1",
-                            new List<Ksb>
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "1",
+                            StandardUId = "ST0001_1.3",
+                            IfateReferenceNumber = "ST0001",
+                            Title = "Head Brewer",
+                            Keywords = "Head, Brewer, Beer",
+                            TypicalJobTitles = "Overseer of brewery operations",
+                            Level = 2,
+                            RouteCode = routes[0].Id,
+                            Route = routes[0],
+                            LarsStandard = new LarsStandard
                             {
-                                Ksb.Knowledge(Guid.NewGuid(), 1, "core_knowledge_1"),
-                                Ksb.Knowledge(Guid.NewGuid(), 2, "core_knowledge_2"),
-                                Ksb.Knowledge(Guid.NewGuid(), 3, "opt1_knowledge_3"),
-                                Ksb.Skill(Guid.NewGuid(), 1, "core_skill_1"),
-                                Ksb.Behaviour(Guid.NewGuid(), 1, "opt1_behaviour_1"),
-                            }),
-                        StandardOption.Create(
-                            "Option 2")
-                    },
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                }
-            };
+                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                LastDateStarts = null,
+                                LarsCode = "1",
+                                SectorSubjectAreaTier2 = 1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.3",
+                            Options = new List<StandardOption>
+                            {
+                                StandardOption.Create(Guid.NewGuid(), "Beer", [Ksb.Skill(Guid.NewGuid(), 1, "BeerDetail")]),
+                                StandardOption.Create(Guid.NewGuid(), "Cider", [Ksb.Skill(Guid.NewGuid(), 1, "CiderDetail")]),
+                            },
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "2",
+                            StandardUId = "ST0002_1.0",
+                            IfateReferenceNumber = "ST0002",
+                            Title = "Brewer",
+                            Keywords = "Brewer, Beer",
+                            TypicalJobTitles = "Brewery operations",
+                            Level = 1,
+                            RouteCode = routes[0].Id,
+                            Route = routes[0],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                LastDateStarts = null,
+                                LarsCode = "2",
+                                SectorSubjectAreaTier2 = 1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Options = new List<StandardOption> { StandardOption.Create("core") },
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "3",
+                            StandardUId = "ST0003_1.0",
+                            IfateReferenceNumber = "ST0003",
+                            Title = "Senior / head of facilities management (degree)",
+                            Keywords = "Head",
+                            TypicalJobTitles = "Overseer of brewery operations",
+                            Level = 6,
+                            RouteCode = routes[1].Id,
+                            Route = routes[1],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                LastDateStarts = null,
+                                LarsCode = "3",
+                                SectorSubjectAreaTier2 = 1.1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "4",
+                            StandardUId = "ST0004_1.0",
+                            IfateReferenceNumber = "ST0004",
+                            Title = "Dentist",
+                            Keywords = "Dentist|Dentistry",
+                            TypicalJobTitles = "Dentist",
+                            Level = 7,
+                            RouteCode = routes[1].Id,
+                            Route = routes[1],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                LastDateStarts = null,
+                                LarsCode = "4",
+                                SectorSubjectAreaTier2 = 1.1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "5",
+                            StandardUId = "ST0005_1.1",
+                            IfateReferenceNumber = "ST0005",
+                            Title = "Photographic assistant SortOrder",
+                            Keywords = null,
+                            TypicalJobTitles = "Assistant Photographer|Photographic Technician",
+                            Level = 3,
+                            RouteCode = routes[2].Id,
+                            Route = routes[2],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                LastDateStarts = null,
+                                LarsCode = "5",
+                                SectorSubjectAreaTier2 = 1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.1",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "6",
+                            StandardUId = "ST0006_1.0",
+                            IfateReferenceNumber = "ST0006",
+                            Title = "Camera prep technician",
+                            Keywords = "SortOrder",
+                            TypicalJobTitles = "Camera prep technician|Camera equipment technician|",
+                            Level = 3,
+                            RouteCode = routes[2].Id,
+                            Route = routes[2],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                LastDateStarts = null,
+                                LarsCode = "6",
+                                SectorSubjectAreaTier2 = 1.1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "7",
+                            StandardUId = "ST0007_1.0",
+                            IfateReferenceNumber = "ST0007",
+                            Title = "Junior animator SortOrder",
+                            Keywords = "SortOrder",
+                            TypicalJobTitles = "Junior animator|SortOrder",
+                            Level = 4,
+                            RouteCode = routes[2].Id,
+                            Route = routes[2],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                LastDateStarts = null,
+                                LarsCode = "7",
+                                SectorSubjectAreaTier2 = 1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "8",
+                            StandardUId = "ST0008_1.0",
+                            IfateReferenceNumber = "ST0008",
+                            Title = "Standard with option mapped KSBs",
+                            Level = 3,
+                            RouteCode = routes[2].Id,
+                            Route = routes[2],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                LarsCode = "8",
+                                SectorSubjectAreaTier2 = 1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            Options = new List<StandardOption>
+                            {
+                                StandardOption.Create(
+                                    Guid.NewGuid(),
+                                    "Option 1",
+                                    [
+                                        Ksb.Knowledge(Guid.NewGuid(), 1, "core_knowledge_1"),
+                                        Ksb.Knowledge(Guid.NewGuid(), 2, "core_knowledge_2"),
+                                        Ksb.Knowledge(Guid.NewGuid(), 3, "opt1_knowledge_3"),
+                                        Ksb.Skill(Guid.NewGuid(), 1, "core_skill_1"),
+                                        Ksb.Behaviour(Guid.NewGuid(), 1, "opt1_behaviour_1"),
+                                    ]),
+                                StandardOption.Create(
+                                    "Option 2")
+                            },
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        }
+                    });
+            }
+
+            return GetValidTestStandards();
         }
 
         public static IEnumerable<Standard> GetInValidTestStandards()
         {
-            var routes = GetTestRoutes().ToList();
-            return new List<Standard>
+            return Standards[nameof(GetInValidTestStandards)];
+        }
+
+        private static IEnumerable<Standard> LoadInValidTestStandards(IReadOnlyList<Route> routes)
+        {
+            if (!Standards.ContainsKey(nameof(GetInValidTestStandards)))
             {
-                new Standard
-                {
-                    LarsCode = 11,
-                    StandardUId = "ST0011_1.0",
-                    IfateReferenceNumber = "ST0011",
-                    Title = "Structural Engineer - invalid",
-                    Keywords = "building, structural, engineer",
-                    TypicalJobTitles = "Structural Engineer",
-                    Level = 2,
-                    RouteCode = routes[0].Id,
-                    LarsStandard = new LarsStandard
+                Standards.Add(nameof(GetInValidTestStandards),
+                    new List<Standard>
                     {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(1),
-                        LarsCode = 11,
-                        SectorSubjectAreaTier2 = 1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.0",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 14,
-                    StandardUId = "ST0014_1.0",
-                    IfateReferenceNumber = "ST0014",
-                    Title = "Dentist - invalid",
-                    Keywords = "Dentist|Dentistry",
-                    TypicalJobTitles = "Dentist",
-                    Level = 7,
-                    RouteCode = routes[1].Id,
-                    LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddDays(1),
-                        LarsCode = 14,
-                        SectorSubjectAreaTier2 = 1m,
-                        SectorSubjectAreaTier1 = 1
-                    },
-                    Status = "Approved for delivery",
-                    Version = "1.0",
-                    Options = new List<StandardOption>
-                    {
-                        StandardOption.Create("Cosmetic"),
-                        StandardOption.Create("Orthodontist"),
-                    },
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                }
-            };
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "11",
+                            StandardUId = "ST0011_1.0",
+                            IfateReferenceNumber = "ST0011",
+                            Title = "Structural Engineer - invalid",
+                            Keywords = "building, structural, engineer",
+                            TypicalJobTitles = "Structural Engineer",
+                            Level = 2,
+                            RouteCode = routes[0].Id,
+                            Route = routes[0],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(1),
+                                LarsCode = "11",
+                                SectorSubjectAreaTier2 = 1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "14",
+                            StandardUId = "ST0014_1.0",
+                            IfateReferenceNumber = "ST0014",
+                            Title = "Dentist - invalid",
+                            Keywords = "Dentist|Dentistry",
+                            TypicalJobTitles = "Dentist",
+                            Level = 7,
+                            RouteCode = routes[1].Id,
+                            Route = routes[1],
+                            LarsStandard = new LarsStandard
+                            {
+                                EffectiveFrom = DateTime.UtcNow.AddDays(1),
+                                LarsCode = "14",
+                                SectorSubjectAreaTier2 = 1m,
+                                SectorSubjectAreaTier1 = 1
+                            },
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            Options = new List<StandardOption>
+                            {
+                                StandardOption.Create("Cosmetic"),
+                                StandardOption.Create("Orthodontist"),
+                            },
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        }
+                    });
+            }
+
+            return GetInValidTestStandards();
         }
 
         public static IEnumerable<Standard> GetNotYetApprovedTestStandards()
         {
-            var routes = GetTestRoutes().ToList();
-            return new List<Standard>
+            return Standards[nameof(GetNotYetApprovedTestStandards)];
+        }
+
+        private static IEnumerable<Standard> LoadNotYetApprovedTestStandards(IReadOnlyList<Route> routes)
+        {
+            if (!Standards.ContainsKey(nameof(GetNotYetApprovedTestStandards)))
             {
-                new Standard
-                {
-                    LarsCode = 0,
-                    StandardUId = "ST0015_1.0",
-                    IfateReferenceNumber = "ST0015",
-                    Title = "Assistant Brewer - Proposal in development",
-                    Keywords = "Head, Brewer, Beer",
-                    TypicalJobTitles = "Assistant of brewery operations",
-                    Level = 1,
-                    RouteCode = routes[0].Id,
-                    LarsStandard = null,
-                    Status = "Proposal in development",
-                    Version = "1.1",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                 new Standard
-                {
-                    LarsCode = 0,
-                    StandardUId = "ST0016_1.0",
-                    IfateReferenceNumber = "ST0016",
-                    Title = "Metallurgy Engineer - In development",
-                    Keywords = "Metallurgy, Engineer, Metal",
-                    TypicalJobTitles = "Metallurgy Engineer",
-                    Level = 4,
-                    RouteCode = routes[0].Id,
-                    LarsStandard = null,
-                    Status = "In development",
-                    Version = "1.0",
-                    Options = new List<StandardOption>
+                Standards.Add(nameof(GetNotYetApprovedTestStandards),
+                    new List<Standard>
                     {
-                        StandardOption.Create("Ferrous"),
-                        StandardOption.Create("Non-ferroes"),
-                    },
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                }
-            };
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "0",
+                            StandardUId = "ST0015_1.0",
+                            IfateReferenceNumber = "ST0015",
+                            Title = "Assistant Brewer - Proposal in development",
+                            Keywords = "Head, Brewer, Beer",
+                            TypicalJobTitles = "Assistant of brewery operations",
+                            Level = 1,
+                            RouteCode = routes[0].Id,
+                            Route = routes[0],
+                            LarsStandard = null,
+                            Status = "Proposal in development",
+                            Version = "1.1",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                         new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "0",
+                            StandardUId = "ST0016_1.0",
+                            IfateReferenceNumber = "ST0016",
+                            Title = "Metallurgy Engineer - In development",
+                            Keywords = "Metallurgy, Engineer, Metal",
+                            TypicalJobTitles = "Metallurgy Engineer",
+                            Level = 4,
+                            RouteCode = routes[0].Id,
+                            Route = routes[0],
+                            LarsStandard = null,
+                            Status = "In development",
+                            Version = "1.0",
+                            Options = new List<StandardOption>
+                            {
+                                StandardOption.Create("Ferrous"),
+                                StandardOption.Create("Non-ferroes"),
+                            },
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        }
+                    });
+            }
+
+            return GetNotYetApprovedTestStandards();
         }
 
         public static IEnumerable<Standard> GetWithdrawnStandards()
         {
-            var routes = GetTestRoutes().ToList();
-            return new List<Standard>
-            {
-                new Standard
-                {
-                    LarsCode = 0,
-                    StandardUId = "ST0030_1.0",
-                    IfateReferenceNumber = "ST0030",
-                    Title = "Assistant Brewer - Withdrawn",
-                    Keywords = "Head, Brewer, Beer",
-                    TypicalJobTitles = "Assistant of brewery operations",
-                    Level = 1,
-                    RouteCode = routes[0].Id,
-                    LarsStandard = null,
-                    Status = "Withdrawn",
-                    Version = "1.0",
-                    Options = new List<StandardOption>
-                    {
-                        StandardOption.Create("Wine"),
-                        StandardOption.Create("Spirits"),
-                    },
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                }
-            };
+            return Standards[nameof(GetWithdrawnStandards)];
         }
+
+        private static IEnumerable<Standard> LoadWithdrawnStandards(IReadOnlyList<Route> routes)
+        {
+            if (!Standards.ContainsKey(nameof(GetWithdrawnStandards)))
+            {
+                Standards.Add(nameof(GetWithdrawnStandards),
+                    new List<Standard>
+                    {
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "0",
+                            StandardUId = "ST0030_1.0",
+                            IfateReferenceNumber = "ST0030",
+                            Title = "Assistant Brewer - Withdrawn",
+                            Keywords = "Head, Brewer, Beer",
+                            TypicalJobTitles = "Assistant of brewery operations",
+                            Level = 1,
+                            RouteCode = routes[0].Id,
+                            Route = routes[0],
+                            LarsStandard = null,
+                            Status = "Withdrawn",
+                            Version = "1.0",
+                            Options = new List<StandardOption>
+                            {
+                                StandardOption.Create("Wine"),
+                                StandardOption.Create("Spirits"),
+                            },
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        }
+                    });
+            }
+
+            return GetWithdrawnStandards();
+        }
+
         public static IEnumerable<Standard> GetOlderVersionsOfStandards()
         {
-            var routes = GetTestRoutes().ToList();
-            return new List<Standard>
+            return Standards[nameof(GetOlderVersionsOfStandards)];
+        }
+
+        private static IEnumerable<Standard> LoadOlderVersionsOfStandards(IReadOnlyList<Route> routes)
+        {
+            if (!Standards.ContainsKey(nameof(GetOlderVersionsOfStandards)))
             {
-                new Standard
-                {
-                    LarsCode = 1,
-                    StandardUId = "ST0001_1.2",
-                    IfateReferenceNumber = "ST0001",
-                    Title = "Head Brewer",
-                    Keywords = "Head, Brewer, Beer",
-                    TypicalJobTitles = "Overseer of brewery operations",
-                    Level = 2,
-                    RouteCode = routes[0].Id,
-                    Status = "Retired",
-                    Version = "1.2",
-                    Options = new List<StandardOption>
+                Standards.Add(nameof(GetOlderVersionsOfStandards),
+                    new List<Standard>
                     {
-                        StandardOption.Create("Beer"),
-                        StandardOption.Create("Cider"),
-                    },
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 1,
-                    StandardUId = "ST0001_1.1",
-                    IfateReferenceNumber = "ST0001",
-                    Title = "Head Brewer",
-                    Keywords = "Head, Brewer, Beer",
-                    TypicalJobTitles = "Overseer of brewery operations",
-                    Level = 2,
-                    RouteCode = routes[0].Id,
-                    Status = "Retired",
-                    Version = "1.1",
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 5,
-                    StandardUId = "ST0005_1.0",
-                    IfateReferenceNumber = "ST0005",
-                    Title = "Photographic assistant SortOrder",
-                    Keywords = null,
-                    TypicalJobTitles = "Assistant Photographer|Photographic Technician",
-                    Level = 3,
-                    RouteCode = routes[2].Id,
-                    Status = "Retired",
-                    Version = "1.0",
-                    Options = new List<StandardOption>
-                    {
-                        StandardOption.Create("Studio"),
-                        StandardOption.Create("Landscape"),
-                    },
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                },
-                new Standard
-                {
-                    LarsCode = 99,
-                    StandardUId = "ST0099_1.0",
-                    IfateReferenceNumber = "ST0099",
-                    Title = "Photographic assistant",
-                    Keywords = null,
-                    TypicalJobTitles = "Assistant Photographer|Photographic Technician",
-                    Level = 3,
-                    RouteCode = routes[2].Id,
-                    Status = "Retired",
-                    Version = "1.0",
-                    Options = new List<StandardOption>
-                    {
-                        StandardOption.Create("Studio"),
-                        StandardOption.Create("Landscape"),
-                    },
-                    OverviewOfRole = "test",
-                    StandardPageUrl = "https://tempuri.org"
-                }
-            };
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "1",
+                            StandardUId = "ST0001_1.2",
+                            IfateReferenceNumber = "ST0001",
+                            Title = "Head Brewer",
+                            Keywords = "Head, Brewer, Beer",
+                            TypicalJobTitles = "Overseer of brewery operations",
+                            Level = 2,
+                            RouteCode = routes[0].Id,
+                            Route = routes[0],
+                            Status = "Retired",
+                            Version = "1.2",
+                            Options = new List<StandardOption>
+                            {
+                                StandardOption.Create("Beer"),
+                                StandardOption.Create("Cider"),
+                            },
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "1",
+                            StandardUId = "ST0001_1.1",
+                            IfateReferenceNumber = "ST0001",
+                            Title = "Head Brewer",
+                            Keywords = "Head, Brewer, Beer",
+                            TypicalJobTitles = "Overseer of brewery operations",
+                            Level = 2,
+                            RouteCode = routes[0].Id,
+                            Route = routes[0],
+                            Status = "Retired",
+                            Version = "1.1",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "5",
+                            StandardUId = "ST0005_1.0",
+                            IfateReferenceNumber = "ST0005",
+                            Title = "Photographic assistant SortOrder",
+                            Keywords = null,
+                            TypicalJobTitles = "Assistant Photographer|Photographic Technician",
+                            Level = 3,
+                            RouteCode = routes[2].Id,
+                            Route = routes[2],
+                            Status = "Retired",
+                            Version = "1.0",
+                            Options = new List<StandardOption>
+                            {
+                                StandardOption.Create("Studio"),
+                                StandardOption.Create("Landscape"),
+                            },
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
+                            LarsCode = "99",
+                            StandardUId = "ST0099_1.0",
+                            IfateReferenceNumber = "ST0099",
+                            Title = "Photographic assistant",
+                            Keywords = null,
+                            TypicalJobTitles = "Assistant Photographer|Photographic Technician",
+                            Level = 3,
+                            RouteCode = routes[2].Id,
+                            Route = routes[2],
+                            Status = "Retired",
+                            Version = "1.0",
+                            Options = new List<StandardOption>
+                            {
+                                StandardOption.Create("Studio"),
+                                StandardOption.Create("Landscape"),
+                            },
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
+                        }
+                    });
+            }
+
+            return GetOlderVersionsOfStandards();
         }
 
         public static IEnumerable<Standard> GetAllTestStandards()
         {
-            var combinedStandards = new List<Standard>();
-
-            combinedStandards.AddRange(GetValidTestStandards());
-            combinedStandards.AddRange(GetInValidTestStandards());
-            combinedStandards.AddRange(GetNotYetApprovedTestStandards());
-            combinedStandards.AddRange(GetOlderVersionsOfStandards());
-            combinedStandards.AddRange(GetWithdrawnStandards());
-
-            return combinedStandards;
+            return Standards.Values.SelectMany(p => p);
         }
 
         public static IEnumerable<Framework> GetFrameworks()

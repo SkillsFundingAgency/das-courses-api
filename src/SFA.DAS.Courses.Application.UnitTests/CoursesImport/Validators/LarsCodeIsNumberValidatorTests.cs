@@ -3,8 +3,8 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 {
@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 {
                     ReferenceNumber = new Settable<string>("ST001"),
                     Version = new Settable<string>("1.0"),
-                    LarsCode = new Settable<int>(12345)
+                    LarsCode = new Settable<string>("12345")
                 }
             };
 
@@ -50,7 +50,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 {
                     ReferenceNumber = new Settable<string>("ST002"),
                     Version = new Settable<string>("2.0"),
-                    LarsCode = Settable<int>.FromInvalidValue("NotANumber")
+                    LarsCode = Settable<string>.FromInvalidValue("NotANumber")
                 }
             };
 

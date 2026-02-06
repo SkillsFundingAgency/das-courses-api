@@ -6,7 +6,7 @@ using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class StatusValidValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class StatusValidValidator : ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>
     {
         public StatusValidValidator()
             : base(ValidationFailureType.StandardError)

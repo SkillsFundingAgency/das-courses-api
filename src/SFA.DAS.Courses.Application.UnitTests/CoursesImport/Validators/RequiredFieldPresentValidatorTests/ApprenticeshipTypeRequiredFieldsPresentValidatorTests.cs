@@ -6,8 +6,8 @@ using FluentValidation.TestHelper;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.RequiredFieldPresentValidatorTests
 {
@@ -49,7 +49,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.Require
                 Knowledges = new Settable<List<Knowledge>>(new List<Knowledge>()),
                 VersionLatestEndDate = new Settable<DateTime?>(DateTime.UtcNow),
                 VersionLatestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
-                LarsCode = new Settable<int>(12345),
+                LarsCode = new Settable<string>("12345"),
                 Level = new Settable<int>(5),
                 ProposedMaxFunding = new Settable<int>(5000),
                 Options = new Settable<List<Option>>(new List<Option>()),

@@ -15,7 +15,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 {
     public class StandardsImportService : IStandardsImportService
     {
-        private readonly IInstituteOfApprenticeshipService _instituteOfApprenticeshipService;
+        private readonly ISkillsEnglandService _skillsEnglandService;
         private readonly IStandardImportRepository _standardImportRepository;
         private readonly IStandardRepository _standardRepository;
         private readonly IImportAuditRepository _auditRepository;
@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private static readonly SemaphoreSlim _semaphoreImport = new SemaphoreSlim(1, 1);
 
         public StandardsImportService(
-            IInstituteOfApprenticeshipService instituteOfApprenticeshipService,
+            ISkillsEnglandService skillsEnglandService,
             IStandardImportRepository standardImportRepository,
             IStandardRepository standardRepository,
             IImportAuditRepository auditRepository,
@@ -37,7 +37,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             ISlackNotificationService slackNotificationService,
             ILogger<StandardsImportService> logger)
         {
-            _instituteOfApprenticeshipService = instituteOfApprenticeshipService;
+            _skillsEnglandService = skillsEnglandService;
             _standardImportRepository = standardImportRepository;
             _standardRepository = standardRepository;
             _auditRepository = auditRepository;
@@ -57,31 +57,35 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 {
                     _logger.LogInformation("{MethodName} - starting", nameof(ImportDataIntoStaging));
 
-                    var standards = await _instituteOfApprenticeshipService.GetStandards();
+                    var standards = await _skillsEnglandService.GetStandards();
                     var importedStandards = RemoveIndevelopmentVersions(standards);
 
                     _logger.LogInformation("{MethodName} - Retrieved Apprenticeships: {ApprenticeshipsCount} Foundation: {FoundationCount}", nameof(ImportDataIntoStaging), importedStandards.Count(c => c.ApprenticeshipType == ApprenticeshipType.Apprenticeship), importedStandards.Count(c => c.ApprenticeshipType == ApprenticeshipType.FoundationApprenticeship));
 
                     // if there are any missing fields in any standard or 
                     var validationFailures = new Dictionary<string, ValidationFailures>();
-                    ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.Standard>> { { "All", importedStandards } },
+                    ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.SkillsEngland.Standard>> { { "All", importedStandards } },
                         validationFailures, [new RequiredFieldsPresentValidator(), new ReferenceNumberFormatValidator(), new VersionFormatValidator()]);
 
                     var hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
                     if (!hasValidationErrors)
                     {
                         var currentRoutes = await _routeRepository.GetAll();
-                        var currentStandards = await _standardRepository.GetStandards();
+                        var currentStandards = await _standardRepository.GetStandards(null);
 
                         var routeImports = await PrepareRouteImports(GetDistinctRoutes(importedStandards));
                         var groupedImportedStandards = GroupImportedStandards(importedStandards, routeImports);
 
+                        // first the standard groups are validated between versions, invalid standard groups are replaced by retaining those previously imported
                         Dictionary<string, List<StandardImport>> validStandardImports = IndividuallyValidateStandardGroups(groupedImportedStandards, currentStandards, currentRoutes, validationFailures);
                         validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
 
-                        // cross validation must include the retained standards after individual validation
+                        // then the standard groups are cross validated with eachother, invalid standard groups are again replaced by retaining those previously imported
                         validStandardImports = CrossValidateStandardGroups(validStandardImports, validationFailures);
                         validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
+
+                        // finally the standard groups are assessed to determine which version is the latest
+                        validStandardImports = PopulateIsLatestVersions(validStandardImports);
 
                         hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
                         if (!hasValidationErrors)
@@ -192,7 +196,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
         }
 
-        private static List<Domain.ImportTypes.Standard> RemoveIndevelopmentVersions(IEnumerable<Domain.ImportTypes.Standard> standards)
+        private static List<Domain.ImportTypes.SkillsEngland.Standard> RemoveIndevelopmentVersions(IEnumerable<Domain.ImportTypes.SkillsEngland.Standard> standards)
         {
             var inDevelopmentStatuses = new List<string> { Domain.Courses.Status.InDevelopment, Domain.Courses.Status.ProposalInDevelopment };
 
@@ -225,6 +229,31 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             return validStandardImports.Concat(groupedCurrentStandardsToRetain).ToDictionary();
         }
 
+        private static Dictionary<string, List<StandardImport>> PopulateIsLatestVersions(Dictionary<string, List<StandardImport>> validStandardImports)
+        {
+            if (validStandardImports == null || validStandardImports.Count == 0)
+                return validStandardImports ?? [];
+
+            foreach (var standards in validStandardImports.Values)
+            {
+                if (standards == null || standards.Count == 0)
+                    continue;
+
+                var ordered = standards
+                    .OrderByDescending(s => s.Version.ParseVersion())
+                    .ToList();
+
+                var latestVersion = ordered[0].Version.ParseVersion();
+                foreach (var s in ordered)
+                {
+                    s.IsLatestVersion = s.Version.ParseVersion().Equals(latestVersion);
+                }
+            }
+
+            return validStandardImports;
+        }
+
+
         private async Task<int> LoadStandardDataFromStaging()
         {
             var standardImports = (await _standardImportRepository.GetAll())
@@ -252,7 +281,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             return await _routeRepository.InsertMany(routesToImport.Select(c => (Route)c).ToList());
         }
 
-        private static List<Domain.ImportTypes.Route> GetDistinctRoutes(List<Domain.ImportTypes.Standard> standards)
+        private static List<Domain.ImportTypes.Route> GetDistinctRoutes(List<Domain.ImportTypes.SkillsEngland.Standard> standards)
         {
             return standards
                 .Where(c => (c.Status.Value?.Equals(Domain.Courses.Status.ApprovedForDelivery, StringComparison.CurrentCultureIgnoreCase) ?? false) &&
@@ -264,7 +293,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 .ToList();
         }
 
-        private static Dictionary<string, List<Domain.ImportTypes.Standard>> GroupImportedStandards(List<Domain.ImportTypes.Standard> importedStandards, List<RouteImport> routes)
+        private static Dictionary<string, List<Domain.ImportTypes.SkillsEngland.Standard>> GroupImportedStandards(List<Domain.ImportTypes.SkillsEngland.Standard> importedStandards, List<RouteImport> routes)
         {
             UpdateStandardsSectorId(importedStandards, routes);
             UpdateStandardsEqaProviderName(importedStandards);
@@ -308,7 +337,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             return groupedStandards;
         }
 
-        private static void UpdateStandardsSectorId(IEnumerable<Domain.ImportTypes.Standard> standards,
+        private static void UpdateStandardsSectorId(IEnumerable<Domain.ImportTypes.SkillsEngland.Standard> standards,
              List<RouteImport> routes)
         {
             foreach (var standard in standards)
@@ -317,7 +346,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
         }
 
-        private static void UpdateStandardsEqaProviderName(List<Domain.ImportTypes.Standard> standards)
+        private static void UpdateStandardsEqaProviderName(List<Domain.ImportTypes.SkillsEngland.Standard> standards)
         {
             foreach (var standard in standards)
             {
@@ -329,12 +358,12 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         }
 
         public static Dictionary<string, List<StandardImport>> IndividuallyValidateStandardGroups
-            (Dictionary<string, List<Domain.ImportTypes.Standard>> importedStandards,
+            (Dictionary<string, List<Domain.ImportTypes.SkillsEngland.Standard>> importedStandards,
             IEnumerable<Standard> currentStandards,
             IEnumerable<Route> currentRoutes,
             Dictionary<string, ValidationFailures> validationFailures)
         {
-            var fatalValidators = new List<ValidatorBase<List<Domain.ImportTypes.Standard>>>
+            var fatalValidators = new List<ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>>
             {
                 new LarsCodeIsNumberValidator(),
                 new VersionsHaveNoGapsValidator()
@@ -342,7 +371,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
             var validStandards = ValidateStandards(importedStandards, validationFailures, fatalValidators);
 
-            var otherValidators = new List<ValidatorBase<List<Domain.ImportTypes.Standard>>>
+            var otherValidators = new List<ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>>
             {
                 new LarsCodeNotZeroTwoWeeksAfterPublishValidator(),
                 new LarsCodeNotZeroForNewVersionValidator(),
@@ -420,7 +449,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
         private async Task<DateTime?> LastSuccessfullImport()
         {
-            var audit = await _auditRepository.GetLastImportByType(ImportType.IFATEImport);
+            var audit = await _auditRepository.GetLastImportByType(ImportType.SkillsEnglandImport);
             return audit?.TimeFinished;
         }
     }

@@ -22,10 +22,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         [Given("I have an http client")]
         public void GivenIHaveAnHttpClient()
         {
-            var client = new AcceptanceTestingWebApplicationFactory<Startup>().CreateClient();
+            var factory = new AcceptanceTestingWebApplicationFactory<Startup>();
+            var client = factory.CreateClient();
+
             client.DefaultRequestHeaders.Add("X-Version", "1.0");
-            _context.Set(client,ContextKeys.HttpClient);
+
+            _context.Set(factory, ContextKeys.WebAppFactory);
+            _context.Set(client, ContextKeys.HttpClient);
         }
+
 
         [When("I (GET|POST|PUT|DELETE) the following url: (.*)")]
         public async Task WhenIMethodTheFollowingUrl(HttpMethod method, string url)

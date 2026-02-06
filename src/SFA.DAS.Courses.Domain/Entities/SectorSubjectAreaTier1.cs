@@ -6,6 +6,9 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         public static implicit operator SectorSubjectAreaTier1(SectorSubjectAreaTier1Import source)
         {
+            if (source == null)
+                return null;
+
             return new SectorSubjectAreaTier1
             {
                 SectorSubjectAreaTier1 = source.SectorSubjectAreaTier1,

@@ -8,6 +8,16 @@ namespace SFA.DAS.Courses.Data.Extensions
 {
     public static class StandardFilterExtension
     {
+        public static IQueryable<Standard> FilterCourseType(this IQueryable<Standard> standards, CourseType? courseType)
+        {
+            if (courseType.HasValue)
+            {
+                return standards.Where(s => s.CourseType == courseType);
+            }
+
+            return standards;
+        }
+
         public static IQueryable<Standard> FilterStandards(this IQueryable<Standard> standards, StandardFilter filter)
         {
             switch (filter)
@@ -87,7 +97,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         private static IQueryable<Standard> FilterNotYetApproved(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards
-                .Where(ls => ls.LarsCode == 0)
+                .Where(ls => ls.LarsCode == "0")
                 .StatusIsOneOf(Domain.Courses.Status.ProposalInDevelopment, Domain.Courses.Status.InDevelopment);
 
             return filteredStandards;

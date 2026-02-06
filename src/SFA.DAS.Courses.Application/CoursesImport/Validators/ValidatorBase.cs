@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
@@ -12,8 +13,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
         }
 
         public ValidationFailureType ValidationFailureType => _validationFailureType;
-
-        protected static string ReferenceNumber(Domain.ImportTypes.Standard importedStandard)
+        protected static string ReferenceNumber(Standard importedStandard)
         {
             if (!importedStandard.ReferenceNumber.IsSet)
             {
@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             return importedStandard.ReferenceNumber.Value;
         }
 
-        protected static string Version(Domain.ImportTypes.Standard importedStandard)
+        protected static string Version(Standard importedStandard)
         {
             if (!importedStandard.Version.IsSet)
             {

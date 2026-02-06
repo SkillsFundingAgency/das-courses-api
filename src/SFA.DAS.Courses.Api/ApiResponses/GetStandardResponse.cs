@@ -2,6 +2,7 @@
 using System.Linq;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Extensions;
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
@@ -41,18 +42,22 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public bool IntegratedApprenticeship { get; set; }
         public int SectorCode { get; set; }
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
-        public string ApprenticeshipType { get; set; }
+        public ApprenticeshipType ApprenticeshipType { get; set; }
         public string ApprenticeshipStandardTypeCode { get; set; }
+        public bool IsLatestVersion { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool IsRegulatedForEPAO { get; set; }
 
         public static implicit operator GetStandardResponse(Standard source)
         {
+            if (source == null)
+                return null;
+
             return new GetStandardResponse
             {
                 StandardUId = source.StandardUId,
                 IfateReferenceNumber = source.IfateReferenceNumber,
-                LarsCode = source.LarsCode,
+                LarsCode = int.Parse(source.LarsCode),
                 Status = source.Status,
                 SearchScore = source.SearchScore,
                 Title = source.Title,
@@ -67,7 +72,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Skills = source.Options.SelectManyOrEmptyList(x => x.Skills).Select(x => x.Detail).Distinct().ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
-                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (ApprenticeshipFundingResponse)c).ToList(),
+                ApprenticeshipFunding = source.ApprenticeshipFunding?.Select(c => (ApprenticeshipFundingResponse)c).ToList() ?? [],
                 StandardDates = (StandardDatesResponse)source.StandardDates,
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description,
@@ -83,6 +88,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
                 ApprenticeshipType = source.ApprenticeshipType,
                 ApprenticeshipStandardTypeCode = source.ApprenticeshipStandardTypeCode,
+                IsLatestVersion = source.IsLatestVersion,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO
             };

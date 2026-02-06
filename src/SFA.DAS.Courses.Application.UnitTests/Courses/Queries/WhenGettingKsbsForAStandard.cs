@@ -10,15 +10,17 @@ using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries;
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
 
-public class WhenGettingKsbsForAStandard
+namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 {
-    [Test, AutoData]
-    public async Task Then_Returns_Correct_Ksbs_Type(Standard standard)
+    public class WhenGettingKsbsForAStandard
     {
-        // Arrange
-        standard.Options = new List<StandardOption>
+        [Test, AutoData]
+        public async Task Then_Returns_Correct_Ksbs_Type(Standard standard)
+        {
+            // Arrange
+            standard.Options = new List<StandardOption>
         {
             new StandardOption
             {
@@ -34,20 +36,21 @@ public class WhenGettingKsbsForAStandard
                 }
             }
         };
-        Mock<IStandardsService> standardServiceMock = new();
-        standardServiceMock.Setup(x => x.GetLatestActiveStandard(It.IsAny<int>())).ReturnsAsync(standard);
-        var query = new GetStandardOptionKsbsQuery
-        {
-            Id = "123",
-            Option = "Core"
-        };
-        var handler = new GetStandardOptionKsbsQueryHandler(standardServiceMock.Object);
+            Mock<IStandardsService> standardServiceMock = new();
+            standardServiceMock.Setup(x => x.GetStandardByAnyId(It.IsAny<string>(), CourseType.Apprenticeship)).ReturnsAsync(standard);
+            var query = new GetStandardOptionKsbsQuery
+            {
+                Id = "123",
+                Option = "Core"
+            };
+            var handler = new GetStandardOptionKsbsQueryHandler(standardServiceMock.Object);
 
-        // Act
-        var result = await handler.Handle(query, CancellationToken.None);
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
 
-        // Assert
-        result.Should().NotBeNull();
-        result.Ksbs.Should().BeEquivalentTo(standard.Options[0].Ksbs);
+            // Assert
+            result.Should().NotBeNull();
+            result.Ksbs.Should().BeEquivalentTo(standard.Options[0].Ksbs);
+        }
     }
 }

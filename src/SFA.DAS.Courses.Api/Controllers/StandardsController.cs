@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
+using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsByIFateReference;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
@@ -25,12 +26,11 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
-        [Route("")]
         public async Task<IActionResult> GetList(
             [FromQuery] string keyword,
             [FromQuery] IList<int> routeIds,
             [FromQuery] IList<int> levels,
-            [FromQuery] string apprenticeshipType,
+            [FromQuery] ApprenticeshipType? apprenticeshipType,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
             [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
         {
@@ -55,35 +55,30 @@ namespace SFA.DAS.Courses.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             var result = await _mediator.Send(new GetStandardByIdQuery { Id = id });
 
-            if (result.Standard == null)
-            {
+            if (result.Standard is null)
                 return NotFound();
-            }
 
             return Ok((GetStandardDetailResponse)result.Standard);
         }
 
-        [HttpGet]
-        [Route("{id}/options/{option}/ksbs")]
+        [HttpGet("{id}/options/{option}/ksbs")]
         public async Task<IActionResult> GetOptionKsbs(string id, string option)
         {
             var queryResult = await _mediator.Send(new GetStandardOptionKsbsQuery
             {
                 Id = id,
-                Option = option,
+                Option = option
             });
 
             return Ok(queryResult);
         }
 
-        [HttpGet]
-        [Route("versions/{iFateReferenceNumber}")]
+        [HttpGet("versions/{iFateReferenceNumber}")]
         public async Task<IActionResult> GetStandardsByIFateReferenceNumber(string iFateReferenceNumber)
         {
             var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery
@@ -91,10 +86,8 @@ namespace SFA.DAS.Courses.Api.Controllers
                 IFateReferenceNumber = iFateReferenceNumber
             });
 
-            if (queryResult.Standards.Any() == false)
-            {
+            if (!queryResult.Standards.Any())
                 return NotFound();
-            }
 
             var response = new GetStandardVersionsListResponse
             {
