@@ -15,7 +15,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                 {
                     foreach (var standard in importedStandards)
                     {
-                        if (standard.ApprenticeshipType is not (ApprenticeshipType.Apprenticeship or ApprenticeshipType.FoundationApprenticeship))
+                        if (standard.ApprenticeshipType is not ApprenticeshipType.Apprenticeship)
                             continue;
                         
                         // only 1 of these is a required field but either may be present but empty

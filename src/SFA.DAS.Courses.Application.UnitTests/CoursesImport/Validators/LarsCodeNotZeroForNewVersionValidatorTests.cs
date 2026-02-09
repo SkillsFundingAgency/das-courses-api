@@ -19,15 +19,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             _sut = new LarsCodeNotZeroForNewVersionValidator();
         }
 
-        [Test]
-        public void Should_Not_Add_Failure_When_LarsCode_Is_Not_Zero_For_New_Version()
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA1001")]
+        public void Should_Not_Add_Failure_When_LarsCode_Is_Not_Zero_For_New_Version(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
             var importedStandards = new List<Standard>
             {
                 new Standard
                 {
-                    ReferenceNumber = new Settable<string>("ST1001"),
+                    ApprenticeshipType = apprenticeshipType,
+                    ReferenceNumber = new Settable<string>(referenceNumber),
                     Version = new Settable<string>("1.1"),
                     LarsCode = new Settable<string>("12345")
                 }
@@ -40,15 +42,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-        [Test]
-        public void Should_Add_Failure_When_LarsCode_Is_Zero_For_New_Version()
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1002")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA1002")]
+        public void Should_Add_Failure_When_LarsCode_Is_Zero_For_New_Version(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
             var importedStandards = new List<Standard>
             {
                 new Standard
                 {
-                    ReferenceNumber = new Settable<string>("ST1002"),
+                    ApprenticeshipType = apprenticeshipType,
+                    ReferenceNumber = new Settable<string>(referenceNumber),
                     Version = new Settable<string>("1.1"),
                     LarsCode = new Settable<string>("0")
                 }
@@ -59,19 +63,42 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 
             // Assert
             result.Errors.Should().ContainSingle(error => error.ErrorMessage ==
-                "S1001: ST1002 version 1.1 has larsCode 0");
+                $"S1001: {referenceNumber} version 1.1 has larsCode 0");
         }
 
-        [Test]
-        public void Should_Not_Add_Failure_When_LarsCode_Is_Zero_For_Initial_Version()
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1003")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA1003")]
+        public void Should_Not_Add_Failure_When_LarsCode_Is_Zero_For_Initial_Version(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
             var importedStandards = new List<Standard>
             {
                 new Standard
                 {
-                    ReferenceNumber = new Settable<string>("ST1003"),
+                    ApprenticeshipType = apprenticeshipType,
+                    ReferenceNumber = new Settable<string>(referenceNumber),
                     Version = new Settable<string>("1.0"),
+                    LarsCode = new Settable<string>("0")
+                }
+            };
+
+            // Act
+            var result = _sut.TestValidate(importedStandards);
+
+            // Assert
+            result.ShouldNotHaveAnyValidationErrors();
+        }
+
+        public void Should_Not_Add_Failure_When_LarsCode_Is_Zero_For_New_Version_For_ApprenticeshipUnit()
+        {
+            // Arrange
+            var importedStandards = new List<Standard>
+            {
+                new Standard
+                {
+                    ApprenticeshipType = Domain.Entities.ApprenticeshipType.ApprenticeshipUnit,
+                    ReferenceNumber = new Settable<string>("SC1004"),
+                    Version = new Settable<string>("1.1"),
                     LarsCode = new Settable<string>("0")
                 }
             };
