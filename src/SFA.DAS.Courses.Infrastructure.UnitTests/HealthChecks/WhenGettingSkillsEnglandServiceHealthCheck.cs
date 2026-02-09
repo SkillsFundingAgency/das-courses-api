@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -13,7 +11,7 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
 {
-    public class WhenGettingIfateHealthCheck
+    public class WhenGettingSkillsEnglandServiceHealthCheck
     {
         [Test, MoqAutoData]
         public async Task Then_The_Latest_ImportAudit_Record_is_Read_From_IFATE(
@@ -21,10 +19,10 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
             HealthCheckContext healthCheckContext, 
             SkillsEnglandServiceHealthCheck handler)
         {
-            //Act
+            // Act
             var actual = await handler.CheckHealthAsync(healthCheckContext);
 
-            //Assert
+            // Assert
             mock.Verify(x => x.GetLastImportByType(ImportType.SkillsEnglandImport), Times.Once);
         }
 
@@ -69,12 +67,12 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.HealthChecks
             HealthCheckContext healthCheckContext,
              SkillsEnglandServiceHealthCheck handler)
         {
-            //Arrange
+            // Arrange
             mock.Setup(x => x.GetLastImportByType(ImportType.SkillsEnglandImport)).ReturnsAsync(new ImportAudit(
                 DateTime.UtcNow.AddDays(10), 0));
-            //Act
+            // Act
             var actual = await handler.CheckHealthAsync(healthCheckContext);
-            //Assert
+            // Assert
             Assert.That(actual.Status, Is.EqualTo(HealthStatus.Degraded));
         }
     }

@@ -21,12 +21,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockRepository,
             StandardsService service)
         {
+            // Arrange
             mockRepository
                 .Setup(repository => repository.Count(filter, CourseType.Apprenticeship))
                 .ReturnsAsync(count);
 
+            // Act
             var actual = await service.Count(filter, CourseType.Apprenticeship);
 
+            // Assert
             actual.Should().Be(count);
         }
 
@@ -37,12 +40,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             [Frozen] Mock<IStandardRepository> mockRepository,
             StandardsService service)
         {
+            // Arrange
             mockRepository
                 .Setup(repository => repository.Count(filter, null))
                 .ReturnsAsync(count);
 
+            // Act
             var actual = await service.Count(filter, null);
 
+            // Assert
             actual.Should().Be(count);
         }
     }

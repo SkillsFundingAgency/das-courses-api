@@ -24,19 +24,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Domain.ImportTypes.SkillsEngland.Standard>
-            {
-                GetValidImportedStandard("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-            };
-
             service
                 .Setup(x => x.GetCourseImports())
                 .ReturnsAsync(new Domain.ImportTypes.SkillsEngland.SkillsEnglandStandardsResult
                 {
-                    Apprenticeships = new List<Domain.ImportTypes.SkillsEngland.Apprenticeship>
-                    {
-                    }
+                    Apprenticeships = new List<Domain.ImportTypes.SkillsEngland.Apprenticeship>(),
+                    FoundationApprenticeships = new List<Domain.ImportTypes.SkillsEngland.FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<Domain.ImportTypes.SkillsEngland.ApprenticeshipUnit>(),
                 });
 
             // Act
@@ -151,10 +145,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .Setup(s => s.InsertMany(It.IsAny<List<Domain.Entities.Standard>>()))
                 .ReturnsAsync(2);
 
-            //Act
+            // Act
             await standardsImportService.LoadDataFromStaging(importStartTime);
 
-            //Assert
+            // Assert
             importAuditRepository.Verify(x =>
                 x.Insert(It.Is<Domain.Entities.ImportAudit>(c => c.RowsImported.Equals(2))), Times.Once);
         }
