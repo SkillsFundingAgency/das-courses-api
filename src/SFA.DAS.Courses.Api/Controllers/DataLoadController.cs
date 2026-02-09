@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,9 +28,9 @@ namespace SFA.DAS.Courses.Api.Controllers
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Data import request received");
-            await _mediator.Send(new ImportDataCommand());
+            var validationMessages = await _mediator.Send(new ImportDataCommand());
             _logger.LogInformation("Data import completed successfully");
-            return NoContent();
+            return Ok(validationMessages);
         }
     }
 }

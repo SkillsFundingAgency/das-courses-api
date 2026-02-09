@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
 using SFA.DAS.Courses.Application.Exceptions;
 using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 using SFA.DAS.Courses.Domain.Interfaces;
 using Standard = SFA.DAS.Courses.Domain.Entities.Standard;
 
@@ -47,9 +49,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _logger = logger;
         }
 
-        public async Task<bool> ImportDataIntoStaging()
+        public async Task<(bool Success, List<string> ValidationMessages)> ImportDataIntoStaging()
         {
-            var dataSuccessfullyStaged = false;
+            var result = (Success: false, ValidationMessages: new List<string>());
 
             if (await _semaphoreImport.WaitAsync(0))
             {
@@ -57,18 +59,13 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 {
                     _logger.LogInformation("{MethodName} - starting", nameof(ImportDataIntoStaging));
 
-                    var standards = await _skillsEnglandService.GetStandards();
-                    var importedStandards = RemoveIndevelopmentVersions(standards);
-
-                    _logger.LogInformation("{MethodName} - Retrieved Apprenticeships: {ApprenticeshipsCount} Foundation: {FoundationCount}", nameof(ImportDataIntoStaging), importedStandards.Count(c => c.ApprenticeshipType == ApprenticeshipType.Apprenticeship), importedStandards.Count(c => c.ApprenticeshipType == ApprenticeshipType.FoundationApprenticeship));
-
-                    // if there are any missing fields in any standard or 
                     var validationFailures = new Dictionary<string, ValidationFailures>();
-                    ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.SkillsEngland.Standard>> { { "All", importedStandards } },
-                        validationFailures, [new RequiredFieldsPresentValidator(), new ReferenceNumberFormatValidator(), new VersionFormatValidator()]);
+                    var importedStandards = await GetAndValidateStandards(validationFailures);
 
-                    var hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
-                    if (!hasValidationErrors)
+                    ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.SkillsEngland.Standard>> { { "All", importedStandards } },
+                        validationFailures, [new ReferenceNumberFormatValidator(), new VersionFormatValidator()]);
+
+                    if (!HasValidationErrors(validationFailures))
                     {
                         var currentRoutes = await _routeRepository.GetAll();
                         var currentStandards = await _standardRepository.GetStandards(null);
@@ -87,39 +84,22 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                         // finally the standard groups are assessed to determine which version is the latest
                         validStandardImports = PopulateIsLatestVersions(validStandardImports);
 
-                        hasValidationErrors = validationFailures.Any(p => p.Value.Errors.Count > 0);
-                        if (!hasValidationErrors)
+                        if (!HasValidationErrors(validationFailures))
                         {
                             await ImportRouteDataIntoStaging(routeImports, validStandardImports);
                             await ImportStandardDataIntoStaging(validStandardImports);
-
-                            dataSuccessfullyStaged = true;
+                            result.Success = true;
                         }
                     }
 
-                    // if there were any validation issues then report them via the slack notification
-                    var sortedKeys = validationFailures.Keys.OrderBy(k => k).ToList();
-                    var allMessages = sortedKeys
-                        .SelectMany(key => validationFailures[key].Errors.Select(error => error))
-                        .Concat(sortedKeys.SelectMany(key => validationFailures[key].StandardErrors.Select(standardError => standardError)))
-                        .Concat(sortedKeys.SelectMany(key => validationFailures[key].Warnings.Select(warning => warning)))
-                        .ToList();
-
-                    if (allMessages.Any())
-                    {
-                        var lastSuccessfulImport = await LastSuccessfullImport() ?? DateTime.UtcNow;
-                        await _slackNotificationService.UploadFile(
-                            allMessages,
-                            $"IfATE_Validation_Results_{DateTime.Now.ToFileTimeUtc()}.txt",
-                            $"{_slackNotificationService.FormattedTag()} The standard import from IfATE failed validation, the last successful run was {(DateTime.UtcNow - lastSuccessfulImport).Days} days ago.");
-                    }
+                    result.ValidationMessages = await ReportValidationFailures(validationFailures);
 
                     _logger.LogInformation("{MethodName} - finished", nameof(ImportDataIntoStaging));
                 }
                 catch (Exception e)
                 {
                     _logger.LogError(e, "{MethodName} - error whilst importing data into staging", nameof(ImportDataIntoStaging));
-                    dataSuccessfullyStaged = false;
+                    result.Success = false;
                 }
                 finally
                 {
@@ -131,7 +111,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 _logger.LogInformation("{MethodName} - importing data into staging is already running", nameof(ImportDataIntoStaging));
             }
 
-            return dataSuccessfullyStaged;
+            return result;
         }
 
         public async Task ImportStandardDataIntoStaging(Dictionary<string, List<StandardImport>> standardImports)
@@ -196,18 +176,47 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
         }
 
-        private static List<Domain.ImportTypes.SkillsEngland.Standard> RemoveIndevelopmentVersions(IEnumerable<Domain.ImportTypes.SkillsEngland.Standard> standards)
+        private async Task<List<Domain.ImportTypes.SkillsEngland.Standard>> GetAndValidateStandards(Dictionary<string, ValidationFailures> validationFailures)
         {
-            var inDevelopmentStatuses = new List<string> { Domain.Courses.Status.InDevelopment, Domain.Courses.Status.ProposalInDevelopment };
+            var skillsEnglandImports = await _skillsEnglandService.GetCourseImports();
 
-            return standards
+            var apprenticeships = RemoveIndevelopmentVersions(skillsEnglandImports.Apprenticeships, v => v.Version.Value, s => s.Status.Value);
+            ValidateStandards(new Dictionary<string, List<Apprenticeship>> { { "All", apprenticeships } },
+                validationFailures, [new RequiredFieldsForApprenticeshipPresentValidator()]);
+
+            var foundationApprenticeships = RemoveIndevelopmentVersions(skillsEnglandImports.FoundationApprenticeships, v => v.Version.Value, s => s.Status.Value);
+            ValidateStandards(new Dictionary<string, List<FoundationApprenticeship>> { { "All", foundationApprenticeships } },
+                validationFailures, [new RequiredFieldsForFoundationApprenticeshipPresentValidator()]);
+
+            var apprenticeshipUnits = RemoveIndevelopmentVersions(skillsEnglandImports.ApprenticeshipUnits, v => v.Version.Value, s => s.Status.Value);
+            ValidateStandards(new Dictionary<string, List<ApprenticeshipUnit>> { { "All", apprenticeshipUnits } },
+                validationFailures, [new RequiredFieldsForApprenticeshipUnitPresentValidator()]);
+
+            return
+                apprenticeships.Select(p => (Domain.ImportTypes.SkillsEngland.Standard)p)
+                .Concat(foundationApprenticeships.Select(p => (Domain.ImportTypes.SkillsEngland.Standard)p))
+                .Concat(apprenticeshipUnits.Select(p => (Domain.ImportTypes.SkillsEngland.Standard)p))
+                .ToList();
+        }
+
+        private static List<T> RemoveIndevelopmentVersions<T>(
+            IEnumerable<T> items,
+            Func<T, string> version,
+            Func<T, string> status)
+        {
+            var inDevelopmentStatuses = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                Domain.Courses.Status.InDevelopment,
+                Domain.Courses.Status.ProposalInDevelopment
+            };
+
+            return items
                 .Where(p =>
                 {
-                    var (Major, Minor) = p.Version.Value.ParseVersion();
-                    return
-                        Major < 1 ||
-                        (Major == 1 && Minor == 0) ||
-                        !inDevelopmentStatuses.Contains(p.Status.Value, StringComparer.OrdinalIgnoreCase);
+                    var (major, minor) = version(p).ParseVersion();
+                    return major < 1
+                           || (major == 1 && minor == 0)
+                           || !inDevelopmentStatuses.Contains(status(p));
                 })
                 .ToList();
         }
@@ -252,7 +261,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
 
             return validStandardImports;
         }
-
 
         private async Task<int> LoadStandardDataFromStaging()
         {
@@ -439,6 +447,35 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
 
             return validStandards;
+        }
+
+        private static bool HasValidationErrors(Dictionary<string, ValidationFailures> validationFailures)
+        {
+            return validationFailures.Any(p => p.Value.Errors.Any());
+        }
+
+        private async Task<List<string>> ReportValidationFailures(Dictionary<string, ValidationFailures> validationFailures)
+        {
+            // if there were any validation issues then report them via the slack notification
+            var sortedKeys = validationFailures.Keys.OrderBy(k => k).ToList();
+            var allMessages = sortedKeys
+                .SelectMany(key => validationFailures[key].Errors.Select(error => error))
+                .Concat(sortedKeys.SelectMany(key => validationFailures[key].StandardErrors.Select(standardError => standardError)))
+                .Concat(sortedKeys.SelectMany(key => validationFailures[key].Warnings.Select(warning => warning)))
+                .ToList();
+
+            if (allMessages.Any())
+            {
+                var lastSuccessfulImport = await LastSuccessfullImport() ?? DateTime.UtcNow;
+                await _slackNotificationService.UploadFile(
+                    allMessages,
+                    $"IfATE_Validation_Results_{DateTime.Now.ToFileTimeUtc()}.txt",
+                    $"{_slackNotificationService.FormattedTag()} The standard import from IfATE failed validation, the last successful run was {(DateTime.UtcNow - lastSuccessfulImport).Days} days ago.");
+                
+                return allMessages;
+            }
+
+            return null;
         }
 
         private async Task AuditImport(DateTime timeStarted, int rowsImported)

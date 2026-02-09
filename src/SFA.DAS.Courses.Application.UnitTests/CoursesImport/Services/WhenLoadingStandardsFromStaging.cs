@@ -30,7 +30,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 GetValidImportedStandard("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
             };
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new Domain.ImportTypes.SkillsEngland.SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = new List<Domain.ImportTypes.SkillsEngland.Apprenticeship>
+                    {
+                    }
+                });
 
             // Act
             await standardsImportService.LoadDataFromStaging(importStartTime);

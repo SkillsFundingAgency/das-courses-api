@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,21 +22,28 @@ namespace SFA.DAS.Courses.Infrastructure.Api
             _client = client;
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards()
+        public async Task<SkillsEnglandStandardsResult> GetCourseImports()
         {
-            var apprenticeshipsTask = GetData<Apprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipsApiUrl);
-            var foundationApprenticeshipsTask = GetData<FoundationApprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.FoundationApprenticeshipsApiUrl);
-            var apprenticeshipUnitsTask = GetData<ApprenticeshipUnit>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipUnitsApiUrl);
+            var apprenticeshipsTask =
+                GetData<Apprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipsApiUrl);
 
-            await Task.WhenAll(apprenticeshipsTask, foundationApprenticeshipsTask, apprenticeshipUnitsTask);
+            var foundationApprenticeshipsTask =
+                GetData<FoundationApprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.FoundationApprenticeshipsApiUrl);
 
-            var apprenticeships = apprenticeshipsTask.Result.Select(p => (Standard)p);
-            var foundationApprenticeships = foundationApprenticeshipsTask.Result.Select(p => (Standard)p);
-            var apprenticeshipUnits = apprenticeshipUnitsTask.Result.Select(p => (Standard)p);
+            var apprenticeshipUnitsTask =
+                GetData<ApprenticeshipUnit>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipUnitsApiUrl);
 
-            return apprenticeships
-                .Concat(foundationApprenticeships)
-                .Concat(apprenticeshipUnits);
+            await Task.WhenAll(
+                apprenticeshipsTask,
+                foundationApprenticeshipsTask,
+                apprenticeshipUnitsTask);
+
+            return new SkillsEnglandStandardsResult
+            {
+                Apprenticeships = apprenticeshipsTask.Result,
+                FoundationApprenticeships = foundationApprenticeshipsTask.Result,
+                ApprenticeshipUnits = apprenticeshipUnitsTask.Result
+            };
         }
 
         private async Task<IEnumerable<T>> GetData<T>(string path)

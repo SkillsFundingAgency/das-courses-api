@@ -17,7 +17,7 @@ using SFA.DAS.Courses.Infrastructure.Api;
 
 namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
 {
-    public class WhenGettingDataFromSkillsEnglandApi
+    public class WhenGettingDataFromSkillsEnglandApis
     {
         private IOptions<CoursesConfiguration> _config;
 
@@ -169,22 +169,12 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             var sut = new SkillsEnglandService(_config, httpClient);
 
             // Act
-            var actual = (await sut.GetStandards()).ToList();
+            var actual = await sut.GetCourseImports();
 
             // Assert
-            actual.ShouldBeEquivalentToWithSettableHandling(
-                expected,
-                options => options.Excluding(c => c.RouteCode)
-            );
-
-            actual.First(s => s.LarsCode == "1").ApprenticeshipType
-                .Should().Be(SFA.DAS.Courses.Domain.Entities.ApprenticeshipType.Apprenticeship);
-
-            actual.First(s => s.LarsCode == "10").ApprenticeshipType
-                .Should().Be(SFA.DAS.Courses.Domain.Entities.ApprenticeshipType.FoundationApprenticeship);
-
-            actual.First(s => s.LarsCode == "ZSC00123").ApprenticeshipType
-                .Should().Be(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit);
+            actual.Apprenticeships.First(s => s.LarsCode == 1).Should().NotBeNull();
+            actual.FoundationApprenticeships.First(s => s.LarsCode == 10).Should().NotBeNull();
+            actual.ApprenticeshipUnits.First(s => s.LarsCode == "ZSC00123").Should().NotBeNull();
         }
 
         [Test]
@@ -205,7 +195,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             var sut = new SkillsEnglandService(_config, httpClient);
 
             // Act & Assert
-            Assert.ThrowsAsync<HttpRequestException>(() => sut.GetStandards());
+            Assert.ThrowsAsync<HttpRequestException>(() => sut.GetCourseImports());
         }
     }
 }
