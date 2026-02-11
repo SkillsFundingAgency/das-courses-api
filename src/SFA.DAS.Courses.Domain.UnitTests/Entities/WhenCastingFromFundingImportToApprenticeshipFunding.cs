@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.LarsCode.Should().Be(fundingImport.LearnAimRef);
             actual.MaxEmployerLevyCap.Should().Be(fundingImport.RateUnWeighted);
             actual.Duration.Should().Be(fundingImport.FundedGuidedLearningHours.GetValueOrDefault(0));
-            actual.DurationUnits.Should().Be("Hours");
+            actual.DurationUnits.Should().Be(DurationUnits.Hours);
             actual.FundingStream.Should().Be(fundingImport.FundingCategory);
         }
     }

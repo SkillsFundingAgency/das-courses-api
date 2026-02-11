@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             _sortOrderService = sortOrderService;
         }
 
-        public async Task<IEnumerable<Standard>> GetStandardsList(
+        private async Task<IEnumerable<Domain.Entities.Standard>> GetList(
             string keyword,
             IList<int> routeIds,
             IList<int> levels,
@@ -35,7 +35,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             StandardFilter filter,
             bool includeAllProperties,
             ApprenticeshipType? apprenticeshipType,
-            CourseType? courseType)
+            CourseType? courseType = null)
         {
             var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties, apprenticeshipType, courseType);
 
@@ -46,7 +46,35 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 
             standards = _sortOrderService.OrderBy(standards, orderBy, keyword);
 
+            return standards;
+        }
+
+        public async Task<IEnumerable<Standard>> GetStandardsList(
+            string keyword,
+            IList<int> routeIds,
+            IList<int> levels,
+            OrderBy orderBy,
+            StandardFilter filter,
+            bool includeAllProperties,
+            ApprenticeshipType? apprenticeshipType,
+            CourseType? courseType = null)
+        {
+            var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipType, courseType);
             return standards.Select(standard => (Standard)standard);
+        }
+
+        public async Task<IEnumerable<Course>> GetCoursesList(
+            string keyword,
+            IList<int> routeIds,
+            IList<int> levels,
+            OrderBy orderBy,
+            StandardFilter filter,
+            bool includeAllProperties,
+            ApprenticeshipType? apprenticeshipType,
+            CourseType? courseType = null)
+        {
+            var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipType, courseType);
+            return standards.Select(standard => (Course)standard);
         }
 
         public async Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber, CourseType? courseType)

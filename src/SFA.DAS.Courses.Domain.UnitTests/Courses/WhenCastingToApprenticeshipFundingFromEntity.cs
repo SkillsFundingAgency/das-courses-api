@@ -10,7 +10,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
         [Test, RecursiveMoqAutoData]
         public void Then_The_Fields_Are_Mapped_Correctly(ApprenticeshipFunding apprenticeshipFunding)
         {
-            var actual = (Domain.Courses.ApprenticeshipFunding)apprenticeshipFunding;
+            var actual = (Domain.Courses.StandardApprenticeshipFunding)apprenticeshipFunding;
 
             actual.Should().BeEquivalentTo(apprenticeshipFunding, options => options
                 .ExcludingMissingMembers()

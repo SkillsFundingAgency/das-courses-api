@@ -4,27 +4,29 @@ using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Domain.Courses
 {
-    public class Standard : CourseBase
+    public class Course : CourseBase
     {
-        public ApprenticeshipType ApprenticeshipType { get; set; }
-        public IEnumerable<StandardApprenticeshipFunding> ApprenticeshipFunding { get; set; }
+        public ApprenticeshipType LearningType { get; set; }
+        public IEnumerable<CourseApprenticeshipFunding> ApprenticeshipFunding { get; set; }
+        public CourseType CourseType { get; set; }
 
-        public static explicit operator Standard(Entities.Standard source)
+        public static explicit operator Course(Entities.Standard source)
         {
             if (source == null)
             {
                 return null;
             }
 
-            return new Standard
+            return new Course
             {
-                ApprenticeshipFunding = source.ApprenticeshipFunding?.Select(c => (StandardApprenticeshipFunding)c).ToList() ?? [],
+                ApprenticeshipFunding = source.ApprenticeshipFunding?.Select(c => (CourseApprenticeshipFunding)c).ToList() ?? [],
                 ApprenticeshipStandardTypeCode = source.LarsStandard?.ApprenticeshipStandardTypeCode,
-                ApprenticeshipType = source.ApprenticeshipType,
+                LearningType = source.ApprenticeshipType,
                 ApprovalBody = source.RegulatedBody,
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
+                CourseType = source.CourseType,
                 CoronationEmblem = source.CoronationEmblem,
                 Duties = source.Duties,
                 EPAChanged = source.EPAChanged,

@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace SFA.DAS.Courses.Api.ApiResponses
+{
+    public class ApprenticeshipFundingResponseBase
+    {
+        public int MaxEmployerLevyCap { get; set; }
+
+        public DateTime? EffectiveTo { get; set; }
+
+        public DateTime EffectiveFrom { get; set; }
+        public int Duration { get; set; }
+        public int? Incentive1618 { get; set; }
+        public int? ProviderAdditionalPayment1618 { get; set; }
+        public int? EmployerAdditionalPayment1618 { get; set; }
+        public int? CareLeaverAdditionalPayment { get; set; }
+        public int? FoundationAppFirstEmpPayment { get; set; }
+        public int? FoundationAppSecondEmpPayment { get; set; }
+        public int? FoundationAppThirdEmpPayment { get; set; }
+    }
+}

@@ -3,29 +3,15 @@ using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
-    public class ApprenticeshipFundingResponse
+    public class StandardApprenticeshipFundingResponse : ApprenticeshipFundingResponseBase
     {
-        public int MaxEmployerLevyCap { get; set; }
-
-        public DateTime? EffectiveTo { get; set; }
-
-        public DateTime EffectiveFrom { get; set; }
-        public int Duration { get; set; }
-        public int? Incentive1618 { get; set; }
-        public int? ProviderAdditionalPayment1618 { get; set; }
-        public int? EmployerAdditionalPayment1618 { get; set; }
-        public int? CareLeaverAdditionalPayment { get; set; }
-        public int? FoundationAppFirstEmpPayment { get; set; }
-        public int? FoundationAppSecondEmpPayment { get; set; }
-        public int? FoundationAppThirdEmpPayment { get; set; }
-
-        public static explicit operator ApprenticeshipFundingResponse(ApprenticeshipFunding apprenticeshipFunding)
+        public static explicit operator StandardApprenticeshipFundingResponse(StandardApprenticeshipFunding apprenticeshipFunding)
         {
             if (apprenticeshipFunding == null)
             {
                 return null;
             }
-            return new ApprenticeshipFundingResponse
+            return new StandardApprenticeshipFundingResponse
             {
                 EffectiveFrom = apprenticeshipFunding.EffectiveFrom,
                 EffectiveTo = apprenticeshipFunding.EffectiveTo,

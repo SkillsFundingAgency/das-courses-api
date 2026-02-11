@@ -78,7 +78,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
 
             // funding mapped
             response.ApprenticeshipFunding.Should().NotBeNull();
-            var expectedFunding = source.ApprenticeshipFunding?.Select(f => (ApprenticeshipFunding)f).ToList() ?? [];
+            var expectedFunding = source.ApprenticeshipFunding?.Select(f => (StandardApprenticeshipFunding)f).ToList() ?? [];
             response.ApprenticeshipFunding.Should().BeEquivalentTo(expectedFunding);
 
             // not mapped in the operator

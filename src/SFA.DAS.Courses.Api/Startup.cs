@@ -135,6 +135,8 @@ namespace SFA.DAS.Courses.Api
                 c.OperationFilter<SwaggerVersionHeaderFilter>();
             });
 
+            services.AddApiBehaviourOptions();
+
             services.AddApiVersioning(opt => {
                 opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
             });

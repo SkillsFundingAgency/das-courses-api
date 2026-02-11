@@ -113,10 +113,10 @@ namespace SFA.DAS.Courses.Data.Extensions
 
         private static IQueryable<Standard> IsAvailableToStart(this IQueryable<Standard> standards)
         {
-            return standards.Where(ls => (ls.LarsStandard.LastDateStarts == null
-                                                          || ls.LarsStandard.LastDateStarts >= DateTime.UtcNow)
-                                                          && ls.LarsStandard.LastDateStarts != ls.LarsStandard.EffectiveFrom
-                                                          && ls.LarsStandard.EffectiveFrom <= DateTime.UtcNow);
+            return standards.Where(ls => ls.LarsStandard == null || 
+                                        ((ls.LarsStandard.LastDateStarts == null || ls.LarsStandard.LastDateStarts >= DateTime.UtcNow)
+                                         && ls.LarsStandard.LastDateStarts != ls.LarsStandard.EffectiveFrom
+                                         && ls.LarsStandard.EffectiveFrom <= DateTime.UtcNow));
         }
 
         private static IQueryable<Standard> IsPastLastStartDate(this IQueryable<Standard> standards)
@@ -127,7 +127,7 @@ namespace SFA.DAS.Courses.Data.Extensions
 
         private static IQueryable<Standard> HasLarsStandard(this IQueryable<Standard> standards)
         {
-            return standards.Where(ls => ls.LarsStandard != null);
+            return standards.Where(ls => ls.CourseType != CourseType.Apprenticeship || ls.LarsStandard != null);
         }
 
         private static IQueryable<Standard> StatusIsOneOf(this IQueryable<Standard> standards, params string[] statuses)

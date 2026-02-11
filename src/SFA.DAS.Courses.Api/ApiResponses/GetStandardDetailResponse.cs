@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public int? SectorSubjectAreaTier1 { get; set; }
         public string SectorSubjectAreaTier1Description { get; set; }
 
-        public List<ApprenticeshipFundingResponse> ApprenticeshipFunding { get; set; }
+        public List<StandardApprenticeshipFundingResponse> ApprenticeshipFunding { get; set; }
 
         public StandardDatesResponse StandardDates { get; set; }
 
@@ -98,7 +98,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                             .Select(x => (KsbResponse)x).ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
-                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (ApprenticeshipFundingResponse)c).ToList(),
+                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (StandardApprenticeshipFundingResponse)c).ToList(),
                 StandardDates = (StandardDatesResponse)source.StandardDates,
                 VersionDetail = (StandardVersionDetailResponse)source.VersionDetail,
                 EqaProvider = (EqaProviderResponse)source.EqaProvider,
