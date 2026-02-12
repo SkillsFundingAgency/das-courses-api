@@ -5,16 +5,15 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Courses
 {
-    public class WhenCastingToApprenticeshipFundingFromEntity
+    public class WhenCastingToCourseApprenticeshipFundingFromEntity
     {
         [Test, RecursiveMoqAutoData]
         public void Then_The_Fields_Are_Mapped_Correctly(ApprenticeshipFunding apprenticeshipFunding)
         {
-            var actual = (Domain.Courses.StandardApprenticeshipFunding)apprenticeshipFunding;
+            var actual = (Domain.Courses.CourseApprenticeshipFunding)apprenticeshipFunding;
 
             actual.Should().BeEquivalentTo(apprenticeshipFunding, options => options
-                .ExcludingMissingMembers()
-            );
+                .ExcludingMissingMembers());
         }
     }
 }

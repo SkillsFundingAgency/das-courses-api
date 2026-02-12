@@ -67,8 +67,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             // Assert all properties except LarsCode
             model.Standards.Should().BeEquivalentTo(
                 queryResult.Standards,
-                options => StandardToGetStandardResponseOptions
-                    .ExclusionsGetStandardResponse(options)
+                options => StandardsEquivalencyAssertionOptions
+                    .GetStandardResponseExclusions(options)
                     .Excluding(s => s.LarsCode));
 
             // Assert LarsCode conversion with distinct values

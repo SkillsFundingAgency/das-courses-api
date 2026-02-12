@@ -6,7 +6,7 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Courses
 {
-    public class WhenCastingToStandardFromEntity
+    public class WhenCastingToStandardFromStandardEntity
     {
         [Test, RecursiveMoqAutoData]
         public void Then_Maps_Fields_Appropriately(Domain.Entities.Standard source)

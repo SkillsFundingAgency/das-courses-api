@@ -35,7 +35,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetCoursesSearch
                     request.CourseType))
                 .ToList();
 
-            var total = await _standardsService.Count(request.Filter, CourseType.Apprenticeship);
+            var total = await _standardsService.Count(request.Filter, request.CourseType);
 
             if (courses.Count == 0 &&
                 !string.IsNullOrWhiteSpace(request.Keyword) &&

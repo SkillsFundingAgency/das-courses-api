@@ -45,6 +45,10 @@ namespace SFA.DAS.Courses.Api.Controllers
                 IncludeAllProperties = false
             });
 
+            //?BaseQuery => Standard Entity =>
+            //
+            //but the mock is (Domain Standard (from Query Result to GetStandardResponse) 
+
             var response = new GetStandardsListResponse
             {
                 Standards = queryResult.Standards.Select(standard => (GetStandardResponse)standard),

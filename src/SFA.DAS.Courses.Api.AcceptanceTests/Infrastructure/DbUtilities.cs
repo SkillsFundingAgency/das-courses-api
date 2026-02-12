@@ -13,20 +13,23 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
     {
         public static Dictionary<string, List<Standard>> Standards = [];
         public static List<Route> Routes = [];
+        public static List<ApprenticeshipFunding> ApprenticeshipFundings = [];
         public static List<SectorSubjectAreaTier2> SectorSubjectAreaTier2s = [];
 
         public static void LoadTestData(CoursesDataContext context)
         {
             LoadTestRoutes();
+            LoadTestApprenticeshipFundings();
             LoadSectorSubjectAreaTier2Items();
 
             context.Routes.AddRange(Routes);
+            context.ApprenticeshipFunding.AddRange(ApprenticeshipFundings);
             context.SectorSubjectAreaTier2.AddRange(SectorSubjectAreaTier2s);
 
-            context.Standards.AddRange(LoadValidTestStandards(Routes));
+            context.Standards.AddRange(LoadValidTestStandards(Routes, ApprenticeshipFundings));
             context.Standards.AddRange(LoadInValidTestStandards(Routes));
             context.Standards.AddRange(LoadNotYetApprovedTestStandards(Routes));
-            context.Standards.AddRange(LoadOlderVersionsOfStandards(Routes));
+            context.Standards.AddRange(LoadOlderVersionsOfStandards(Routes, ApprenticeshipFundings));
             context.Standards.AddRange(LoadWithdrawnStandards(Routes));
 
             context.Frameworks.AddRange(GetFrameworks());
@@ -92,13 +95,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             }
         }
 
-        public static IEnumerable<Standard> GetValidTestStandards()
+        public static IEnumerable<Standard> GetValidTestStandards(CourseType? courseType)
         {
-            return Standards[nameof(GetValidTestStandards)];
+            return Standards[nameof(GetValidTestStandards)]
+                .Where(p => courseType == null || p.CourseType == courseType);
         }
 
 
-        private static IEnumerable<Standard> LoadValidTestStandards(IReadOnlyList<Route> routes)
+        private static IEnumerable<Standard> LoadValidTestStandards(IReadOnlyList<Route> routes, IReadOnlyList<ApprenticeshipFunding> apprenticeshipFundings)
         {
             if (!Standards.ContainsKey(nameof(GetValidTestStandards)))
             {
@@ -108,6 +112,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "1")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.3",
@@ -139,6 +147,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "2")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "2",
                             StandardUId = "ST0002_1.0",
@@ -166,6 +178,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "3")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "3",
                             StandardUId = "ST0003_1.0",
@@ -192,6 +208,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "4")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "4",
                             StandardUId = "ST0004_1.0",
@@ -218,6 +238,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "5")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "5",
                             StandardUId = "ST0005_1.1",
@@ -244,6 +268,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "6")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "6",
                             StandardUId = "ST0006_1.0",
@@ -270,6 +298,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "7")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "7",
                             StandardUId = "ST0007_1.0",
@@ -296,6 +328,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "8")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "8",
                             StandardUId = "ST0008_1.0",
@@ -330,11 +366,33 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             },
                             OverviewOfRole = "test",
                             StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "ZSC00009")
+                            },
+                            CourseType = CourseType.ShortCourse,
+                            LarsCode = "ZSC00009",
+                            StandardUId = "SC0009_1.0",
+                            IfateReferenceNumber = "SC0009",
+                            Title = "Beer Taster",
+                            Keywords = "Beer, Taster",
+                            Level = 3,
+                            RouteCode = routes[2].Id,
+                            Route = routes[2],
+                            LarsStandard = null, // short courses will not have a LarsStandard
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
                         }
                     });
             }
 
-            return GetValidTestStandards();
+            return GetValidTestStandards(null);
         }
 
         public static IEnumerable<Standard> GetInValidTestStandards()
@@ -518,7 +576,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             return Standards[nameof(GetOlderVersionsOfStandards)];
         }
 
-        private static IEnumerable<Standard> LoadOlderVersionsOfStandards(IReadOnlyList<Route> routes)
+        private static IEnumerable<Standard> LoadOlderVersionsOfStandards(IReadOnlyList<Route> routes, IReadOnlyList<ApprenticeshipFunding> apprenticeshipFundings)
         {
             if (!Standards.ContainsKey(nameof(GetOlderVersionsOfStandards)))
             {
@@ -528,6 +586,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "1")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.2",
@@ -551,6 +613,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "1")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.1",
@@ -569,6 +635,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
+                            {
+                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "5")
+                            },
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "5",
                             StandardUId = "ST0005_1.0",
@@ -618,9 +688,96 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             return GetOlderVersionsOfStandards();
         }
 
-        public static IEnumerable<Standard> GetAllTestStandards()
+        public static IEnumerable<Standard> GetAllTestStandards(CourseType? courseType)
         {
-            return Standards.Values.SelectMany(p => p);
+            return Standards.Values
+                .SelectMany(p => p)
+                .Where(p => courseType == null || p.CourseType == courseType);
+        }
+
+        public static IEnumerable<ApprenticeshipFunding> LoadTestApprenticeshipFundings()
+        {
+            if (ApprenticeshipFundings.Count == 0)
+            {
+                ApprenticeshipFundings = new List<ApprenticeshipFunding>
+                {
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "1",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "2",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "3",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "4",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "5",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "6",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "7",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "8",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "ZSC00009",
+                        Duration = 10,
+                        DurationUnits = DurationUnits.Hours,
+                        FundingStream = "ShortCourseFundingCategory"
+                    }
+                };
+            }
+
+            return ApprenticeshipFundings;
         }
 
         public static IEnumerable<Framework> GetFrameworks()
