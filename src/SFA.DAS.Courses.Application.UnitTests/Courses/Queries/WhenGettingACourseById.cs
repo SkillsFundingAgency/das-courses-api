@@ -10,71 +10,69 @@ using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
-
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 {
-    public class WhenGettingAStandardById
+    public class WhenGettingACourseById
     {
         [Test, MoqAutoData]
         public async Task Then_Gets_ApprenticeshipStandard_From_Service_By_LarsCode(
-            GetStandardByIdQuery query,
-            Standard standardFromService,
+            GetCourseByIdQuery query,
+            Course courseFromService,
             [Frozen] Mock<IStandardsService> mockStandardsService,
-            GetStandardByIdQueryHandler handler)
+            GetCourseByIdQueryHandler handler)
         {
             // Arrange
-            standardFromService.LarsCode = 1234.ToString();
-            query.Id = standardFromService.LarsCode.ToString();
+            courseFromService.LarsCode = 1234.ToString();
+            query.Id = courseFromService.LarsCode.ToString();
             mockStandardsService
-                .Setup(service => service.GetStandardByAnyId(standardFromService.LarsCode))
-                .ReturnsAsync(standardFromService);
+                .Setup(service => service.GetCourseByAnyId(courseFromService.LarsCode))
+                .ReturnsAsync(courseFromService);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            result.Standard.Should().BeEquivalentTo(standardFromService);
+            result.Course.Should().BeEquivalentTo(courseFromService);
         }
 
         [Test, MoqAutoData]
         public async Task Then_Gets_ApprenticeshipStandard_From_Service_By_IFateReferenceNumber(
-            GetStandardByIdQuery query,
-            Standard standardFromService,
+            GetCourseByIdQuery query,
+            Course courseFromService,
             [Frozen] Mock<IStandardsService> mockStandardsService,
-            GetStandardByIdQueryHandler handler)
+            GetCourseByIdQueryHandler handler)
         {
             // Arrange
             query.Id = "ST0012";
             mockStandardsService
-                .Setup(service => service.GetStandardByAnyId(query.Id))
-                .ReturnsAsync(standardFromService);
+                .Setup(service => service.GetCourseByAnyId(query.Id))
+                .ReturnsAsync(courseFromService);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            result.Standard.Should().BeEquivalentTo(standardFromService);
+            result.Course.Should().BeEquivalentTo(courseFromService);
         }
 
         [Test, MoqAutoData]
         public async Task Then_Gets_ApprenticeshipStandard_From_Service_By_StandardUId(
-            GetStandardByIdQuery query,
-            Standard standardFromService,
+            GetCourseByIdQuery query,
+            Course courseFromService,
             [Frozen] Mock<IStandardsService> mockStandardsService,
-            GetStandardByIdQueryHandler handler)
+            GetCourseByIdQueryHandler handler)
         {
             // Arrange
             query.Id = "ST0012_1.2";
             mockStandardsService
-                .Setup(service => service.GetStandardByAnyId(query.Id))
-                .ReturnsAsync(standardFromService);
+                .Setup(service => service.GetCourseByAnyId(query.Id))
+                .ReturnsAsync(courseFromService);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            result.Standard.Should().BeEquivalentTo(standardFromService);
+            result.Course.Should().BeEquivalentTo(courseFromService);
         }
 
         [Test]
@@ -82,22 +80,22 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
         [MoqInlineAutoData(false)]
         public async Task Then_Gets_ApprenticeshipStandard_With_CoronationEmblem_Set(
             bool coronationEmblem,
-            GetStandardByIdQuery query,
-            Standard standardFromService,
+            GetCourseByIdQuery query,
+            Course courseFromService,
             [Frozen] Mock<IStandardsService> mockStandardsService,
-            GetStandardByIdQueryHandler handler)
+            GetCourseByIdQueryHandler handler)
         {
             // Arrange
-            standardFromService.CoronationEmblem = coronationEmblem;
+            courseFromService.CoronationEmblem = coronationEmblem;
             mockStandardsService
-                .Setup(service => service.GetStandardByAnyId(query.Id))
-                .ReturnsAsync(standardFromService);
+                .Setup(service => service.GetCourseByAnyId(query.Id))
+                .ReturnsAsync(courseFromService);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            result.Standard.CoronationEmblem.Should().Be(coronationEmblem);
+            result.Course.CoronationEmblem.Should().Be(coronationEmblem);
         }
     }
 }

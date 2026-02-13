@@ -24,11 +24,11 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string LarsCode { get; set; }
         public int Level { get; set; }
 
-        private List<StandardOption> _options = new List<StandardOption>();
-        public List<StandardOption> Options
+        private List<CourseOption> _options = new List<CourseOption>();
+        public List<CourseOption> Options
         {
             get => _options;
-            set => _options = value ?? new List<StandardOption>();
+            set => _options = value ?? new List<CourseOption>();
         }
         public bool OtherBodyApprovalRequired { get; set; }
         public string OverviewOfRole { get; set; }
@@ -41,7 +41,6 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string SectorSubjectAreaTier1Description { get; set; }
         public decimal SectorSubjectAreaTier2 { get; set; }
         public string SectorSubjectAreaTier2Description { get; set; }
-        public StandardDates StandardDates { get; set; }
         public string StandardPageUrl { get; set; }
         public string StandardUId { get; set; }
         public string Status { get; set; }
@@ -49,7 +48,6 @@ namespace SFA.DAS.Courses.Domain.Courses
         public string TrailBlazerContact { get; set; }
         public string TypicalJobTitles { get; set; }
         public string Version { get; set; }
-        public StandardVersionDetail VersionDetail { get; set; }
         public int VersionMajor { get; set; }
         public int VersionMinor { get; set; }
     }

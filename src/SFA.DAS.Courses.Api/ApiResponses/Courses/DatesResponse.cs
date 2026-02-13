@@ -3,7 +3,7 @@ using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
-    public class StandardDatesResponse
+    public class CourseDatesResponse
     {
         public DateTime? LastDateStarts { get ; set ; }
 
@@ -11,13 +11,14 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public DateTime EffectiveFrom { get ; set ; }
 
-        public static explicit operator StandardDatesResponse(StandardDates standardDates)
+        public static explicit operator CourseDatesResponse(CourseDates standardDates)
         {
-            if(standardDates == null)
+            if (standardDates == null)
             {
                 return null;
             }
-            return new StandardDatesResponse
+
+            return new CourseDatesResponse
             {
                 EffectiveFrom = standardDates.EffectiveFrom,
                 EffectiveTo = standardDates.EffectiveTo,

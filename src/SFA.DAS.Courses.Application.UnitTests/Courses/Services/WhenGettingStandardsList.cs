@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false, null, CourseType.Apprenticeship)).ToList();
+            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false, null)).ToList();
 
             // Assert
             result.Should().BeEquivalentTo(
@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false, null, CourseType.Apprenticeship)).ToList();
+            var result = (await service.GetStandardsList("", new List<int>(), new List<int>(), orderBy, filter, false, null)).ToList();
 
             // Assert
             result.Should().BeEquivalentTo(
@@ -100,7 +100,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = await service.GetStandardsList(keyword, new List<int>(), new List<int>(), orderBy, filter, false, null, CourseType.Apprenticeship);
+            var result = await service.GetStandardsList(keyword, new List<int>(), new List<int>(), orderBy, filter, false, null);
 
             // Assert
             result.Should().BeEquivalentTo(
@@ -139,7 +139,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, true, null, CourseType.Apprenticeship);
+            var result = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, true, null);
 
             // Assert
             result.Should().BeEquivalentTo(
@@ -179,7 +179,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Returns(standardsFoundInSearch.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, false, null, CourseType.Apprenticeship);
+            var result = await service.GetStandardsList(keyword, routeIds, new List<int>(), orderBy, filter, false, null);
 
             // Assert
             result.Should().BeEquivalentTo(
@@ -205,7 +205,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true, null, CourseType.Apprenticeship);
+            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true, null);
 
             // Assert
             result.Should().BeEquivalentTo(
@@ -231,7 +231,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true, ApprenticeshipType.Apprenticeship, CourseType.Apprenticeship);
+            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, true, ApprenticeshipType.Apprenticeship);
 
             // Assert
             result.Should().BeEquivalentTo(
@@ -258,7 +258,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .Returns(standardsFromSortService.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, false, null, CourseType.Apprenticeship);
+            var result = await service.GetStandardsList("", new List<int>(), levelCodes, orderBy, filter, false, null);
 
             // Assert
             result.Should().BeEquivalentTo(

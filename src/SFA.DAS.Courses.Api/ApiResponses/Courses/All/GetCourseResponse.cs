@@ -7,12 +7,13 @@ using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
-    public class GetCourseResponse : CourseResponseBase
+    public class GetCourseResponse : SingleResponse
     {
         public List<CourseApprenticeshipFundingResponse> ApprenticeshipFunding { get; set; }
         public ApprenticeshipType LearningType { get; set; }
         public CourseType CourseType { get; set; }
         public string LarsCode { get; set; }
+        public CourseDatesResponse CourseDates { get; set; }
 
         public static implicit operator GetCourseResponse(Course source)
         {
@@ -39,7 +40,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding?.Select(c => (CourseApprenticeshipFundingResponse)c).ToList() ?? [],
-                StandardDates = (StandardDatesResponse)source.StandardDates,
+                CourseDates = (CourseDatesResponse)source.CourseDates,
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
                 SectorSubjectAreaTier2Description = source.SectorSubjectAreaTier2Description,
                 SectorSubjectAreaTier1 = source.SectorSubjectAreaTier1,

@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
-    public class GetCoursesSearchResponse : CourseSearchResponseBase
+    public class GetCoursesSearchResponse : MultipleResponse
     {
         public IEnumerable<GetCourseResponse> Standards { get; set; }
     }

@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Courses.Domain.Courses
 {
-    public class ApprenticeshipFundingBase
+    public class ApprenticeshipFunding
     {
         public DateTime EffectiveFrom { get; set; }
 

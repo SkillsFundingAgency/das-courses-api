@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Courses.Api.ApiResponses;
+using SFA.DAS.Courses.Application.Courses.Queries.GetCourse;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCoursesSearch;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
@@ -52,6 +53,17 @@ namespace SFA.DAS.Courses.Api.Controllers
             };
 
             return Ok(response);
+        }
+
+        [HttpGet("lookup/{id}")]
+        public async Task<IActionResult> Lookup(string id)
+        {
+            var result = await _mediator.Send(new GetCourseByIdQuery { Id = id });
+
+            if (result.Course is null)
+                return NotFound();
+
+            return Ok((GetCourseDetailResponse)result.Course);
         }
     }
 }

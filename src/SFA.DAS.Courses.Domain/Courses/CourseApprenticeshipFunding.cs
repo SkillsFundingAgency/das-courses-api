@@ -2,11 +2,11 @@
 
 namespace SFA.DAS.Courses.Domain.Courses
 {
-    public class CourseApprenticeshipFunding : ApprenticeshipFundingBase
+    public class CourseApprenticeshipFunding : ApprenticeshipFunding
     {
         public DurationUnits DurationUnits { get; set; }
 
-        public static explicit operator CourseApprenticeshipFunding(ApprenticeshipFunding apprenticeshipFunding)
+        public static explicit operator CourseApprenticeshipFunding(Entities.ApprenticeshipFunding apprenticeshipFunding)
         {
             if (apprenticeshipFunding == null)
             {

@@ -12,10 +12,14 @@ using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
 
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 {
-    public class WhenGettingStandardsCount
+    public class WhenGettingCoursesCount
     {
-        [Test, MoqAutoData]
-        public async Task Then_Gets_Standard_Count_Filtered_From_Repo(
+        [Test]
+        [MoqInlineAutoData(CourseType.Apprenticeship)]
+        [MoqInlineAutoData(CourseType.ShortCourse)]
+        [MoqInlineAutoData(null)]
+        public async Task Then_Gets_Course_Count_Filtered_From_Repo(
+            CourseType? courseType,
             int count,
             StandardFilter filter,
             [Frozen] Mock<IStandardRepository> mockRepository,
@@ -23,11 +27,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             // Arrange
             mockRepository
-                .Setup(repository => repository.Count(filter, CourseType.Apprenticeship))
+                .Setup(repository => repository.Count(filter, courseType))
                 .ReturnsAsync(count);
 
             // Act
-            var actual = await service.CountStandards(filter);
+            var actual = await service.CountCourses(filter, courseType);
 
             // Assert
             actual.Should().Be(count);

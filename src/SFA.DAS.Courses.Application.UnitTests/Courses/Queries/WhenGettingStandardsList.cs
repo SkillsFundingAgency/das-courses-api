@@ -38,12 +38,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.OrderBy,
                     query.Filter,
                     query.IncludeAllProperties,
-                    query.ApprenticeshipType,
-                    CourseType.Apprenticeship))
+                    query.ApprenticeshipType))
                 .ReturnsAsync(standards);
             
             mockStandardsService
-                .Setup(service => service.Count(query.Filter, CourseType.Apprenticeship))
+                .Setup(service => service.CountStandards(query.Filter))
                 .ReturnsAsync(count);
 
             // Act
@@ -76,11 +75,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.OrderBy,
                     query.Filter,
                     query.IncludeAllProperties,
-                    null,
-                    CourseType.Apprenticeship))
+                    null))
                 .ReturnsAsync(standards);
             mockStandardsService
-                .Setup(service => service.Count(query.Filter, CourseType.Apprenticeship))
+                .Setup(service => service.CountStandards(query.Filter))
                 .ReturnsAsync(count);
             
             // Act

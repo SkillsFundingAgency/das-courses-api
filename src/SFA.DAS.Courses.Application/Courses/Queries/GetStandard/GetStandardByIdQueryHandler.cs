@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
-
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
 {
     public class GetStandardByIdQueryHandler : IRequestHandler<GetStandardByIdQuery, GetStandardByIdResult>
@@ -16,7 +14,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandard
 
         public async Task<GetStandardByIdResult> Handle(GetStandardByIdQuery request, CancellationToken cancellationToken)
         {
-            var standard = await _standardsService.GetStandardByAnyId(request.Id, CourseType.Apprenticeship);
+            var standard = await _standardsService.GetStandardByAnyId(request.Id);
 
             return new GetStandardByIdResult { Standard = standard };
         }

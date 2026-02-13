@@ -31,11 +31,10 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
                     request.OrderBy,
                     request.Filter,
                     request.IncludeAllProperties,
-                    request.ApprenticeshipType,
-                    CourseType.Apprenticeship))
+                    request.ApprenticeshipType))
                 .ToList();
 
-            var total = await _standardsService.Count(request.Filter, CourseType.Apprenticeship);
+            var total = await _standardsService.CountStandards(request.Filter);
 
             if (standards.Count == 0 &&
                 !string.IsNullOrWhiteSpace(request.Keyword) &&

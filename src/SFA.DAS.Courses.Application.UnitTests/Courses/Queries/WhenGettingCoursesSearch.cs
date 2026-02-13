@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                 .ReturnsAsync(standards);
             
             mockStandardsService
-                .Setup(service => service.Count(query.Filter, query.CourseType))
+                .Setup(service => service.CountCourses(query.Filter, query.CourseType))
                 .ReturnsAsync(count);
 
             // Act
@@ -75,7 +75,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.CourseType))
                 .ReturnsAsync(standards);
             mockStandardsService
-                .Setup(service => service.Count(query.Filter, null))
+                .Setup(service => service.CountCourses(query.Filter, null))
                 .ReturnsAsync(count);
             
             // Act
