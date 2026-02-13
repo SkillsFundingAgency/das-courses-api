@@ -7,10 +7,8 @@ using FluentAssertions.Equivalency;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using SFA.DAS.Courses.Api.ApiResponses;
-using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Domain.Entities;
 using TechTalk.SpecFlow;
-using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 {
@@ -26,7 +24,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
 
         [Then("all valid courses are returned")]
-        public async Task ThenAllValidStandardsReturned()
+        public async Task ThenAllValidCoursesReturned()
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -35,16 +33,16 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetCoursesSearchResponse>(result.Content);
 
-            model.Total.Should().Be(DbUtilities.GetValidTestStandards(null).Count());
+            model.Total.Should().Be(DbUtilities.GetValidTestCourses().Count());
 
-            var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(DbUtilities.GetValidTestStandards(null));
+            var expectedCourses = new List<Standard>();
+            expectedCourses.AddRange(DbUtilities.GetValidTestCourses());
 
-            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
+            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
         }
 
         [Then("all valid and invalid courses are returned")]
-        public async Task ThenAllValidAndInvalidStandardsAreReturned()
+        public async Task ThenAllValidAndInvalidCoursesAreReturned()
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -53,16 +51,16 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetCoursesSearchResponse>(result.Content);
 
-            var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(DbUtilities.GetValidTestStandards(null));
-            expectedStandards.AddRange(DbUtilities.GetInValidTestStandards());
+            var expectedCourses = new List<Standard>();
+            expectedCourses.AddRange(DbUtilities.GetValidTestCourses());
+            expectedCourses.AddRange(DbUtilities.GetInValidTestCourses());
 
-            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
-            model.Total.Should().Be(expectedStandards.Count);
+            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
+            model.Total.Should().Be(expectedCourses.Count);
         }
 
         [Then("all courses are returned")]
-        public async Task ThenAllStandardsAreReturned()
+        public async Task ThenAllCoursesAreReturned()
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -71,15 +69,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetCoursesSearchResponse>(result.Content);
 
-            var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(DbUtilities.GetAllTestStandards(null));
+            var expectedCourses = new List<Standard>();
+            expectedCourses.AddRange(DbUtilities.GetAllTestCourses());
             
-            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
-            model.Total.Should().Be(expectedStandards.Count);
+            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
+            model.Total.Should().Be(expectedCourses.Count);
         }
 
         [Then("all not yet approved courses are returned")]
-        public async Task ThenAllNotApprovedStandardsAreReturned()
+        public async Task ThenAllNotApprovedCoursesAreReturned()
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -88,15 +86,15 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetCoursesSearchResponse>(result.Content);
 
-            var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(DbUtilities.GetNotYetApprovedTestStandards());
+            var expectedCourses = new List<Standard>();
+            expectedCourses.AddRange(DbUtilities.GetNotYetApprovedTestCourses());
 
-            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), FullBaseStandardQueryExludes);
-            model.Total.Should().Be(expectedStandards.Count);
+            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), FullBaseStandardQueryExludes);
+            model.Total.Should().Be(expectedCourses.Count);
         }
 
         [Then("the following valid courses are returned")]
-        public async Task ThenTheFollowingValidStandardsReturned(Table table)
+        public async Task ThenTheFollowingValidCoursesReturned(Table table)
         {
             if (!_context.TryGetValue<HttpResponseMessage>(ContextKeys.HttpResponse, out var result))
             {
@@ -105,27 +103,27 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetCoursesSearchResponse>(result.Content);
 
-            var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(GetExpected(table));
+            var expectedCourses = new List<Standard>();
+            expectedCourses.AddRange(GetExpected(table));
 
-            model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
+            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
         }
 
         private static IEnumerable<Standard> GetExpected(Table table)
         {
             var testRoutes = DbUtilities.GetTestRoutes();
-            var standards = new List<Standard>();
+            var courses = new List<Standard>();
             foreach (var row in table.Rows)
             {
-                standards.Add(DbUtilities.GetAllTestStandards(null).Single(standard =>
-                    standard.Title == row["title"] &&
-                    standard.RouteCode == testRoutes.Single(sector => sector.Name == row["route"]).Id &&
-                    standard.Level == int.Parse(row["level"]) &&
-                    standard.Version == row["version"] &&
-                    standard.Status == row["status"]));
+                courses.Add(DbUtilities.GetAllTestCourses().Single(course =>
+                    course.Title == row["title"] &&
+                    course.RouteCode == testRoutes.Single(sector => sector.Name == row["route"]).Id &&
+                    course.Level == int.Parse(row["level"]) &&
+                    course.Version == row["version"] &&
+                    course.Status == row["status"]));
             }
 
-            return standards;
+            return courses;
         }
 
         /// <summary>

@@ -11,14 +11,13 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Api.Controllers;
-using SFA.DAS.Courses.Api.UnitTests.Controllers.Courses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCoursesSearch;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
 using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
-namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
+namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Courses
 {
     public class WhenCallingGetCoursesSearch
     {
@@ -41,8 +40,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                 .Setup(mediator => mediator.Send(
                     It.Is<GetCoursesSearchQuery>(query =>
                         query.Keyword == keyword &&
-                        query.RouteIds.Equals(routeIds) &&
-                        query.Levels.Equals(levels) &&
+                        query.RouteIds.SequenceEqual(routeIds) &&
+                        query.Levels.SequenceEqual(levels) &&
                         query.OrderBy.Equals(orderBy) &&
                         query.Filter.Equals(filter) &&
                         !query.IncludeAllProperties &&

@@ -42,10 +42,10 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
-            model.Total.Should().Be(DbUtilities.GetValidTestStandards(CourseType.Apprenticeship).Count());
+            model.Total.Should().Be(DbUtilities.GetValidTestStandards().Count());
 
             var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(DbUtilities.GetValidTestStandards(CourseType.Apprenticeship));
+            expectedStandards.AddRange(DbUtilities.GetValidTestStandards());
 
             model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetStandardResponse)(Domain.Courses.Standard)s), BaseStandardQueryExludes);
         }
@@ -61,7 +61,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
             var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(DbUtilities.GetValidTestStandards(CourseType.Apprenticeship));
+            expectedStandards.AddRange(DbUtilities.GetValidTestStandards());
             expectedStandards.AddRange(DbUtilities.GetInValidTestStandards());
 
             model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetStandardResponse)(Domain.Courses.Standard)s), BaseStandardQueryExludes);
@@ -79,7 +79,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var model = await HttpUtilities.ReadContent<GetStandardsListResponse>(result.Content);
 
             var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(DbUtilities.GetAllTestStandards(CourseType.Apprenticeship));
+            expectedStandards.AddRange(DbUtilities.GetAllTestStandards());
             
             model.Standards.Should().BeEquivalentTo(expectedStandards.Select(s => (GetStandardResponse)(Domain.Courses.Standard)s), BaseStandardQueryExludes);
             model.Total.Should().Be(expectedStandards.Count);
@@ -157,7 +157,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var standards = new List<Standard>();
             foreach (var row in table.Rows)
             {
-                standards.Add(DbUtilities.GetAllTestStandards(CourseType.Apprenticeship).Single(standard =>
+                standards.Add(DbUtilities.GetAllTestStandards().Single(standard =>
                     standard.Title == row["title"] &&
                     standard.RouteCode == testRoutes.Single(sector => sector.Name == row["route"]).Id &&
                     standard.Level == int.Parse(row["level"]) &&
