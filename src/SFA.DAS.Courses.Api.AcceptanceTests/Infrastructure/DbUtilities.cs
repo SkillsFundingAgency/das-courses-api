@@ -587,10 +587,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
-                            {
-                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "1")
-                            },
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "1"),
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.2",
@@ -614,10 +611,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
-                            {
-                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "1")
-                            },
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "1"),
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.1",
@@ -636,10 +630,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = new List<ApprenticeshipFunding>
-                            {
-                                apprenticeshipFundings.FirstOrDefault(p => p.LarsCode == "5")
-                            },
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "5"),
                             CourseType = CourseType.Apprenticeship,
                             LarsCode = "5",
                             StandardUId = "ST0005_1.0",

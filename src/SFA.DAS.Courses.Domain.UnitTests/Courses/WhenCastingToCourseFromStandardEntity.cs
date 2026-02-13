@@ -48,10 +48,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.RouteCode.Should().Be(source.Route.Id);
             response.ApprovalBody.Should().Be(source.RegulatedBody);
 
-            response.StandardDates.Should().NotBeNull();
-            response.StandardDates.EffectiveFrom.Should().Be(source.LarsStandard.EffectiveFrom);
-            response.StandardDates.EffectiveTo.Should().Be(source.LarsStandard.EffectiveTo);
-            response.StandardDates.LastDateStarts.Should().Be(source.LarsStandard.LastDateStarts);
+            response.StandardDates.Should().BeNull();
 
             response.VersionDetail.Should().NotBeNull();
             response.VersionDetail.EarliestStartDate.Should().Be(source.VersionEarliestStartDate);

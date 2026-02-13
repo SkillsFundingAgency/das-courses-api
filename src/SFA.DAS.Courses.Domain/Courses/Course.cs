@@ -52,7 +52,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 SectorSubjectAreaTier1Description = source.LarsStandard?.SectorSubjectArea1?.SectorSubjectAreaTier1Desc,
                 SectorSubjectAreaTier2 = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.SectorSubjectAreaTier2 : 0m,
                 SectorSubjectAreaTier2Description = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.Name : "",
-                StandardDates = (StandardDates)source.LarsStandard,
+                StandardDates = null,
                 StandardPageUrl = source.StandardPageUrl,
                 StandardUId = source.StandardUId,
                 Status = source.Status,
