@@ -92,12 +92,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         }
 
         [Test]
-        [MoqInlineAutoData("ST0001_1.0", "123")]
-        [MoqInlineAutoData("FA0002_1.0", "456")]
-        [MoqInlineAutoData("SC0003_1.0", "ZSC00003")]
+        [MoqInlineAutoData("ST0001_1.0", "123", CourseType.Apprenticeship)]
+        [MoqInlineAutoData("FA0002_1.0", "456", CourseType.Apprenticeship)]
+        [MoqInlineAutoData("SC0003_1.0", "ZSC00003", CourseType.ShortCourse)]
         public async Task When_Id_Is_StandardUId_Then_Uses_Get(
             string standardUId,
             string larsCode,
+            CourseType courseType,
             [Frozen] Mock<IStandardRepository> standardsRepository,
             StandardsService _sut)
         {
@@ -106,6 +107,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             {
                 StandardUId = standardUId,
                 LarsCode = larsCode,
+                CourseType = courseType,
                 Route = new Route { Name = "Route", Id = 1 },
             };
 
@@ -127,8 +129,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             // Assert
             result.Should().NotBeNull();
             standardsRepository.Verify(r => r.Get(standardUId, null), Times.Once);
-            standardsRepository.Verify(r => r.GetEarliestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
-            standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
+            if (courseType == CourseType.ShortCourse)
+            {
+                standardsRepository.Verify(r => r.GetEarliestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
+                standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
+            }
+            else
+            {
+                standardsRepository.Verify(r => r.GetEarliestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
+                standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
+            }
             standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
         }
 

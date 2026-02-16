@@ -1,10 +1,11 @@
 ﻿using SFA.DAS.Courses.Domain.Courses;
+using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
     public class CourseVersionDetailResponse : VersionDetailResponse
     {
-        public string ProposedDurationUnits { get; set; }
+        public DurationUnits ProposedDurationUnits { get; set; }
 
         public static explicit operator CourseVersionDetailResponse(CourseVersionDetail source)
         {

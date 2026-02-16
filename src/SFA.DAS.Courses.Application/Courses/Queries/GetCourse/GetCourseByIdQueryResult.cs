@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetCourse
 {
-    public class GetCourseByIdResult
+    public class GetCourseByIdQueryResult
     {
         public Course Course { get ; set ; }
     }

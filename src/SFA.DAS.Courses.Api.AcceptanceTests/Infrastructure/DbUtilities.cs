@@ -45,14 +45,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new SectorSubjectAreaTier2
                         {
-                            EffectiveFrom = DateTime.Today,
+                            EffectiveFrom = DateTime.UtcNow.Date,
                             SectorSubjectAreaTier2Desc = "Test Sector",
                             SectorSubjectAreaTier2 = 1m,
                             Name = "Test Sector"
                         },
                         new SectorSubjectAreaTier2
                         {
-                            EffectiveFrom = DateTime.Today,
+                            EffectiveFrom = DateTime.UtcNow.Date,
                             SectorSubjectAreaTier2Desc = "Test Sector 2",
                             SectorSubjectAreaTier2 = 1.1m,
                             Name = "Test Sector 2"
@@ -129,7 +129,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[0],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "1",
                                 SectorSubjectAreaTier2 = 1m,
@@ -161,7 +161,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[0],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "2",
                                 SectorSubjectAreaTier2 = 1m,
@@ -189,7 +189,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[1],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "3",
                                 SectorSubjectAreaTier2 = 1.1m,
@@ -216,7 +216,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[1],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "4",
                                 SectorSubjectAreaTier2 = 1.1m,
@@ -243,7 +243,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[2],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "5",
                                 SectorSubjectAreaTier2 = 1m,
@@ -270,7 +270,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[2],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "6",
                                 SectorSubjectAreaTier2 = 1.1m,
@@ -297,7 +297,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[2],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "7",
                                 SectorSubjectAreaTier2 = 1m,
@@ -322,7 +322,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[2],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LarsCode = "8",
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
@@ -418,7 +418,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[0],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(1),
                                 LarsCode = "11",
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
@@ -443,7 +443,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[1],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.Today.AddDays(1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(1),
                                 LarsCode = "14",
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1

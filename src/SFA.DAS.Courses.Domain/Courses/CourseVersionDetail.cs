@@ -4,7 +4,7 @@ namespace SFA.DAS.Courses.Domain.Courses
 {
     public class CourseVersionDetail : VersionDetail
     {
-        public string ProposedDurationUnits { get; set; }
+        public DurationUnits ProposedDurationUnits { get; set; }
 
         public static explicit operator CourseVersionDetail(Entities.Standard source)
         {
@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 ApprovedForDelivery = source.ApprovedForDelivery,
                 ProposedTypicalDuration = source.ProposedTypicalDuration,
                 ProposedMaxFunding = source.ProposedMaxFunding,
-                ProposedDurationUnits = source.CourseType == CourseType.Apprenticeship ? DurationUnits.Months.ToString() : DurationUnits.Hours.ToString()
+                ProposedDurationUnits = source.CourseType == CourseType.Apprenticeship ? DurationUnits.Months : DurationUnits.Hours
             };
         }
     }
