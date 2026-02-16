@@ -187,7 +187,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             var standard = await _standardsRepository.Get(standardUId, courseType);
             var course = await CourseWithRelatedOccupations(standard);
 
-            if (course != null && course.CourseDates == null)
+            if (course != null && course.CourseDates == null && course.CourseType == CourseType.ShortCourse)
             {
                 course.CourseDates = await GetCourseDates(standard.LarsCode, courseType);
             }
