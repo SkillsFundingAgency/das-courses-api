@@ -13,6 +13,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public CourseDatesResponse CourseDates { get; set; }
         public CourseVersionDetailResponse VersionDetail { get; set; }
         public CourseType CourseType { get; set; }
+        public string LarsCode { get; set; }
 
         public static implicit operator GetCourseDetailResponse(Course source)
         {
@@ -23,7 +24,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
             {
                 StandardUId = source.StandardUId,
                 IfateReferenceNumber = source.IfateReferenceNumber,
-                LarsCode = int.Parse(source.LarsCode),
+                LarsCode = source.LarsCode,
                 Status = source.Status,
                 SearchScore = source.SearchScore,
                 Title = source.Title,
@@ -51,7 +52,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                             .Select(x => (KsbResponse)x).ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
-                ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (CourseApprenticeshipFundingResponse)c).ToList(),
+                ApprenticeshipFunding = source.ApprenticeshipFunding?.Select(c => (CourseApprenticeshipFundingResponse)c).ToList() ?? [],
                 CourseDates = (CourseDatesResponse)source.CourseDates,
                 VersionDetail = (CourseVersionDetailResponse)source.VersionDetail,
                 EqaProvider = (EqaProviderResponse)source.EqaProvider,

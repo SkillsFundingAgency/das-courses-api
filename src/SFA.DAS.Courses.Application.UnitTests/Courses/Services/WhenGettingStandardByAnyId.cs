@@ -55,7 +55,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .ReturnsAsync((Standard)null);
 
             // Act
-            var result = await _sut.GetStandardByAnyId(id);
+            await _sut.GetStandardByAnyId(id);
 
             // Assert
             standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(id, CourseType.Apprenticeship), Times.Once);
@@ -68,20 +68,20 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         [MoqInlineAutoData("FA0001_1.0")]
         [MoqInlineAutoData("SC0001_1.0")]
         public async Task When_Id_Is_StandardUId_Then_Uses_Get(
-            string id,
+            string standardUId,
             [Frozen] Mock<IStandardRepository> standardsRepository,
             StandardsService _sut)
         {
             // Arrange
             standardsRepository
-                .Setup(r => r.Get(id, CourseType.Apprenticeship))
+                .Setup(r => r.Get(standardUId, CourseType.Apprenticeship))
                 .ReturnsAsync((Standard)null);
 
             // Act
-            var result = await _sut.GetStandardByAnyId(id);
+            await _sut.GetStandardByAnyId(standardUId);
 
             // Assert
-            standardsRepository.Verify(r => r.Get(id, CourseType.Apprenticeship), Times.Once);
+            standardsRepository.Verify(r => r.Get(standardUId, CourseType.Apprenticeship), Times.Once);
             standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
             standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
         }

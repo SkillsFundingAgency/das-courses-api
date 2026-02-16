@@ -52,9 +52,9 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             CourseType? courseType = null)
         {
             var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipType, courseType);
-            var courses = standards.Select(standard => (Course)standard);
+            var courses = standards.Select(standard => (Course)standard).ToList();
 
-            foreach(var course in courses)
+            foreach (var course in courses)
             {
                 if (course != null && course.CourseDates == null && course.CourseType == CourseType.ShortCourse)
                 {
@@ -161,7 +161,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             var latestActiveStandard = await _standardsRepository.GetLatestActiveStandard(larsCode, courseType);
             var course = await CourseWithRelatedOccupations(latestActiveStandard);
 
-            if (course != null && course.CourseDates == null)
+            if (course != null && course.CourseDates == null && course.CourseType == CourseType.ShortCourse)
             {
                 course.CourseDates = await GetCourseDates(latestActiveStandard, courseType);
             }
@@ -174,7 +174,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             var latestActiveStandard = await _standardsRepository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, courseType);
             var course = await CourseWithRelatedOccupations(latestActiveStandard);
 
-            if (course != null && course.CourseDates == null)
+            if (course != null && course.CourseDates == null && course.CourseType == CourseType.ShortCourse)
             {
                 course.CourseDates = await GetCourseDates(latestActiveStandard, courseType);
             }
@@ -203,7 +203,14 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 
         private async Task<CourseDates> GetCourseDates(Domain.Entities.Standard latestActiveStandard, CourseType? courseType)
         {
+            if (latestActiveStandard == null)
+                return null;
+
             var earliestActiveStandard = await _standardsRepository.GetEarliestActiveStandard(latestActiveStandard.LarsCode, courseType);
+
+            if (earliestActiveStandard == null)
+                return null;
+
             return new CourseDates
             {
                 EffectiveFrom = earliestActiveStandard.ApprovedForDelivery.GetValueOrDefault(DateTime.MinValue),

@@ -13,6 +13,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public List<StandardApprenticeshipFundingResponse> ApprenticeshipFunding { get; set; }
         public CourseDatesResponse StandardDates { get; set; }
         public StandardVersionDetailResponse VersionDetail { get; set; }
+        public int LarsCode { get; set; }
 
         public static implicit operator GetStandardDetailResponse(Standard source)
         {

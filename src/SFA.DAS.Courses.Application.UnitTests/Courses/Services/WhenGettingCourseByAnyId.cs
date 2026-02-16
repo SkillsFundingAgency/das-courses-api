@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -48,7 +49,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             // Assert
             result.Should().NotBeNull();
             standardsRepository.Verify(r => r.GetLatestActiveStandard(id, null), Times.Once);
-            standardsRepository.Verify(r => r.GetEarliestActiveStandard(id, null), Times.Once);
             standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
             standardsRepository.Verify(r => r.Get(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
         }
@@ -87,7 +87,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             // Assert
             result.Should().NotBeNull();
             standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(id, null), Times.Once);
-            standardsRepository.Verify(r => r.GetEarliestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
             standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
             standardsRepository.Verify(r => r.Get(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
         }
@@ -97,7 +96,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         [MoqInlineAutoData("FA0002_1.0", "456")]
         [MoqInlineAutoData("SC0003_1.0", "ZSC00003")]
         public async Task When_Id_Is_StandardUId_Then_Uses_Get(
-            string id,
+            string standardUId,
             string larsCode,
             [Frozen] Mock<IStandardRepository> standardsRepository,
             StandardsService _sut)
@@ -105,7 +104,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             // Arrange
             var standardFromRepo = new Standard
             {
-                StandardUId = id,
+                StandardUId = standardUId,
                 LarsCode = larsCode,
                 Route = new Route { Name = "Route", Id = 1 },
             };
@@ -119,15 +118,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .ReturnsAsync(standardFromRepo);
 
             standardsRepository
-                .Setup(r => r.Get(id, null))
+                .Setup(r => r.Get(standardUId, null))
                 .ReturnsAsync(standardFromRepo);
 
             // Act
-            var result = await _sut.GetCourseByAnyId(id);
+            var result = await _sut.GetCourseByAnyId(standardUId);
 
             // Assert
             result.Should().NotBeNull();
-            standardsRepository.Verify(r => r.Get(id, null), Times.Once);
+            standardsRepository.Verify(r => r.Get(standardUId, null), Times.Once);
             standardsRepository.Verify(r => r.GetEarliestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
             standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
             standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
@@ -195,6 +194,55 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             standardsRepository.Verify(r => r.Get(id, null), Times.Once);
             standardsRepository.Verify(r => r.GetActiveStandardsByIfateReferenceNumbers(It.IsAny<List<string>>(), It.IsAny<CourseType?>()), Times.Once);
+        }
+
+        [Test]
+        [MoqInlineAutoData("ZSC00123")]
+        public async Task When_ShortCourse_And_CourseDates_Null_Then_Populates_CourseDates(
+            string larsCode,
+            [Frozen] Mock<IStandardRepository> standardsRepository,
+            StandardsService _sut)
+        {
+            // Arrange
+            var earliestApproved = new DateTime(2020, 1, 1, 0, 0, 0,DateTimeKind.Utc);
+            var latestStart = new DateTime(2030, 6, 30, 0, 0, 0, DateTimeKind.Utc);
+
+            var latestActive = new Standard
+            {
+                LarsCode = larsCode,
+                CourseType = CourseType.ShortCourse,
+                VersionLatestStartDate = latestStart,
+                Route = new Route { Name = "Route", Id = 1 }
+            };
+
+            var earliestActive = new Standard
+            {
+                LarsCode = larsCode,
+                CourseType = CourseType.ShortCourse,
+                ApprovedForDelivery = earliestApproved,
+                Route = new Route { Name = "Route", Id = 1 }
+            };
+
+            standardsRepository
+                .Setup(r => r.GetLatestActiveStandard(larsCode, null))
+                .ReturnsAsync(latestActive);
+
+            standardsRepository
+                .Setup(r => r.GetEarliestActiveStandard(larsCode, null))
+                .ReturnsAsync(earliestActive);
+
+            // Act
+            var result = await _sut.GetCourseByAnyId(larsCode);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.CourseDates.Should().NotBeNull();
+            result.CourseDates.EffectiveFrom.Should().Be(earliestApproved);
+            result.CourseDates.EffectiveTo.Should().Be(latestStart);
+            result.CourseDates.LastDateStarts.Should().Be(latestStart);
+
+            standardsRepository.Verify(r => r.GetLatestActiveStandard(larsCode, null), Times.Once);
+            standardsRepository.Verify(r => r.GetEarliestActiveStandard(larsCode, null), Times.Once);
         }
     }
 }

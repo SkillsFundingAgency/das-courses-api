@@ -264,5 +264,89 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             result.Should().BeEquivalentTo(
                 standardsFromSortService.Select(s => (Domain.Courses.Course)s));
         }
+
+        [Test, MoqAutoData]
+        public async Task When_List_Contains_ShortCourse_With_Null_CourseDates_Then_Populates_Only_For_ShortCourse(
+            OrderBy orderBy,
+            StandardFilter filter,
+            [Frozen] Mock<IStandardRepository> standardsRepository,
+            [Frozen] Mock<IStandardsSortOrderService> sortOrderService,
+            StandardsService _sut)
+        {
+            // Arrange
+            var shortCourseLars = "ZSC00123";
+            var apprenticeshipLars = "123";
+
+            var earliestApproved = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var latestStart = new DateTime(2030, 6, 30, 0, 0, 0, DateTimeKind.Utc);
+
+            var earliestActiveShortCourse = new Standard
+            {
+                StandardUId = "SC0001_1.0",
+                LarsCode = shortCourseLars,
+                CourseType = CourseType.ShortCourse,
+                LarsStandard = null,
+                Route = new Route { Name = "Route", Id = 1 },
+                ApprovedForDelivery = earliestApproved
+            };
+
+            var latestActiveShortCourseFromRepo = new Standard
+            {
+                StandardUId = "SC0001_1.1",
+                LarsCode = shortCourseLars,
+                CourseType = CourseType.ShortCourse,
+                LarsStandard = null,
+                Route = new Route { Name = "Route", Id = 1 },
+                VersionLatestStartDate = latestStart
+            };
+
+            var activeApprenticeshipFromRepo = new Standard
+            {
+                StandardUId = "ST0001_1.0",
+                LarsCode = apprenticeshipLars,
+                CourseType = CourseType.Apprenticeship,
+                LarsStandard = null,
+                Route = new Route { Name = "Route", Id = 1 }
+            };
+
+            var listFromRepo = new List<Standard> { latestActiveShortCourseFromRepo, activeApprenticeshipFromRepo };
+
+            standardsRepository
+                .Setup(r => r.GetStandards(new List<int>(), new List<int>(), filter, false, null, null))
+                .ReturnsAsync(listFromRepo);
+
+            standardsRepository
+                .Setup(r => r.GetLatestActiveStandard(shortCourseLars, null))
+                .ReturnsAsync(latestActiveShortCourseFromRepo);
+
+            standardsRepository
+                .Setup(r => r.GetEarliestActiveStandard(shortCourseLars, null))
+                .ReturnsAsync(earliestActiveShortCourse);
+
+            sortOrderService
+            .Setup(s => s.OrderBy(It.IsAny<IEnumerable<Standard>>(), It.IsAny<OrderBy>(), It.IsAny<string>()))
+            .Returns((IEnumerable<Standard> items, OrderBy _, string __) => items.OrderBy(x => x.StandardUId));
+
+            // Act
+            var result = (await _sut.GetCoursesList("", new List<int>(), new List<int>(), orderBy, filter, false, null, null)).ToList();
+
+            // Assert
+            var shortCourse = result.Single(x => x.LarsCode == shortCourseLars);
+            shortCourse.CourseDates.Should().NotBeNull();
+            shortCourse.CourseDates.EffectiveFrom.Should().Be(earliestApproved);
+            shortCourse.CourseDates.EffectiveTo.Should().Be(latestStart);
+            shortCourse.CourseDates.LastDateStarts.Should().Be(latestStart);
+
+            var apprenticeship = result.Single(x => x.LarsCode == apprenticeshipLars);
+            apprenticeship.CourseDates.Should().BeNull();
+
+            // the short courses course data was calculated from versions
+            standardsRepository.Verify(r => r.GetLatestActiveStandard(shortCourseLars, null), Times.Once);
+            standardsRepository.Verify(r => r.GetEarliestActiveStandard(shortCourseLars, null), Times.Once);
+
+            // the apprenticeship courses data was known from lars standard
+            standardsRepository.Verify(r => r.GetLatestActiveStandard(apprenticeshipLars, null), Times.Never);
+            standardsRepository.Verify(r => r.GetEarliestActiveStandard(apprenticeshipLars, null), Times.Never);
+        }
     }
 }

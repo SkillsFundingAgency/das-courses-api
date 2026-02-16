@@ -47,7 +47,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
             var response = new GetCoursesSearchResponse
             {
-                Standards = queryResult.Standards.Select(course => (GetCourseResponse)course),
+                Courses = queryResult.Standards.Select(course => (GetCourseResponse)course),
                 Total = queryResult.Total,
                 TotalFiltered = queryResult.TotalFiltered
             };

@@ -42,7 +42,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         }
 
         public static IEnumerable<Standard> InMemoryFilterIsLatestVersion(this IEnumerable<Standard> standards, 
-            StandardFilter filter, bool includeDistictLarsCodes = true)
+            StandardFilter filter, bool includeDistinctLarsCodes = true)
         {
             switch (filter)
             {
@@ -53,7 +53,7 @@ namespace SFA.DAS.Courses.Data.Extensions
                             .GroupBy(s => s.IfateReferenceNumber)
                             .Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault());
 
-                        if (includeDistictLarsCodes)
+                        if (includeDistinctLarsCodes)
                         {
                             // There are several exception cases where standards with same IfateReferenceNumber 
                             // have more than one record each, one in `retired` and another in `approved for delivery` status 
@@ -84,18 +84,18 @@ namespace SFA.DAS.Courses.Data.Extensions
         }
 
         public static IEnumerable<Standard> InMemoryFilterIsEarliestVersion(this IEnumerable<Standard> standards,
-            StandardFilter filter, bool includeDistictLarsCodes = true)
+            StandardFilter filter, bool includeDistinctLarsCodes = true)
         {
             switch (filter)
             {
                 case StandardFilter.Active:
                 case StandardFilter.ActiveAvailable:
                     {
-                        var latestVersionStandards = standards
+                        var earliestVersionStandards = standards
                             .GroupBy(s => s.IfateReferenceNumber)
                             .Select(c => c.OrderBy(x => x.VersionMajor).ThenBy(y => y.VersionMinor).FirstOrDefault());
 
-                        if (includeDistictLarsCodes)
+                        if (includeDistinctLarsCodes)
                         {
                             // There are several exception cases where standards with same IfateReferenceNumber 
                             // have more than one record each, one in `retired` and another in `approved for delivery` status 
@@ -110,13 +110,13 @@ namespace SFA.DAS.Courses.Data.Extensions
                             // To include all of the above we will create a list that is grouped by LarsCode (otherwise unnecessary)
                             // and union it with the `actual` list which is grouped by IFateReferenceNumber 
 
-                            latestVersionStandards = latestVersionStandards.Union(
+                            earliestVersionStandards = earliestVersionStandards.Union(
                                 standards
                                     .GroupBy(s => s.LarsCode)
                                     .Select(c => c.OrderBy(x => x.VersionMajor).ThenBy(y => y.VersionMinor).FirstOrDefault()));
                         }
 
-                        return latestVersionStandards;
+                        return earliestVersionStandards;
                     }
                 default:
                     break;
