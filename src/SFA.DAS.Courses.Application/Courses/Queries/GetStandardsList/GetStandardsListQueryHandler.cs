@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -18,6 +19,9 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList
             ILogger<GetStandardsListQueryHandler> logger,
             IStandardsService standardsService)
         {
+            ArgumentNullException.ThrowIfNull(logger);
+            ArgumentNullException.ThrowIfNull(standardsService);
+
             _logger = logger;
             _standardsService = standardsService;
         }
