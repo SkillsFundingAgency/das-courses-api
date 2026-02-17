@@ -56,7 +56,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 TypicalJobTitles = source.TypicalJobTitles,
                 Version = source.Version
             };
-
         }
     }
 }

@@ -5,9 +5,7 @@ namespace SFA.DAS.Courses.Api.ApiResponses
     public class ApprenticeshipFundingResponseBase
     {
         public int MaxEmployerLevyCap { get; set; }
-
         public DateTime? EffectiveTo { get; set; }
-
         public DateTime EffectiveFrom { get; set; }
         public int Duration { get; set; }
         public int? Incentive1618 { get; set; }
