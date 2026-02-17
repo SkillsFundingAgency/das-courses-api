@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +17,11 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
         private readonly IStandardsService _standardsService;
 
         public GetStandardOptionKsbsQueryHandler(IStandardsService standardsService)
-            => _standardsService = standardsService;
+        {
+            ArgumentNullException.ThrowIfNull(standardsService);
+
+            _standardsService = standardsService;
+        }
 
         public async Task<GetStandardOptionKsbsResult> Handle(GetStandardOptionKsbsQuery request, CancellationToken cancellationToken)
         {

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -12,7 +13,11 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardsByIFateReferen
         private readonly IStandardsService _standardsService;
 
         public GetStandardsByIFateReferenceQueryHandler(IStandardsService standardsService)
-            => _standardsService = standardsService;
+        {
+            ArgumentNullException.ThrowIfNull(standardsService);
+
+            _standardsService = standardsService;
+        }
 
         public async Task<GetStandardsByIFateReferenceResult> Handle(GetStandardsByIFateReferenceQuery request, CancellationToken cancellationToken)
         {

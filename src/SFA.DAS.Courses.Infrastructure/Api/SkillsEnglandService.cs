@@ -24,14 +24,16 @@ namespace SFA.DAS.Courses.Infrastructure.Api
 
         public async Task<SkillsEnglandStandardsResult> GetCourseImports()
         {
-            var apprenticeshipsTask =
-                GetData<Apprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipsApiUrl);
+            var config = _coursesConfiguration?.SkillsEnglandApiConfiguration;
 
-            var foundationApprenticeshipsTask =
-                GetData<FoundationApprenticeship>(_coursesConfiguration.SkillsEnglandApiConfiguration.FoundationApprenticeshipsApiUrl);
+            var apprenticeshipsTask = GetDataIfConfigured<Apprenticeship>(
+                config?.ApprenticeshipsApiUrl);
 
-            var apprenticeshipUnitsTask =
-                GetData<ApprenticeshipUnit>(_coursesConfiguration.SkillsEnglandApiConfiguration.ApprenticeshipUnitsApiUrl);
+            var foundationApprenticeshipsTask = GetDataIfConfigured<FoundationApprenticeship>(
+                config?.FoundationApprenticeshipsApiUrl);
+
+            var apprenticeshipUnitsTask = GetDataIfConfigured<ApprenticeshipUnit>(
+                config?.ApprenticeshipUnitsApiUrl);
 
             await Task.WhenAll(
                 apprenticeshipsTask,
@@ -44,6 +46,16 @@ namespace SFA.DAS.Courses.Infrastructure.Api
                 FoundationApprenticeships = foundationApprenticeshipsTask.Result,
                 ApprenticeshipUnits = apprenticeshipUnitsTask.Result
             };
+        }
+
+        private async Task<IEnumerable<T>> GetDataIfConfigured<T>(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return await Task.FromResult(Enumerable.Empty<T>());
+            }
+
+            return await GetData<T>(path);
         }
 
         private async Task<IEnumerable<T>> GetData<T>(string path)
@@ -63,8 +75,9 @@ namespace SFA.DAS.Courses.Infrastructure.Api
                 ]
             };
 
-            var standards = JsonConvert.DeserializeObject<IEnumerable<T>>(jsonResponse, settings);
-            return standards;
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonResponse, settings)
+                   ?? Enumerable.Empty<T>();
         }
+
     }
 }
