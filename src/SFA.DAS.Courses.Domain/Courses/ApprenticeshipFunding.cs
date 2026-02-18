@@ -5,9 +5,7 @@ namespace SFA.DAS.Courses.Domain.Courses
     public class ApprenticeshipFunding
     {
         public DateTime EffectiveFrom { get; set; }
-
         public DateTime? EffectiveTo { get; set; }
-
         public decimal MaxEmployerLevyCap { get; set; }
         public int Duration { get; set; }
         public int? Incentive1618 { get; set; }
