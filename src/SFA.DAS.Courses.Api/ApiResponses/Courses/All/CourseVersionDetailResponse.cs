@@ -9,6 +9,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public static explicit operator CourseVersionDetailResponse(CourseVersionDetail source)
         {
+            if (source == null)
+                return null;
+
             return new CourseVersionDetailResponse
             {
                 EarliestStartDate = source.EarliestStartDate,

@@ -8,8 +8,12 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string ContactName { get; set; }
         public string ContactEmail { get; set; }
         public string WebLink { get; set; }
+
         public static explicit operator EqaProviderResponse(EqaProvider source)
         {
+            if (source == null)
+                return null;
+
             return new EqaProviderResponse
             {
                 Name = source.Name,
