@@ -26,11 +26,11 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("entryRequirements")]
         public Settable<string> EntryRequirements { get; set; } = new Settable<string>(string.Empty);
 
+        [JsonProperty("greenJobTitles")]
+        public Settable<List<string>> GreenJobTitles { get; set; } = new Settable<List<string>>();
+
         [JsonProperty("keywords")]
         public Settable<List<string>> Keywords { get; set; }
-
-        [JsonProperty("knowledges")]
-        public Settable<List<Knowledge>> Knowledges { get; set; } = new Settable<List<Knowledge>>();
 
         [JsonProperty("larsCode")]
         public Settable<string> LarsCode { get; set; }
@@ -44,8 +44,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("latestStartDate")]
         public Settable<DateTime?> VersionLatestStartDate { get; set; }
 
-        [JsonProperty("learningHours")]
-        public Settable<int> LearningHours { get; set; }
+        [JsonProperty("minimumHoursForCompliance")]
+        public Settable<int> MinimumHoursForCompliance { get; set; }
 
         [JsonProperty("level")]
         public Settable<int> Level { get; set; }
@@ -53,8 +53,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("maxFunding")]
         public Settable<int> ProposedMaxFunding { get; set; }
 
-        [JsonProperty("overviewOfRole")]
-        public Settable<string> OverviewOfRole { get; set; }
+        [JsonProperty("overviewOfTheSkillsGap")]
+        public Settable<string> OverviewOfTheSkillsGap { get; set; }
 
         [JsonProperty("publishDate")]
         public Settable<DateTime> PublishDate { get; set; }
@@ -74,11 +74,14 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("route")]
         public Settable<string> Route { get; set; }
 
-        [JsonProperty("skills")]
-        public Settable<List<Skill>> Skills { get; set; } = new Settable<List<Skill>>();
-
         [JsonProperty("status")]
         public Settable<string> Status { get; set; }
+
+        [JsonProperty("technicalKnowledges")]
+        public Settable<List<IdDetailPair>> TechnicalKnowledges { get; set; } = new Settable<List<IdDetailPair>>();
+
+        [JsonProperty("technicalSkills")]
+        public Settable<List<IdDetailPair>> TechnicalSkills { get; set; } = new Settable<List<IdDetailPair>>();
 
         [JsonProperty("title")]
         public Settable<string> Title { get; set; }
@@ -86,8 +89,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("typicalJobTitles")]
         public Settable<List<string>> TypicalJobTitles { get; set; }
 
-        [JsonProperty("url")]
-        public Settable<Uri> Url { get; set; }
+        [JsonProperty("apprenticeshipUnitUrl")]
+        public Settable<Uri> ApprenticeshipUnitUrl { get; set; }
 
         [JsonProperty("version")]
         public Settable<string> Version { get; set; }
@@ -95,19 +98,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("versionNumber")] // Not Used
         public Settable<string> VersionNumber { get; set; }
 
-        public class Skill
+        public class IdDetailPair
         {
-            [JsonProperty("skillId")]
-            public Settable<Guid> SkillId { get; set; }
-
-            [JsonProperty("detail")]
-            public Settable<string> Detail { get; set; }
-        }
-
-        public class Knowledge
-        {
-            [JsonProperty("knowledgeId")]
-            public Settable<Guid> KnowledgeId { get; set; }
+            [JsonProperty("id")]
+            public Settable<Guid> Id { get; set; }
 
             [JsonProperty("detail")]
             public Settable<string> Detail { get; set; }

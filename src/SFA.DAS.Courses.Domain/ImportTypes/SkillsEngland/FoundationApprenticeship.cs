@@ -162,6 +162,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         {
             [JsonProperty("id")]
             public Settable<Guid> Id { get; set; }
+
             [JsonProperty("detail")]
             public Settable<string> Detail { get; set; }
         }
@@ -170,6 +171,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         {
             [JsonProperty("name")]
             public Settable<string> Name { get; set; } = new Settable<string>(string.Empty);
+
             [JsonProperty("reference")]
             public Settable<string> Reference { get; set; } = new Settable<string>(string.Empty);
         }
