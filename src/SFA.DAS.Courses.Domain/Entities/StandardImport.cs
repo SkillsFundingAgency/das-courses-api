@@ -63,7 +63,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 Status = source.Status.Value?.Trim(),
                 Title = source.Title.Value?.Trim(),
                 TrailBlazerContact = source.TbMainContact.Value?.Trim(),
-                TypicalJobTitles = (source.TypicalJobTitles.Value?.Any() ?? false) ? string.Join("|", source.TypicalJobTitles.Value) : string.Empty,
+                TypicalJobTitles = GetCombinedGreenAndTypicalJobTitles(source),
                 Version = (source.Version?.Value).ToBaselineVersion(),
                 VersionEarliestStartDate = source.VersionEarliestStartDate.Value,
                 VersionLatestEndDate = source.VersionLatestEndDate.Value,
@@ -71,6 +71,19 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionMajor = GetVersionPart(source.Version?.Value, VersionPart.Major),
                 VersionMinor = GetVersionPart(source.Version?.Value, VersionPart.Minor)
             };
+        }
+
+        private static string GetCombinedGreenAndTypicalJobTitles(ImportTypes.SkillsEngland.Standard standard)
+        {
+            var combined = Enumerable.Empty<string>()
+                .Concat(standard.TypicalJobTitles?.Value ?? Enumerable.Empty<string>())
+                .Concat(standard.GreenJobTitles?.Value ?? Enumerable.Empty<string>())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct();
+
+            return combined.Any()
+                ? string.Join("|", combined)
+                : string.Empty;
         }
 
         private static List<string> GetRelatedOccupationsStandardCodes(ImportTypes.SkillsEngland.Standard standard)
@@ -315,18 +328,41 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsListWithoutDutyMapping(ImportTypes.SkillsEngland.Standard standard)
         {
-            var ksbs = standard.ApprenticeshipType == Entities.ApprenticeshipType.Apprenticeship
-                ? standard.Knowledges.Value?.Select((x, i) => Ksb.Knowledge(x.KnowledgeId.Value, i + 1, x.Detail.Value))
-                    .Union(standard.Skills.Value?.Select((x, i) => Ksb.Skill(x.SkillId.Value, i + 1, x.Detail.Value)))
-                    .Union(standard.Behaviours.Value?.Select((x, i) => Ksb.Behaviour(x.BehaviourId.Value, i + 1, x.Detail.Value)))
-                : standard.TechnicalKnowledges.Value?.Select((x, i) => Ksb.TechnicalKnowledge(x.Id.Value, i + 1, x.Detail.Value))
-                    .Union(standard.TechnicalSkills.Value?.Select((x, i) => Ksb.TechnicalSkill(x.Id.Value, i + 1, x.Detail.Value)))
-                    .Union(standard.EmployabilitySkillsAndBehaviours.Value?.Select((x, i) => Ksb.EmployabilitySkillsAndBehaviour(x.Id.Value, i + 1, x.Detail.Value)));
+            var ksbs = standard.ApprenticeshipType switch
+            {
+                ApprenticeshipType.Apprenticeship => GetApprenticeshipKsbs(standard),
+                ApprenticeshipType.FoundationApprenticeship => GetFoundationApprenticeshipKsbs(standard),
+                ApprenticeshipType.ApprenticeshipUnit => GetApprenticeshipUnitKsbs(standard),
+                _ => Enumerable.Empty<Ksb>()
+            };
 
             return new List<StandardOption>
             {
-                StandardOption.CreateCorePseudoOption(ksbs?.DistinctBy(x => x.Key).ToList())
+                StandardOption.CreateCorePseudoOption(ksbs.DistinctBy(x => x.Key).ToList())
             };
+        }
+
+        private static IEnumerable<Ksb> GetApprenticeshipKsbs(ImportTypes.SkillsEngland.Standard standard)
+        {
+            return Enumerable.Empty<Ksb>()
+                .Concat(standard.Knowledges?.Value?.Select((x, i) => Ksb.Knowledge(x.KnowledgeId.Value, i + 1, x.Detail.Value)) ?? Enumerable.Empty<Ksb>())
+                .Concat(standard.Skills?.Value?.Select((x, i) => Ksb.Skill(x.SkillId.Value, i + 1, x.Detail.Value)) ?? Enumerable.Empty<Ksb>())
+                .Concat(standard.Behaviours?.Value?.Select((x, i) => Ksb.Behaviour(x.BehaviourId.Value, i + 1, x.Detail.Value)) ?? Enumerable.Empty<Ksb>());
+        }
+
+        private static IEnumerable<Ksb> GetFoundationApprenticeshipKsbs(ImportTypes.SkillsEngland.Standard standard)
+        {
+            return Enumerable.Empty<Ksb>()
+                .Concat(standard.TechnicalKnowledges?.Value?.Select((x, i) => Ksb.TechnicalKnowledge(x.Id.Value, i + 1, x.Detail.Value)) ?? Enumerable.Empty<Ksb>())
+                .Concat(standard.TechnicalSkills?.Value?.Select((x, i) => Ksb.TechnicalSkill(x.Id.Value, i + 1, x.Detail.Value)) ?? Enumerable.Empty<Ksb>())
+                .Concat(standard.EmployabilitySkillsAndBehaviours?.Value?.Select((x, i) => Ksb.EmployabilitySkillsAndBehaviour(x.Id.Value, i + 1, x.Detail.Value)) ?? Enumerable.Empty<Ksb>());
+        }
+
+        private static IEnumerable<Ksb> GetApprenticeshipUnitKsbs(ImportTypes.SkillsEngland.Standard standard)
+        {
+            return Enumerable.Empty<Ksb>()
+                .Concat(standard.TechnicalKnowledges?.Value?.Select((x, i) => Ksb.TechnicalKnowledge(x.Id.Value, i + 1, x.Detail.Value)) ?? Enumerable.Empty<Ksb>())
+                .Concat(standard.TechnicalSkills?.Value?.Select((x, i) => Ksb.TechnicalSkill(x.Id.Value, i + 1, x.Detail.Value)) ?? Enumerable.Empty<Ksb>());
         }
 
         private static bool GetIsRegulated(ImportTypes.SkillsEngland.Standard standard, string name)
