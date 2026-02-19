@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
             actual.EqaProviderContactEmail.Should().Be(standard.EqaProvider.Value?.ContactEmail.Value?.Trim());
             actual.EqaProviderWebLink.Should().Be(standard.EqaProvider.Value.WebLink.Value);
             actual.Title.Should().Be(standard.Title.Value.Trim());
-            actual.TypicalJobTitles.Should().Be(string.Join("|", standard.TypicalJobTitles.Value));
+            actual.TypicalJobTitles.Should().Be(string.Join("|", string.Join("|", standard.TypicalJobTitles.Value), string.Join("|", standard.GreenJobTitles.Value)));
             actual.Version.Should().Be((standard.Version?.Value).ToBaselineVersion());
             actual.RegulatedBody.Should().Be(standard.RegulatedBody.Value?.Trim());
             actual.CreatedDate.Should().Be(standard.CreatedDate.Value);

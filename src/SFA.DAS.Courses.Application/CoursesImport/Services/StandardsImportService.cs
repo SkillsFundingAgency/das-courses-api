@@ -435,7 +435,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                             validationFailures.Add(entry.Key, new ValidationFailures());
                         }
 
-                        validationFailures[entry.Key].AddValidationFailure(validator.ValidationFailureType, result.Errors[0].ErrorMessage);
+                        validationFailures[entry.Key].AddValidationFailures(validator.ValidationFailureType, result.Errors.Select(p => p.ErrorMessage));
                     }
                 }
             }

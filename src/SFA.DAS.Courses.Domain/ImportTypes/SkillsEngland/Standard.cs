@@ -8,7 +8,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
     [InitializeSettables]
     public class Standard
     {
-        #region Common properties between standards and foundation apprenticeships
+        #region Common properties
 
         public ApprenticeshipType ApprenticeshipType { get; set; }
         public Settable<DateTime?> ApprovedForDelivery { get; set; }
@@ -42,12 +42,14 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<DateTime?> VersionLatestEndDate { get; set; }
         public Settable<DateTime?> VersionLatestStartDate { get; set; }
         public Settable<string> VersionNumber { get; set; }
+        #endregion Common properties
 
-
-        #endregion Common properties between standards and foundation apprenticeships
+        #region Common properties between foundation apprenticeships and apprenticeship units
+        public Settable<List<IdDetailPair>> TechnicalKnowledges { get; set; } = new Settable<List<IdDetailPair>>();
+        public Settable<List<IdDetailPair>> TechnicalSkills { get; set; } = new Settable<List<IdDetailPair>>();
+        #endregion Common properties between foundation apprenticeships and apprenticeship units
 
         #region Only applicable to standards apprenticeships
-
         public Settable<List<Behaviour>> Behaviours { get; set; } = new Settable<List<Behaviour>>();
         public Settable<bool> CoreAndOptions { get; set; }
         public Settable<bool> CoronationEmblem { get; set; }
@@ -60,23 +62,18 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<List<Skill>> Skills { get; set; } = new Settable<List<Skill>>();
         public Settable<Uri> StandardPageUrl { get; set; }
         public Settable<string> TbMainContact { get; set; } = new Settable<string>(string.Empty);
-
-        #endregion Standards apprenticeships
+        #endregion Only applicable to standards apprenticeships
 
         #region Only applicable to Foundation Apprenticeships
-
         public Settable<bool> AssessmentChanged { get; set; } = new();
         public Settable<List<IdDetailPair>> EmployabilitySkillsAndBehaviours { get; set; } = new Settable<List<IdDetailPair>>();
         public Settable<Uri> FoundationApprenticeshipUrl { get; set; } = new();
         public Settable<List<RelatedOccupation>> RelatedOccupations { get; set; } = new Settable<List<RelatedOccupation>>();
-        public Settable<List<IdDetailPair>> TechnicalKnowledges { get; set; } = new Settable<List<IdDetailPair>>();
-        public Settable<List<IdDetailPair>> TechnicalSkills { get; set; } = new Settable<List<IdDetailPair>>();
-
-        #endregion Foundation Apprenticeships
+        #endregion Only applicable to Foundation Apprenticeships
 
         #region Only applicable to Apprenticeship Units
-
-        #endregion  Apprenticeship Units
+        public Settable<List<string>> GreenJobTitles { get; set; } = new Settable<List<string>>();
+        #endregion Only applicable to Apprenticeship Units
 
         public static implicit operator Standard(Apprenticeship apprenticeship)
         {
@@ -278,18 +275,14 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                 CourseType = CourseType.ShortCourse,
                 CreatedDate = apprenticeshipUnit.CreatedDate.Clone(),
                 DurationUnits = DurationUnits.Hours,
+                GreenJobTitles = apprenticeshipUnit.GreenJobTitles.MapList(p => p),
                 Keywords = apprenticeshipUnit.Keywords.MapList(p => p),
-                Knowledges = apprenticeshipUnit.Knowledges.MapList(p => new Knowledge
-                {
-                    Detail = p.Detail.Clone(),
-                    KnowledgeId = p.KnowledgeId.Clone()
-                }),
                 LarsCode = apprenticeshipUnit.LarsCode.Clone(),
                 LastUpdated = apprenticeshipUnit.LastUpdated.Clone(),
                 Level = apprenticeshipUnit.Level.Clone(),
-                OverviewOfRole = apprenticeshipUnit.OverviewOfRole.Clone(),
+                OverviewOfRole = apprenticeshipUnit.OverviewOfTheSkillsGap.Clone(),
                 ProposedMaxFunding = apprenticeshipUnit.ProposedMaxFunding.Clone(),
-                ProposedTypicalDuration = apprenticeshipUnit.LearningHours.Clone(),
+                ProposedTypicalDuration = apprenticeshipUnit.MinimumHoursForCompliance.Clone(),
                 PublishDate = apprenticeshipUnit.PublishDate.Clone(),
                 ReferenceNumber = apprenticeshipUnit.ReferenceNumber.Clone(),
                 Regulated = apprenticeshipUnit.Regulated.Clone(),
@@ -301,15 +294,20 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                     WebLink = p.WebLink.Clone()
                 }),
                 Route = apprenticeshipUnit.Route.Clone(),
-                Skills = apprenticeshipUnit.Skills.MapList(p => new Skill
+                TechnicalKnowledges = apprenticeshipUnit.TechnicalKnowledges.MapList(p => new IdDetailPair
                 {
                     Detail = p.Detail.Clone(),
-                    SkillId = p.SkillId.Clone()
+                    Id = p.Id.Clone()
+                }),
+                TechnicalSkills = apprenticeshipUnit.TechnicalSkills.MapList(p => new IdDetailPair
+                {
+                    Detail = p.Detail.Clone(),
+                    Id = p.Id.Clone()
                 }),
                 Status = apprenticeshipUnit.Status.Clone(),
                 Title = apprenticeshipUnit.Title.Clone(),
                 TypicalJobTitles = apprenticeshipUnit.TypicalJobTitles.MapList(p => p),
-                StandardPageUrl = apprenticeshipUnit.Url.Clone(),
+                StandardPageUrl = apprenticeshipUnit.ApprenticeshipUnitUrl.Clone(),
                 Version = apprenticeshipUnit.Version.Clone(),
                 VersionEarliestStartDate = apprenticeshipUnit.VersionEarliestStartDate.Clone(),
                 VersionLatestEndDate = apprenticeshipUnit.VersionLatestEndDate.Clone(),
