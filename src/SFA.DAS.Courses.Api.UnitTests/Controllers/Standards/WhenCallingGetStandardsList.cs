@@ -46,8 +46,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                 .Setup(mediator => mediator.Send(
                     It.Is<GetStandardsListQuery>(query =>
                         query.Keyword == keyword &&
-                        query.RouteIds.Equals(routeIds) &&
-                        query.Levels.Equals(levels) &&
+                        query.RouteIds.SequenceEqual(routeIds) &&
+                        query.Levels.SequenceEqual(levels) &&
                         query.OrderBy.Equals(orderBy) &&
                         query.Filter.Equals(filter) &&
                         !query.IncludeAllProperties &&
@@ -67,8 +67,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             // Assert all properties except LarsCode
             model.Standards.Should().BeEquivalentTo(
                 queryResult.Standards,
-                options => StandardToGetStandardResponseOptions
-                    .ExclusionsGetStandardResponse(options)
+                options => StandardsEquivalencyAssertionOptions
+                    .GetStandardResponseExclusions(options)
                     .Excluding(s => s.LarsCode));
 
             // Assert LarsCode conversion with distinct values

@@ -21,7 +21,7 @@ public class WhenCastingToStandardOptionFromEntity
             Ksb.EmployabilitySkillsAndBehaviour(Guid.NewGuid(), 6, "Employability Skills and Behaviour Detail")
         });
 
-        var actual = (Domain.Courses.StandardOption)source;
+        var actual = (Domain.Courses.CourseOption)source;
 
         actual.Knowledge.Should().HaveCount(1);
         actual.Knowledge[0].Detail.Should().Be("Knowledge Detail");
@@ -35,7 +35,7 @@ public class WhenCastingToStandardOptionFromEntity
         actual.TechnicalSkills[0].Detail.Should().Be("Technical Skill Detail");
         actual.EmployabilitySkillsAndBehaviours.Should().HaveCount(1);
         actual.EmployabilitySkillsAndBehaviours[0].Detail.Should().Be("Employability Skills and Behaviour Detail");
-        actual.Title.Should().Be(Domain.Courses.StandardOption.CoreTitle);
+        actual.Title.Should().Be(Domain.Courses.CourseOption.CoreTitle);
         actual.Ksbs.Should().HaveCount(6);
     }
 }

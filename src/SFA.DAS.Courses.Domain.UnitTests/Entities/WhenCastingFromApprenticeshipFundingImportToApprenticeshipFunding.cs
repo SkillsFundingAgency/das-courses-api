@@ -21,8 +21,8 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
 
             actual.Id.Should().NotBeEmpty();
             actual.LarsCode.Should().Be(apprenticeshipFundingImport.LarsCode.ToString());
-            actual.DurationUnits.Should().Be("Months");
-            actual.FundingStream.Should().Be("Apprenticeship");
+            actual.DurationUnits.Should().Be(DurationUnits.Months);
+            actual.FundingStream.Should().Be(ApprenticeshipType.Apprenticeship.ToString());
         }
     }
 }

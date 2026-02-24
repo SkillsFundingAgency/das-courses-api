@@ -145,11 +145,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             var secondBatch = insertedBatches[1];
 
             Assert.That(firstBatch, Is.Not.Empty);
-            Assert.That(firstBatch.All(x => x.DurationUnits == "Hours"), Is.True);
+            Assert.That(firstBatch.All(x => x.DurationUnits == DurationUnits.Hours), Is.True);
 
             Assert.That(secondBatch, Is.Not.Empty);
-            Assert.That(secondBatch.All(x => x.DurationUnits == "Months"), Is.True);
-            Assert.That(secondBatch.All(x => x.FundingStream == "Apprenticeship"), Is.True);
+            Assert.That(secondBatch.All(x => x.DurationUnits == DurationUnits.Months), Is.True);
+            Assert.That(secondBatch.All(x => x.FundingStream == ApprenticeshipType.Apprenticeship.ToString()), Is.True);
 
             // Assert - audit record uses NEW rowsImported formula:
             // rowsImported = larsStandardImports.Count + (fundingImports.Count + apprenticeshipFundingImports.Count) + sectorSubjectAreaTier2Imports.Count

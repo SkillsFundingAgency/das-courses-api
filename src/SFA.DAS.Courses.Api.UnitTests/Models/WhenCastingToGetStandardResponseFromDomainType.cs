@@ -23,8 +23,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Models
             // Assert all properties except LarsCode
             response.Should().BeEquivalentTo(
                     source,
-                    options => StandardToGetStandardResponseOptions
-                        .ExclusionsGetStandardResponse(options)
+                    options => StandardsEquivalencyAssertionOptions
+                        .GetStandardResponseExclusions(options)
                         .Excluding(s => s.LarsCode)
                 );
             

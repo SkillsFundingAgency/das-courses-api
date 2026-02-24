@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
 
             // but its related LarsStandard is not effective yet
             fixture.Customize<LarsStandard>(composer =>
-                composer.With(standard => standard.EffectiveFrom, DateTime.Today.AddDays(1)));
+                composer.With(standard => standard.EffectiveFrom, DateTime.UtcNow.Date.AddDays(1)));
         }
     }
 }

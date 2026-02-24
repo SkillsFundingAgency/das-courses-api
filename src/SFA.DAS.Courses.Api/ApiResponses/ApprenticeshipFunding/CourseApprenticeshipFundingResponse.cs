@@ -1,36 +1,26 @@
 ﻿using System;
 using SFA.DAS.Courses.Domain.Courses;
+using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
-    public class ApprenticeshipFundingResponse
+    public class CourseApprenticeshipFundingResponse : ApprenticeshipFundingResponseBase
     {
-        public int MaxEmployerLevyCap { get; set; }
+        public DurationUnits DurationUnits { get; set; }
 
-        public DateTime? EffectiveTo { get; set; }
-
-        public DateTime EffectiveFrom { get; set; }
-        public int Duration { get; set; }
-        public int? Incentive1618 { get; set; }
-        public int? ProviderAdditionalPayment1618 { get; set; }
-        public int? EmployerAdditionalPayment1618 { get; set; }
-        public int? CareLeaverAdditionalPayment { get; set; }
-        public int? FoundationAppFirstEmpPayment { get; set; }
-        public int? FoundationAppSecondEmpPayment { get; set; }
-        public int? FoundationAppThirdEmpPayment { get; set; }
-
-        public static explicit operator ApprenticeshipFundingResponse(ApprenticeshipFunding apprenticeshipFunding)
+        public static explicit operator CourseApprenticeshipFundingResponse(CourseApprenticeshipFunding apprenticeshipFunding)
         {
             if (apprenticeshipFunding == null)
             {
                 return null;
             }
-            return new ApprenticeshipFundingResponse
+            return new CourseApprenticeshipFundingResponse
             {
                 EffectiveFrom = apprenticeshipFunding.EffectiveFrom,
                 EffectiveTo = apprenticeshipFunding.EffectiveTo,
                 MaxEmployerLevyCap = Convert.ToInt32(apprenticeshipFunding.MaxEmployerLevyCap),
                 Duration = apprenticeshipFunding.Duration,
+                DurationUnits = apprenticeshipFunding.DurationUnits,
                 Incentive1618 = apprenticeshipFunding.Incentive1618,
                 ProviderAdditionalPayment1618 = apprenticeshipFunding.ProviderAdditionalPayment1618,
                 EmployerAdditionalPayment1618 = apprenticeshipFunding.EmployerAdditionalPayment1618,

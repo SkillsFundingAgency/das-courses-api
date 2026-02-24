@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
         {
             List<Ksb> ksbs = null;
 
-            var standard = await _standardsService.GetStandardByAnyId(request.Id, CourseType.Apprenticeship);
+            var standard = await _standardsService.GetStandardByAnyId(request.Id);
 
             if (standard != null)
             {

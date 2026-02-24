@@ -81,7 +81,26 @@ namespace SFA.DAS.Courses.Data.Repository
 
             // In Memory Filter for get latest version due to limitations in EF query translation
             // into expression tree
-            var standard = standards.InMemoryFilterIsLatestVersion(StandardFilter.Active).SingleOrDefault();
+            var standard = standards.InMemoryFilterIsLatestVersion(StandardFilter.Active, false).SingleOrDefault();
+
+            if (standard is null) return null;
+
+            return (await IncludeApprenticeshipFunding(new List<Standard> { standard })).First();
+        }
+
+        public async Task<Standard> GetEarliestActiveStandard(string larsCode,
+            CourseType? courseType)
+        {
+            var query = GetFullBaseStandardQuery(courseType)
+                .FilterStandards(StandardFilter.Active)
+                .Where(c => c.LarsCode == larsCode);
+
+            var standards = await query
+                .ToListAsync();
+
+            // In Memory Filter for get latest version due to limitations in EF query translation
+            // into expression tree
+            var standard = standards.InMemoryFilterIsEarliestVersion(StandardFilter.Active).SingleOrDefault();
 
             if (standard is null) return null;
 
@@ -221,6 +240,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
                     ApprenticeshipType = c.ApprenticeshipType,
+                    CourseType = c.CourseType,
                     IsLatestVersion = c.IsLatestVersion,
                     IsRegulatedForProvider = c.IsRegulatedForProvider,
                     IsRegulatedForEPAO = c.IsRegulatedForEPAO

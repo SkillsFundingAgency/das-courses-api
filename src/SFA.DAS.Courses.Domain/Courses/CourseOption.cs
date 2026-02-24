@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SFA.DAS.Courses.Domain.Courses
 {
-    public class StandardOption
+    public class CourseOption
     {
         public const string CoreTitle = "core";
 
@@ -19,9 +19,9 @@ namespace SFA.DAS.Courses.Domain.Courses
         public List<Ksb> EmployabilitySkillsAndBehaviours { get; set; }
         public List<Ksb> Ksbs { get; set; }
 
-        public static explicit operator StandardOption(Entities.StandardOption source)
+        public static explicit operator CourseOption(Entities.StandardOption source)
         {
-            return new StandardOption
+            return new CourseOption
             {
                 OptionId = source.OptionId,
                 Title = source.Title,

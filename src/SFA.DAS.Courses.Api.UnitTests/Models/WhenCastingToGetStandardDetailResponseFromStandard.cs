@@ -31,8 +31,8 @@ public class WhenCastingToGetStandardDetailResponseFromStandard
         // Assert all properties except LarsCode
         result.Should().BeEquivalentTo(
                 standard,
-                options => StandardToGetStandardResponseOptions
-                    .ExclusionsForGetStandardDetailResponse(options)
+                options => StandardsEquivalencyAssertionOptions
+                    .GetStandardDetailResponseExclusions(options)
                     .Excluding(s => s.LarsCode)
             );
 

@@ -6,13 +6,13 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Domain.UnitTests.Courses
 {
-    public class WhenCastingToStandardFromEntity
+    public class WhenCastingToCourseFromStandardEntity
     {
         [Test, RecursiveMoqAutoData]
         public void Then_Maps_Fields_Appropriately(Domain.Entities.Standard source)
         {
             // Act
-            var response = (Standard)source;
+            var response = (Course)source;
 
             response.Should().BeEquivalentTo(source, options => options
                 .ExcludingMissingMembers()
@@ -48,10 +48,10 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.RouteCode.Should().Be(source.Route.Id);
             response.ApprovalBody.Should().Be(source.RegulatedBody);
 
-            response.StandardDates.Should().NotBeNull();
-            response.StandardDates.EffectiveFrom.Should().Be(source.LarsStandard.EffectiveFrom);
-            response.StandardDates.EffectiveTo.Should().Be(source.LarsStandard.EffectiveTo);
-            response.StandardDates.LastDateStarts.Should().Be(source.LarsStandard.LastDateStarts);
+            response.CourseDates.Should().NotBeNull();
+            response.CourseDates.EffectiveFrom.Should().Be(source.LarsStandard.EffectiveFrom);
+            response.CourseDates.EffectiveTo.Should().Be(source.LarsStandard.EffectiveTo);
+            response.CourseDates.LastDateStarts.Should().Be(source.LarsStandard.LastDateStarts);
 
             response.VersionDetail.Should().NotBeNull();
             response.VersionDetail.EarliestStartDate.Should().Be(source.VersionEarliestStartDate);
@@ -78,7 +78,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
 
             // funding mapped
             response.ApprenticeshipFunding.Should().NotBeNull();
-            var expectedFunding = source.ApprenticeshipFunding?.Select(f => (ApprenticeshipFunding)f).ToList() ?? [];
+            var expectedFunding = source.ApprenticeshipFunding?.Select(f => (StandardApprenticeshipFunding)f).ToList() ?? [];
             response.ApprenticeshipFunding.Should().BeEquivalentTo(expectedFunding);
 
             // not mapped in the operator
