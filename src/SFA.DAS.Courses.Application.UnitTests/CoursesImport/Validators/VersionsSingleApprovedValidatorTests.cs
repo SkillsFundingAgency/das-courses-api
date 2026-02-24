@@ -5,7 +5,7 @@ using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
-using Standard = SFA.DAS.Courses.Domain.ImportTypes.Standard;
+using Standard = SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland.Standard;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 {

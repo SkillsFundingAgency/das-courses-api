@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Domain.Entities
             => new StandardOption { OptionId = id, Title = title, Ksbs = ksbs, };
 
         public static StandardOption CreateCorePseudoOption(List<Ksb> ksbs)
-            => new StandardOption { Title = Courses.StandardOption.CoreTitle, Ksbs = ksbs, };
+            => new StandardOption { Title = Courses.CourseOption.CoreTitle, Ksbs = ksbs, };
 
         private List<Ksb> KsbDetail(KsbType ksbType)
             => Ksbs?

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using FluentValidation;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class CreatedDateValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class CreatedDateValidator : ValidatorBase<List<Standard>>
     {
         public CreatedDateValidator()
             : base(ValidationFailureType.StandardError)

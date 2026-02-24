@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,15 +18,22 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
     public class WhenCallingImport
     {
         [Test, MoqAutoData]
-        public async Task Then_Sends_ImportStandardsCommand_And_Returns_NoContent_Result(
+        public async Task Then_Sends_ImportStandardsCommand_And_Returns_OkResult(
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] DataLoadController controller)
         {
-            var controllerResult = await controller.Index() as NoContentResult;
+            // Arrange
+            mockMediator
+                .Setup(p => p.Send(It.IsAny<ImportDataCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<string>());
 
+            // Act
+            var controllerResult = await controller.Index() as OkObjectResult;
+
+            // Assert
             mockMediator.Verify(x=>x.Send(It.IsAny<ImportDataCommand>(), It.IsAny<CancellationToken>()), Times.Once);
             Assert.That(controllerResult, Is.Not.Null);
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.NoContent);
+            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
         }
     }
 }

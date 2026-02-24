@@ -3,6 +3,9 @@
     public class Standard : StandardBase
     {
         public float? SearchScore { get; set; }
+        
+        // Computed column
+        public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
 
         public static implicit operator Standard(StandardImport source)
         {
@@ -17,10 +20,11 @@
                 CoronationEmblem = source.CoronationEmblem,
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
+                CourseType = source.CourseType,
                 CreatedDate = source.CreatedDate,
                 Duties = source.Duties,
+                DurationUnits = source.DurationUnits,
                 EPAChanged = source.EPAChanged,
-                EpaoMustBeApprovedByRegulatorBody = source.EpaoMustBeApprovedByRegulatorBody,
                 EqaProviderContactEmail = source.EqaProviderContactEmail,
                 EqaProviderContactName = source.EqaProviderContactName,
                 EqaProviderName = source.EqaProviderName,
@@ -28,10 +32,12 @@
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 IntegratedApprenticeship = source.IntegratedApprenticeship,
                 IntegratedDegree = source.IntegratedDegree,
+                IsLatestVersion = source.IsLatestVersion,
                 IsRegulatedForEPAO = source.IsRegulatedForEPAO,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 Keywords = source.Keywords,
                 LarsCode = source.LarsCode,
+                LastUpdated = source.LastUpdated,
                 Level = source.Level,
                 OverviewOfRole = source.OverviewOfRole,
                 Options = source.Options,

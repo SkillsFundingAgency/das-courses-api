@@ -14,6 +14,7 @@ using SFA.DAS.Courses.Api.Controllers;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsList;
 using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
 {
@@ -26,7 +27,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             string keyword,
             OrderBy orderBy,
             StandardFilter filter,
-            string apprenticeshipType,
+            ApprenticeshipType apprenticeshipType,
             GetStandardsListQueryResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
             [Greedy] StandardsController controller)
@@ -45,8 +46,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
                 .Setup(mediator => mediator.Send(
                     It.Is<GetStandardsListQuery>(query =>
                         query.Keyword == keyword &&
-                        query.RouteIds.Equals(routeIds) &&
-                        query.Levels.Equals(levels) &&
+                        query.RouteIds.SequenceEqual(routeIds) &&
+                        query.Levels.SequenceEqual(levels) &&
                         query.OrderBy.Equals(orderBy) &&
                         query.Filter.Equals(filter) &&
                         !query.IncludeAllProperties &&
@@ -66,8 +67,8 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Standards
             // Assert all properties except LarsCode
             model.Standards.Should().BeEquivalentTo(
                 queryResult.Standards,
-                options => StandardToGetStandardResponseOptions
-                    .ExclusionsGetStandardResponse(options)
+                options => StandardsEquivalencyAssertionOptions
+                    .GetStandardResponseExclusions(options)
                     .Excluding(s => s.LarsCode));
 
             // Assert LarsCode conversion with distinct values

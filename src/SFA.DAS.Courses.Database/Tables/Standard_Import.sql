@@ -26,9 +26,6 @@
     [StandardPageUrl] VARCHAR(500) NOT NULL,
     [Version] VARCHAR(20) NULL,
     [RegulatedBody] VARCHAR(1000) NULL,
-    [Skills] NVARCHAR(MAX) NULL, -- TODO: Remove
-    [Knowledge] NVARCHAR(MAX) NULL, -- TODO: Remove
-    [Behaviours] NVARCHAR(MAX) NULL, -- TODO: Remove
     [Duties] NVARCHAR(MAX) NULL,
     [CoreDuties] NVARCHAR(MAX) NULL,
     [CoreAndOptions] BIT NOT NULL DEFAULT 0,
@@ -41,10 +38,13 @@
     [CoronationEmblem] BIT NOT NULL DEFAULT 0,
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0, 
     [IsRegulatedForEPAO] BIT NOT NULL DEFAULT 0, 
-    [EpaoMustBeApprovedByRegulatorBody] BIT NOT NULL Default 0,
     [PublishDate] DATETIME NULL,
     [ApprenticeshipType] VARCHAR(50) NULL DEFAULT 'Apprenticeship',
     [RelatedOccupations] NVARCHAR(1000) NULL,
+    [CourseType] VARCHAR(25) NOT NULL DEFAULT 'Apprenticeship',
+    [DurationUnits] VARCHAR(6) NOT NULL DEFAULT 'Months',
+    [LastUpdated] DATETIME NULL,
+    [IsLatestVersion] BIT NOT NULL DEFAULT 0,
     CONSTRAINT [AK_StandardImport_Column] UNIQUE ([StandardUId])
 )
 GO

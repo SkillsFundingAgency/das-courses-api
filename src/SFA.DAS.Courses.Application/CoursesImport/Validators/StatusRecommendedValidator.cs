@@ -7,7 +7,7 @@ using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class StatusRecommendedValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class StatusRecommendedValidator : ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>
     {
         public StatusRecommendedValidator()
             : base(ValidationFailureType.StandardError)
@@ -20,7 +20,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                     foreach (var standard in importedStandards)
                     {
                         var parsedVersion = standard.Version.Value.ParseVersion();
-                        if (parsedVersion.Major == 1 && parsedVersion.Minor == 0 && !validStatuses.Contains(standard.Status.Value))
+                        if (parsedVersion.Major == 1 && parsedVersion.Minor == 0 
+                            && !validStatuses.Contains(standard.Status.Value))
                         {
                             context.AddFailure($"W1002: {standard.ReferenceNumber.Value} version {standard.Version.Value} has status '{standard.Status.Value}'");
                         }

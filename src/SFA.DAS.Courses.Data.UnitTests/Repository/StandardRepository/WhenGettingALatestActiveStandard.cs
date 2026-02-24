@@ -27,6 +27,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             {
                 new Standard()
                 {
+                    ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    CourseType = CourseType.Apprenticeship,
                     IfateReferenceNumber = "ST001",
                     StandardUId = "ST001_1.0",
                     LarsCode = "1",
@@ -41,6 +43,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 },
                 new Standard
                 {
+                    ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    CourseType = CourseType.Apprenticeship,
                     IfateReferenceNumber = "ST002",
                     StandardUId = "ST002_1.1",
                     LarsCode = "2",
@@ -55,6 +59,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 },
                 new Standard
                 {
+                    ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    CourseType = CourseType.Apprenticeship,
                     IfateReferenceNumber = "ST002",
                     StandardUId = ExpectedStandardUId,
                     LarsCode = "2",
@@ -69,6 +75,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 },
                 new Standard
                 {
+                    ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    CourseType = CourseType.Apprenticeship,
                     IfateReferenceNumber = "ST002",
                     StandardUId = "ST002_1.0",
                     LarsCode = "2",
@@ -93,10 +101,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         [Test]
         public async Task Then_The_Standard_Is_Returned_By_LarsCode()
         {
-            //Act
-            var standards = await _standardRepository.GetLatestActiveStandard(ExpectedLarsCode);
+            // Act
+            var standards = await _standardRepository.GetLatestActiveStandard(ExpectedLarsCode, CourseType.Apprenticeship);
             
-            //Assert
+            // Assert
             Assert.That(standards, Is.Not.Null);
             standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c=>c.StandardUId.Equals(ExpectedStandardUId)));
         }
@@ -104,10 +112,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         [Test]
         public async Task Then_The_Standard_Is_Returned_By_IFateReferenceNumber()
         {
-            //Act
-            var standards = await _standardRepository.GetLatestActiveStandardByIfateReferenceNumber(ExpectedIFateReferenceNumber);
+            // Act
+            var standards = await _standardRepository.GetLatestActiveStandardByIfateReferenceNumber(ExpectedIFateReferenceNumber, CourseType.Apprenticeship);
 
-            //Assert
+            // Assert
             Assert.That(standards, Is.Not.Null);
             standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c => c.StandardUId.Equals(ExpectedStandardUId)));
         }
@@ -115,11 +123,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         [Test]
         public async Task Then_Standard_Should_Be_Null()
         {
-            //Arrange
+            // Arrange
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(new List<Standard>());
 
-            //Act Assert
-            var result = await _standardRepository.GetLatestActiveStandard(ExpectedLarsCode);
+            // Act & Assert
+            var result = await _standardRepository.GetLatestActiveStandard(ExpectedLarsCode, CourseType.Apprenticeship);
             result.Should().BeNull();
         }
     }

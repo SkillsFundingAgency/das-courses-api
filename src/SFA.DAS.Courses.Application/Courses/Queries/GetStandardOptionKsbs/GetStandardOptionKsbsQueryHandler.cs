@@ -1,10 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
+
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
 
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 {
@@ -13,13 +17,22 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
         private readonly IStandardsService _standardsService;
 
         public GetStandardOptionKsbsQueryHandler(IStandardsService standardsService)
-            => _standardsService = standardsService;
+        {
+            ArgumentNullException.ThrowIfNull(standardsService);
+
+            _standardsService = standardsService;
+        }
 
         public async Task<GetStandardOptionKsbsResult> Handle(GetStandardOptionKsbsQuery request, CancellationToken cancellationToken)
         {
-            Standard standard = await GetStandard.GetStandard.ByAnyId(_standardsService, request.Id);
+            List<Ksb> ksbs = null;
 
-            var ksbs = standard?.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
+            var standard = await _standardsService.GetStandardByAnyId(request.Id);
+
+            if (standard != null)
+            {
+                ksbs = standard.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
+            }
 
             return new GetStandardOptionKsbsResult
             {

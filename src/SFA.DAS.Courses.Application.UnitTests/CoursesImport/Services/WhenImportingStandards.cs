@@ -9,9 +9,10 @@ using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
-using Standard = SFA.DAS.Courses.Domain.ImportTypes.Standard;
+using Standard = SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland.Standard;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 {
@@ -23,16 +24,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3"),
-                GetValidImportedStandard(104, "ST0104", "0.1", "Title 4", Status.InDevelopment, "Route 3", "Option 4") // Route not loaded, standard loaded but route mapped to 0
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3"),
+                CreateValidImportedApprenticeship(104, "ST0104", "0.1", "Title 4", Status.InDevelopment, "Route 3", "Option 4") // Route not loaded, standard loaded but route mapped to 0
             };
 
             routeRepository
@@ -40,10 +41,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -63,17 +71,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3"),
-                GetValidImportedStandard(104, "ST0104", "1.0", "Title 4", Status.ApprovedForDelivery, "Route 2", "Option 4"),
-                GetValidImportedStandard(104, "ST0104", "1.1", "Title 4", Status.InDevelopment, "Route 3", "Option 4") // Route and standard not loaded
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3"),
+                CreateValidImportedApprenticeship(104, "ST0104", "1.0", "Title 4", Status.ApprovedForDelivery, "Route 2", "Option 4"),
+                CreateValidImportedApprenticeship(104, "ST0104", "1.1", "Title 4", Status.InDevelopment, "Route 3", "Option 4") // Route and standard not loaded
             };
 
             routeRepository
@@ -81,10 +89,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -105,35 +120,42 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.Retired, "Route 2", "Option 3"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.Retired, "Route 2", "Option 3"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
             };
 
-            importedStandards[2].CreatedDate = DateTime.Now; // this duplicate will be used as it was created last
-            importedStandards[3].CreatedDate = DateTime.Now.AddDays(-1); 
+            apprenticeships[2].CreatedDate = DateTime.Now; // this duplicate will be used as it was created last
+            apprenticeships[3].CreatedDate = DateTime.Now.AddDays(-1); 
 
             routeRepository
                 .Setup(s => s.GetAll())
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
-            //Act
+            // Act
             await standardsImportService.ImportDataIntoStaging();
 
-            //Assert
+            // Assert
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0101" && p.Status == Status.ApprovedForDelivery))));
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0102" && p.Status == Status.ApprovedForDelivery))));
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0103" && p.Status == Status.Retired))));
@@ -145,15 +167,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 3", "Option 3")
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 3", "Option 3")
             };
 
             var currentRoutes = new List<Domain.Entities.Route>
@@ -174,15 +196,22 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
-            //Act
+            // Act
             await standardsImportService.ImportDataIntoStaging();
 
-            //Assert
+            // Assert
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 1 && p.Active))));
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 2 && !p.Active))));
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 3 && p.Active))));
@@ -198,11 +227,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>();
+            var apprenticeships = new List<Apprenticeship>();
 
             var currentRoutes = new List<Domain.Entities.Route>
             {
@@ -222,15 +251,22 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
-            //Act
+            // Act
             await standardsImportService.ImportDataIntoStaging();
 
-            //Assert
+            // Assert
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 1 && p.Active))));
             routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(s => s.Exists(p => p.Id == 2 && p.Active))));
 
@@ -249,16 +285,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
             };
 
-            importedStandards[0].EqaProvider = new Domain.ImportTypes.EqaProvider 
+            apprenticeships[0].EqaProvider = new Apprenticeship.ApprenticeshipEqaProvider
             { 
                 ProviderName = eqaProviderName, 
                 ContactName = new Settable<string>(null), 
@@ -272,15 +308,22 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
-            //Act
+            // Act
             await standardsImportService.ImportDataIntoStaging();
 
-            //Assert
+            // Assert
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0101" && p.EqaProviderName == "Ofqual"))));
         }
 
@@ -290,15 +333,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
             };
 
             routeRepository
@@ -306,10 +349,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -326,28 +376,35 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
             };
 
-            importedStandards[0].LarsCode = new Settable<int>(); // the lars code is missing from the import
+            apprenticeships[0].LarsCode = new Settable<int>(); // the lars code is missing from the import
 
             routeRepository
                 .Setup(s => s.GetAll())
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -363,15 +420,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // bad format for standard reference
-                GetValidImportedStandard(102, "102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
+                CreateValidImportedApprenticeship(101, "ST101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // bad format for standard reference
+                CreateValidImportedApprenticeship(102, "102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
             };
 
             routeRepository
@@ -379,10 +436,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -398,15 +462,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // bad format for vesion
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1+0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // bad format for vesion
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1+0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3")
             };
 
             routeRepository
@@ -414,10 +478,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -433,29 +504,36 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"), // bad referenceNumber format
-                GetValidImportedStandard(103, "ST0103", "1+0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3") // bad version format
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"), // bad referenceNumber format
+                CreateValidImportedApprenticeship(103, "ST0103", "1+0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3") // bad version format
             };
 
-            importedStandards[0].LarsCode = new Settable<int>(); // the lars code is missing from the import
+            apprenticeships[0].LarsCode = new Settable<int>(); // the lars code is missing from the import
 
             routeRepository
                 .Setup(s => s.GetAll())
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -473,16 +551,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(103, "ST0103", "1.0", "", Status.ApprovedForDelivery, "Route 2", "Option 3") // blank title is invalid
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(103, "ST0103", "1.0", "", Status.ApprovedForDelivery, "Route 2", "Option 3") // blank title is invalid
             };
 
             var currentRoutes = new List<Domain.Entities.Route>
@@ -503,10 +581,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -526,19 +611,19 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(0, "ST0103", "1.0", "Title New 3", Status.ApprovedForDelivery, "Route 2", "Option 3") // blank title is invalid
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(0, "ST0103", "1.0", "Title New 3", Status.ApprovedForDelivery, "Route 2", "Option 3") // blank title is invalid
             };
 
-            importedStandards[2].PublishDate = DateTime.Now.AddDays(-14);
+            apprenticeships[2].PublishDate = DateTime.Now.AddDays(-14);
 
             var currentRoutes = new List<Domain.Entities.Route>
             {
@@ -560,10 +645,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -583,16 +675,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(101, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3") // duplicated lars code
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(101, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3") // duplicated lars code
             };
 
             var currentRoutes = new List<Domain.Entities.Route>
@@ -613,10 +705,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -637,16 +736,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(103, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // lars code swapped with ST0103
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(101, "ST0103", "1.0", "", Status.ApprovedForDelivery, "Route 2", "Option 3") // but swap rejected because title is invalid
+                CreateValidImportedApprenticeship(103, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // lars code swapped with ST0103
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(101, "ST0103", "1.0", "", Status.ApprovedForDelivery, "Route 2", "Option 3") // but swap rejected because title is invalid
             };
 
             var currentRoutes = new List<Domain.Entities.Route>
@@ -667,10 +766,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -691,16 +797,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Standard>
+            var apprenticeships = new List<Apprenticeship>
             {
-                GetValidImportedStandard(103, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // lars code swapped with ST0103
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-                GetValidImportedStandard(101, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3") // lars code swapped with ST0101
+                CreateValidImportedApprenticeship(103, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // lars code swapped with ST0103
+                CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
+                CreateValidImportedApprenticeship(101, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3") // lars code swapped with ST0101
             };
 
             var currentRoutes = new List<Domain.Entities.Route>
@@ -721,10 +827,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .ReturnsAsync(currentRoutes);
 
             standardRepository
-                .Setup(s => s.GetStandards())
+                .Setup(s => s.GetStandards(null))
                 .ReturnsAsync(currentStandards);
 
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = new List<FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<ApprenticeshipUnit>()
+                });
 
             // Act
             await standardsImportService.ImportDataIntoStaging();
@@ -738,6 +851,82 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .Verify(s => s.UploadFile(
                     It.IsAny<List<string>>(),
                     It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Standards_Have_Correct_ApprenticeshipType_And_CourseType_And_DurationUnits(
+            [Frozen] Mock<IRouteRepository> routeRepository,
+            [Frozen] Mock<IRouteImportRepository> routeImportRepository,
+            [Frozen] Mock<IStandardRepository> standardRepository,
+            [Frozen] Mock<IStandardImportRepository> standardImportRepository,
+            [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ISlackNotificationService> slackNotificationService,
+            StandardsImportService standardsImportService)
+        {
+            // Arrange
+            var apprenticeships = new List<Apprenticeship>
+            {
+                CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1")
+            };
+
+            var foundationApprenticeships = new List<FoundationApprenticeship>
+            {
+                CreateValidImportedFoundationApprenticeship(102, "FA0102", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1")
+            };
+
+            var apprenticeshipUnits = new List<ApprenticeshipUnit>
+            {
+                CreateValidImportedApprenticeshipUnit("ZSC00103", "SC0103", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1")
+            };
+
+            var currentRoutes = new List<Domain.Entities.Route>
+            {
+                new Domain.Entities.Route { Id = 1, Name = "Route 1", Active = true}
+            };
+
+            var currentStandards = new List<Domain.Entities.Standard>();
+
+            routeRepository
+                .Setup(s => s.GetAll())
+                .ReturnsAsync(currentRoutes);
+
+            standardRepository
+                .Setup(s => s.GetStandards(null))
+                .ReturnsAsync(currentStandards);
+
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = apprenticeships,
+                    FoundationApprenticeships = foundationApprenticeships,
+                    ApprenticeshipUnits = apprenticeshipUnits
+                });
+
+            // Act
+            await standardsImportService.ImportDataIntoStaging();
+
+            // Assert
+            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(
+                s => s.Exists(p => p.IfateReferenceNumber == "ST0101" 
+                    && p.LarsCode == "101" 
+                    && p.ApprenticeshipType == ApprenticeshipType.Apprenticeship
+                    && p.CourseType == CourseType.Apprenticeship
+                    && p.DurationUnits == DurationUnits.Months))));
+            
+            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(
+                s => s.Exists(p => p.IfateReferenceNumber == "FA0102" 
+                    && p.LarsCode == "102" 
+                    && p.ApprenticeshipType == ApprenticeshipType.FoundationApprenticeship
+                    && p.CourseType == CourseType.Apprenticeship
+                    && p.DurationUnits == DurationUnits.Months))));
+            
+            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(
+                s => s.Exists(p => p.IfateReferenceNumber == "SC0103" 
+                    && p.LarsCode == "ZSC00103" 
+                    && p.ApprenticeshipType == ApprenticeshipType.ApprenticeshipUnit
+                    && p.CourseType == CourseType.ShortCourse
+                    && p.DurationUnits == DurationUnits.Hours))));
         }
     }
 }

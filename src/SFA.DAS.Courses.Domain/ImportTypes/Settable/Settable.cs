@@ -41,6 +41,14 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
             return new Settable<T>(invalidValue);
         }
 
+        public Settable<T> Clone()
+        {
+            if (!_isSet) return Undefined;
+            if (_hasValue) return new Settable<T>(_value);
+            return FromInvalidValue(_invalidValue);
+        }
+
+
         public bool IsSet => _isSet;
         public bool HasValue => _isSet && _hasValue;
         public bool HasInvalidValue => _invalidValue != null; 
@@ -61,17 +69,27 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
         }
 
         public static implicit operator Settable<T>(T value) => new(value);
-        public static implicit operator T(Settable<T> value) => value.HasValue ? value._value : default;
+        public static implicit operator T(Settable<T> value) => value != null && value.HasValue ? value._value : default;
 
         public override bool Equals(object obj) =>
             obj is Settable<T> other && this == other;
 
-        public static bool operator ==(Settable<T> t1, Settable<T> t2) =>
+        public static bool operator ==(Settable<T> t1, Settable<T> t2)
+        {
+            if (ReferenceEquals(t1, t2))
+                return true;
+
+            if (t1 is null || t2 is null)
+                return false;
+
+            return
                 t1.IsSet == t2.IsSet &&
                 t1.HasValue == t2.HasValue &&
                 t1.HasInvalidValue == t2.HasInvalidValue &&
                 (!t1.HasValue || EqualityComparer<T>.Default.Equals(t1.Value, t2.Value)) &&
                 (!t1.HasInvalidValue || Equals(t1.InvalidValue, t2.InvalidValue));
+        }
+
 
         public static bool operator !=(Settable<T> t1, Settable<T> t2) => !(t1 == t2);
 

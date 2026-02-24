@@ -13,20 +13,23 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
     {
         public static Dictionary<string, List<Standard>> Standards = [];
         public static List<Route> Routes = [];
+        public static List<ApprenticeshipFunding> ApprenticeshipFundings = [];
         public static List<SectorSubjectAreaTier2> SectorSubjectAreaTier2s = [];
 
         public static void LoadTestData(CoursesDataContext context)
         {
             LoadTestRoutes();
+            LoadTestApprenticeshipFundings();
             LoadSectorSubjectAreaTier2Items();
 
             context.Routes.AddRange(Routes);
+            context.ApprenticeshipFunding.AddRange(ApprenticeshipFundings);
             context.SectorSubjectAreaTier2.AddRange(SectorSubjectAreaTier2s);
 
-            context.Standards.AddRange(LoadValidTestStandards(Routes));
+            context.Standards.AddRange(LoadValidTestStandards(Routes, ApprenticeshipFundings));
             context.Standards.AddRange(LoadInValidTestStandards(Routes));
             context.Standards.AddRange(LoadNotYetApprovedTestStandards(Routes));
-            context.Standards.AddRange(LoadOlderVersionsOfStandards(Routes));
+            context.Standards.AddRange(LoadOlderVersionsOfStandards(Routes, ApprenticeshipFundings));
             context.Standards.AddRange(LoadWithdrawnStandards(Routes));
 
             context.Frameworks.AddRange(GetFrameworks());
@@ -42,14 +45,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new SectorSubjectAreaTier2
                         {
-                            EffectiveFrom = DateTime.Today,
+                            EffectiveFrom = DateTime.UtcNow.Date,
                             SectorSubjectAreaTier2Desc = "Test Sector",
                             SectorSubjectAreaTier2 = 1m,
                             Name = "Test Sector"
                         },
                         new SectorSubjectAreaTier2
                         {
-                            EffectiveFrom = DateTime.Today,
+                            EffectiveFrom = DateTime.UtcNow.Date,
                             SectorSubjectAreaTier2Desc = "Test Sector 2",
                             SectorSubjectAreaTier2 = 1.1m,
                             Name = "Test Sector 2"
@@ -94,11 +97,16 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 
         public static IEnumerable<Standard> GetValidTestStandards()
         {
+            return Standards[nameof(GetValidTestStandards)]
+                .Where(p => p.CourseType == CourseType.Apprenticeship);
+        }
+
+        public static IEnumerable<Standard> GetValidTestCourses()
+        {
             return Standards[nameof(GetValidTestStandards)];
         }
 
-
-        private static IEnumerable<Standard> LoadValidTestStandards(IReadOnlyList<Route> routes)
+        private static IEnumerable<Standard> LoadValidTestStandards(IReadOnlyList<Route> routes, IReadOnlyList<ApprenticeshipFunding> apprenticeshipFundings)
         {
             if (!Standards.ContainsKey(nameof(GetValidTestStandards)))
             {
@@ -107,6 +115,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "1"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.3",
                             IfateReferenceNumber = "ST0001",
@@ -118,7 +129,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[0],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "1",
                                 SectorSubjectAreaTier2 = 1m,
@@ -136,6 +147,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "2"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "2",
                             StandardUId = "ST0002_1.0",
                             IfateReferenceNumber = "ST0002",
@@ -147,7 +161,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[0],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "2",
                                 SectorSubjectAreaTier2 = 1m,
@@ -161,6 +175,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "3"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "3",
                             StandardUId = "ST0003_1.0",
                             IfateReferenceNumber = "ST0003",
@@ -172,7 +189,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[1],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "3",
                                 SectorSubjectAreaTier2 = 1.1m,
@@ -185,6 +202,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "4"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "4",
                             StandardUId = "ST0004_1.0",
                             IfateReferenceNumber = "ST0004",
@@ -196,7 +216,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[1],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "4",
                                 SectorSubjectAreaTier2 = 1.1m,
@@ -209,6 +229,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "5"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "5",
                             StandardUId = "ST0005_1.1",
                             IfateReferenceNumber = "ST0005",
@@ -220,7 +243,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[2],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "5",
                                 SectorSubjectAreaTier2 = 1m,
@@ -233,6 +256,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "6"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "6",
                             StandardUId = "ST0006_1.0",
                             IfateReferenceNumber = "ST0006",
@@ -244,7 +270,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[2],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "6",
                                 SectorSubjectAreaTier2 = 1.1m,
@@ -257,6 +283,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "7"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "7",
                             StandardUId = "ST0007_1.0",
                             IfateReferenceNumber = "ST0007",
@@ -268,7 +297,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[2],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
                                 LarsCode = "7",
                                 SectorSubjectAreaTier2 = 1m,
@@ -281,6 +310,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "8"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "8",
                             StandardUId = "ST0008_1.0",
                             IfateReferenceNumber = "ST0008",
@@ -290,7 +322,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[2],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LarsCode = "8",
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
@@ -314,14 +346,52 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             },
                             OverviewOfRole = "test",
                             StandardPageUrl = "https://tempuri.org"
+                        },
+                        new Standard
+                        {
+                            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "ZSC00009"),
+                            CourseType = CourseType.ShortCourse,
+                            LarsCode = "ZSC00009",
+                            StandardUId = "SC0009_1.0",
+                            IfateReferenceNumber = "SC0009",
+                            Title = "Beer Taster",
+                            Keywords = "Beer, Taster",
+                            Level = 5,
+                            RouteCode = routes[2].Id,
+                            Route = routes[2],
+                            LarsStandard = null, // short courses do not have a LarsStandard, courses dates
+                                                 // cannot be tested in acceptance tests
+                            Status = "Approved for delivery",
+                            Version = "1.0",
+                            OverviewOfRole = "test",
+                            StandardPageUrl = "https://tempuri.org"
                         }
                     });
             }
 
-            return GetValidTestStandards();
+            return Standards[nameof(GetValidTestStandards)];
         }
 
+        private static List<ApprenticeshipFunding> GetFundingOrNull(
+            IEnumerable<ApprenticeshipFunding> fundings,
+            string larsCode)
+        {
+            var funding = fundings.FirstOrDefault(p => p.LarsCode == larsCode);
+
+            return funding != null
+                ? new List<ApprenticeshipFunding> { funding }
+                : null;
+        }
+
+
         public static IEnumerable<Standard> GetInValidTestStandards()
+        {
+            return Standards[nameof(GetInValidTestStandards)]
+                .Where(p => p.CourseType == CourseType.Apprenticeship);
+        }
+
+        public static IEnumerable<Standard> GetInValidTestCourses()
         {
             return Standards[nameof(GetInValidTestStandards)];
         }
@@ -335,6 +405,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "11",
                             StandardUId = "ST0011_1.0",
                             IfateReferenceNumber = "ST0011",
@@ -346,7 +418,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[0],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(1),
                                 LarsCode = "11",
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
@@ -358,6 +430,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "14",
                             StandardUId = "ST0014_1.0",
                             IfateReferenceNumber = "ST0014",
@@ -369,7 +443,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Route = routes[1],
                             LarsStandard = new LarsStandard
                             {
-                                EffectiveFrom = DateTime.UtcNow.AddDays(1),
+                                EffectiveFrom = DateTime.UtcNow.Date.AddDays(1),
                                 LarsCode = "14",
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
@@ -387,10 +461,16 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     });
             }
 
-            return GetInValidTestStandards();
+            return Standards[nameof(GetInValidTestStandards)];
         }
 
         public static IEnumerable<Standard> GetNotYetApprovedTestStandards()
+        {
+            return Standards[nameof(GetNotYetApprovedTestStandards)]
+                .Where(p => p.CourseType == CourseType.Apprenticeship);
+        }
+
+        public static IEnumerable<Standard> GetNotYetApprovedTestCourses()
         {
             return Standards[nameof(GetNotYetApprovedTestStandards)];
         }
@@ -404,6 +484,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "0",
                             StandardUId = "ST0015_1.0",
                             IfateReferenceNumber = "ST0015",
@@ -421,6 +503,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                          new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "0",
                             StandardUId = "ST0016_1.0",
                             IfateReferenceNumber = "ST0016",
@@ -444,7 +528,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     });
             }
 
-            return GetNotYetApprovedTestStandards();
+            return Standards[nameof(GetNotYetApprovedTestStandards)];
         }
 
         public static IEnumerable<Standard> GetWithdrawnStandards()
@@ -461,6 +545,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "0",
                             StandardUId = "ST0030_1.0",
                             IfateReferenceNumber = "ST0030",
@@ -484,7 +570,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     });
             }
 
-            return GetWithdrawnStandards();
+            return Standards[nameof(GetWithdrawnStandards)];
         }
 
         public static IEnumerable<Standard> GetOlderVersionsOfStandards()
@@ -492,7 +578,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             return Standards[nameof(GetOlderVersionsOfStandards)];
         }
 
-        private static IEnumerable<Standard> LoadOlderVersionsOfStandards(IReadOnlyList<Route> routes)
+        private static IEnumerable<Standard> LoadOlderVersionsOfStandards(IReadOnlyList<Route> routes, IReadOnlyList<ApprenticeshipFunding> apprenticeshipFundings)
         {
             if (!Standards.ContainsKey(nameof(GetOlderVersionsOfStandards)))
             {
@@ -501,6 +587,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     {
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "1"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.2",
                             IfateReferenceNumber = "ST0001",
@@ -522,6 +611,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "1"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "1",
                             StandardUId = "ST0001_1.1",
                             IfateReferenceNumber = "ST0001",
@@ -538,6 +630,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "5"),
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "5",
                             StandardUId = "ST0005_1.0",
                             IfateReferenceNumber = "ST0005",
@@ -559,6 +654,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         },
                         new Standard
                         {
+                            ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                            CourseType = CourseType.Apprenticeship,
                             LarsCode = "99",
                             StandardUId = "ST0099_1.0",
                             IfateReferenceNumber = "ST0099",
@@ -581,12 +678,105 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     });
             }
 
-            return GetOlderVersionsOfStandards();
+            return Standards[nameof(GetOlderVersionsOfStandards)];
         }
 
         public static IEnumerable<Standard> GetAllTestStandards()
         {
-            return Standards.Values.SelectMany(p => p);
+            return Standards.Values
+                .SelectMany(p => p)
+                .Where(p => p.CourseType == CourseType.Apprenticeship);
+        }
+
+        public static IEnumerable<Standard> GetAllTestCourses()
+        {
+            return Standards.Values
+                .SelectMany(p => p);
+        }
+
+        public static IEnumerable<ApprenticeshipFunding> LoadTestApprenticeshipFundings()
+        {
+            if (ApprenticeshipFundings.Count == 0)
+            {
+                ApprenticeshipFundings = new List<ApprenticeshipFunding>
+                {
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "1",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "2",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "3",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "4",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "5",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "6",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "7",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "8",
+                        Duration = 3,
+                        DurationUnits = DurationUnits.Months,
+                        FundingStream = ApprenticeshipType.Apprenticeship.ToString()
+                    },
+                    new ApprenticeshipFunding
+                    {
+                        Id = Guid.NewGuid(),
+                        LarsCode = "ZSC00009",
+                        Duration = 10,
+                        DurationUnits = DurationUnits.Hours,
+                        FundingStream = "ShortCourseFundingCategory"
+                    }
+                };
+            }
+
+            return ApprenticeshipFundings;
         }
 
         public static IEnumerable<Framework> GetFrameworks()

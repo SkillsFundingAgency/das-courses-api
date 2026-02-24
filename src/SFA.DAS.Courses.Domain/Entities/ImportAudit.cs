@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -23,7 +23,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
     public enum ImportType : byte
     {
-        IFATEImport = 0,
+        SkillsEnglandImport = 0,
         LarsImport = 1,
         FrameworkImport =2,
     }

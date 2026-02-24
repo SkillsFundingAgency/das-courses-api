@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -11,6 +12,8 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetLevels
 
         public GetLevelsListQueryHandler(ILevelsService levelsService)
         {
+            ArgumentNullException.ThrowIfNull(levelsService);
+
             _levelsService = levelsService;
         }
 

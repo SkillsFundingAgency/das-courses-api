@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -12,6 +13,8 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetRoutes
 
         public GetRoutesQueryHandler(IRouteService service)
         {
+            ArgumentNullException.ThrowIfNull(service);
+
             _service = service;
         }
         public async Task<GetRoutesQueryResult> Handle(GetRoutesQuery request, CancellationToken cancellationToken)

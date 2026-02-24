@@ -11,7 +11,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
         [Test, RecursiveMoqAutoData]
         public void Then_The_Fields_Are_Mapped_Correctly(LarsStandard larsStandard)
         {
-            var actual = (StandardDates)larsStandard;
+            var actual = (CourseDates)larsStandard;
 
             actual.Should().BeEquivalentTo(larsStandard, options => options.ExcludingMissingMembers());
         }

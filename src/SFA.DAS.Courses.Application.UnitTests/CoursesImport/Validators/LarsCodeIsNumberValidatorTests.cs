@@ -3,8 +3,8 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 {
@@ -19,17 +19,19 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             _sut = new LarsCodeIsNumberValidator();
         }
 
-        [Test]
-        public void Should_Not_Add_Failure_When_LarsCode_Is_Valid()
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA1001")]
+        public void Should_Not_Add_Failure_When_LarsCode_Is_Valid(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
             var importedStandards = new List<Standard>
             {
                 new Standard
                 {
-                    ReferenceNumber = new Settable<string>("ST001"),
+                    ApprenticeshipType = apprenticeshipType,
+                    ReferenceNumber = new Settable<string>(referenceNumber),
                     Version = new Settable<string>("1.0"),
-                    LarsCode = new Settable<int>(12345)
+                    LarsCode = new Settable<string>("12345")
                 }
             };
 
@@ -40,17 +42,19 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-        [Test]
-        public void Should_Add_Failure_When_LarsCode_Is_Not_A_Number()
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA1001")]
+        public void Should_Add_Failure_When_LarsCode_Is_Not_A_Number(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
             var importedStandards = new List<Standard>
             {
                 new Standard
                 {
-                    ReferenceNumber = new Settable<string>("ST002"),
+                    ApprenticeshipType = apprenticeshipType,
+                    ReferenceNumber = new Settable<string>(referenceNumber),
                     Version = new Settable<string>("2.0"),
-                    LarsCode = Settable<int>.FromInvalidValue("NotANumber")
+                    LarsCode = Settable<string>.FromInvalidValue("NotANumber")
                 }
             };
 
@@ -59,7 +63,28 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 
             // Assert
             result.Errors.Should().ContainSingle(error => error.ErrorMessage ==
-                "S1005: ST002 version 2.0 larsCode is not a number");
+                $"S1005: {referenceNumber} version 2.0 larsCode is not a number");
+        }
+
+        public void Should_Not_Add_Failure_When_LarsCode_Is_Not_A_Number_For_ApprenticeshipUnit()
+        {
+            // Arrange
+            var importedStandards = new List<Standard>
+            {
+                new Standard
+                {
+                    ApprenticeshipType = Domain.Entities.ApprenticeshipType.ApprenticeshipUnit,
+                    ReferenceNumber = new Settable<string>("SC1003"),
+                    Version = new Settable<string>("2.0"),
+                    LarsCode = Settable<string>.FromInvalidValue("NotANumber")
+                }
+            };
+
+            // Act
+            var result = _sut.TestValidate(importedStandards);
+
+            // Assert
+            result.ShouldNotHaveAnyValidationErrors();
         }
     }
 }

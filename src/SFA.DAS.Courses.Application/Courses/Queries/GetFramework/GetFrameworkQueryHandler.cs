@@ -1,3 +1,4 @@
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -11,6 +12,8 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetFramework
 
         public GetFrameworkQueryHandler (IFrameworksService frameworksService)
         {
+            ArgumentNullException.ThrowIfNull(frameworksService);
+
             _frameworksService = frameworksService;
         }
         public async Task<GetFrameworkResult> Handle(GetFrameworkQuery request, CancellationToken cancellationToken)
