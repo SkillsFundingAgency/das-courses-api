@@ -41,32 +41,82 @@ namespace SFA.DAS.Courses.Data.Extensions
             return standards;
         }
 
-        public static IEnumerable<Standard> InMemoryFilterIsLatestVersion(this IEnumerable<Standard> standards, StandardFilter filter)
+        public static IEnumerable<Standard> InMemoryFilterIsLatestVersion(this IEnumerable<Standard> standards, 
+            StandardFilter filter, bool includeDistinctLarsCodes = true)
         {
             switch (filter)
             {
                 case StandardFilter.Active:
                 case StandardFilter.ActiveAvailable:
                     {
-                        // There are two exception cases where standard with same IfateRefNum 
-                        // has two records each, one in `retired` and other in `approved for delivery` status. 
-                        // However each version has a distinct LarsCode as seen below.
-                        // RefNum  LarsCode    Version  Status
-                        // ST0096  288         1.0      Retired
-                        // ST0096  529         2.0      Approved for delivery
-                        // ST0313  73          1.0      Retired
-                        // ST0313  222         2.0      Approved for delivery
-                        // Going forward this should never happen.
-                        // All versions of standards should have the same LarsCode.
-                        // To include all of the above we need to create a list that is grouped by LarsCode (otherwise unnecessary)
-                        // and union it with the `actual` list which is grouped by IFateReferenceNumber 
+                        var latestVersionStandards = standards
+                            .GroupBy(s => s.IfateReferenceNumber)
+                            .Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault());
 
-                        var standardsByLarsCode = standards.GroupBy(s => s.LarsCode).Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault());
+                        if (includeDistinctLarsCodes)
+                        {
+                            // There are several exception cases where standards with same IfateReferenceNumber 
+                            // have more than one record each, one in `retired` and another in `approved for delivery` status 
+                            // where each version has a distinct LarsCode, some example are shown below
 
-                        var standardsByIfateReferenceNumber = standards.GroupBy(s => s.IfateReferenceNumber).Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault());
+                            // RefNum  LarsCode    Version  Status
+                            // ST0096  288         1.0      Retired
+                            // ST0096  529         2.0      Approved for delivery
+                            // ST0313  73          1.0      Retired
+                            // ST0313  222         2.0      Approved for delivery
 
-                        var union = standardsByLarsCode.Union(standardsByIfateReferenceNumber).ToList();
-                        return union;
+                            // To include all of the above we will create a list that is grouped by LarsCode (otherwise unnecessary)
+                            // and union it with the `actual` list which is grouped by IFateReferenceNumber 
+
+                            latestVersionStandards = latestVersionStandards.Union(
+                                standards
+                                    .GroupBy(s => s.LarsCode)
+                                    .Select(c => c.OrderByDescending(x => x.VersionMajor).ThenByDescending(y => y.VersionMinor).FirstOrDefault()));
+                        }
+
+                        return latestVersionStandards;
+                    }
+                default:
+                    break;
+            }
+
+            return standards;
+        }
+
+        public static IEnumerable<Standard> InMemoryFilterIsEarliestVersion(this IEnumerable<Standard> standards,
+            StandardFilter filter, bool includeDistinctLarsCodes = true)
+        {
+            switch (filter)
+            {
+                case StandardFilter.Active:
+                case StandardFilter.ActiveAvailable:
+                    {
+                        var earliestVersionStandards = standards
+                            .GroupBy(s => s.IfateReferenceNumber)
+                            .Select(c => c.OrderBy(x => x.VersionMajor).ThenBy(y => y.VersionMinor).FirstOrDefault());
+
+                        if (includeDistinctLarsCodes)
+                        {
+                            // There are several exception cases where standards with same IfateReferenceNumber 
+                            // have more than one record each, one in `retired` and another in `approved for delivery` status 
+                            // where each version has a distinct LarsCode, some example are shown below
+
+                            // RefNum  LarsCode    Version  Status
+                            // ST0096  288         1.0      Retired
+                            // ST0096  529         2.0      Approved for delivery
+                            // ST0313  73          1.0      Retired
+                            // ST0313  222         2.0      Approved for delivery
+
+                            // To include all of the above we will create a list that is grouped by LarsCode (otherwise unnecessary)
+                            // and union it with the `actual` list which is grouped by IFateReferenceNumber 
+
+                            earliestVersionStandards = earliestVersionStandards.Union(
+                                standards
+                                    .GroupBy(s => s.LarsCode)
+                                    .Select(c => c.OrderBy(x => x.VersionMajor).ThenBy(y => y.VersionMinor).FirstOrDefault()));
+                        }
+
+                        return earliestVersionStandards;
                     }
                 default:
                     break;

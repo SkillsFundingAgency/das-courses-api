@@ -60,7 +60,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Courses
             model.TotalFiltered.Should().Be(queryResult.TotalFiltered);
 
             // Assert all properties except LarsCode
-            model.Standards.Should().BeEquivalentTo(
+            model.Courses.Should().BeEquivalentTo(
                 queryResult.Standards,
                 options => CoursesEquivalencyAssertionOptions
                     .GetCourseResponseExclusions(options));

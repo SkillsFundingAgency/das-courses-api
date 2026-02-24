@@ -8,6 +8,8 @@ namespace SFA.DAS.Courses.Domain.Courses
     {
         public ApprenticeshipType ApprenticeshipType { get; set; }
         public IEnumerable<StandardApprenticeshipFunding> ApprenticeshipFunding { get; set; }
+        public StandardVersionDetail VersionDetail { get; set; }
+        public CourseDates StandardDates { get; set; }
 
         public static explicit operator Standard(Entities.Standard source)
         {
@@ -39,7 +41,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 Keywords = source.Keywords,
                 LarsCode = source.LarsCode,
                 Level = source.Level,
-                Options = source.Options?.Select(x => (StandardOption)x).ToList(),
+                Options = source.Options?.Select(x => (CourseOption)x).ToList(),
                 OtherBodyApprovalRequired = source.LarsStandard != null ? source.LarsStandard.OtherBodyApprovalRequired : false,
                 OverviewOfRole = source.OverviewOfRole,
                 Route = source.Route.Name,
@@ -50,7 +52,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 SectorSubjectAreaTier1Description = source.LarsStandard?.SectorSubjectArea1?.SectorSubjectAreaTier1Desc,
                 SectorSubjectAreaTier2 = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.SectorSubjectAreaTier2 : 0m,
                 SectorSubjectAreaTier2Description = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.Name : "",
-                StandardDates = (StandardDates)source.LarsStandard,
+                StandardDates = (CourseDates)source.LarsStandard,
                 StandardPageUrl = source.StandardPageUrl,
                 StandardUId = source.StandardUId,
                 Status = source.Status,

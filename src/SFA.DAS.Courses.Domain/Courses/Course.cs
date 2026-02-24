@@ -8,7 +8,9 @@ namespace SFA.DAS.Courses.Domain.Courses
     {
         public ApprenticeshipType LearningType { get; set; }
         public IEnumerable<CourseApprenticeshipFunding> ApprenticeshipFunding { get; set; }
+        public CourseVersionDetail VersionDetail { get; set; }
         public CourseType CourseType { get; set; }
+        public CourseDates CourseDates { get; set; }
 
         public static explicit operator Course(Entities.Standard source)
         {
@@ -41,7 +43,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 Keywords = source.Keywords,
                 LarsCode = source.LarsCode,
                 Level = source.Level,
-                Options = source.Options?.Select(x => (StandardOption)x).ToList(),
+                Options = source.Options?.Select(x => (CourseOption)x).ToList(),
                 OtherBodyApprovalRequired = source.LarsStandard != null ? source.LarsStandard.OtherBodyApprovalRequired : false,
                 OverviewOfRole = source.OverviewOfRole,
                 Route = source.Route.Name,
@@ -52,7 +54,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 SectorSubjectAreaTier1Description = source.LarsStandard?.SectorSubjectArea1?.SectorSubjectAreaTier1Desc,
                 SectorSubjectAreaTier2 = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.SectorSubjectAreaTier2 : 0m,
                 SectorSubjectAreaTier2Description = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.Name : "",
-                StandardDates = null,
+                CourseDates = (CourseDates)source.LarsStandard,
                 StandardPageUrl = source.StandardPageUrl,
                 StandardUId = source.StandardUId,
                 Status = source.Status,
@@ -60,7 +62,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 TrailBlazerContact = source.TrailBlazerContact,
                 TypicalJobTitles = source.TypicalJobTitles,
                 Version = source.Version,
-                VersionDetail = (StandardVersionDetail)source,
+                VersionDetail = (CourseVersionDetail)source,
                 VersionMajor = source.VersionMajor,
                 VersionMinor = source.VersionMinor
             };

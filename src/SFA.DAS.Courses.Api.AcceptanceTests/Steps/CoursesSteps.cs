@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var expectedCourses = new List<Standard>();
             expectedCourses.AddRange(DbUtilities.GetValidTestCourses());
 
-            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
+            model.Courses.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
         }
 
         [Then("all valid and invalid courses are returned")]
@@ -55,7 +55,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             expectedCourses.AddRange(DbUtilities.GetValidTestCourses());
             expectedCourses.AddRange(DbUtilities.GetInValidTestCourses());
 
-            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
+            model.Courses.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
             model.Total.Should().Be(expectedCourses.Count);
         }
 
@@ -72,7 +72,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var expectedCourses = new List<Standard>();
             expectedCourses.AddRange(DbUtilities.GetAllTestCourses());
             
-            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
+            model.Courses.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
             model.Total.Should().Be(expectedCourses.Count);
         }
 
@@ -89,7 +89,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var expectedCourses = new List<Standard>();
             expectedCourses.AddRange(DbUtilities.GetNotYetApprovedTestCourses());
 
-            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), FullBaseStandardQueryExludes);
+            model.Courses.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), FullBaseStandardQueryExludes);
             model.Total.Should().Be(expectedCourses.Count);
         }
 
@@ -106,7 +106,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             var expectedCourses = new List<Standard>();
             expectedCourses.AddRange(GetExpected(table));
 
-            model.Standards.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
+            model.Courses.Should().BeEquivalentTo(expectedCourses.Select(s => (GetCourseResponse)(Domain.Courses.Course)s), BaseStandardQueryExludes);
         }
 
         private static IEnumerable<Standard> GetExpected(Table table)
@@ -127,16 +127,18 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         }
 
         /// <summary>
-        /// When an api endpoint returns a GetCourseResponse for a Course using a BaseStandardQuery then Options are not included, the Options are not
-        /// returned but the Skills which are populated from Options cannot be populated either; SearchScore is not relevant.
+        /// When an api endpoint returns a GetCourseResponse for a Course using a BaseStandardQuery then Options are not included, as the Options are not
+        /// returned the Skills which are populated from Options cannot be populated either; CourseDates are derived from versions and can't be tested
+        /// here; SearchScore is not relevant.
         /// are populated from 
         /// </summary>
         /// <param name="config"></param>
         /// <returns>Exluded properties which should be configured for the EquivalencyAssertion</returns>
         private static EquivalencyAssertionOptions<GetCourseResponse> BaseStandardQueryExludes(EquivalencyAssertionOptions<GetCourseResponse> config) =>
             config
-                .Excluding(c => c.SearchScore)
-                .Excluding(c => c.Skills);
+                .Excluding(c => c.Skills)
+                .Excluding(c => c.CourseDates)
+                .Excluding(c => c.SearchScore);
 
         private static EquivalencyAssertionOptions<GetCourseResponse> FullBaseStandardQueryExludes(EquivalencyAssertionOptions<GetCourseResponse> config) =>
             config

@@ -20,9 +20,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
         public async Task Then_Returns_Correct_Ksbs_Type(Standard standard)
         {
             // Arrange
-            standard.Options = new List<StandardOption>
+            standard.Options = new List<CourseOption>
             {
-                new StandardOption
+                new CourseOption
                 {
                     Title = "Core",
                     Ksbs = new List<Ksb>
@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             };
 
             Mock<IStandardsService> standardServiceMock = new();
-            standardServiceMock.Setup(x => x.GetStandardByAnyId(It.IsAny<string>(), CourseType.Apprenticeship)).ReturnsAsync(standard);
+            standardServiceMock.Setup(x => x.GetStandardByAnyId(It.IsAny<string>())).ReturnsAsync(standard);
             var query = new GetStandardOptionKsbsQuery
             {
                 Id = "123",

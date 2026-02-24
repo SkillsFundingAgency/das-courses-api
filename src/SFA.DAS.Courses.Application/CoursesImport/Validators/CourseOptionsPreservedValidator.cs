@@ -31,7 +31,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                         var importedOptions = standard.Options.Value ?? new List<Option>();
                         var currentTitles = currentStandard.Options
                             .Select(cso => cso.Title)
-                            .Where(title => title != Domain.Courses.StandardOption.CoreTitle)
+                            .Where(title => title != Domain.Courses.CourseOption.CoreTitle)
                             .ToList();
                         var importedTitles = importedOptions
                             .Select(io => io.Title.Value.Trim())

@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Courses.Domain.Courses
 {
-    public class StandardApprenticeshipFunding : ApprenticeshipFundingBase
+    public class StandardApprenticeshipFunding : ApprenticeshipFunding
     {
         public static explicit operator StandardApprenticeshipFunding(Entities.ApprenticeshipFunding apprenticeshipFunding)
         {
