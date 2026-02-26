@@ -37,12 +37,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.SectorSubjectAreaTier2Reposi
         [Test]
         public async Task Then_The_SectorSubjectAreaTier2_Items_Are_Removed()
         {
-            //Act
+            // Act
             await _sectorSubjectAreaTier2Repository.DeleteAll();
-            
-            //Assert
-            _coursesDataContext.Verify(x=>x.SectorSubjectAreaTier2.RemoveRange(_coursesDataContext.Object.SectorSubjectAreaTier2), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
+
+            // Assert
+            _coursesDataContext.Verify(x => x.DeleteAllAsync<SectorSubjectAreaTier2>(default), Times.Once);
         }
     }
 }

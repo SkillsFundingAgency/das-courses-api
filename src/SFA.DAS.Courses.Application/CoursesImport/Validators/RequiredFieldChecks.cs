@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 
@@ -9,28 +10,18 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
     internal static class RequiredFieldChecks
     {
-        public static string JsonName<T>(string propertyName)
-        {
-            var property = typeof(T).GetProperty(propertyName)
-                ?? throw new ArgumentException($"Property '{propertyName}' not found on type '{typeof(T).Name}'.");
-
-            var jsonPropertyAttribute = property.GetCustomAttributes(typeof(JsonPropertyAttribute), false)
-                .Cast<JsonPropertyAttribute>()
-                .FirstOrDefault();
-
-            return jsonPropertyAttribute?.PropertyName ?? propertyName;
-        }
+        private static readonly ConcurrentDictionary<(Type TargetType, string PropName), string> _jsonNameCache = new();
+        private static readonly ConcurrentDictionary<string, JsonMetadata> _metadataCache = new();
 
         public static void RequireSet<TTarget, T>(
             Dictionary<string, bool> undefinedFields,
             TTarget target,
             Expression<Func<TTarget, Settable<T>>> propertyExpr)
         {
-            var propName = GetPropertyName(propertyExpr);
-            var jsonName = JsonName<TTarget>(propName);
+            var jsonData = GetJsonMetadata(propertyExpr);
 
-            var settable = propertyExpr.Compile()(target);
-            undefinedFields[jsonName] = !settable.IsSet;
+            var settable = (Settable<T>)jsonData.Getter(target)!;
+            undefinedFields[jsonData.JsonName] = !settable.IsSet;
         }
 
         public static void RequireSetAt<TTarget, T>(
@@ -39,11 +30,10 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             TTarget target,
             Expression<Func<TTarget, Settable<T>>> propertyExpr)
         {
-            var propName = GetPropertyName(propertyExpr);
-            var jsonName = JsonName<TTarget>(propName);
+            var jsonData = GetJsonMetadata(propertyExpr);
 
-            var settable = propertyExpr.Compile()(target);
-            undefinedFields[$"{prefix}.{jsonName}"] = !settable.IsSet;
+            var settable = (Settable<T>)jsonData.Getter(target)!;
+            undefinedFields[$"{prefix}.{jsonData.JsonName}"] = !settable.IsSet;
         }
 
         public static void RequireSetObject<TTarget, TObject>(
@@ -52,18 +42,15 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             Expression<Func<TTarget, Settable<TObject>>> objectExpr,
             Action<Dictionary<string, bool>, TObject, string> childChecks)
         {
-            var propName = GetPropertyName(objectExpr);
-            var jsonName = JsonName<TTarget>(propName);
+            var jsonData = GetJsonMetadata(objectExpr);
 
-            var settableObj = objectExpr.Compile()(target);
-
-            undefinedFields[jsonName] = !settableObj.IsSet;
+            var settableObj = (Settable<TObject>)jsonData.Getter(target)!;
+            undefinedFields[jsonData.JsonName] = !settableObj.IsSet;
 
             if (!settableObj.IsSet || !settableObj.HasValue) return;
 
-            childChecks(undefinedFields, settableObj.Value, jsonName);
+            childChecks(undefinedFields, settableObj.Value, jsonData.JsonName);
         }
-
 
         public static void RequireSetList<TTarget, TItem>(
             Dictionary<string, bool> undefinedFields,
@@ -71,17 +58,17 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             Expression<Func<TTarget, Settable<List<TItem>>>> listExpr,
             Action<Dictionary<string, bool>, TItem, string> perItemChecks)
         {
-            var listPropName = GetPropertyName(listExpr);
-            var listJsonName = JsonName<TTarget>(listPropName);
+            var jsonData = GetJsonMetadata(listExpr);
 
-            var settableList = listExpr.Compile()(target);
-            undefinedFields[listJsonName] = !settableList.IsSet;
+            var settableList = (Settable<List<TItem>>)jsonData.Getter(target)!;
+            undefinedFields[jsonData.JsonName] = !settableList.IsSet;
 
             if (!settableList.IsSet || !settableList.HasValue) return;
 
-            for (var i = 0; i < settableList.Value.Count; i++)
+            var list = settableList.Value;
+            for (var i = 0; i < list.Count; i++)
             {
-                perItemChecks(undefinedFields, settableList.Value[i], $"{listJsonName}[{i}]");
+                perItemChecks(undefinedFields, list[i], $"{jsonData.JsonName}[{i}]");
             }
         }
 
@@ -91,14 +78,14 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             Expression<Func<TTarget, Settable<TLeft>>> leftExpr,
             Expression<Func<TTarget, Settable<TRight>>> rightExpr,
             string separator = " or ")
-         {
-            var leftName = JsonName<TTarget>(GetPropertyName(leftExpr));
-            var rightName = JsonName<TTarget>(GetPropertyName(rightExpr));
-    
-            var left = leftExpr.Compile()(target);
-            var right = rightExpr.Compile()(target);
+        {
+            var leftMeta = GetJsonMetadata(leftExpr);
+            var rightMeta = GetJsonMetadata(rightExpr);
 
-            undefinedFields[$"{leftName}{separator}{rightName}"] = !left.IsSet && !right.IsSet;
+            var left = (Settable<TLeft>)leftMeta.Getter(target)!;
+            var right = (Settable<TRight>)rightMeta.Getter(target)!;
+
+            undefinedFields[$"{leftMeta.JsonName}{separator}{rightMeta.JsonName}"] = !left.IsSet && !right.IsSet;
         }
 
         public static void ValidateListIfSet<TTarget, TItem>(
@@ -107,17 +94,44 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             Expression<Func<TTarget, Settable<List<TItem>>>> listExpr,
             Action<Dictionary<string, bool>, TItem, string> perItemChecks)
         {
-            var listPropName = GetPropertyName(listExpr);
-            var listJsonName = JsonName<TTarget>(listPropName);
+            var jsonData = GetJsonMetadata(listExpr);
 
-            var settableList = listExpr.Compile()(target);
-
+            var settableList = (Settable<List<TItem>>)jsonData.Getter(target)!;
             if (!settableList.IsSet || !settableList.HasValue) return;
 
-            for (var i = 0; i < settableList.Value.Count; i++)
+            var list = settableList.Value;
+            for (var i = 0; i < list.Count; i++)
             {
-                perItemChecks(undefinedFields, settableList.Value[i], $"{listJsonName}[{i}]");
+                perItemChecks(undefinedFields, list[i], $"{jsonData.JsonName}[{i}]");
             }
+        }
+
+        private static string GetJsonName(Type targetType, string propName)
+        {
+            return _jsonNameCache.GetOrAdd((targetType, propName), key =>
+            {
+                var property = key.TargetType.GetProperty(key.PropName, BindingFlags.Instance | BindingFlags.Public)
+                    ?? throw new ArgumentException($"Property '{key.PropName}' not found on type '{key.TargetType.Name}'.");
+
+                var attr = property.GetCustomAttribute<JsonPropertyAttribute>(inherit: false);
+                return attr?.PropertyName ?? key.PropName;
+            });
+        }
+
+        private static JsonMetadata GetJsonMetadata<TTarget, TValue>(Expression<Func<TTarget, TValue>> expr)
+        {
+            var propName = GetPropertyName(expr);
+            var targetType = typeof(TTarget);
+            var jsonName = GetJsonName(targetType, propName);
+
+            var key = $"{targetType.FullName}:{expr}";
+
+            return _metadataCache.GetOrAdd(key, _ =>
+            {
+                var compiled = expr.Compile();
+                Func<object, object?> getter = o => compiled((TTarget)o);
+                return new JsonMetadata(jsonName, getter);
+            });
         }
 
         private static string GetPropertyName<TTarget, TValue>(Expression<Func<TTarget, TValue>> expr)
@@ -126,6 +140,17 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             if (expr.Body is UnaryExpression u && u.Operand is MemberExpression um) return um.Member.Name;
             throw new ArgumentException("Expression must be a property access, e.g. x => x.Foo");
         }
-    }
 
+        private readonly struct JsonMetadata
+        {
+            public JsonMetadata(string jsonName, Func<object, object> getter)
+            {
+                JsonName = jsonName;
+                Getter = getter;
+            }
+
+            public string JsonName { get; }
+            public Func<object, object> Getter { get; }
+        }
+    }
 }

@@ -24,8 +24,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            _coursesDataContext.SectorSubjectAreaTier1Import.RemoveRange(_coursesDataContext.SectorSubjectAreaTier1Import);
-            await _coursesDataContext.SaveChangesAsync();
+            await _coursesDataContext.DeleteAllAsync<SectorSubjectAreaTier1Import>();
         }
 
         public async Task InsertMany(IEnumerable<SectorSubjectAreaTier1Import> sectorSubjectAreaTier1Imports)

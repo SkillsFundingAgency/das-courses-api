@@ -24,8 +24,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            _coursesDataContext.Frameworks.RemoveRange(_coursesDataContext.Frameworks);
-            await _coursesDataContext.SaveChangesAsync();
+            await _coursesDataContext.DeleteAllAsync<Framework>();
         }
 
         public async Task<Framework> Get(string id)

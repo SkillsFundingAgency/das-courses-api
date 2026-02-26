@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 
@@ -16,8 +17,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            _coursesDataContext.SectorSubjectAreaTier2.RemoveRange(_coursesDataContext.SectorSubjectAreaTier2);
-            await _coursesDataContext.SaveChangesAsync();
+            await _coursesDataContext.DeleteAllAsync<SectorSubjectAreaTier2>();
         }
 
         public async Task InsertMany(IEnumerable<SectorSubjectAreaTier2> sectorSubjectAreaTier2Items)

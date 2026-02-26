@@ -40,12 +40,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.RouteRepository
         [Test]
         public async Task Then_The_Routes_Are_Removed()
         {
-            //Act
+            // Act
             await _routeRepository.DeleteAll();
-            
-            //Assert
-            _coursesDataContext.Verify(x=>x.Routes.RemoveRange(_coursesDataContext.Object.Routes), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
+
+            // Assert
+            _coursesDataContext.Verify(x => x.DeleteAllAsync<Route>(default), Times.Once);
         }
     }
 }

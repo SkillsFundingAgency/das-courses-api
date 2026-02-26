@@ -39,12 +39,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkFundingImportReposi
         [Test]
         public async Task Then_The_FrameworkFundingImport_Items_Are_Removed()
         {
-            //Act
+            // Act
             await _frameworkFundingImportRepository.DeleteAll();
-            
-            //Assert
-            _coursesDataContext.Verify(x=>x.FrameworkFundingImport.RemoveRange(_coursesDataContext.Object.FrameworkFundingImport), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
+
+            // Assert
+            _coursesDataContext.Verify(x => x.DeleteAllAsync<FrameworkFundingImport>(default), Times.Once);
         }
     }
 }

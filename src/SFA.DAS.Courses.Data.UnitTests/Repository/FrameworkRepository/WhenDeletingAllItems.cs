@@ -41,10 +41,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkRepository
         {
             //Act
             await _frameworkRepository.DeleteAll();
-            
-            //Assert
-            _coursesDataContext.Verify(x=>x.Frameworks.RemoveRange(_coursesDataContext.Object.Frameworks), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
+
+            // Assert
+            _coursesDataContext.Verify(x => x.DeleteAllAsync<Framework>(default), Times.Once);
         }
     }
 }

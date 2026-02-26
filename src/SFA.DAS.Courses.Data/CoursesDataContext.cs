@@ -32,6 +32,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.Route> Routes { get; set; }
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
+        Task<int> DeleteAllAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
@@ -121,6 +122,11 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new RouteImport());
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public Task<int> DeleteAllAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return Set<TEntity>().ExecuteDeleteAsync(cancellationToken);
         }
     }
 }
