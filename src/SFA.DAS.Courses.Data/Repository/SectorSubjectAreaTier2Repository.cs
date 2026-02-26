@@ -17,7 +17,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            await _coursesDataContext.DeleteAllAsync<SectorSubjectAreaTier2>();
+            await _coursesDataContext.DeleteAllBatchedAsync<SectorSubjectAreaTier2>();
         }
 
         public async Task InsertMany(IEnumerable<SectorSubjectAreaTier2> sectorSubjectAreaTier2Items)

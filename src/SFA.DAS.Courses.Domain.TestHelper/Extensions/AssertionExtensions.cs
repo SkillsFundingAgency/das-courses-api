@@ -25,10 +25,10 @@ namespace SFA.DAS.Courses.Domain.TestHelper.Extensions
                             Type expectationType = ctx.Expectation.GetType();
 
                             if (subjectType.IsGenericType && subjectType.GetGenericTypeDefinition() == typeof(Settable<>) &&
-                                expectationType.IsGenericType && expectationType.GetGenericTypeDefinition() == typeof(Settable<>))
+                                expectationType.IsGenericType && expectationType?.GetGenericTypeDefinition() == typeof(Settable<>))
                             {
-                                object subjectValue = subjectType.GetProperty("Value")?.GetValue(ctx.Subject);
-                                object expectationValue = expectationType.GetProperty("Value")?.GetValue(ctx.Expectation);
+                                object? subjectValue = subjectType.GetProperty("Value")?.GetValue(ctx.Subject);
+                                object? expectationValue = expectationType.GetProperty("Value")?.GetValue(ctx.Expectation);
 
                                 subjectValue.Should().BeEquivalentTo(expectationValue,
                                     options => options.RespectingRuntimeTypes(),

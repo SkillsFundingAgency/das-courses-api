@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardImportRepository
             await _larsStandardImportRepository.DeleteAll();
 
             // Assert
-            _coursesDataContext.Verify(x => x.DeleteAllAsync<LarsStandardImport>(default), Times.Once);
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<LarsStandardImport>(200, default), Times.Once);
         }
     }
 }

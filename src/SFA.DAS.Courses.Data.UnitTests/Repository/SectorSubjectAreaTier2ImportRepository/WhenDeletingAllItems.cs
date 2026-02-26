@@ -42,7 +42,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.SectorSubjectAreaTier2Import
             await _sectorSubjectAreaTier2ImportRepository.DeleteAll();
 
             // Assert
-            _coursesDataContext.Verify(x => x.DeleteAllAsync<SectorSubjectAreaTier2Import>(default), Times.Once);
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<SectorSubjectAreaTier2Import>(200, default), Times.Once);
         }
     }
 }

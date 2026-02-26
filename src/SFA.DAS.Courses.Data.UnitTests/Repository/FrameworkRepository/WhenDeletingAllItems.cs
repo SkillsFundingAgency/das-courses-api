@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkRepository
             await _frameworkRepository.DeleteAll();
 
             // Assert
-            _coursesDataContext.Verify(x => x.DeleteAllAsync<Framework>(default), Times.Once);
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<Framework>(200, default), Times.Once);
         }
     }
 }

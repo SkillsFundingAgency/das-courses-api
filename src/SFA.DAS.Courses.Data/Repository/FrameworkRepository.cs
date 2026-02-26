@@ -24,7 +24,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            await _coursesDataContext.DeleteAllAsync<Framework>();
+            await _coursesDataContext.DeleteAllBatchedAsync<Framework>();
         }
 
         public async Task<Framework> Get(string id)

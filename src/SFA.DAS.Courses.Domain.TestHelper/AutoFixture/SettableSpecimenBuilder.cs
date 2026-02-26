@@ -7,7 +7,7 @@ namespace SFA.DAS.Courses.Domain.TestHelper.AutoFixture
 {
     public class SettableSpecimenBuilder : ISpecimenBuilder
     {
-        public object Create(object request, ISpecimenContext context)
+        public object? Create(object request, ISpecimenContext context)
         {
             if (request is Type type && type.IsClass)
             {
@@ -59,5 +59,4 @@ namespace SFA.DAS.Courses.Domain.TestHelper.AutoFixture
             return new NoSpecimen();
         }
     }
-
 }

@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Courses.Data.Configuration;
 using SFA.DAS.Courses.Domain.Configuration;
-//using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Data
 {
@@ -32,8 +31,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.Route> Routes { get; set; }
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
-        Task<int> DeleteAllAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class;
-        Task TruncateAsync<TEntity>(CancellationToken ct = default) where TEntity : class;
+        Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200,CancellationToken cancellationToken = default) where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
@@ -125,26 +123,19 @@ namespace SFA.DAS.Courses.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public Task<int> DeleteAllAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class
+        public async Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class
         {
-            return Set<TEntity>().ExecuteDeleteAsync(cancellationToken);
-        }
+            var set = Set<TEntity>();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.", Justification = "Required for TRUNCATE call")]
-        public async Task TruncateAsync<TEntity>(CancellationToken ct = default) where TEntity : class
-        {
-            var entityType = Model.FindEntityType(typeof(TEntity));
-            if (entityType == null)
-                throw new InvalidOperationException($"Entity type {typeof(TEntity).Name} not found in model.");
-    
-            var tableName = entityType.GetTableName();
-            var schema = entityType.GetSchema();
-    
-            var fullName = string.IsNullOrEmpty(schema)
-                ? $"[{tableName}]"
-                : $"[{schema}].[{tableName}]";
-    
-            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {fullName}", ct);
+            while (true)
+            {
+                var deleted = await set
+                    .Take(batchSize)
+                    .ExecuteDeleteAsync(cancellationToken);
+
+                if (deleted < batchSize)
+                    break;
+            }
         }
     }
 }

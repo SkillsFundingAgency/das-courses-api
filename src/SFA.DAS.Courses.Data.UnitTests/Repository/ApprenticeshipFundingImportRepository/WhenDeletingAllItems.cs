@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingImportR
             await _apprenticeshipFundingImportRepository.DeleteAll();
 
             // Assert
-            _coursesDataContext.Verify(x => x.DeleteAllAsync<ApprenticeshipFundingImport>(default), Times.Once);
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<ApprenticeshipFundingImport>(200, default), Times.Once);
         }
     }
 }

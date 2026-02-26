@@ -23,7 +23,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            await _coursesDataContext.DeleteAllAsync<Route>();
+            await _coursesDataContext.DeleteAllBatchedAsync<Route>();
         }
 
         public async Task<IEnumerable<Route>> GetAll()

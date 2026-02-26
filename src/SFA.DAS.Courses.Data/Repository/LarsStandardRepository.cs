@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Data.Repository
         
         public async Task DeleteAll()
         {
-            await _coursesDataContext.DeleteAllAsync<LarsStandard>();
+            await _coursesDataContext.DeleteAllBatchedAsync<LarsStandard>();
         }
     }
 }

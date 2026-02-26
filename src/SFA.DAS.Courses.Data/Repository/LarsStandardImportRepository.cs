@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Data.Repository
         }
         public async Task DeleteAll()
         {
-            await _coursesDataContext.DeleteAllAsync<LarsStandardImport>();
+            await _coursesDataContext.DeleteAllBatchedAsync<LarsStandardImport>();
         }
 
         public async Task<IEnumerable<LarsStandardImport>> GetAll()

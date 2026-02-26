@@ -23,7 +23,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            await _coursesDataContext.DeleteAllAsync<ApprenticeshipFunding>();
+            await _coursesDataContext.DeleteAllBatchedAsync<ApprenticeshipFunding>();
         }
     }
 }

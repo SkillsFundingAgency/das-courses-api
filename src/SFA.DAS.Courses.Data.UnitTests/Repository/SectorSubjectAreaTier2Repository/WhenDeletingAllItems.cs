@@ -41,7 +41,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.SectorSubjectAreaTier2Reposi
             await _sectorSubjectAreaTier2Repository.DeleteAll();
 
             // Assert
-            _coursesDataContext.Verify(x => x.DeleteAllAsync<SectorSubjectAreaTier2>(default), Times.Once);
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<SectorSubjectAreaTier2>(200, default), Times.Once);
         }
     }
 }

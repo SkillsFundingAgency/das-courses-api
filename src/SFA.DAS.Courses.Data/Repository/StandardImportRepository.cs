@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            await _coursesDataContext.TruncateAsync<StandardImport>();
+            await _coursesDataContext.DeleteAllBatchedAsync<StandardImport>(200);
         }
 
         public async Task<IEnumerable<StandardImport>> GetAll()

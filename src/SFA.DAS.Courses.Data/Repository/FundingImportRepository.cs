@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Data.Repository
         }
         public async Task DeleteAll()
         {
-            await _coursesDataContext.DeleteAllAsync<FundingImport>();
+            await _coursesDataContext.DeleteAllBatchedAsync<FundingImport>();
         }
 
         public async Task<IEnumerable<FundingImport>> GetAll()

@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.RouteRepository
             await _routeRepository.DeleteAll();
 
             // Assert
-            _coursesDataContext.Verify(x => x.DeleteAllAsync<Route>(default), Times.Once);
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<Route>(200, default), Times.Once);
         }
     }
 }

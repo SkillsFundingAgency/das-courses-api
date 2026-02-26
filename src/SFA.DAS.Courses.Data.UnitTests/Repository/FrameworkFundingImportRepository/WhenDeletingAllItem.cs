@@ -43,7 +43,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.FrameworkFundingImportReposi
             await _frameworkFundingImportRepository.DeleteAll();
 
             // Assert
-            _coursesDataContext.Verify(x => x.DeleteAllAsync<FrameworkFundingImport>(default), Times.Once);
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<FrameworkFundingImport>(200, default), Times.Once);
         }
     }
 }

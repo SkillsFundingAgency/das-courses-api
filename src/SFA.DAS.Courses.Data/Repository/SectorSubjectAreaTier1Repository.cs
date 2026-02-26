@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            await _coursesDataContext.DeleteAllAsync<SectorSubjectAreaTier1>();
+            await _coursesDataContext.DeleteAllBatchedAsync<SectorSubjectAreaTier1>();
         }
 
         public async Task<List<SectorSubjectAreaTier1>> GetAll(CancellationToken cancellationToken)
