@@ -33,6 +33,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
         Task<int> DeleteAllAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class;
+        Task TruncateAsync<TEntity>(CancellationToken ct = default) where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
@@ -127,6 +128,23 @@ namespace SFA.DAS.Courses.Data
         public Task<int> DeleteAllAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class
         {
             return Set<TEntity>().ExecuteDeleteAsync(cancellationToken);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.", Justification = "Required for TRUNCATE call")]
+        public async Task TruncateAsync<TEntity>(CancellationToken ct = default) where TEntity : class
+        {
+            var entityType = Model.FindEntityType(typeof(TEntity));
+            if (entityType == null)
+                throw new InvalidOperationException($"Entity type {typeof(TEntity).Name} not found in model.");
+    
+            var tableName = entityType.GetTableName();
+            var schema = entityType.GetSchema();
+    
+            var fullName = string.IsNullOrEmpty(schema)
+                ? $"[{tableName}]"
+                : $"[{schema}].[{tableName}]";
+    
+            await Database.ExecuteSqlRawAsync($"TRUNCATE TABLE {fullName}", ct);
         }
     }
 }
