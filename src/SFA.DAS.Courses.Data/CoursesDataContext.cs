@@ -31,7 +31,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.Route> Routes { get; set; }
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
-        Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200,CancellationToken cancellationToken = default) where TEntity : class;
+        Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
