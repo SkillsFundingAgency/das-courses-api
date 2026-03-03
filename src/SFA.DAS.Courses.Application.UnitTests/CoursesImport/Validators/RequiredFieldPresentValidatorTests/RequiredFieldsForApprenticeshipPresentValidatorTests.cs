@@ -43,6 +43,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.Require
                     WebLink = new Settable<string>("http://provider.com")
                 }),
                 IntegratedApprenticeship = new Settable<bool?>(null),
+                IntegratedDegree = new Settable<string>(),
                 Keywords = new Settable<List<string>>(new List<string>()),
                 Knowledges = new Settable<List<Apprenticeship.Knowledge>>(new List<Apprenticeship.Knowledge>()),
                 LarsCode = new Settable<int>(12345),

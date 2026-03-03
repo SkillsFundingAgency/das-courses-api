@@ -20,15 +20,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
             }
         }
 
-        public static void InitializeIfTagged(IEnumerable<object> objects)
-        {
-            foreach (var obj in objects)
-            {
-                InitializeIfTagged(obj);
-            }
-        }
-
-        public static void InitializeSettableProperties(object target)
+        private static void InitializeSettableProperties(object target)
         {
             if (target == null) return;
 
@@ -41,33 +33,24 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
                 {
                     if (value == null)
                     {
-                        var settableInstance = Activator.CreateInstance(prop.PropertyType);
-                        prop.SetValue(target, settableInstance);
+                        value = Activator.CreateInstance(prop.PropertyType);
+                        prop.SetValue(target, value);
                     }
-                }
-                else if (IsComplexType(prop.PropertyType))
-                {
-                    if (value == null)
+                    else if (value is ISettable settableValue)
                     {
-                        try
+                        if (!settableValue.HasValue) continue;
+
+                        if (settableValue.UntypedValue is IEnumerable enumerableValue && enumerableValue is not string)
                         {
-                            value = Activator.CreateInstance(prop.PropertyType);
-                            prop.SetValue(target, value);
+                            foreach (var item in enumerableValue)
+                            {
+                                InitializeIfTagged(item);
+                            }
                         }
-                        catch
+                        else
                         {
-                            continue;
+                            InitializeIfTagged(settableValue.UntypedValue);
                         }
-                    }
-                    InitializeSettableProperties(value);
-                }
-                else if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType) &&
-                         prop.PropertyType != typeof(string) &&
-                         value is IEnumerable enumerable)
-                {
-                    foreach (var item in enumerable)
-                    {
-                        InitializeSettableProperties(item);
                     }
                 }
             }
@@ -75,8 +58,5 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
 
         private static bool IsSettableType(Type type) =>
             type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Settable<>);
-
-        private static bool IsComplexType(Type type) =>
-            type.IsClass && type != typeof(string);
     }
 }

@@ -11,23 +11,32 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("approvedForDelivery")]
         public Settable<DateTime?> ApprovedForDelivery { get; set; }
 
+        [JsonProperty("assessmentChanged")]
+        public Settable<bool> AssessmentChanged { get; set; }
+
         [JsonProperty("assessmentPlanUrl")]
         public Settable<string> AssessmentPlanUrl { get; set; }
 
         [JsonProperty("change")]
         public Settable<string> Change { get; set; }
 
-        [JsonProperty("changedDate")]
-        public Settable<DateTime?> ChangedDate { get; set; }
-
         [JsonProperty("createdDate")]
         public Settable<DateTime> CreatedDate { get; set; }
+
+        [JsonProperty("changedDate")]
+        public Settable<DateTime?> ChangedDate { get; set; }
 
         [JsonProperty("eQAProvider")]
         public Settable<FoundationApprenticeshipEqaProvider> EqaProvider { get; set; }
 
         [JsonProperty("earliestStartDate")]
         public Settable<DateTime?> VersionEarliestStartDate { get; set; }
+
+        [JsonProperty("employabilitySkillsAndBehaviours")]
+        public Settable<List<IdDetailPair>> EmployabilitySkillsAndBehaviours { get; set; }
+
+        [JsonProperty("foundationApprenticeshipUrl")]
+        public Settable<Uri> FoundationApprenticeshipUrl { get; set; }
 
         [JsonProperty("keywords")]
         public Settable<List<string>> Keywords { get; set; }
@@ -55,6 +64,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
 
         [JsonProperty("publishDate")]
         public Settable<DateTime> PublishDate { get; set; }
+        
+        [JsonProperty("typicalDuration")]
+        public Settable<int> ProposedTypicalDuration { get; set; }
 
         [JsonProperty("qualifications")]
         public Settable<List<Qualification>> Qualifications { get; set; }
@@ -62,14 +74,17 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("referenceNumber")]
         public Settable<string> ReferenceNumber { get; set; }
 
-        [JsonProperty("regulatedBody")]
-        public Settable<string> RegulatedBody { get; set; }
-
         [JsonProperty("regulated")]
         public Settable<bool> Regulated { get; set; }
 
+        [JsonProperty("regulatedBody")]
+        public Settable<string> RegulatedBody { get; set; }
+        
         [JsonProperty("regulationDetail")]
         public Settable<List<RegulationDetail>> RegulationDetails { get; set; }
+
+        [JsonProperty("relatedOccupations")]
+        public Settable<List<RelatedOccupation>> RelatedOccupations { get; set; }
 
         [JsonProperty("route")]
         public Settable<string> Route { get; set; }
@@ -80,11 +95,14 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("status")]
         public Settable<string> Status { get; set; }
 
+        [JsonProperty("technicalKnowledges")]
+        public Settable<List<IdDetailPair>> TechnicalKnowledges { get; set; }
+
+        [JsonProperty("technicalSkills")]
+        public Settable<List<IdDetailPair>> TechnicalSkills { get; set; }
+
         [JsonProperty("title")]
         public Settable<string> Title { get; set; }
-
-        [JsonProperty("typicalDuration")]
-        public Settable<int> ProposedTypicalDuration { get; set; }
 
         [JsonProperty("typicalJobTitles")]
         public Settable<List<string>> TypicalJobTitles { get; set; }
@@ -94,25 +112,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
 
         [JsonProperty("versionNumber")]
         public Settable<string> VersionNumber { get; set; }
-
-        [JsonProperty("technicalKnowledges")]
-        public Settable<List<IdDetailPair>> TechnicalKnowledges { get; set; } = new Settable<List<IdDetailPair>>();
-
-        [JsonProperty("technicalSkills")]
-        public Settable<List<IdDetailPair>> TechnicalSkills { get; set; } = new Settable<List<IdDetailPair>>();
-
-        [JsonProperty("employabilitySkillsAndBehaviours")]
-        public Settable<List<IdDetailPair>> EmployabilitySkillsAndBehaviours { get; set; } = new Settable<List<IdDetailPair>>();
-
-        [JsonProperty("foundationApprenticeshipUrl")]
-        public Settable<Uri> FoundationApprenticeshipUrl { get; set; } = new();
-
-        [JsonProperty("assessmentChanged")]
-        public Settable<bool> AssessmentChanged { get; set; } = new();
-
-        [JsonProperty("relatedOccupations")]
-        public Settable<List<RelatedOccupation>> RelatedOccupations { get; set; } = new Settable<List<RelatedOccupation>>();
-
+        
+        [InitializeSettables]
         public class FoundationApprenticeshipEqaProvider
         {
             [JsonProperty("providerName")]
@@ -131,6 +132,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> WebLink { get; set; }
         }
 
+        [InitializeSettables]
         public class RegulationDetail
         {
             [JsonProperty("name")]
@@ -143,6 +145,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<bool> Approved { get; set; }
         }
 
+        [InitializeSettables]
         public class Qualification
         {
             [JsonProperty("qualificationId")]
@@ -158,6 +161,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> AnyAdditionalInformation { get; set; }
         }
 
+        [InitializeSettables]
         public class IdDetailPair
         {
             [JsonProperty("id")]
@@ -167,13 +171,14 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> Detail { get; set; }
         }
 
+        [InitializeSettables]
         public class RelatedOccupation
         {
             [JsonProperty("name")]
-            public Settable<string> Name { get; set; } = new Settable<string>(string.Empty);
+            public Settable<string> Name { get; set; }
 
             [JsonProperty("reference")]
-            public Settable<string> Reference { get; set; } = new Settable<string>(string.Empty);
+            public Settable<string> Reference { get; set; }
         }
     }
 }

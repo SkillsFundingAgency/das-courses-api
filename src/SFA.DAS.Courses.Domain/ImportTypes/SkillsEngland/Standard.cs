@@ -171,7 +171,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                 VersionNumber = apprenticeship.VersionNumber.Clone(),
             };
 
-            InitializeSettablesHelper.InitializeSettableProperties(standard);
+            InitializeSettablesHelper.InitializeIfTagged(standard);
             return standard;
         }
 
@@ -256,7 +256,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                 VersionNumber = foundationApprenticeship.VersionNumber.Clone(),
             };
 
-            InitializeSettablesHelper.InitializeSettableProperties(standard);
+            InitializeSettablesHelper.InitializeIfTagged(standard);
             return standard;
         }
 
@@ -315,7 +315,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                 VersionNumber = apprenticeshipUnit.VersionNumber.Clone(),
             };
 
-            InitializeSettablesHelper.InitializeSettableProperties(standard);
+            InitializeSettablesHelper.InitializeIfTagged(standard);
             return standard;
         }
     }
