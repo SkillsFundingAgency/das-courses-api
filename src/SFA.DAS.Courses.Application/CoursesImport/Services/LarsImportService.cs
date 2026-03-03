@@ -69,7 +69,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
             catch (Exception e)
             {
-                _logger.LogError("LARS Import - an error occurred while trying to import data from LARS file.", e);
+                _logger.LogError(e, "LARS Import - an error occurred while trying to import data from LARS file.");
                 throw;
             }
         }
@@ -116,7 +116,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             }
             catch (Exception e)
             {
-                _logger.LogError("LARS Import - an error occurred while trying to load data from staging tables.", e);
+                _logger.LogError(e, "LARS Import - an error occurred while trying to load data from staging tables.");
                 throw;
             }
         }

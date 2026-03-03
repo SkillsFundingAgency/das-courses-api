@@ -24,10 +24,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<DateTime?> VersionEarliestStartDate { get; set; }
 
         [JsonProperty("entryRequirements")]
-        public Settable<string> EntryRequirements { get; set; } = new Settable<string>(string.Empty);
+        public Settable<string> EntryRequirements { get; set; }
 
         [JsonProperty("greenJobTitles")]
-        public Settable<List<string>> GreenJobTitles { get; set; } = new Settable<List<string>>();
+        public Settable<List<string>> GreenJobTitles { get; set; }
 
         [JsonProperty("keywords")]
         public Settable<List<string>> Keywords { get; set; }
@@ -78,10 +78,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<string> Status { get; set; }
 
         [JsonProperty("technicalKnowledges")]
-        public Settable<List<IdDetailPair>> TechnicalKnowledges { get; set; } = new Settable<List<IdDetailPair>>();
+        public Settable<List<IdDetailPair>> TechnicalKnowledges { get; set; }
 
         [JsonProperty("technicalSkills")]
-        public Settable<List<IdDetailPair>> TechnicalSkills { get; set; } = new Settable<List<IdDetailPair>>();
+        public Settable<List<IdDetailPair>> TechnicalSkills { get; set; }
 
         [JsonProperty("title")]
         public Settable<string> Title { get; set; }
@@ -95,9 +95,10 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("version")]
         public Settable<string> Version { get; set; }
 
-        [JsonProperty("versionNumber")] // Not Used
+        [JsonProperty("versionNumber")]
         public Settable<string> VersionNumber { get; set; }
 
+        [InitializeSettables]
         public class IdDetailPair
         {
             [JsonProperty("id")]
@@ -107,6 +108,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> Detail { get; set; }
         }
 
+        [InitializeSettables]
         public class RegulationDetail
         {
             [JsonProperty("approved")]

@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<string> AssessmentPlanUrl { get; set; }
 
         [JsonProperty("behaviours")]
-        public Settable<List<Behaviour>> Behaviours { get; set; } = new Settable<List<Behaviour>>();
+        public Settable<List<Behaviour>> Behaviours { get; set; }
 
         [JsonProperty("change")]
         public Settable<string> Change { get; set; }
@@ -34,7 +34,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<DateTime> CreatedDate { get; set; }
 
         [JsonProperty("duties")]
-        public Settable<List<Duty>> Duties { get; set; } = new();
+        public Settable<List<Duty>> Duties { get; set; }
 
         [JsonProperty("earliestStartDate")]
         public Settable<DateTime?> VersionEarliestStartDate { get; set; }
@@ -46,13 +46,13 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<bool?> IntegratedApprenticeship { get; set; }
 
         [JsonProperty("integratedDegree")]
-        public Settable<string> IntegratedDegree { get; set; } = new Settable<string>(string.Empty);
+        public Settable<string> IntegratedDegree { get; set; }
 
         [JsonProperty("keywords")]
         public Settable<List<string>> Keywords { get; set; }
 
         [JsonProperty("knowledges")]
-        public Settable<List<Knowledge>> Knowledges { get; set; } = new Settable<List<Knowledge>>();
+        public Settable<List<Knowledge>> Knowledges { get; set; }
 
         [JsonProperty("larsCode")]
         public Settable<int> LarsCode { get; set; }
@@ -76,7 +76,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<List<Option>> Options { get; set; }
 
         [JsonProperty("optionsUnstructuredTemplate")]
-        public Settable<List<string>> OptionsUnstructuredTemplate { get; set; } = new Settable<List<string>>();
+        public Settable<List<string>> OptionsUnstructuredTemplate { get; set; }
 
         [JsonProperty("overviewOfRole")]
         public Settable<string> OverviewOfRole { get; set; }
@@ -106,7 +106,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<int> RouteCode { get; set; }
 
         [JsonProperty("skills")]
-        public Settable<List<Skill>> Skills { get; set; } = new Settable<List<Skill>>();
+        public Settable<List<Skill>> Skills { get; set; }
 
         [JsonProperty("standardPageUrl")]
         public Settable<Uri> StandardPageUrl { get; set; }
@@ -115,7 +115,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<string> Status { get; set; }
 
         [JsonProperty("tbMainContact")]
-        public Settable<string> TbMainContact { get; set; } = new Settable<string>(string.Empty);
+        public Settable<string> TbMainContact { get; set; }
 
         [JsonProperty("title")]
         public Settable<string> Title { get; set; }
@@ -132,6 +132,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("versionNumber")]
         public Settable<string> VersionNumber { get; set; }
 
+        [InitializeSettables]
         public class ApprenticeshipEqaProvider
         {
             [JsonProperty("contactAddress")]
@@ -150,6 +151,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> WebLink { get; set; }
         }
 
+        [InitializeSettables]
         public class Behaviour
         {
             [JsonProperty("behaviourId")]
@@ -159,6 +161,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> Detail { get; set; }
         }
 
+        [InitializeSettables]
         public class Duty
         {
             [JsonProperty("dutyDetail")]
@@ -183,6 +186,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<List<Guid>> MappedSkills { get; set; }
         }
 
+        [InitializeSettables]
         public class Knowledge
         {
             [JsonProperty("detail")]
@@ -192,6 +196,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<Guid> KnowledgeId { get; set; }
         }
 
+        [InitializeSettables]
         public class Option
         {
             [JsonProperty("optionId")]
@@ -201,6 +206,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> Title { get; set; }
         }
 
+        [InitializeSettables]
         public class Qualification
         {
             [JsonProperty("anyAdditionalInformation")]
@@ -216,6 +222,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> Title { get; set; }
         }
 
+
+        [InitializeSettables]
         public class RegulationDetail
         {
             [JsonProperty("approved")]
@@ -228,6 +236,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
             public Settable<string> WebLink { get; set; }
         }
 
+        [InitializeSettables]
         public class Skill
         {
             [JsonProperty("detail")]

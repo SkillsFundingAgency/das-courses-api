@@ -14,16 +14,16 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             _coursesDataContext = coursesDataContext;
         }
+
         public async Task InsertMany(IEnumerable<ApprenticeshipFundingImport> apprenticeshipFundingImports)
         {
             await _coursesDataContext.ApprenticeshipFundingImport.AddRangeAsync(apprenticeshipFundingImports);
-            
             await _coursesDataContext.SaveChangesAsync();
         }
+
         public async Task DeleteAll()
         {
-            _coursesDataContext.ApprenticeshipFundingImport.RemoveRange(_coursesDataContext.ApprenticeshipFundingImport);
-            await _coursesDataContext.SaveChangesAsync();
+            await _coursesDataContext.DeleteAllBatchedAsync<ApprenticeshipFundingImport>();
         }
 
         public async Task<IEnumerable<ApprenticeshipFundingImport>> GetAll()

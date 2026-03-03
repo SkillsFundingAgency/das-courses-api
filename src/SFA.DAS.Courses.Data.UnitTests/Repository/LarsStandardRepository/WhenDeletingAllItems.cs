@@ -39,12 +39,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.LarsStandardRepository
         [Test]
         public async Task Then_The_LarsStandard_Items_Are_Removed()
         {
-            //Act
+            // Act
             await _larsStandardRepository.DeleteAll();
-            
-            //Assert
-            _coursesDataContext.Verify(x=>x.LarsStandards.RemoveRange(_coursesDataContext.Object.LarsStandards), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
+
+            // Assert
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<LarsStandard>(200, default), Times.Once);
         }
     }
 }

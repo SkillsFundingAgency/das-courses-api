@@ -7,7 +7,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     public interface IRouteImportRepository
     {
         Task<int> InsertMany(IEnumerable<RouteImport> routes);
-        Task<int> DeleteAll();
+        Task DeleteAll();
         Task<IEnumerable<RouteImport>> GetAll();
     }
 }

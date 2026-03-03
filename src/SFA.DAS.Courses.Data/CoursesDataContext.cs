@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Courses.Data.Configuration;
 using SFA.DAS.Courses.Domain.Configuration;
-//using SFA.DAS.Courses.Domain.ImportTypes;
 
 namespace SFA.DAS.Courses.Data
 {
@@ -32,6 +31,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.Route> Routes { get; set; }
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
+        Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
@@ -121,6 +121,21 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new RouteImport());
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public async Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var set = Set<TEntity>();
+
+            while (true)
+            {
+                var deleted = await set
+                    .Take(batchSize)
+                    .ExecuteDeleteAsync(cancellationToken);
+
+                if (deleted < batchSize)
+                    break;
+            }
         }
     }
 }

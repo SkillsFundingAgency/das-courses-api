@@ -3,8 +3,17 @@ using Newtonsoft.Json;
 
 namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
 {
+    public interface ISettable
+    {
+        bool IsSet { get; }
+        bool HasValue { get; }
+        bool HasInvalidValue { get; }
+        object InvalidValue { get; }
+        object UntypedValue { get; }
+    }
+
     [JsonConverter(typeof(SettableJsonConverter<>))]
-    public class Settable<T>
+    public class Settable<T> : ISettable
     {
         private T _value;
         private bool _isSet;
@@ -51,7 +60,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
 
         public bool IsSet => _isSet;
         public bool HasValue => _isSet && _hasValue;
-        public bool HasInvalidValue => _invalidValue != null; 
+        public bool HasInvalidValue => _invalidValue != null;
         public object InvalidValue => _invalidValue;
 
         public T Value
@@ -67,6 +76,8 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
                 _value = value;
             }
         }
+
+        public object UntypedValue => HasValue ? _value : null;
 
         public static implicit operator Settable<T>(T value) => new(value);
         public static implicit operator T(Settable<T> value) => value != null && value.HasValue ? value._value : default;

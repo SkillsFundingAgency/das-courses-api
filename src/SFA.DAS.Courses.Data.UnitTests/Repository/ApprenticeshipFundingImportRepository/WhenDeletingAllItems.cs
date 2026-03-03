@@ -40,12 +40,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.ApprenticeshipFundingImportR
         [Test]
         public async Task Then_The_ApprenticeshipFundingImport_Items_Are_Removed()
         {
-            //Act
+            // Act
             await _apprenticeshipFundingImportRepository.DeleteAll();
-            
-            //Assert
-            _coursesDataContext.Verify(x=>x.ApprenticeshipFundingImport.RemoveRange(_coursesDataContext.Object.ApprenticeshipFundingImport), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
+
+            // Assert
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<ApprenticeshipFundingImport>(200, default), Times.Once);
         }
     }
 }

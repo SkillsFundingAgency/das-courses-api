@@ -40,12 +40,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.RouteImportRepository
         [Test]
         public async Task Then_The_RoutesImport_Items_Are_Removed()
         {
-            //Act
+            // Act
             await _routeImportRepository.DeleteAll();
-            
-            //Assert
-            _coursesDataContext.Verify(x=>x.RoutesImport.RemoveRange(_coursesDataContext.Object.RoutesImport), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
+
+            // Assert
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<RouteImport>(200, default), Times.Once);
         }
     }
 }

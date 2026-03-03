@@ -29,6 +29,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     WebLink = new Settable<string>("http://provider.com")
                 }),
                 IntegratedApprenticeship = new Settable<bool?>(null),
+                IntegratedDegree = new Settable<string>(),
                 Keywords = new Settable<List<string>>(new List<string>()),
                 Knowledges = new Settable<List<Apprenticeship.Knowledge>>(new List<Apprenticeship.Knowledge>()),
                 LarsCode = larsCode,
@@ -140,55 +141,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 VersionLatestEndDate = new Settable<DateTime?>(DateTime.UtcNow),
                 VersionLatestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
                 VersionNumber = new Settable<string>("1.0")
-            };
-        }
-
-        protected static Standard GetValidImportedStandard(string larsCode, string referenceNumber, string version, string title, string status, string route, string optionTitle)
-        {
-            return new Standard
-            {
-                LarsCode = larsCode,
-                ReferenceNumber = referenceNumber,
-                Title = title,
-                Status = status,
-                CreatedDate = DateTime.Now,
-                PublishDate = DateTime.Now,
-                Version = version,
-                VersionNumber = version,
-                Change = new Settable<string>(null),
-                VersionEarliestStartDate = new Settable<DateTime?>(null),
-                VersionLatestStartDate = new Settable<DateTime?>(null),
-                VersionLatestEndDate = new Settable<DateTime?>(null),
-                OverviewOfRole = new Settable<string>(null),
-                Level = 1,
-                ProposedTypicalDuration = 1,
-                ProposedMaxFunding = 1,
-                Route = route,
-                Keywords = new Settable<List<string>>(null),
-                AssessmentPlanUrl = "http://plan.html",
-                EqaProvider = new Domain.ImportTypes.SkillsEngland.EqaProvider
-                {
-                    ProviderName = new Settable<string>(null),
-                    ContactName = new Settable<string>(null),
-                    ContactAddress = new Settable<string>(null),
-                    ContactEmail = new Settable<string>(null),
-                    WebLink = new Settable<string>(null),
-                },
-                ApprovedForDelivery = new Settable<DateTime?>(null),
-                TbMainContact = new Settable<string>(null),
-                Knowledges = new Settable<List<Knowledge>>(null),
-                Behaviours = new Settable<List<Behaviour>>(null),
-                Skills = new Settable<List<Skill>>(null),
-                Duties = new Settable<List<Duty>>(null),
-                RegulatedBody = new Settable<string>(null),
-                Regulated = new Settable<bool>(true),
-                RegulationDetail = new Settable<List<RegulationDetail>>(null),
-                TypicalJobTitles = new Settable<List<string>>(null),
-                StandardPageUrl = new Settable<Uri>(null),
-                CoreAndOptions = false,
-                Options = new List<Option> { new Option { OptionId = Guid.NewGuid(), Title = optionTitle } },
-                OptionsUnstructuredTemplate = new Settable<List<string>>(null),
-                CoronationEmblem = false
             };
         }
 
