@@ -32,9 +32,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("keywords")]
         public Settable<List<string>> Keywords { get; set; }
 
-        [JsonProperty("larsCode")]
-        public Settable<string> LarsCode { get; set; }
-
         [JsonProperty("lastUpdated")]
         public Settable<DateTime?> LastUpdated { get; set; }
 
@@ -43,6 +40,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
 
         [JsonProperty("latestStartDate")]
         public Settable<DateTime?> VersionLatestStartDate { get; set; }
+
+        [JsonProperty("learningAimClassCode")]
+        public Settable<string> LearningAimClassCode { get; set; }
 
         [JsonProperty("minimumHoursForCompliance")]
         public Settable<int> MinimumHoursForCompliance { get; set; }

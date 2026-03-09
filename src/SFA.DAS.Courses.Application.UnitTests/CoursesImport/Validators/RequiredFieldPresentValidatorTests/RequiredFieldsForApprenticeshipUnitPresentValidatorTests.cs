@@ -29,8 +29,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.Require
                 ChangedDate = new Settable<DateTime?>(null),
                 CreatedDate = new Settable<DateTime>(DateTime.UtcNow),
                 Keywords = new Settable<List<string>>(new List<string>()),
-                LarsCode = new Settable<string>("12345"),
                 LastUpdated = new Settable<DateTime?>(null),
+                LearningAimClassCode = new Settable<string>("ZSC12345"),
                 Level = new Settable<int>(5),
                 MinimumHoursForCompliance = new Settable<int>(1),
                 OverviewOfTheSkillsGap = new Settable<string>("Overview"),
@@ -73,8 +73,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.Require
         [TestCase(nameof(ApprenticeshipUnit.CreatedDate))]
         [TestCase(nameof(ApprenticeshipUnit.Keywords))]
         [TestCase(nameof(ApprenticeshipUnit.TechnicalKnowledges))]
-        [TestCase(nameof(ApprenticeshipUnit.LarsCode))]
         [TestCase(nameof(ApprenticeshipUnit.LastUpdated))]
+        [TestCase(nameof(ApprenticeshipUnit.LearningAimClassCode))]
         [TestCase(nameof(ApprenticeshipUnit.MinimumHoursForCompliance))]
         [TestCase(nameof(ApprenticeshipUnit.Level))]
         [TestCase(nameof(ApprenticeshipUnit.ProposedMaxFunding))]

@@ -109,7 +109,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             };
         }
 
-        protected static ApprenticeshipUnit CreateValidImportedApprenticeshipUnit(string larsCode, string referenceNumber, string version, string title, string status, string route)
+        protected static ApprenticeshipUnit CreateValidImportedApprenticeshipUnit(string learningAimClassCode, string referenceNumber, string version, string title, string status, string route)
         {
             return new ApprenticeshipUnit
             {
@@ -118,7 +118,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 ChangedDate = new Settable<DateTime?>(null),
                 CreatedDate = new Settable<DateTime>(DateTime.UtcNow),
                 Keywords = new Settable<List<string>>(new List<string>()),
-                LarsCode = larsCode,
+                LearningAimClassCode = learningAimClassCode,
                 LastUpdated = new Settable<DateTime?>(null),
                 Level = new Settable<int>(5),
                 MinimumHoursForCompliance = new Settable<int>(1),
