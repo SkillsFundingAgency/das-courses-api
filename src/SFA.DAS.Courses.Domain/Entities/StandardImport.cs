@@ -79,7 +79,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 .Concat(standard.TypicalJobTitles?.Value ?? Enumerable.Empty<string>())
                 .Concat(standard.GreenJobTitles?.Value ?? Enumerable.Empty<string>())
                 .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct();
+                .Distinct(StringComparer.OrdinalIgnoreCase);
 
             return combined.Any()
                 ? string.Join("|", combined)
