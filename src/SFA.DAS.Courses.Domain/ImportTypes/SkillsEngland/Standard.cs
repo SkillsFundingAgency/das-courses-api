@@ -19,6 +19,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         public Settable<DateTime> CreatedDate { get; set; }
         public DurationUnits DurationUnits { get; set; }
         public Settable<EqaProvider> EqaProvider { get; set; }
+        public Settable<List<string>> GreenJobTitles { get; set; } = new Settable<List<string>>();
         public Settable<List<string>> Keywords { get; set; }
         public Settable<string> LarsCode { get; set; }
         public Settable<DateTime?> LastUpdated { get; set; }
@@ -72,7 +73,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         #endregion Only applicable to Foundation Apprenticeships
 
         #region Only applicable to Apprenticeship Units
-        public Settable<List<string>> GreenJobTitles { get; set; } = new Settable<List<string>>();
         #endregion Only applicable to Apprenticeship Units
 
         public static implicit operator Standard(Apprenticeship apprenticeship)
@@ -115,6 +115,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                     ProviderName = p.ProviderName.Clone(),
                     WebLink = p.WebLink.Clone(),
                 }),
+                GreenJobTitles = apprenticeship.GreenJobTitles.MapList(p => p),
                 IntegratedApprenticeship = apprenticeship.IntegratedApprenticeship.Clone(),
                 IntegratedDegree = apprenticeship.IntegratedDegree.Clone(),
                 Keywords = apprenticeship.Keywords.MapList(p => p),
@@ -205,6 +206,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                     WebLink = p.WebLink.Clone(),
                 }),
                 FoundationApprenticeshipUrl = foundationApprenticeship.FoundationApprenticeshipUrl.Clone(),
+                GreenJobTitles = foundationApprenticeship.GreenJobTitles.MapList(p => p),
                 Keywords = foundationApprenticeship.Keywords.MapList(p => p),
                 LarsCode = foundationApprenticeship.LarsCode.Map(i => i.ToString()),
                 LastUpdated = foundationApprenticeship.LastUpdated.Clone(),

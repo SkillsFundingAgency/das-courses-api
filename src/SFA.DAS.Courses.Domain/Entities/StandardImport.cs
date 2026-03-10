@@ -81,9 +81,11 @@ namespace SFA.DAS.Courses.Domain.Entities
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Distinct(StringComparer.OrdinalIgnoreCase);
 
-            return combined.Any()
+            var results = combined.Any()
                 ? string.Join("|", combined)
                 : string.Empty;
+
+            return results;
         }
 
         private static List<string> GetRelatedOccupationsStandardCodes(ImportTypes.SkillsEngland.Standard standard)

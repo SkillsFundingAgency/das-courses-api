@@ -37,6 +37,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
 
         [JsonProperty("foundationApprenticeshipUrl")]
         public Settable<Uri> FoundationApprenticeshipUrl { get; set; }
+        
+        [JsonProperty("greenJobTitles")]
+        public Settable<List<string>> GreenJobTitles { get; set; }
 
         [JsonProperty("keywords")]
         public Settable<List<string>> Keywords { get; set; }

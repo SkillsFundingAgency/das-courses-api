@@ -42,6 +42,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("eQAProvider")]
         public Settable<ApprenticeshipEqaProvider> EqaProvider { get; set; }
 
+        [JsonProperty("greenJobTitles")]
+        public Settable<List<string>> GreenJobTitles { get; set; }
+
         [JsonProperty("integratedApprenticeship")]
         public Settable<bool?> IntegratedApprenticeship { get; set; }
 
