@@ -372,6 +372,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             var fatalValidators = new List<ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>>
             {
+                new LarsCodeFormatValidator(),
                 new LarsCodeIsNumberValidator(),
                 new VersionsHaveNoGapsValidator()
             };
