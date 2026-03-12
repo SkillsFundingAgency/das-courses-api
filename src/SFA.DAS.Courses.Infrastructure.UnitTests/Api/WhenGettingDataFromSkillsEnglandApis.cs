@@ -93,7 +93,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             {
                 new
                 {
-                    larsCode = "ZSC00123",
+                    learningAimClassCode  = "ZSC00123",
                     referenceNumber = "SC0123",
                     title = "Apprenticeship Unit 1",
                     status = "Approved for delivery",
@@ -174,7 +174,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
             // Assert
             actual.Apprenticeships.First(s => s.LarsCode == 1).Should().NotBeNull();
             actual.FoundationApprenticeships.First(s => s.LarsCode == 10).Should().NotBeNull();
-            actual.ApprenticeshipUnits.First(s => s.LarsCode == "ZSC00123").Should().NotBeNull();
+            actual.ApprenticeshipUnits.First(s => s.LearningAimClassCode == "ZSC00123").Should().NotBeNull();
         }
 
         [Test]

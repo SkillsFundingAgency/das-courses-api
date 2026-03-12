@@ -279,7 +279,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                 DurationUnits = DurationUnits.Hours,
                 GreenJobTitles = apprenticeshipUnit.GreenJobTitles.MapList(p => p),
                 Keywords = apprenticeshipUnit.Keywords.MapList(p => p),
-                LarsCode = apprenticeshipUnit.LarsCode.Clone(),
+                LarsCode = apprenticeshipUnit.LearningAimClassCode.Clone(),
                 LastUpdated = apprenticeshipUnit.LastUpdated.Clone(),
                 Level = apprenticeshipUnit.Level.Clone(),
                 OverviewOfRole = apprenticeshipUnit.OverviewOfTheSkillsGap.Clone(),
