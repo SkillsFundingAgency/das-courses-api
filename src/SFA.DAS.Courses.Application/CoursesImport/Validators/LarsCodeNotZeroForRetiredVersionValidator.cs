@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                             continue;
 
                         var parsedVersion = standard.Version.Value.ParseVersion();
-                        if ((parsedVersion.Major >= 1 || (parsedVersion.Major == 1 && parsedVersion.Minor > 0))
+                        if (parsedVersion.Major >= 1
                             && int.TryParse(standard.LarsCode.Value, out int larsCode) && larsCode == 0
                             && standard.Status.Value.Equals(Domain.Courses.Status.Retired, System.StringComparison.OrdinalIgnoreCase))
                         {
