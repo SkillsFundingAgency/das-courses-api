@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                             continue;
 
                         var parsedVersion = standard.Version.Value.ParseVersion();
-                        if (parsedVersion.Major >= 1 && parsedVersion.Minor > 0 
+                        if ((parsedVersion.Major >= 1 || (parsedVersion.Major == 1 && parsedVersion.Minor > 0))
                             && int.TryParse(standard.LarsCode.Value, out int larsCode) && larsCode == 0)
                         {
                             context.AddFailure($"S1001: {standard.ReferenceNumber.Value} version {standard.Version.Value} has larsCode 0");
