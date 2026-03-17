@@ -106,7 +106,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 new Standard
                 {
                     ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
-                    ReferenceNumber = new Settable<string>("SC0001"),
+                    ReferenceNumber = new Settable<string>("AU0001"),
                     Version = new Settable<string>("1.0"),
                     VersionNumber = new Settable<string>("2.0"),
                     Status = new Settable<string>(Status.Retired)

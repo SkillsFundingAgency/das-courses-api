@@ -78,7 +78,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
         }
 
         [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA1003")]
-        [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, "SC1003")]
+        [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, "AU1003")]
         public void Should_Not_Add_Failure_When_CoreAndOptions_Is_True_But_No_Options_Present_For_OtherApprenticeshipTypes(
             Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {

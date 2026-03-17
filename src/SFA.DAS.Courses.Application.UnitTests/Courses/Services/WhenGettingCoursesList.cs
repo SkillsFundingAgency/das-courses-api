@@ -282,7 +282,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var earliestActiveShortCourse = new Standard
             {
-                StandardUId = "SC0001_1.0",
+                StandardUId = "AU0001_1.0",
                 LarsCode = shortCourseLars,
                 CourseType = CourseType.ShortCourse,
                 LarsStandard = null,
@@ -292,7 +292,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             var latestActiveShortCourseFromRepo = new Standard
             {
-                StandardUId = "SC0001_1.1",
+                StandardUId = "AU0001_1.1",
                 LarsCode = shortCourseLars,
                 CourseType = CourseType.ShortCourse,
                 LarsStandard = null,

@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         [Test]
         [MoqInlineAutoData("ST0001_1.0", "123")]
         [MoqInlineAutoData("FA0001_1.0", "456")]
-        [MoqInlineAutoData("SC0001_1.0", "ZSC00123")]
+        [MoqInlineAutoData("AU0001_1.0", "ZSC00123")]
         public async Task When_Id_Is_LarsCode_Then_Uses_GetLatestActiveStandard(
             string standardUid,
             string id,
@@ -56,7 +56,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         [Test]
         [MoqInlineAutoData("ST0001_1.0", "ST0001", "123")]
         [MoqInlineAutoData("FA0002_1.0", "FA0002", "456")]
-        [MoqInlineAutoData("SC0003_1.0", "SC0003", "ZSC00003")]
+        [MoqInlineAutoData("AU0003_1.0", "AU0003", "ZSC00003")]
         public async Task When_Id_Is_ReferenceNumber_Then_Uses_GetLatestActiveStandardByIfateReferenceNumber(
             string standardUid,
             string id,
@@ -94,7 +94,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         [Test]
         [MoqInlineAutoData("ST0001_1.0", "123", CourseType.Apprenticeship)]
         [MoqInlineAutoData("FA0002_1.0", "456", CourseType.Apprenticeship)]
-        [MoqInlineAutoData("SC0003_1.0", "ZSC00003", CourseType.ShortCourse)]
+        [MoqInlineAutoData("AU0003_1.0", "ZSC00003", CourseType.ShortCourse)]
         public async Task When_Id_Is_StandardUId_Then_Uses_Get(
             string standardUId,
             string larsCode,

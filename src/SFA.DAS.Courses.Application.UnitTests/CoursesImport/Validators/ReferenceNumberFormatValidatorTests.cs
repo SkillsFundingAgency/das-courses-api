@@ -21,10 +21,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 
         [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1001")]
         [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA0001")]
-        [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, "SC0001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, "AU0001")]
         [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, " ST1001 ", Reason = "Spaces around the reference number should be ignored as they are going to be trimmed")]
         [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, " FA0001 ", Reason = "Spaces around the reference number should be ignored as they are going to be trimmed")]
-        [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, " SC0001 ", Reason = "Spaces around the reference number should be ignored as they are going to be trimmed")]
+        [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, " AU0001 ", Reason = "Spaces around the reference number should be ignored as they are going to be trimmed")]
         public void Should_Not_Add_Failure_When_ReferenceNumber_Is_Valid(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
@@ -45,11 +45,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "SC1001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "AU1001")]
         [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "ST1001")]
         [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "INVALID123")]
         [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "FA0001")]
-        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "SC0001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "AU0001")]
         [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "INVALID123")]
         [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, "FA0001")]
         [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, "ST0001")]

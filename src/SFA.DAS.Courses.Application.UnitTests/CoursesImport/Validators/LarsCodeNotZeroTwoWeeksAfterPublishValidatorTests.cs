@@ -22,7 +22,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 
         [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1001")]
         [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA1001")]
-        [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, "SC1001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.ApprenticeshipUnit, "AU1001")]
         public void Should_Not_Add_Failure_When_LarsCode_Is_Not_Zero(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
         {
             // Arrange
@@ -103,7 +103,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 new Standard
                 {
                     ApprenticeshipType = Domain.Entities.ApprenticeshipType.ApprenticeshipUnit,
-                    ReferenceNumber = new Settable<string>("SC10004"),
+                    ReferenceNumber = new Settable<string>("AU10004"),
                     Version = new Settable<string>("1.0"),
                     LarsCode = new Settable<string>("0"),
                     PublishDate = new Settable<DateTime>(DateTime.Now.AddDays(-20))

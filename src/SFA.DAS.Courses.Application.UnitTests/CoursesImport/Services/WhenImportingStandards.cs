@@ -876,7 +876,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var apprenticeshipUnits = new List<ApprenticeshipUnit>
             {
-                CreateValidImportedApprenticeshipUnit("ZSC00103", "SC0103", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1")
+                CreateValidImportedApprenticeshipUnit("ZSC00103", "AU0103", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1")
             };
 
             var currentRoutes = new List<Domain.Entities.Route>
@@ -922,7 +922,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     && p.DurationUnits == DurationUnits.Months))));
             
             standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(
-                s => s.Exists(p => p.IfateReferenceNumber == "SC0103" 
+                s => s.Exists(p => p.IfateReferenceNumber == "AU0103" 
                     && p.LarsCode == "ZSC00103" 
                     && p.ApprenticeshipType == ApprenticeshipType.ApprenticeshipUnit
                     && p.CourseType == CourseType.ShortCourse

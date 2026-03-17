@@ -31,7 +31,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 new Standard
                 {
                     ApprenticeshipType = Domain.Entities.ApprenticeshipType.ApprenticeshipUnit,
-                    ReferenceNumber = new Settable<string>("SC0001"),
+                    ReferenceNumber = new Settable<string>("AU0001"),
                     LarsCode = larsCode,
                     Version = new Settable<string>("1.0")
                 }
@@ -45,7 +45,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
         }
 
         [TestCase("12345")]
-        [TestCase("SC000001")]
+        [TestCase("AU000001")]
         public void Should_Add_Failure_When_Lars_Has_Invalid_Format(string larsCode)
         {
             // Arrange
@@ -54,7 +54,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 new Standard
                 {
                     ApprenticeshipType = Domain.Entities.ApprenticeshipType.ApprenticeshipUnit,
-                    ReferenceNumber = new Settable<string>("SC0001"),
+                    ReferenceNumber = new Settable<string>("AU0001"),
                     LarsCode = larsCode,
                     Version = new Settable<string>("1.0")
                 }
@@ -65,7 +65,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 
             // Assert
             result.Errors.Should().ContainSingle(error => error.ErrorMessage ==
-                $"E1005: SC0001 version 1.0 of type '{Domain.Entities.ApprenticeshipType.ApprenticeshipUnit}' has not got larsCode in the correct format.");
+                $"E1005: AU0001 version 1.0 of type '{Domain.Entities.ApprenticeshipType.ApprenticeshipUnit}' has not got larsCode in the correct format.");
         }
     }
 }

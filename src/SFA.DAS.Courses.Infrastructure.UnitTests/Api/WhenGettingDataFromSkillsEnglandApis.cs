@@ -94,7 +94,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                 new
                 {
                     learningAimClassCode  = "ZSC00123",
-                    referenceNumber = "SC0123",
+                    referenceNumber = "AU0123",
                     title = "Apprenticeship Unit 1",
                     status = "Approved for delivery",
                     createdDate = now,
@@ -105,7 +105,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
                     level = 2,
                     maxFunding = 500,
                     overviewOfRole = "Aprenticeship unit overview",
-                    url = "https://skillsengland.gov.uk/apprenticeship-units/SC0001"
+                    url = "https://skillsengland.gov.uk/apprenticeship-units/AU0001"
                 }
             };
 
