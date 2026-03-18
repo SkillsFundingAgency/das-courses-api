@@ -33,7 +33,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.Require
                 LearningAimClassCode = new Settable<string>("ZSC12345"),
                 Level = new Settable<int>(5),
                 MinimumHoursForCompliance = new Settable<int>(1),
-                OverviewOfTheSkillsGap = new Settable<string>("Overview"),
                 ProposedMaxFunding = new Settable<int>(5000),
                 PublishDate = new Settable<DateTime>(DateTime.UtcNow),
                 ReferenceNumber = new Settable<string>("ST1001"),
@@ -51,7 +50,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.Require
                 VersionEarliestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
                 VersionLatestEndDate = new Settable<DateTime?>(DateTime.UtcNow),
                 VersionLatestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
-                VersionNumber = new Settable<string>("1.0")
+                VersionNumber = new Settable<string>("1.0"),
+                WhoIsItFor = new Settable<string>("WhoIsItFor"),
             };
         }
 
@@ -78,7 +78,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.Require
         [TestCase(nameof(ApprenticeshipUnit.MinimumHoursForCompliance))]
         [TestCase(nameof(ApprenticeshipUnit.Level))]
         [TestCase(nameof(ApprenticeshipUnit.ProposedMaxFunding))]
-        [TestCase(nameof(ApprenticeshipUnit.OverviewOfTheSkillsGap))]
         [TestCase(nameof(ApprenticeshipUnit.PublishDate))]
         [TestCase(nameof(ApprenticeshipUnit.ReferenceNumber))]
         [TestCase(nameof(ApprenticeshipUnit.Regulated))]
@@ -94,6 +93,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators.Require
         [TestCase(nameof(ApprenticeshipUnit.VersionLatestEndDate))]
         [TestCase(nameof(ApprenticeshipUnit.VersionLatestStartDate))]
         [TestCase(nameof(ApprenticeshipUnit.Version))]
+        [TestCase(nameof(ApprenticeshipUnit.WhoIsItFor))]
         public void Should_Add_Failure_When_Required_Field_Is_Missing(string propertyName)
         {
             // Arrange

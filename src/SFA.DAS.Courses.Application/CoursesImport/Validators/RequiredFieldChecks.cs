@@ -129,7 +129,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             return _metadataCache.GetOrAdd(key, _ =>
             {
                 var compiled = expr.Compile();
-                Func<object, object?> getter = o => compiled((TTarget)o);
+                Func<object, object> getter = o => compiled((TTarget)o);
                 return new JsonMetadata(jsonName, getter);
             });
         }

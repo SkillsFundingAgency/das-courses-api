@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using SFA.DAS.Courses.Domain.ImportTypes.Settable;
 
@@ -53,9 +54,6 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
         [JsonProperty("maxFunding")]
         public Settable<int> ProposedMaxFunding { get; set; }
 
-        [JsonProperty("overviewOfTheSkillsGap")]
-        public Settable<string> OverviewOfTheSkillsGap { get; set; }
-
         [JsonProperty("publishDate")]
         public Settable<DateTime> PublishDate { get; set; }
 
@@ -97,6 +95,9 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
 
         [JsonProperty("versionNumber")]
         public Settable<string> VersionNumber { get; set; }
+
+        [JsonProperty("whoIsItFor")]
+        public Settable<string> WhoIsItFor { get; set; }
 
         [InitializeSettables]
         public class IdDetailPair

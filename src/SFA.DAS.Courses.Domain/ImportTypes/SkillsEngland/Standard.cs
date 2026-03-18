@@ -282,7 +282,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland
                 LarsCode = apprenticeshipUnit.LearningAimClassCode.Clone(),
                 LastUpdated = apprenticeshipUnit.LastUpdated.Clone(),
                 Level = apprenticeshipUnit.Level.Clone(),
-                OverviewOfRole = apprenticeshipUnit.OverviewOfTheSkillsGap.Clone(),
+                OverviewOfRole = apprenticeshipUnit.WhoIsItFor.Clone(),
                 ProposedMaxFunding = apprenticeshipUnit.ProposedMaxFunding.Clone(),
                 ProposedTypicalDuration = apprenticeshipUnit.MinimumHoursForCompliance.Clone(),
                 PublishDate = apprenticeshipUnit.PublishDate.Clone(),

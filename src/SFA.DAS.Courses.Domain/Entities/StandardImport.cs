@@ -51,7 +51,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 LastUpdated = source.LastUpdated,
                 Level = source.Level.Value,
                 Options = CreateStructuredOptionsList(source),
-                OverviewOfRole = source.OverviewOfRole.Value,
+                OverviewOfRole = RemoveMarkup(source.OverviewOfRole.Value),
                 ProposedMaxFunding = source.ProposedMaxFunding.Value,
                 ProposedTypicalDuration = source.ProposedTypicalDuration.Value,
                 PublishDate = source.PublishDate.Value,
@@ -71,6 +71,14 @@ namespace SFA.DAS.Courses.Domain.Entities
                 VersionMajor = GetVersionPart(source.Version?.Value, VersionPart.Major),
                 VersionMinor = GetVersionPart(source.Version?.Value, VersionPart.Minor)
             };
+        }
+
+        private static string RemoveMarkup(string input)
+        {
+            if (input == null)
+                return null;
+
+            return input.Replace("<p>", string.Empty).Replace("</p>", string.Empty);
         }
 
         private static string GetCombinedGreenAndTypicalJobTitles(ImportTypes.SkillsEngland.Standard standard)

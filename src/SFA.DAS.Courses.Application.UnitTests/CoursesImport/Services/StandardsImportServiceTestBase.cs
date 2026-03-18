@@ -7,7 +7,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 {
     public class StandardsImportServiceTestBase
     {
-        protected static Apprenticeship CreateValidImportedApprenticeship(int larsCode, string referenceNumber, string version, string title, string status, string route, string optionTitle)
+        protected StandardsImportServiceTestBase()
+        {
+        }
+
+        public static Apprenticeship CreateValidImportedApprenticeship(int larsCode, string referenceNumber, string version, string title, string status, string route, string optionTitle)
         {
             return new Apprenticeship
             {
@@ -61,7 +65,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             };
         }
 
-        protected static FoundationApprenticeship CreateValidImportedFoundationApprenticeship(int larsCode, string referenceNumber, string version, string title, string status, string route)
+        public static FoundationApprenticeship CreateValidImportedFoundationApprenticeship(int larsCode, string referenceNumber, string version, string title, string status, string route)
         {
             return new FoundationApprenticeship
             {
@@ -109,7 +113,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             };
         }
 
-        protected static ApprenticeshipUnit CreateValidImportedApprenticeshipUnit(string learningAimClassCode, string referenceNumber, string version, string title, string status, string route)
+        public static ApprenticeshipUnit CreateValidImportedApprenticeshipUnit(string learningAimClassCode, string referenceNumber, string version, string title, string status, string route)
         {
             return new ApprenticeshipUnit
             {
@@ -122,7 +126,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 LastUpdated = new Settable<DateTime?>(null),
                 Level = new Settable<int>(5),
                 MinimumHoursForCompliance = new Settable<int>(1),
-                OverviewOfTheSkillsGap = new Settable<string>("Overview"),
                 ProposedMaxFunding = new Settable<int>(5000),
                 PublishDate = new Settable<DateTime>(DateTime.UtcNow),
                 ReferenceNumber = referenceNumber,
@@ -140,11 +143,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 VersionEarliestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
                 VersionLatestEndDate = new Settable<DateTime?>(DateTime.UtcNow),
                 VersionLatestStartDate = new Settable<DateTime?>(DateTime.UtcNow),
-                VersionNumber = new Settable<string>("1.0")
+                VersionNumber = new Settable<string>("1.0"),
+                WhoIsItFor = new Settable<string>("WhoIsItFor")
             };
         }
 
-        protected static Domain.Entities.StandardImport GetValidStandardImport(string larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
+        public static Domain.Entities.StandardImport GetValidStandardImport(string larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
         {
             return new Domain.Entities.StandardImport
             {
@@ -181,7 +185,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             };
         }
 
-        protected static Domain.Entities.Standard GetValidStandard(string larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
+        public static Domain.Entities.Standard GetValidStandard(string larsCode, string referenceNumber, string version, string title, string status, int routeCode, string optionTitle)
         {
             return new Domain.Entities.Standard
             {

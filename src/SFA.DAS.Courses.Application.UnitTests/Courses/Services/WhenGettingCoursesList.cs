@@ -69,6 +69,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 standardsFromRepo.Select(s => (Domain.Courses.Course)s));
         }
 
+        
         [Test, RecursiveMoqAutoData]
         public async Task And_Has_Keyword_Then_Gets_Courses_Filtered_From_SearchManager(
             string keyword,

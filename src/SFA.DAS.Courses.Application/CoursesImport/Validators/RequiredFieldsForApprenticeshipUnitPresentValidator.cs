@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                         
                         RequiredFieldChecks.RequireSet(undefinedFields, apprenticeshipUnit, x => x.Level);
                         RequiredFieldChecks.RequireSet(undefinedFields, apprenticeshipUnit, x => x.MinimumHoursForCompliance);
-                        RequiredFieldChecks.RequireSet(undefinedFields, apprenticeshipUnit, x => x.OverviewOfTheSkillsGap);
+                        RequiredFieldChecks.RequireSet(undefinedFields, apprenticeshipUnit, x => x.WhoIsItFor);
                         RequiredFieldChecks.RequireSet(undefinedFields, apprenticeshipUnit, x => x.ProposedMaxFunding);
                         RequiredFieldChecks.RequireSet(undefinedFields, apprenticeshipUnit, x => x.PublishDate);
                         RequiredFieldChecks.RequireSet(undefinedFields, apprenticeshipUnit, x => x.ReferenceNumber);
