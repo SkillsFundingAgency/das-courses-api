@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Courses
             string keyword,
             OrderBy orderBy,
             StandardFilter filter,
-            ApprenticeshipType learningType,
+            List<ApprenticeshipType> learningTypes,
             CourseType courseType,
             GetCoursesSearchQueryResult queryResult,
             [Frozen] Mock<IMediator> mockMediator,
@@ -45,13 +45,13 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Courses
                         query.OrderBy.Equals(orderBy) &&
                         query.Filter.Equals(filter) &&
                         !query.IncludeAllProperties &&
-                        query.LearningType.Equals(learningType) &&
+                        query.LearningTypes.Equals(learningTypes) &&
                         query.CourseType.Equals(courseType)),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
             // Act
-            var controllerResult = await controller.Search(keyword, routeIds, levels, learningType, courseType, orderBy, filter) as ObjectResult;
+            var controllerResult = await controller.Search(keyword, routeIds, levels, learningTypes, courseType, orderBy, filter) as ObjectResult;
 
             // Assert
             var model = controllerResult.Value as GetCoursesSearchResponse;

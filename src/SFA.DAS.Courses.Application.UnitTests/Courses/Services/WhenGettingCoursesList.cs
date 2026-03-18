@@ -224,14 +224,14 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
         {
             // Arrange
             mockStandardsRepository
-                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, ApprenticeshipType.Apprenticeship, null))
+                .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, new List<ApprenticeshipType> { ApprenticeshipType.Apprenticeship }, null))
                 .ReturnsAsync(standardsFromRepo);
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
             // Act
-            var result = await service.GetCoursesList("", new List<int>(), levelCodes, orderBy, filter, true, ApprenticeshipType.Apprenticeship, null);
+            var result = await service.GetCoursesList("", new List<int>(), levelCodes, orderBy, filter, true, new List<ApprenticeshipType> { ApprenticeshipType.Apprenticeship }, null);
 
             // Assert
             result.Should().BeEquivalentTo(

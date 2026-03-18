@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.OrderBy,
                     query.Filter,
                     query.IncludeAllProperties,
-                    query.LearningType,
+                    query.LearningTypes,
                     query.CourseType))
                 .ReturnsAsync(standards);
             
@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             var standards = new List<Course>();
             query.Levels = new List<int>();
             query.RouteIds = new List<int>();
-            query.LearningType = null;
+            query.LearningTypes = null;
             mockStandardsService
                 .Setup(service => service.GetCoursesList(
                     query.Keyword,
@@ -71,7 +71,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                     query.OrderBy,
                     query.Filter,
                     query.IncludeAllProperties,
-                    query.LearningType,
+                    query.LearningTypes,
                     query.CourseType))
                 .ReturnsAsync(standards);
             mockStandardsService

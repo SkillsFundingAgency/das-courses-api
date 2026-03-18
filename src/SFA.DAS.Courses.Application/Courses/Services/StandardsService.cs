@@ -37,7 +37,13 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             bool includeAllProperties,
             ApprenticeshipType? apprenticeshipType)
         {
-            var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipType, CourseType.Apprenticeship);
+            var apprenticeshipTypes = new List<ApprenticeshipType>();
+            if(apprenticeshipType != null)
+            {
+                apprenticeshipTypes.Add(apprenticeshipType.Value);
+            }
+
+            var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipTypes, CourseType.Apprenticeship);
             return standards.Select(standard => (Standard)standard);
         }
 
@@ -48,10 +54,10 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             OrderBy orderBy,
             StandardFilter filter,
             bool includeAllProperties,
-            ApprenticeshipType? apprenticeshipType,
+            IList<ApprenticeshipType> apprenticeshipTypes,
             CourseType? courseType = null)
         {
-            var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipType, courseType);
+            var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipTypes, courseType);
             var courses = standards.Select(standard => (Course)standard).ToList();
 
             foreach (var course in courses)
@@ -123,10 +129,10 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             OrderBy orderBy,
             StandardFilter filter,
             bool includeAllProperties,
-            ApprenticeshipType? apprenticeshipType,
+            IList<ApprenticeshipType> apprenticeshipTypes,
             CourseType? courseType = null)
         {
-            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties, apprenticeshipType, courseType);
+            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties, apprenticeshipTypes, courseType);
 
             if (!string.IsNullOrEmpty(keyword))
             {

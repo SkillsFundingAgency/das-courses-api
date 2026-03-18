@@ -11,7 +11,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
     public interface IStandardsService
     {
         Task<IEnumerable<Standard>> GetStandardsList(string keyword, IList<int> routeIds, IList<int> levels, OrderBy orderBy, StandardFilter filter, bool includeAllProperties, ApprenticeshipType? apprenticeshipType);
-        Task<IEnumerable<Course>> GetCoursesList(string keyword, IList<int> routeIds, IList<int> levels, OrderBy orderBy, StandardFilter filter, bool includeAllProperties, ApprenticeshipType? apprenticeshipType, CourseType? courseType = null);
+        Task<IEnumerable<Course>> GetCoursesList(string keyword, IList<int> routeIds, IList<int> levels, OrderBy orderBy, StandardFilter filter, bool includeAllProperties, IList<ApprenticeshipType> apprenticeshipTypes, CourseType? courseType = null);
         Task<int> CountStandards(StandardFilter filter = StandardFilter.None);
         Task<int> CountCourses(StandardFilter filter = StandardFilter.None, CourseType? courseType = null);
         Task<Standard> GetStandardByAnyId(string id);

@@ -44,7 +44,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             // Act
             var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, 
-                false, null, CourseType.Apprenticeship);
+                false, new List<ApprenticeshipType>(), CourseType.Apprenticeship);
 
             // Assert
             actualStandards.Should().NotBeNull();
@@ -77,7 +77,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, true, null, CourseType.Apprenticeship);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, true, new List<ApprenticeshipType>(), CourseType.Apprenticeship);
 
             actualStandards.Should().NotBeNull();
             actualStandards.Should().BeEquivalentTo(activeValidApprenticeshipStandards);
@@ -111,7 +111,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
             // Act
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false, null, CourseType.Apprenticeship);
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.Active, false, new List<ApprenticeshipType>(), CourseType.Apprenticeship);
 
             // Assert
             actualStandards.Should().NotBeNull();
@@ -164,8 +164,8 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(), 
                 new List<int>(), 
                 StandardFilter.Active, 
-                false, 
-                null, 
+                false,
+                new List<ApprenticeshipType>(), 
                 CourseType.Apprenticeship);
 
             // Assert
@@ -211,7 +211,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(), 
                 StandardFilter.NotYetApproved, 
                 false,
-                null,
+                new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
 
             // Assert
@@ -254,7 +254,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(), 
                 StandardFilter.None, 
                 false,
-                null,
+                new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
 
             // Assert
@@ -301,7 +301,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(),
                 StandardFilter.ActiveAvailable, 
                 false,
-                null,
+                new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
 
             // Assert
@@ -342,7 +342,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(),
                 StandardFilter.ActiveAvailable, 
                 false,
-                null,
+                new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
 
             // Assert
@@ -383,7 +383,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int> { activeValidApprenticeshipStandards[0].Level },
                 StandardFilter.ActiveAvailable, 
                 false,
-                null,
+                new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
 
             // Assert
@@ -418,7 +418,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
                 includeAllProperties: false,
-                ApprenticeshipType.Apprenticeship,
+                new List<ApprenticeshipType> { ApprenticeshipType.Apprenticeship },
                 CourseType.Apprenticeship);
 
             // Assert
@@ -453,7 +453,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
                 false,
-                ApprenticeshipType.FoundationApprenticeship,
+                new List<ApprenticeshipType> { ApprenticeshipType.FoundationApprenticeship },
                 CourseType.Apprenticeship);
 
             // Assert
@@ -488,7 +488,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int>(),
                 StandardFilter.ActiveAvailable,
                 false,
-                null,
+                new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
 
             // Assert
@@ -531,7 +531,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new List<int> { activeValidApprenticeshipStandards[0].Level },
                 StandardFilter.Active, 
                 false,
-                null,
+                new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
 
             var expectedStandards = new List<Standard>

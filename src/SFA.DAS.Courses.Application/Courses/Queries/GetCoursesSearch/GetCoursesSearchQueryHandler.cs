@@ -33,7 +33,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetCoursesSearch
                     request.OrderBy,
                     request.Filter,
                     request.IncludeAllProperties,
-                    request.LearningType,
+                    request.LearningTypes,
                     request.CourseType))
                 .ToList();
 

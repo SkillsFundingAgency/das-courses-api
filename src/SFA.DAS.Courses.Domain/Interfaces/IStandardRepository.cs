@@ -16,7 +16,7 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<List<Standard>> GetActiveStandardsByIfateReferenceNumbers(List<string> ifateReferenceNumbers, CourseType? courseType);
         Task<Standard> Get(string standardUId, CourseType? courseType);
         Task<IEnumerable<Standard>> GetStandards(CourseType? courseType);
-        Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, ApprenticeshipType? apprenticeshipType = null, CourseType? courseType = null);
+        Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, IList<ApprenticeshipType> apprenticeshipTypes, CourseType? courseType = null);
         Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber, CourseType? courseType);
     }
 }

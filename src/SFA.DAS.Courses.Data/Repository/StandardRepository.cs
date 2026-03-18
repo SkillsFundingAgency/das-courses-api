@@ -139,14 +139,14 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task<IEnumerable<Standard>> GetStandards(CourseType? courseType)
         {
-            return await GetStandards(new List<int>(), new List<int>(), StandardFilter.None, true, null, courseType);
+            return await GetStandards(new List<int>(), new List<int>(), StandardFilter.None, true, new List<ApprenticeshipType>(), courseType);
         }
 
         public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, 
             IList<int> levels, 
             StandardFilter filter, 
             bool includeAllProperties, 
-            ApprenticeshipType? apprenticeshipType = null,
+            IList<ApprenticeshipType> apprenticeshipTypes,
             CourseType? courseType = null)
         {
             IQueryable<Standard> query = (includeAllProperties
@@ -162,9 +162,9 @@ namespace SFA.DAS.Courses.Data.Repository
             {
                 query = query.Where(standard => levels.Contains(standard.Level));
             }
-            if (apprenticeshipType != null)
+            if (apprenticeshipTypes.Count > 0)
             {
-                query = query.Where(standard => standard.ApprenticeshipType == apprenticeshipType.Value);
+                query = query.Where(standard => apprenticeshipTypes.Contains(standard.ApprenticeshipType));
             }
 
             var standards = await query.ToListAsync();

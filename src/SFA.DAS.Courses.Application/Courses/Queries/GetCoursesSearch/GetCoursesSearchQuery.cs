@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetCoursesSearch
         public IList<int> Levels { get; set; } = new List<int>();
         public OrderBy OrderBy { get; set; }
         public StandardFilter Filter { get; set; }
-        public ApprenticeshipType? LearningType { get; set; }
+        public IList<ApprenticeshipType> LearningTypes { get; set; } = new List<ApprenticeshipType>();
         public CourseType? CourseType { get; set; }
         public bool IncludeAllProperties { get; set; }
     }

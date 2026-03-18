@@ -28,7 +28,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             [FromQuery] string keyword,
             [FromQuery] IList<int> routeIds,
             [FromQuery] IList<int> levels,
-            [FromQuery] ApprenticeshipType? learningType,
+            [FromQuery] IList<ApprenticeshipType> learningTypes,
             [FromQuery] CourseType? courseType,
             [FromQuery] OrderBy orderBy = OrderBy.Score,
             [FromQuery] StandardFilter filter = StandardFilter.ActiveAvailable)
@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Api.Controllers
                 Keyword = keyword,
                 RouteIds = routeIds,
                 Levels = levels,
-                LearningType = learningType,
+                LearningTypes = learningTypes,
                 CourseType = courseType,
                 OrderBy = orderBy,
                 Filter = filter,
