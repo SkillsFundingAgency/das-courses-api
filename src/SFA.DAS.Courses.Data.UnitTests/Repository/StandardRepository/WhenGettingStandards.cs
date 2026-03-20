@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -43,7 +44,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
 
             // Act
-            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable, 
+            var actualStandards = await repository.GetStandards(new List<int>(), new List<int>(), StandardFilter.ActiveAvailable,
                 false, new List<ApprenticeshipType>(), CourseType.Apprenticeship);
 
             // Assert
@@ -161,11 +162,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             // Act
             var actualStandards = await repository.GetStandards(
-                new List<int>(), 
-                new List<int>(), 
-                StandardFilter.Active, 
+                new List<int>(),
+                new List<int>(),
+                StandardFilter.Active,
                 false,
-                new List<ApprenticeshipType>(), 
+                new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
 
             // Assert
@@ -207,9 +208,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             // Act
             var actualStandards = await repository.GetStandards(
-                new List<int>(), 
-                new List<int>(), 
-                StandardFilter.NotYetApproved, 
+                new List<int>(),
+                new List<int>(),
+                StandardFilter.NotYetApproved,
                 false,
                 new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
@@ -250,9 +251,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             // Act
             var actualStandards = await repository.GetStandards(
-                new List<int>(), 
-                new List<int>(), 
-                StandardFilter.None, 
+                new List<int>(),
+                new List<int>(),
+                StandardFilter.None,
                 false,
                 new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
@@ -299,7 +300,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actualStandards = await repository.GetStandards(
                 new List<int> { activeValidApprenticeshipStandards[0].RouteCode },
                 new List<int>(),
-                StandardFilter.ActiveAvailable, 
+                StandardFilter.ActiveAvailable,
                 false,
                 new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
@@ -340,7 +341,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actualStandards = await repository.GetStandards(
                 new List<int> { activeInvalidApprenticeshipStandards[0].RouteCode },
                 new List<int>(),
-                StandardFilter.ActiveAvailable, 
+                StandardFilter.ActiveAvailable,
                 false,
                 new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
@@ -381,7 +382,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actualStandards = await repository.GetStandards(
                 new List<int>(),
                 new List<int> { activeValidApprenticeshipStandards[0].Level },
-                StandardFilter.ActiveAvailable, 
+                StandardFilter.ActiveAvailable,
                 false,
                 new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
@@ -529,7 +530,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var actualStandards = await repository.GetStandards(
                 new List<int>(),
                 new List<int> { activeValidApprenticeshipStandards[0].Level },
-                StandardFilter.Active, 
+                StandardFilter.Active,
                 false,
                 new List<ApprenticeshipType>(),
                 CourseType.Apprenticeship);
@@ -543,6 +544,178 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             // Assert
             actualStandards.Should().NotBeNull();
             actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Available_Standards_Are_Returned_Including_Distinct_LarsCodes_When_ActiveAvailable_Filter_IsSpecified(
+        [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+        [Frozen] Mock<ICoursesDataContext> mockDbContext,
+        Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            var first = activeValidApprenticeshipStandards[0];
+            first.IfateReferenceNumber = "ST0001";
+            first.LarsCode = "1001";
+            first.Version = "1.0";
+            first.VersionMajor = 1;
+            first.VersionMinor = 0;
+
+            var second = activeValidApprenticeshipStandards[1];
+            second.IfateReferenceNumber = "ST0001";
+            second.LarsCode = "1002";
+            second.Version = "2.0";
+            second.VersionMajor = 2;
+            second.VersionMinor = 0;
+
+            mockDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(new List<Standard> { first, second });
+
+            mockDbContext
+                .Setup(c => c.ApprenticeshipFunding)
+                .ReturnsDbSet(new List<ApprenticeshipFunding>());
+
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int>(),
+                new List<int>(),
+                StandardFilter.ActiveAvailable,
+                false,
+                new List<ApprenticeshipType>(),
+                CourseType.Apprenticeship);
+
+            // Assert
+            actualStandards.Should().HaveCount(2);
+            actualStandards.Select(x => x.LarsCode).Should().BeEquivalentTo("1001", "1002");
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_The_Available_ShortCourses_Are_Returned_When_ActiveAvailableFilter_IsSpecified(
+            [ShortCourseStandards] List<Standard> activeValidShortCourseStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            mockDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(activeValidShortCourseStandards);
+
+            mockDbContext
+                .Setup(c => c.ApprenticeshipFunding)
+                .ReturnsDbSet(new List<ApprenticeshipFunding>());
+
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int>(),
+                new List<int>(),
+                StandardFilter.ActiveAvailable,
+                false,
+                new List<ApprenticeshipType>(),
+                CourseType.ShortCourse);
+
+            // Assert
+            actualStandards.Should().BeEquivalentTo(
+                activeValidShortCourseStandards,
+                EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Active_ShortCourses_Are_Returned_Including_Not_Available_To_Start_When_ActiveFilter_IsSpecified(
+            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            shortCourseStandards[0].VersionLatestStartDate = DateTime.UtcNow.AddDays(-1);
+
+            mockDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(shortCourseStandards);
+
+            mockDbContext
+                .Setup(c => c.ApprenticeshipFunding)
+                .ReturnsDbSet(new List<ApprenticeshipFunding>());
+
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int>(),
+                new List<int>(),
+                StandardFilter.Active,
+                false,
+                new List<ApprenticeshipType>(),
+                CourseType.ShortCourse);
+
+            // Assert
+            actualStandards.Should().BeEquivalentTo(
+                shortCourseStandards,
+                EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_NotYetApproved_ShortCourses_Are_Returned_When_NotYetApprovedFilter_IsSpecified(
+            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            foreach (var standard in shortCourseStandards)
+            {
+                standard.CourseType = CourseType.ShortCourse;
+                standard.LarsCode = string.Empty;
+                standard.Status = "Proposal in development";
+            }
+
+            mockDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(shortCourseStandards);
+
+            mockDbContext
+                .Setup(c => c.ApprenticeshipFunding)
+                .ReturnsDbSet(new List<ApprenticeshipFunding>());
+
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int>(),
+                new List<int>(),
+                StandardFilter.NotYetApproved,
+                false,
+                new List<ApprenticeshipType>(),
+                CourseType.ShortCourse);
+
+            // Assert
+            actualStandards.Should().BeEquivalentTo(
+                shortCourseStandards,
+                EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_All_ShortCourses_Are_Returned_When_NoneFilter_IsSpecified(
+            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDbContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            mockDbContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(shortCourseStandards);
+
+            mockDbContext
+                .Setup(c => c.ApprenticeshipFunding)
+                .ReturnsDbSet(new List<ApprenticeshipFunding>());
+
+            // Act
+            var actualStandards = await repository.GetStandards(
+                new List<int>(),
+                new List<int>(),
+                StandardFilter.None,
+                false,
+                new List<ApprenticeshipType>(),
+                CourseType.ShortCourse);
+
+            // Assert
+            actualStandards.Should().BeEquivalentTo(
+                shortCourseStandards,
+                EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
     }
 }

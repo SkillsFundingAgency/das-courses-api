@@ -130,5 +130,52 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var result = await _standardRepository.GetLatestActiveStandard(ExpectedLarsCode, CourseType.Apprenticeship);
             result.Should().BeNull();
         }
+
+        [Test]
+        public async Task Then_The_Latest_ShortCourse_Is_Returned_By_LarsCode()
+        {
+            // Arrange
+            var shortCourseLarsCode = "ZSC00001";
+            var expectedStandardUId = "AU0001_1.1";
+
+            _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(new List<Standard>
+            {
+                new Standard
+                {
+                    ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+                    CourseType = CourseType.ShortCourse,
+                    IfateReferenceNumber = "AU0001",
+                    StandardUId = "AU0001_1.0",
+                    LarsCode = shortCourseLarsCode,
+                    Status = "Approved for delivery",
+                    Version = "1.0",
+                    VersionMajor = 1,
+                    VersionMinor = 0,
+                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-3),
+                    VersionLatestStartDate = DateTime.UtcNow.AddMonths(-2)
+                },
+                new Standard
+                {
+                    ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+                    CourseType = CourseType.ShortCourse,
+                    IfateReferenceNumber = "AU0001",
+                    StandardUId = expectedStandardUId,
+                    LarsCode = shortCourseLarsCode,
+                    Status = "Approved for delivery",
+                    Version = "1.1",
+                    VersionMajor = 1,
+                    VersionMinor = 1,
+                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-3),
+                    VersionLatestStartDate = DateTime.UtcNow.AddMonths(1)
+                }
+            });
+
+            // Act
+            var standard = await _standardRepository.GetLatestActiveStandard(shortCourseLarsCode, CourseType.ShortCourse);
+
+            // Assert
+            standard.Should().NotBeNull();
+            standard.StandardUId.Should().Be(expectedStandardUId);
+        }
     }
 }

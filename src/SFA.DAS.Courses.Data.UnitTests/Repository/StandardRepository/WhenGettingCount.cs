@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -169,9 +170,117 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 
             var count = await repository.Count(StandardFilter.None, CourseType.Apprenticeship);
 
-            var total = activeInvalidApprenticeshipStandards.Count + activeInvalidApprenticeshipStandards.Count + notYetApprovedApprenticeshipStandards.Count
-                + withdrawnApprenticeshipStandards.Count + retiredApprenticeshipStandards.Count;
+            var total = activeValidApprenticeshipStandards.Count
+                + activeInvalidApprenticeshipStandards.Count
+                + notYetApprovedApprenticeshipStandards.Count
+                + withdrawnApprenticeshipStandards.Count
+                + retiredApprenticeshipStandards.Count;
+
             count.Should().Be(total);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Count_From_Context_Of_Available_ShortCourses(
+            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            mockDataContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(shortCourseStandards);
+
+            // Act
+            var count = await repository.Count(StandardFilter.ActiveAvailable, CourseType.ShortCourse);
+
+            // Assert
+            count.Should().Be(shortCourseStandards.Count);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Count_From_Context_Of_Active_ShortCourses(
+            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            var closedShortCourse = shortCourseStandards[0];
+            closedShortCourse.VersionLatestStartDate = DateTime.UtcNow.AddDays(-1);
+
+            mockDataContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(shortCourseStandards);
+
+            // Act
+            var count = await repository.Count(StandardFilter.Active, CourseType.ShortCourse);
+
+            // Assert
+            count.Should().Be(shortCourseStandards.Count);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Count_From_Context_Of_NotYetApproved_ShortCourses(
+            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            foreach (var standard in shortCourseStandards)
+            {
+                standard.CourseType = CourseType.ShortCourse;
+                standard.LarsCode = string.Empty;
+                standard.Status = "In development";
+            }
+
+            mockDataContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(shortCourseStandards);
+
+            // Act
+            var count = await repository.Count(StandardFilter.NotYetApproved, CourseType.ShortCourse);
+
+            // Assert
+            count.Should().Be(shortCourseStandards.Count);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Count_From_Context_Of_All_ShortCourses(
+            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            mockDataContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(shortCourseStandards);
+
+            // Act
+            var count = await repository.Count(StandardFilter.None, CourseType.ShortCourse);
+
+            // Assert
+            count.Should().Be(shortCourseStandards.Count);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Distinct_Count_By_LarsCode_For_ActiveAvailable_Standards(
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            activeValidApprenticeshipStandards[0].LarsCode = "100001";
+            activeValidApprenticeshipStandards[1].LarsCode = "100001";
+            activeValidApprenticeshipStandards[2].LarsCode = "100002";
+
+            mockDataContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(activeValidApprenticeshipStandards);
+
+            // Act
+            var count = await repository.Count(StandardFilter.ActiveAvailable, CourseType.Apprenticeship);
+
+            // Assert
+            count.Should().Be(2);
         }
     }
 }

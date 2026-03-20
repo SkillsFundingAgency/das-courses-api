@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -49,6 +50,47 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             // Assert
             standards.Should().HaveCount(1);
             standards[0].IfateReferenceNumber.Should().Be(activeValidApprenticeshipStandards[0].IfateReferenceNumber);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Returns_Latest_Standards_For_Distinct_LarsCodes_Sharing_The_Same_IfateReferenceNumber(
+            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            var ifateReferenceNumber = "ST0001";
+
+            var version1 = activeValidApprenticeshipStandards[0];
+            version1.IfateReferenceNumber = ifateReferenceNumber;
+            version1.LarsCode = "1001";
+            version1.Version = "1.0";
+            version1.VersionMajor = 1;
+            version1.VersionMinor = 0;
+
+            var version2 = activeValidApprenticeshipStandards[1];
+            version2.IfateReferenceNumber = ifateReferenceNumber;
+            version2.LarsCode = "1002";
+            version2.Version = "2.0";
+            version2.VersionMajor = 2;
+            version2.VersionMinor = 0;
+
+            mockDataContext
+                .Setup(context => context.Standards)
+                .ReturnsDbSet(new List<Standard> { version1, version2 });
+
+            mockDataContext
+                .Setup(c => c.ApprenticeshipFunding)
+                .ReturnsDbSet(new List<ApprenticeshipFunding>());
+
+            // Act
+            var standards = await repository.GetActiveStandardsByIfateReferenceNumbers(
+                new List<string> { ifateReferenceNumber },
+                CourseType.Apprenticeship);
+
+            // Assert
+            standards.Should().HaveCount(2);
+            standards.Select(x => x.LarsCode).Should().BeEquivalentTo("1001", "1002");
         }
     }
 }

@@ -36,10 +36,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             };
 
             standardsRepository
-                .Setup(r => r.GetEarliestActiveStandard(id, null))
-                .ReturnsAsync(standardFromRepo);
-
-            standardsRepository
                 .Setup(r => r.GetLatestActiveStandard(id, null))
                 .ReturnsAsync(standardFromRepo);
 
@@ -48,9 +44,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             // Assert
             result.Should().NotBeNull();
+            standardsRepository.Verify(r => r.Get(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
             standardsRepository.Verify(r => r.GetLatestActiveStandard(id, null), Times.Once);
             standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
-            standardsRepository.Verify(r => r.Get(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
         }
 
         [Test]
@@ -74,10 +70,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             };
 
             standardsRepository
-                .Setup(r => r.GetEarliestActiveStandard(larsCode, null))
-                .ReturnsAsync(standardFromRepo);
-
-            standardsRepository
                 .Setup(r => r.GetLatestActiveStandardByIfateReferenceNumber(id, null))
                 .ReturnsAsync(standardFromRepo);
 
@@ -86,9 +78,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             // Assert
             result.Should().NotBeNull();
-            standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(id, null), Times.Once);
-            standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
+            
             standardsRepository.Verify(r => r.Get(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
+            standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
+            standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(id, null), Times.Once);
         }
 
         [Test]
@@ -112,14 +105,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             };
 
             standardsRepository
-                .Setup(r => r.GetEarliestActiveStandard(larsCode, null))
-                .ReturnsAsync(standardFromRepo);
-
-            standardsRepository
-                .Setup(r => r.GetLatestActiveStandard(larsCode, null))
-                .ReturnsAsync(standardFromRepo);
-
-            standardsRepository
                 .Setup(r => r.Get(standardUId, null))
                 .ReturnsAsync(standardFromRepo);
 
@@ -129,16 +114,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             // Assert
             result.Should().NotBeNull();
             standardsRepository.Verify(r => r.Get(standardUId, null), Times.Once);
-            if (courseType == CourseType.ShortCourse)
-            {
-                standardsRepository.Verify(r => r.GetEarliestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
-                standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Once);
-            }
-            else
-            {
-                standardsRepository.Verify(r => r.GetEarliestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
-                standardsRepository.Verify(r => r.GetLatestActiveStandard(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
-            }
+            standardsRepository.Verify(r => r.GetLatestActiveStandard(standardUId, null), Times.Never);
             standardsRepository.Verify(r => r.GetLatestActiveStandardByIfateReferenceNumber(It.IsAny<string>(), It.IsAny<CourseType?>()), Times.Never);
         }
 
@@ -176,10 +152,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                     ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship,
                 }
             };
-
-            standardsRepository
-                .Setup(r => r.GetEarliestActiveStandard(standardFromRepo.LarsCode, null))
-                .ReturnsAsync(standardFromRepo);
 
             standardsRepository
                 .Setup(r => r.GetLatestActiveStandard(standardFromRepo.LarsCode, null))
@@ -225,21 +197,21 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 Route = new Route { Name = "Route", Id = 1 }
             };
 
-            var earliestActive = new Standard
-            {
-                LarsCode = larsCode,
-                CourseType = CourseType.ShortCourse,
-                ApprovedForDelivery = earliestApproved,
-                Route = new Route { Name = "Route", Id = 1 }
-            };
-
             standardsRepository
                 .Setup(r => r.GetLatestActiveStandard(larsCode, null))
                 .ReturnsAsync(latestActive);
 
             standardsRepository
-                .Setup(r => r.GetEarliestActiveStandard(larsCode, null))
-                .ReturnsAsync(earliestActive);
+                .Setup(r => r.GetShortCourseDates(larsCode))
+                .ReturnsAsync(new List<ShortCourseDates> 
+                { 
+                    new ShortCourseDates 
+                    { 
+                        LarsCode = larsCode,
+                        EffectiveFrom = earliestApproved, 
+                        EffectiveTo = latestStart, 
+                        LastDateStarts = latestStart 
+                    } });
 
             // Act
             var result = await _sut.GetCourseByAnyId(larsCode);
@@ -252,7 +224,6 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             result.CourseDates.LastDateStarts.Should().Be(latestStart);
 
             standardsRepository.Verify(r => r.GetLatestActiveStandard(larsCode, null), Times.Once);
-            standardsRepository.Verify(r => r.GetEarliestActiveStandard(larsCode, null), Times.Once);
         }
     }
 }

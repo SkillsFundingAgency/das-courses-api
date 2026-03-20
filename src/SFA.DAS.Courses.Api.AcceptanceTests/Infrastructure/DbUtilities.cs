@@ -364,6 +364,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                                                  // cannot be tested in acceptance tests
                             Status = "Approved for delivery",
                             Version = "1.0",
+                            VersionEarliestStartDate = DateTime.UtcNow.AddDays(-1),
+                            VersionLatestEndDate = DateTime.UtcNow.AddDays(1),
                             OverviewOfRole = "test",
                             StandardPageUrl = "https://tempuri.org"
                         }

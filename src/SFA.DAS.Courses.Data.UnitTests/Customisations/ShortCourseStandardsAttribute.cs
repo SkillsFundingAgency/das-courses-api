@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using AutoFixture;
 using AutoFixture.NUnit3;
+using FluentAssertions.Extensions;
 using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Customisations
@@ -30,16 +31,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
     {
         public void Customize(IFixture fixture)
         {
-            fixture.Customize<LarsStandard>(composer =>
-                composer
-                    .With(standard => standard.EffectiveFrom, DateTime.UtcNow.Date.AddDays(-1))
-                    .Without(standard => standard.LastDateStarts));
-
             fixture.Customize<Standard>(composer =>
                 composer
                     .With(standard => standard.Status, "Approved for delivery")
-                    .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship)
-                    .With(standard => standard.CourseType, CourseType.ShortCourse));
+                    .With(standard => standard.ApprenticeshipType, ApprenticeshipType.ApprenticeshipUnit)
+                    .With(standard => standard.CourseType, CourseType.ShortCourse)
+                    .With(standard => standard.VersionEarliestStartDate, DateTime.UtcNow.AddDays(-1))
+                    .With(standard => standard.VersionLatestStartDate, DateTime.UtcNow.AddDays(1)));
         }
     }
 }

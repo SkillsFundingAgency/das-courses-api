@@ -28,8 +28,24 @@ namespace SFA.DAS.Courses.Api.Controllers
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Data import request received");
+            
             var validationMessages = await _mediator.Send(new ImportDataCommand());
-            _logger.LogInformation("Data import completed successfully");
+            if (validationMessages.Count > 0)
+            {
+                _logger.LogWarning(
+                    "Data import completed with {ValidationErrorCount} validation errors",
+                    validationMessages.Count);
+
+                foreach (var message in validationMessages)
+                {
+                    _logger.LogWarning("Validation error: {ValidationMessage}", message);
+                }
+            }
+            else
+            {
+                _logger.LogInformation("Data import completed successfully");
+            }
+
             return Ok(validationMessages);
         }
     }

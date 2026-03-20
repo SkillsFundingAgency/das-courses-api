@@ -21,8 +21,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         [Test]
         public void Then_ReturnOneVersionOfEachStandard()
         {
-            var filteredStandards = _standards.InMemoryFilterIsLatestVersion(StandardFilter.Active);
-
+            var filteredStandards = _standards.InMemoryFilterIsLatestVersion(StandardFilter.Active, DistinctInMemoryFilterType.ByIfateReferenceNumberAndLarsCode);
             filteredStandards.Count().Should().Be(2);
         }
 
@@ -35,7 +34,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             AddVersion1_11(includeVersion1_11);
             AddVersion2_0(includeVersion2_0);
 
-            var filteredStandards = _standards.InMemoryFilterIsLatestVersion(StandardFilter.Active);
+            var filteredStandards = _standards.InMemoryFilterIsLatestVersion(StandardFilter.Active, DistinctInMemoryFilterType.ByIfateReferenceNumberAndLarsCode);
 
             var resultStandard = filteredStandards.FirstOrDefault(standard => standard.LarsCode == "1");
 
