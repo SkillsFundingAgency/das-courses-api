@@ -287,34 +287,20 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var approvedForDelivery = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var versionLatestStartDate = new DateTime(2020, 2, 2, 0, 0, 0, DateTimeKind.Utc);
 
-            var firstActiveShortCourse = fixture.Build<Standard>()
+            var activeShortCourse = fixture.Build<Standard>()
                 .With(x => x.StandardUId, "AU0001_1.0")
                 .With(x => x.LarsCode, shortCourseLars)
                 .With(x => x.CourseType, CourseType.ShortCourse)
                 .With(x => x.LarsStandard, (LarsStandard)null)
+                .With(x => x.ShortCourseDates, new ShortCourseDates
+                {
+                    EffectiveFrom = approvedForDelivery,
+                    EffectiveTo = versionLatestStartDate,
+                    LastDateStarts = versionLatestStartDate,
+                })
                 .With(x => x.Route, new Route { Name = "Route", Id = 1 })
                 .With(x => x.ApprovedForDelivery, approvedForDelivery)
                 .With(x => x.VersionLatestStartDate, versionLatestStartDate)
-                .Create();
-
-            var secondActiveShortCourse = fixture.Build<Standard>()
-                .With(x => x.StandardUId, "AU0001_1.1")
-                .With(x => x.LarsCode, shortCourseLars)
-                .With(x => x.CourseType, CourseType.ShortCourse)
-                .With(x => x.LarsStandard, (LarsStandard)null)
-                .With(x => x.Route, new Route { Name = "Route", Id = 1 })
-                .With(x => x.ApprovedForDelivery, approvedForDelivery.AddDays(10))
-                .With(x => x.VersionLatestStartDate, versionLatestStartDate.AddDays(10))
-                .Create();
-
-            var thirdActiveShortCourse = fixture.Build<Standard>()
-                .With(x => x.StandardUId, "AU0001_1.2")
-                .With(x => x.LarsCode, shortCourseLars)
-                .With(x => x.CourseType, CourseType.ShortCourse)
-                .With(x => x.LarsStandard, (LarsStandard)null)
-                .With(x => x.Route, new Route { Name = "Route", Id = 1 })
-                .With(x => x.ApprovedForDelivery, approvedForDelivery.AddDays(20))
-                .With(x => x.VersionLatestStartDate, versionLatestStartDate.AddDays(20))
                 .Create();
 
             var activeApprenticeship = fixture.Build<Standard>()
@@ -326,31 +312,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 .With(x => x.VersionLatestStartDate, new DateTime(2021, 2, 2, 0, 0, 0, DateTimeKind.Utc))
                 .Create();
 
-            var shortCoursesFromRepo = new List<Standard>
-            {
-                firstActiveShortCourse,
-                secondActiveShortCourse,
-                thirdActiveShortCourse
-            };
-
-            var apprenticeshipsFromRepo = new List<Standard> { activeApprenticeship };
+            var standardsFromRepo = new List<Standard> { activeShortCourse, activeApprenticeship };
 
             standardsRepository
                 .Setup(r => r.GetStandards(new List<int>(), new List<int>(), filter, false, null, null))
-                .ReturnsAsync(shortCoursesFromRepo.Union(apprenticeshipsFromRepo));
-
-            standardsRepository
-                .Setup(r => r.GetShortCourseDates(null))
-                .ReturnsAsync(new List<ShortCourseDates>
-                {
-                    new ShortCourseDates
-                    {
-                        LarsCode = shortCourseLars,
-                        EffectiveFrom = firstActiveShortCourse.ApprovedForDelivery.Value,
-                        EffectiveTo = thirdActiveShortCourse.VersionLatestStartDate,
-                        LastDateStarts = thirdActiveShortCourse.VersionLatestStartDate
-                    }
-                });
+                .ReturnsAsync(standardsFromRepo);
 
             sortOrderService
                 .Setup(s => s.OrderBy(It.IsAny<IEnumerable<Standard>>(), It.IsAny<OrderBy>(), It.IsAny<string>()))
@@ -360,19 +326,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var result = (await _sut.GetCoursesList("", new List<int>(), new List<int>(), orderBy, filter, false, null, null)).ToList();
 
             // Assert
-            var shortCourses = result
-                .Where(x => x.LarsCode == shortCourseLars)
-                .ToList();
-
-            shortCourses.Should().HaveCount(3);
-
-            shortCourses.Select(x => x.CourseDates).Should().AllSatisfy(courseDates =>
-            {
-                courseDates.Should().NotBeNull();
-                courseDates!.EffectiveFrom.Should().Be(firstActiveShortCourse.ApprovedForDelivery);
-                courseDates.EffectiveTo.Should().Be(thirdActiveShortCourse.VersionLatestStartDate);
-                courseDates.LastDateStarts.Should().Be(thirdActiveShortCourse.VersionLatestStartDate);
-            });
+            var shortCourse = result.Single(x => x.LarsCode == shortCourseLars);
+            shortCourse.CourseDates.Should().BeEquivalentTo((Domain.Courses.CourseDates)activeShortCourse.ShortCourseDates);
 
             var apprenticeship = result.Single(x => x.LarsCode == apprenticeshipLars);
             apprenticeship.CourseDates.Should().BeEquivalentTo((Domain.Courses.CourseDates)activeApprenticeship.LarsStandard);

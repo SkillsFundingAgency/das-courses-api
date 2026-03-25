@@ -68,7 +68,6 @@ namespace SFA.DAS.Courses.Domain.TestHelper.AutoFixture
                 {
                     composer = composer
                         .With(x => x.CourseType, CourseType.ShortCourse)
-                        .With(x => x.LarsStandard, (LarsStandard?)null)
                         .With(x => x.StandardUId, $"AU{counter++:0000}_{version}")
                         .With(x => x.LarsCode, $"ZSC{counter++:00000}");
                 }

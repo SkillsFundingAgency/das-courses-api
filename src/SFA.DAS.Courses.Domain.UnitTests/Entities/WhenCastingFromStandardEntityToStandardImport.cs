@@ -17,6 +17,7 @@ public class WhenCastingFromStandardEntityToStandardImport
         standardImport.Should().BeEquivalentTo(standardEntity, options => options
             .Excluding(s => s.StandardUId)
             .Excluding(s => s.LarsStandard)
+            .Excluding(s => s.ShortCourseDates)
             .Excluding(s => s.ApprenticeshipFunding)
             .Excluding(s => s.SearchScore)
             .Excluding(s => s.EpaoMustBeApprovedByRegulatorBody));

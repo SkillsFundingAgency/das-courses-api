@@ -147,9 +147,9 @@ namespace SFA.DAS.Courses.Data.Extensions
 
             return standards.Where(s =>
                 (s.CourseType == CourseType.ShortCourse
-                    && (s.VersionLatestStartDate == null || s.VersionLatestStartDate >= now)
-                    && s.VersionLatestStartDate != s.VersionEarliestStartDate
-                    && s.VersionEarliestStartDate <= now)
+                    && (s.ShortCourseDates.LastDateStarts == null || s.ShortCourseDates.LastDateStarts >= now)
+                    && s.ShortCourseDates.LastDateStarts != s.ShortCourseDates.EffectiveFrom
+                    && s.ShortCourseDates.EffectiveFrom <= now)
                 ||
                 (s.CourseType != CourseType.ShortCourse
                     && (s.LarsStandard.LastDateStarts == null || s.LarsStandard.LastDateStarts >= now)
@@ -163,8 +163,8 @@ namespace SFA.DAS.Courses.Data.Extensions
 
             return standards.Where(s =>
                 (s.CourseType == CourseType.ShortCourse
-                    && s.VersionLatestStartDate != null
-                    && s.VersionLatestStartDate < now)
+                    && s.ShortCourseDates.LastDateStarts != null
+                    && s.ShortCourseDates.LastDateStarts < now)
                 ||
                 (s.CourseType != CourseType.ShortCourse
                     && s.LarsStandard.LastDateStarts != null

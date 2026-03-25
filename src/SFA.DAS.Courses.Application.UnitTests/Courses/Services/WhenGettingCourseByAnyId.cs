@@ -193,25 +193,20 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             {
                 LarsCode = larsCode,
                 CourseType = CourseType.ShortCourse,
+                ShortCourseDates = new ShortCourseDates
+                {
+                    EffectiveFrom = earliestApproved,
+                    EffectiveTo = latestStart,
+                    LastDateStarts = latestStart
+                },
                 VersionLatestStartDate = latestStart,
+                ApprovedForDelivery = earliestApproved,
                 Route = new Route { Name = "Route", Id = 1 }
             };
 
             standardsRepository
                 .Setup(r => r.GetLatestActiveStandard(larsCode, null))
                 .ReturnsAsync(latestActive);
-
-            standardsRepository
-                .Setup(r => r.GetShortCourseDates(larsCode))
-                .ReturnsAsync(new List<ShortCourseDates> 
-                { 
-                    new ShortCourseDates 
-                    { 
-                        LarsCode = larsCode,
-                        EffectiveFrom = earliestApproved, 
-                        EffectiveTo = latestStart, 
-                        LastDateStarts = latestStart 
-                    } });
 
             // Act
             var result = await _sut.GetCourseByAnyId(larsCode);

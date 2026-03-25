@@ -10,7 +10,7 @@ using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 {
-    public class WhenGettingALatestActiveStandard
+    public class WhenGettingALatestActiveStandard : StandardRepositoryTestBase
     {
         private Mock<ICoursesDataContext> _coursesDataContext;
         private List<Standard> _standards;
@@ -28,6 +28,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new Standard()
                 {
                     ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
                     CourseType = CourseType.Apprenticeship,
                     IfateReferenceNumber = "ST001",
                     StandardUId = "ST001_1.0",
@@ -44,6 +45,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new Standard
                 {
                     ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
                     CourseType = CourseType.Apprenticeship,
                     IfateReferenceNumber = "ST002",
                     StandardUId = "ST002_1.1",
@@ -60,6 +62,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new Standard
                 {
                     ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
                     CourseType = CourseType.Apprenticeship,
                     IfateReferenceNumber = "ST002",
                     StandardUId = ExpectedStandardUId,
@@ -76,6 +79,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 new Standard
                 {
                     ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
                     CourseType = CourseType.Apprenticeship,
                     IfateReferenceNumber = "ST002",
                     StandardUId = "ST002_1.0",
@@ -94,6 +98,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             _coursesDataContext = new Mock<ICoursesDataContext>();
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(_standards);
             _coursesDataContext.Setup(c => c.ApprenticeshipFunding).ReturnsDbSet(new List<ApprenticeshipFunding>());
+            _coursesDataContext.Setup(c => c.ShortCourseDates).ReturnsDbSet(new List<ShortCourseDates>());
 
             _standardRepository = new Data.Repository.StandardRepository(_coursesDataContext.Object);
         }
@@ -103,9 +108,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         {
             // Act
             var standards = await _standardRepository.GetLatestActiveStandard(ExpectedLarsCode, CourseType.Apprenticeship);
-            
+
             // Assert
-            Assert.That(standards, Is.Not.Null);
+            standards.Should().NotBeNull();
             standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c=>c.StandardUId.Equals(ExpectedStandardUId)));
         }
 
@@ -116,7 +121,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var standards = await _standardRepository.GetLatestActiveStandardByIfateReferenceNumber(ExpectedIFateReferenceNumber, CourseType.Apprenticeship);
 
             // Assert
-            Assert.That(standards, Is.Not.Null);
+            standards.Should().NotBeNull();
             standards.Should().BeEquivalentTo(_standards.SingleOrDefault(c => c.StandardUId.Equals(ExpectedStandardUId)));
         }
 
@@ -138,7 +143,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var shortCourseLarsCode = "ZSC00001";
             var expectedStandardUId = "AU0001_1.1";
 
-            _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(new List<Standard>
+            _standards = new List<Standard>
             {
                 new Standard
                 {
@@ -168,7 +173,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                     VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-3),
                     VersionLatestStartDate = DateTime.UtcNow.AddMonths(1)
                 }
-            });
+            };
+
+            _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(_standards);
+            _coursesDataContext.Setup(c => c.ShortCourseDates).ReturnsDbSet(GetShortCourseDates(_standards));
 
             // Act
             var standard = await _standardRepository.GetLatestActiveStandard(shortCourseLarsCode, CourseType.ShortCourse);

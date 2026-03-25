@@ -17,7 +17,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            if (parameter.ParameterType.IsAssignableFrom(typeof(IEnumerable<Standard>)))
+            if (!typeof(IEnumerable<Standard>).IsAssignableFrom(parameter.ParameterType))
             {
                 throw new ArgumentException(nameof(parameter));
             }
@@ -30,16 +30,15 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
     {
         public void Customize(IFixture fixture)
         {
-            fixture.Customize<LarsStandard>(composer =>
-                composer
-                    .With(standard => standard.EffectiveFrom, DateTime.UtcNow.Date.AddDays(-1))
-                    .Without(standard => standard.LastDateStarts));
-
-            fixture.Customize<Standard>(composer =>
-                composer
-                    .With(standard => standard.Status, "Approved for delivery")
-                    .With(standard => standard.ApprenticeshipType, ApprenticeshipType.Apprenticeship)
-                    .With(standard => standard.CourseType, CourseType.Apprenticeship));
+            fixture.Customize(new StandardCustomization(
+                status: "Approved for delivery",
+                apprenticeshipType: ApprenticeshipType.Apprenticeship,
+                courseType: CourseType.Apprenticeship,
+                version: "1.0",
+                approvedForDelivery: DateTime.UtcNow.AddDays(-10),
+                effectiveFrom: DateTime.UtcNow.Date.AddDays(-1), // with a LarsStandard which is effective
+                effectiveTo: null,
+                lastDateStarts: null));
         }
     }
 }

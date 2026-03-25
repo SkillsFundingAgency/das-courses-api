@@ -8,7 +8,7 @@ using SFA.DAS.Courses.Domain.Entities;
 namespace SFA.DAS.Courses.Data.UnitTests.Customisations
 {
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class ApprenticeshipStandardsNotYetApprovedAttribute : CustomizeAttribute
+    public class ShortCourseStandardsWithdrawnAttribute : CustomizeAttribute
     {
         public override ICustomization GetCustomization(ParameterInfo parameter)
         {
@@ -22,21 +22,23 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
                 throw new ArgumentException(nameof(parameter));
             }
 
-            return new ApprenticeshipStandardsNotYetApprovedCustomization();
+            return new ShortCourseStandardsWithdrawnCustomization();
         }
     }
 
-    public class ApprenticeshipStandardsNotYetApprovedCustomization : ICustomization
+    public class ShortCourseStandardsWithdrawnCustomization : ICustomization
     {
         public void Customize(IFixture fixture)
         {
             fixture.Customize(new StandardCustomization(
-                status: "In development",
-                apprenticeshipType: ApprenticeshipType.Apprenticeship,
-                courseType: CourseType.Apprenticeship,
-                version: "0.1",
-                larsCode: "0",
-                approvedForDelivery: null));
+                status: "Withdrawn",
+                apprenticeshipType: ApprenticeshipType.ApprenticeshipUnit,
+                courseType: CourseType.ShortCourse,
+                version: "1.0",
+                approvedForDelivery: DateTime.UtcNow.AddDays(-20),
+                effectiveFrom: DateTime.UtcNow.AddDays(-10), // with ShortCourseDates which are effective
+                effectiveTo: DateTime.UtcNow.AddDays(-1),
+                lastDateStarts: DateTime.UtcNow.AddDays(10)));
         }
     }
 }

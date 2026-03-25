@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Domain.Courses
@@ -28,6 +29,7 @@ namespace SFA.DAS.Courses.Domain.Courses
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
                 CoreAndOptions = source.CoreAndOptions,
                 CoreDuties = source.CoreDuties,
+                CourseDates = GetCourseDates(source),
                 CourseType = source.CourseType,
                 CoronationEmblem = source.CoronationEmblem,
                 Duties = source.Duties,
@@ -54,7 +56,6 @@ namespace SFA.DAS.Courses.Domain.Courses
                 SectorSubjectAreaTier1Description = source.LarsStandard?.SectorSubjectArea1?.SectorSubjectAreaTier1Desc,
                 SectorSubjectAreaTier2 = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.SectorSubjectAreaTier2 : 0m,
                 SectorSubjectAreaTier2Description = source.LarsStandard != null ? source.LarsStandard.SectorSubjectArea2.Name : "",
-                CourseDates = (CourseDates)source.LarsStandard,
                 StandardPageUrl = source.StandardPageUrl,
                 StandardUId = source.StandardUId,
                 Status = source.Status,
@@ -66,6 +67,18 @@ namespace SFA.DAS.Courses.Domain.Courses
                 VersionMajor = source.VersionMajor,
                 VersionMinor = source.VersionMinor
             };
+        }
+
+        private static CourseDates GetCourseDates(Entities.Standard standard)
+        {
+            if(standard.CourseType == CourseType.ShortCourse)
+            {
+                return (CourseDates)standard.ShortCourseDates;
+            }
+            else
+            {
+                return (CourseDates)standard.LarsStandard;
+            }
         }
     }
 }

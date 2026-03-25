@@ -94,21 +94,15 @@ namespace SFA.DAS.Courses.Data.Repository
             return (await IncludeApprenticeshipFunding(new List<Standard> { standard })).First();
         }
 
-        public async Task<List<ShortCourseDates>> GetShortCourseDates(string larsCode = null)
+        public async Task<int> RefreshShortCourseDates()
         {
-            var query = _coursesDataContext
+            var shortCourses = await _coursesDataContext
                 .Standards
                 .FilterStandards(StandardFilter.Active)
-                .Where(s => s.CourseType == CourseType.ShortCourse && s.LarsCode != string.Empty);
+                .Where(s => s.CourseType == CourseType.ShortCourse && s.LarsCode != string.Empty)
+                .ToListAsync();
 
-            if (!string.IsNullOrWhiteSpace(larsCode))
-            {
-                query = query.Where(s => s.LarsCode == larsCode);
-            }
-
-            var items = await query.ToListAsync();
-
-            return items
+            var shortCouresDates = shortCourses
                 .GroupBy(s => s.LarsCode)
                 .Select(g => new ShortCourseDates
                 {
@@ -130,6 +124,10 @@ namespace SFA.DAS.Courses.Data.Repository
                         .FirstOrDefault()
                 })
                 .ToList();
+
+            await _coursesDataContext.DeleteAllBatchedAsync<ShortCourseDates>();
+            await _coursesDataContext.ShortCourseDates.AddRangeAsync(shortCouresDates);
+            return await _coursesDataContext.SaveChangesAsync();
         }
 
         public async Task<Standard> GetLatestActiveStandard(string larsCode,
@@ -226,6 +224,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     .ThenInclude(l => l.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
                     .ThenInclude(l => l.SectorSubjectArea1)
+                .Include(c => c.ShortCourseDates)
                 .FilterCourseType(courseType);
             
                 return query;
@@ -240,12 +239,14 @@ namespace SFA.DAS.Courses.Data.Repository
                     .ThenInclude(c => c.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
                     .ThenInclude(c => c.SectorSubjectArea1)
+                .Include(c => c.ShortCourseDates)
                 .FilterCourseType(courseType)
                 .Select(c => new Standard
                 {
                     Status = c.Status,
                     StandardUId = c.StandardUId,
                     LarsStandard = c.LarsStandard,
+                    ShortCourseDates = c.ShortCourseDates,
                     Keywords = c.Keywords,
                     Level = c.Level,
                     CoronationEmblem = c.CoronationEmblem,

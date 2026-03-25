@@ -74,13 +74,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         }
 
         [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
-        public void Then_ShortCourses_With_Null_VersionLatestStartDate_Are_Not_Returned(
+        public void Then_ShortCourses_With_Null_LastDateStarts_Are_Not_Returned(
             List<Standard> standards)
         {
             // Arrange
             foreach (var standard in standards)
             {
-                standard.VersionLatestStartDate = null;
+                standard.ShortCourseDates.LastDateStarts = null;
             }
 
             // Act
@@ -93,7 +93,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         }
 
         [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
-        public void Then_ShortCourses_With_Past_VersionLatestStartDate_Are_Returned(
+        public void Then_ShortCourses_With_Past_LastDateStarts_Are_Returned(
             List<Standard> standards)
         {
             // Arrange
@@ -101,7 +101,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
 
             foreach (var standard in standards)
             {
-                standard.VersionLatestStartDate = now.AddDays(-1);
+                standard.ShortCourseDates.LastDateStarts = now.AddDays(-1);
             }
 
             // Act
@@ -114,7 +114,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         }
 
         [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
-        public void Then_ShortCourses_With_Future_VersionLatestStartDate_Are_Not_Returned(
+        public void Then_ShortCourses_With_Future_LastDateStarts_Are_Not_Returned(
             List<Standard> standards)
         {
             // Arrange
@@ -122,7 +122,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
 
             foreach (var standard in standards)
             {
-                standard.VersionLatestStartDate = now.AddDays(1);
+                standard.ShortCourseDates.LastDateStarts = now.AddDays(1);
             }
 
             // Act

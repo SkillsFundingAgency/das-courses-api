@@ -143,6 +143,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     Status = "Approved for delivery",
                     CourseType = CourseType.ShortCourse,
                     LarsCode = "ZSC00002",
+                    LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
+                        EffectiveTo = null,
+                        LastDateStarts = null
+                    },
                     VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-2),
                     VersionLatestStartDate = null
                 }
@@ -170,6 +177,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     Status = "Approved for delivery",
                     CourseType = CourseType.ShortCourse,
                     LarsCode = "ZSC00002",
+                    LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(1),
+                        EffectiveTo = null,
+                        LastDateStarts = null
+                    },
                     VersionEarliestStartDate = DateTime.UtcNow.AddMonths(1),
                     VersionLatestStartDate = null
                 }
@@ -184,7 +198,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         }
 
         [Test]
-        public void Then_ShortCourses_With_VersionLatestStartDate_In_The_Past_Are_Not_Returned()
+        public void Then_ShortCourses_With_ShortCourseDates_EffectiveTo_In_The_Past_Are_Not_Returned()
         {
             // Arrange
             var standards = new List<Standard>
@@ -197,8 +211,15 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     Status = "Approved for delivery",
                     CourseType = CourseType.ShortCourse,
                     LarsCode = "ZSC00002",
-                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-1),
-                    VersionLatestStartDate = DateTime.UtcNow.AddDays(-1)
+                    LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
+                        EffectiveTo = null,
+                        LastDateStarts = DateTime.UtcNow.AddMonths(-1)
+                    },
+                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-2),
+                    VersionLatestStartDate = DateTime.UtcNow.AddMonths(-1),
                 }
             }.AsQueryable();
 
@@ -211,7 +232,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         }
 
         [Test]
-        public void Then_ShortCourses_With_The_Same_VersionEarliestStartDate_And_VersionLatestStartDate_Are_Not_Returned()
+        public void Then_ShortCourses_With_The_Same_ShortCoursesDates_EffectiveFrom_And_LastDateStarts_Are_Not_Returned()
         {
             // Arrange
             var sameDate = DateTime.UtcNow;
@@ -226,8 +247,14 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     Status = "Approved for delivery",
                     CourseType = CourseType.ShortCourse,
                     LarsCode = "ZSC00002",
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        EffectiveFrom = sameDate,
+                        EffectiveTo = null,
+                        LastDateStarts = sameDate
+                    },
                     VersionEarliestStartDate = sameDate,
-                    VersionLatestStartDate = sameDate
+                    VersionLatestStartDate = sameDate,
                 }
             }.AsQueryable();
 
@@ -250,6 +277,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 LarsStandard = new LarsStandard
                 {
                     EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
+                    EffectiveTo = null,
                     LastDateStarts = null
                 }
             };
@@ -265,6 +293,12 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 CourseType = CourseType.ShortCourse,
                 LarsCode = "ZSC00001",
                 LarsStandard = null,
+                ShortCourseDates = new ShortCourseDates
+                { 
+                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                    EffectiveTo = null,
+                    LastDateStarts = null
+                },
                 VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-1),
                 VersionLatestStartDate = null
             };

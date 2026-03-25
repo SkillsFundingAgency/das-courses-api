@@ -13,12 +13,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
     {
         public static Dictionary<string, List<Standard>> Standards = [];
         public static List<Route> Routes = [];
+        public static List<ShortCourseDates> ShortCourseDates = [];
         public static List<ApprenticeshipFunding> ApprenticeshipFundings = [];
         public static List<SectorSubjectAreaTier2> SectorSubjectAreaTier2s = [];
 
         public static void LoadTestData(CoursesDataContext context)
         {
             LoadTestRoutes();
+            LoadShortCourseDates();
             LoadTestApprenticeshipFundings();
             LoadSectorSubjectAreaTier2Items();
 
@@ -31,6 +33,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
             context.Standards.AddRange(LoadNotYetApprovedTestStandards(Routes));
             context.Standards.AddRange(LoadOlderVersionsOfStandards(Routes, ApprenticeshipFundings));
             context.Standards.AddRange(LoadWithdrawnStandards(Routes));
+
+            context.ShortCourseDates.AddRange(ShortCourseDates);
 
             context.Frameworks.AddRange(GetFrameworks());
             context.SaveChanges();
@@ -90,6 +94,24 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Name = "Creative and design",
                             Id = 3,
                             Active = true
+                        }
+                    });
+            }
+        }
+
+        public static void LoadShortCourseDates()
+        {
+            if(ShortCourseDates.Count == 0)
+            {
+                ShortCourseDates.AddRange(
+                    new List<ShortCourseDates>
+                    {
+                        new ShortCourseDates
+                        {
+                            LarsCode = "ZSC00009",
+                            EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
+                            EffectiveTo = null,
+                            LastDateStarts = null,
                         }
                     });
             }
@@ -360,8 +382,8 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             Level = 5,
                             RouteCode = routes[2].Id,
                             Route = routes[2],
-                            LarsStandard = null, // short courses do not have a LarsStandard, courses dates
-                                                 // cannot be tested in acceptance tests
+                            LarsStandard = null, 
+                            ShortCourseDates = ShortCourseDates[0],
                             Status = "Approved for delivery",
                             Version = "1.0",
                             VersionEarliestStartDate = DateTime.UtcNow.AddDays(-1),
