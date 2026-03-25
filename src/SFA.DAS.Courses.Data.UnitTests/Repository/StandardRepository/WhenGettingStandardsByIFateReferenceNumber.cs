@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             var retired = data.RetiredApprenticeshipStandards[0];
             retired.IfateReferenceNumber = iFateReferenceNumber;
             retired.Version = "1.0";
-            active.StandardUId = $"{iFateReferenceNumber}_1.0";
+            retired.StandardUId = $"{iFateReferenceNumber}_1.0";
 
             SetupContext(mockDataContext, data);
 

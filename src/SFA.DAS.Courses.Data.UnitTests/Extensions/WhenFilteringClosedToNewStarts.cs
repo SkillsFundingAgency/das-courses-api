@@ -12,7 +12,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
 {
     public class WhenFilteringClosedToNewStarts
     {
-        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public void Then_Apprenticeships_With_Null_LastDateStarts_Are_Not_Returned(
             List<Standard> standards)
         {
@@ -31,7 +31,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             actual.Should().BeEmpty();
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public void Then_Apprenticeships_With_Past_LastDateStarts_Are_Returned(
             List<Standard> standards)
         {
@@ -52,7 +52,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             actual.Should().BeEquivalentTo(standards);
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public void Then_Apprenticeships_With_Future_LastDateStarts_Are_Not_Returned(
             List<Standard> standards)
         {
@@ -73,7 +73,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             actual.Should().BeEmpty();
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit, "1.0")]
         public void Then_ShortCourses_With_Null_LastDateStarts_Are_Not_Returned(
             List<Standard> standards)
         {
@@ -92,7 +92,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             actual.Should().BeEmpty();
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit, "1.0")]
         public void Then_ShortCourses_With_Past_LastDateStarts_Are_Returned(
             List<Standard> standards)
         {
@@ -113,7 +113,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             actual.Should().BeEquivalentTo(standards);
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.ApprenticeshipUnit, "1.0")]
         public void Then_ShortCourses_With_Future_LastDateStarts_Are_Not_Returned(
             List<Standard> standards)
         {

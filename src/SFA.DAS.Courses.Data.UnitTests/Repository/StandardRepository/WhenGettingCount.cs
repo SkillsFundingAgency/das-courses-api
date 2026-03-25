@@ -191,7 +191,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
         {
             // Arrange
             var expectedCount =
-                data.NotYetApprovedApprenticeshipStandards.Count;
+                data.NotYetApprovedShortCourseStandards.Count;
 
             SetupContext(mockDataContext, data);
 
@@ -214,7 +214,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                 data.ActiveInvalidShortCourseStandards.Count +
                 data.RetiredShortCourseStandards.Count + 
                 data.WithdrawnShortCourseStandards.Count + 
-                data.NotYetApprovedApprenticeshipStandards.Count;
+                data.NotYetApprovedShortCourseStandards.Count;
 
             SetupContext(mockDataContext, data);
 

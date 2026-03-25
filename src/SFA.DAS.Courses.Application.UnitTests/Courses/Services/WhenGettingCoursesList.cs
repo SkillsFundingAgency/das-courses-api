@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 {
     public class WhenGettingCoursesList
     {
-        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task And_No_Keyword_Then_Gets_Courses_Filtered_From_Repository(
             List<Standard> standardsFromRepo,
             OrderBy orderBy,
@@ -46,7 +46,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 standardsFromRepo.Select(s => (Domain.Courses.Course)s));
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task And_No_Keyword_And_Filtering_By_Active_Then_Gets_Courses_Filtered_From_Repository(
             OrderBy orderBy,
             StandardFilter filter,
@@ -191,7 +191,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 standardsFoundInSearch.Select(s => (Domain.Courses.Course)s));
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task And_Has_Levels_Then_Gets_Standards_Filtered_From_Filters(
             List<int> levelCodes,
             OrderBy orderBy,
@@ -217,7 +217,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 standardsFromRepo.Select(s => (Domain.Courses.Course)s), config => config.Excluding(p => p.CourseDates));
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task And_Has_ApprenticeshipType_Then_Gets_Courses_Filtered_From_Filters(
             List<int> levelCodes,
             OrderBy orderBy,
@@ -244,7 +244,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 standardsFromRepo.Select(s => (Domain.Courses.Course)s));
         }
 
-        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship)]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task Then_Courses_Filtered_Are_Ordered_By_SortOrderService(
             List<int> levelCodes,
             OrderBy orderBy,
