@@ -12,5 +12,4 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         public virtual ICollection<Standard> Standards { get; set; }
     }
-
 }

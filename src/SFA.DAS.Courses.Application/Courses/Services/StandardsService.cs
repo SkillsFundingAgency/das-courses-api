@@ -61,7 +61,6 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             return standards.Select(standard => (Course)standard).ToList();
         }
 
-
         public async Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber, CourseType? courseType)
         {
             var standards = await _standardsRepository.GetStandards(iFateReferenceNumber, courseType);

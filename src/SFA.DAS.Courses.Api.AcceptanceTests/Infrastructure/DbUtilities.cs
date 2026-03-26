@@ -17,6 +17,16 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
         public static List<ApprenticeshipFunding> ApprenticeshipFundings = [];
         public static List<SectorSubjectAreaTier2> SectorSubjectAreaTier2s = [];
 
+        const string LarsCode1 = "1";
+        const string LarsCode2 = "2"; 
+        const string LarsCode3 = "3";
+        const string LarsCode4 = "4";
+        const string LarsCode5 = "5";
+        const string LarsCode6 = "6"; 
+        const string LarsCode7 = "7";
+        const string LarsCode8 = "8";
+        const string ShortCourseLarsCode9 = "ZSC00009";
+
         public static void LoadTestData(CoursesDataContext context)
         {
             LoadTestRoutes();
@@ -101,14 +111,14 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
 
         public static void LoadShortCourseDates()
         {
-            if(ShortCourseDates.Count == 0)
+            if (ShortCourseDates.Count == 0)
             {
                 ShortCourseDates.AddRange(
                     new List<ShortCourseDates>
                     {
                         new ShortCourseDates
                         {
-                            LarsCode = "ZSC00009",
+                            LarsCode = ShortCourseLarsCode9,
                             EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                             EffectiveTo = null,
                             LastDateStarts = null,
@@ -138,9 +148,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "1"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode1),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "1",
+                            LarsCode = LarsCode1,
                             StandardUId = "ST0001_1.3",
                             IfateReferenceNumber = "ST0001",
                             Title = "Head Brewer",
@@ -153,7 +163,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             {
                                 EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
-                                LarsCode = "1",
+                                LarsCode = LarsCode1,
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
                             },
@@ -170,9 +180,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "2"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode2),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "2",
+                            LarsCode = LarsCode2,
                             StandardUId = "ST0002_1.0",
                             IfateReferenceNumber = "ST0002",
                             Title = "Brewer",
@@ -185,7 +195,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             {
                                 EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
-                                LarsCode = "2",
+                                LarsCode = LarsCode2,
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
                             },
@@ -198,9 +208,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "3"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode3),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "3",
+                            LarsCode = LarsCode3,
                             StandardUId = "ST0003_1.0",
                             IfateReferenceNumber = "ST0003",
                             Title = "Senior / head of facilities management (degree)",
@@ -213,7 +223,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             {
                                 EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
-                                LarsCode = "3",
+                                LarsCode = LarsCode3,
                                 SectorSubjectAreaTier2 = 1.1m,
                                 SectorSubjectAreaTier1 = 1
                             },
@@ -225,9 +235,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "4"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode4),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "4",
+                            LarsCode = LarsCode4,
                             StandardUId = "ST0004_1.0",
                             IfateReferenceNumber = "ST0004",
                             Title = "Dentist",
@@ -240,7 +250,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             {
                                 EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
-                                LarsCode = "4",
+                                LarsCode = LarsCode4,
                                 SectorSubjectAreaTier2 = 1.1m,
                                 SectorSubjectAreaTier1 = 1
                             },
@@ -252,9 +262,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "5"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode5),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "5",
+                            LarsCode = LarsCode5,
                             StandardUId = "ST0005_1.1",
                             IfateReferenceNumber = "ST0005",
                             Title = "Photographic assistant SortOrder",
@@ -267,7 +277,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             {
                                 EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
-                                LarsCode = "5",
+                                LarsCode = LarsCode5,
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
                             },
@@ -279,9 +289,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "6"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode6),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "6",
+                            LarsCode = LarsCode6,
                             StandardUId = "ST0006_1.0",
                             IfateReferenceNumber = "ST0006",
                             Title = "Camera prep technician",
@@ -294,7 +304,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             {
                                 EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
-                                LarsCode = "6",
+                                LarsCode = LarsCode6,
                                 SectorSubjectAreaTier2 = 1.1m,
                                 SectorSubjectAreaTier1 = 1
                             },
@@ -306,9 +316,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "7"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode7),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "7",
+                            LarsCode = LarsCode7,
                             StandardUId = "ST0007_1.0",
                             IfateReferenceNumber = "ST0007",
                             Title = "Junior animator SortOrder",
@@ -321,7 +331,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             {
                                 EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
                                 LastDateStarts = null,
-                                LarsCode = "7",
+                                LarsCode = LarsCode7,
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
                             },
@@ -333,9 +343,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "8"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode8),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "8",
+                            LarsCode = LarsCode8,
                             StandardUId = "ST0008_1.0",
                             IfateReferenceNumber = "ST0008",
                             Title = "Standard with option mapped KSBs",
@@ -345,7 +355,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                             LarsStandard = new LarsStandard
                             {
                                 EffectiveFrom = DateTime.UtcNow.Date.AddDays(-1),
-                                LarsCode = "8",
+                                LarsCode = LarsCode8,
                                 SectorSubjectAreaTier2 = 1m,
                                 SectorSubjectAreaTier1 = 1
                             },
@@ -372,9 +382,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "ZSC00009"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, ShortCourseLarsCode9),
                             CourseType = CourseType.ShortCourse,
-                            LarsCode = "ZSC00009",
+                            LarsCode = ShortCourseLarsCode9,
                             StandardUId = "AU0009_1.0",
                             IfateReferenceNumber = "AU0009",
                             Title = "Beer Taster",
@@ -612,9 +622,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "1"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode1),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "1",
+                            LarsCode = LarsCode1,
                             StandardUId = "ST0001_1.2",
                             IfateReferenceNumber = "ST0001",
                             Title = "Head Brewer",
@@ -636,9 +646,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "1"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode1),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "1",
+                            LarsCode = LarsCode1,
                             StandardUId = "ST0001_1.1",
                             IfateReferenceNumber = "ST0001",
                             Title = "Head Brewer",
@@ -655,9 +665,9 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                         new Standard
                         {
                             ApprenticeshipType = ApprenticeshipType.Apprenticeship,
-                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, "5"),
+                            ApprenticeshipFunding = GetFundingOrNull(apprenticeshipFundings, LarsCode5),
                             CourseType = CourseType.Apprenticeship,
-                            LarsCode = "5",
+                            LarsCode = LarsCode5,
                             StandardUId = "ST0005_1.0",
                             IfateReferenceNumber = "ST0005",
                             Title = "Photographic assistant SortOrder",
@@ -727,7 +737,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     new ApprenticeshipFunding
                     {
                         Id = Guid.NewGuid(),
-                        LarsCode = "1",
+                        LarsCode = LarsCode1,
                         Duration = 3,
                         DurationUnits = DurationUnits.Months,
                         FundingStream = ApprenticeshipType.Apprenticeship.ToString()
@@ -736,7 +746,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     new ApprenticeshipFunding
                     {
                         Id = Guid.NewGuid(),
-                        LarsCode = "2",
+                        LarsCode = LarsCode2,
                         Duration = 3,
                         DurationUnits = DurationUnits.Months,
                         FundingStream = ApprenticeshipType.Apprenticeship.ToString()
@@ -744,7 +754,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     new ApprenticeshipFunding
                     {
                         Id = Guid.NewGuid(),
-                        LarsCode = "3",
+                        LarsCode = LarsCode3,
                         Duration = 3,
                         DurationUnits = DurationUnits.Months,
                         FundingStream = ApprenticeshipType.Apprenticeship.ToString()
@@ -752,7 +762,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     new ApprenticeshipFunding
                     {
                         Id = Guid.NewGuid(),
-                        LarsCode = "4",
+                        LarsCode = LarsCode4,
                         Duration = 3,
                         DurationUnits = DurationUnits.Months,
                         FundingStream = ApprenticeshipType.Apprenticeship.ToString()
@@ -760,7 +770,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     new ApprenticeshipFunding
                     {
                         Id = Guid.NewGuid(),
-                        LarsCode = "5",
+                        LarsCode = LarsCode5,
                         Duration = 3,
                         DurationUnits = DurationUnits.Months,
                         FundingStream = ApprenticeshipType.Apprenticeship.ToString()
@@ -776,7 +786,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     new ApprenticeshipFunding
                     {
                         Id = Guid.NewGuid(),
-                        LarsCode = "7",
+                        LarsCode = LarsCode7,
                         Duration = 3,
                         DurationUnits = DurationUnits.Months,
                         FundingStream = ApprenticeshipType.Apprenticeship.ToString()
@@ -784,7 +794,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     new ApprenticeshipFunding
                     {
                         Id = Guid.NewGuid(),
-                        LarsCode = "8",
+                        LarsCode = LarsCode8,
                         Duration = 3,
                         DurationUnits = DurationUnits.Months,
                         FundingStream = ApprenticeshipType.Apprenticeship.ToString()
@@ -792,7 +802,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure
                     new ApprenticeshipFunding
                     {
                         Id = Guid.NewGuid(),
-                        LarsCode = "ZSC00009",
+                        LarsCode = ShortCourseLarsCode9,
                         Duration = 10,
                         DurationUnits = DurationUnits.Hours,
                         FundingStream = "ShortCourseFundingCategory"

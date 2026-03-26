@@ -75,10 +75,8 @@ namespace SFA.DAS.Courses.Domain.Courses
             {
                 return (CourseDates)standard.ShortCourseDates;
             }
-            else
-            {
-                return (CourseDates)standard.LarsStandard;
-            }
+            
+            return (CourseDates)standard.LarsStandard;
         }
     }
 }
