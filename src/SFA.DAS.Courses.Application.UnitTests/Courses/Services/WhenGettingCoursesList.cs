@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
@@ -10,6 +11,7 @@ using SFA.DAS.Courses.Application.Courses.Services;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
+using SFA.DAS.Courses.Domain.TestHelper.AutoFixture;
 using SFA.DAS.Testing.AutoFixture;
 
 using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
@@ -18,7 +20,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 {
     public class WhenGettingCoursesList
     {
-        [Test, RecursiveMoqAutoData]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task And_No_Keyword_Then_Gets_Courses_Filtered_From_Repository(
             List<Standard> standardsFromRepo,
             OrderBy orderBy,
@@ -31,6 +33,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, null, null))
                 .ReturnsAsync(standardsFromRepo);
+
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
@@ -43,11 +46,11 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 standardsFromRepo.Select(s => (Domain.Courses.Course)s));
         }
 
-        [Test, RecursiveMoqAutoData]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task And_No_Keyword_And_Filtering_By_Active_Then_Gets_Courses_Filtered_From_Repository(
-            List<Standard> standardsFromRepo,
             OrderBy orderBy,
             StandardFilter filter,
+            List<Standard> standardsFromRepo,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
@@ -57,6 +60,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), new List<int>(), filter, false, null, null))
                 .ReturnsAsync(standardsFromRepo);
+
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
@@ -187,7 +191,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 standardsFoundInSearch.Select(s => (Domain.Courses.Course)s));
         }
 
-        [Test, RecursiveMoqAutoData]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task And_Has_Levels_Then_Gets_Standards_Filtered_From_Filters(
             List<int> levelCodes,
             OrderBy orderBy,
@@ -210,10 +214,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 
             // Assert
             result.Should().BeEquivalentTo(
-                standardsFromRepo.Select(s => (Domain.Courses.Course)s));
+                standardsFromRepo.Select(s => (Domain.Courses.Course)s), config => config.Excluding(p => p.CourseDates));
         }
 
-        [Test, RecursiveMoqAutoData]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task And_Has_ApprenticeshipType_Then_Gets_Courses_Filtered_From_Filters(
             List<int> levelCodes,
             OrderBy orderBy,
@@ -227,6 +231,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, true, new List<ApprenticeshipType> { ApprenticeshipType.Apprenticeship }, null))
                 .ReturnsAsync(standardsFromRepo);
+
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, It.IsAny<OrderBy>(), It.IsAny<string>()))
                 .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
@@ -239,13 +244,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
                 standardsFromRepo.Select(s => (Domain.Courses.Course)s));
         }
 
-        [Test, RecursiveMoqAutoData]
+        [Test, StandardInlineAutoData(ApprenticeshipType.Apprenticeship, "1.0")]
         public async Task Then_Courses_Filtered_Are_Ordered_By_SortOrderService(
             List<int> levelCodes,
             OrderBy orderBy,
             StandardFilter filter,
             List<Standard> standardsFromRepo,
-            List<Standard> standardsFromSortService,
             [Frozen] Mock<IStandardRepository> mockStandardsRepository,
             [Frozen] Mock<IStandardsSortOrderService> mockSortOrderService,
             StandardsService service)
@@ -254,20 +258,22 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             mockStandardsRepository
                 .Setup(repository => repository.GetStandards(new List<int>(), levelCodes, filter, false, null, null))
                 .ReturnsAsync(standardsFromRepo);
+
             mockSortOrderService
                 .Setup(orderService => orderService.OrderBy(standardsFromRepo, orderBy, ""))
-                .Returns(standardsFromSortService.OrderBy(standard => standard.SearchScore));
+                .Returns(standardsFromRepo.OrderBy(standard => standard.SearchScore));
 
             // Act
             var result = await service.GetCoursesList("", new List<int>(), levelCodes, orderBy, filter, false, null, null);
 
             // Assert
             result.Should().BeEquivalentTo(
-                standardsFromSortService.Select(s => (Domain.Courses.Course)s));
+                standardsFromRepo.Select(s => (Domain.Courses.Course)s));
         }
 
-        [Test, MoqAutoData]
-        public async Task When_List_Contains_ShortCourse_With_Null_CourseDates_Then_Populates_Only_For_ShortCourse(
+        [Test, StandardInlineAutoData()]
+        public async Task When_List_Contains_ShortCourse_Then_Populates_CourseDates(
+            IFixture fixture,
             OrderBy orderBy,
             StandardFilter filter,
             [Frozen] Mock<IStandardRepository> standardsRepository,
@@ -278,76 +284,53 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
             var shortCourseLars = "ZSC00123";
             var apprenticeshipLars = "123";
 
-            var earliestApproved = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var latestStart = new DateTime(2030, 6, 30, 0, 0, 0, DateTimeKind.Utc);
+            var approvedForDelivery = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var versionLatestStartDate = new DateTime(2020, 2, 2, 0, 0, 0, DateTimeKind.Utc);
 
-            var earliestActiveShortCourse = new Standard
-            {
-                StandardUId = "AU0001_1.0",
-                LarsCode = shortCourseLars,
-                CourseType = CourseType.ShortCourse,
-                LarsStandard = null,
-                Route = new Route { Name = "Route", Id = 1 },
-                ApprovedForDelivery = earliestApproved
-            };
+            var activeShortCourse = fixture.Build<Standard>()
+                .With(x => x.StandardUId, "AU0001_1.0")
+                .With(x => x.LarsCode, shortCourseLars)
+                .With(x => x.CourseType, CourseType.ShortCourse)
+                .With(x => x.LarsStandard, (LarsStandard)null)
+                .With(x => x.ShortCourseDates, new ShortCourseDates
+                {
+                    EffectiveFrom = approvedForDelivery,
+                    EffectiveTo = versionLatestStartDate,
+                    LastDateStarts = versionLatestStartDate,
+                })
+                .With(x => x.Route, new Route { Name = "Route", Id = 1 })
+                .With(x => x.ApprovedForDelivery, approvedForDelivery)
+                .With(x => x.VersionLatestStartDate, versionLatestStartDate)
+                .Create();
 
-            var latestActiveShortCourseFromRepo = new Standard
-            {
-                StandardUId = "AU0001_1.1",
-                LarsCode = shortCourseLars,
-                CourseType = CourseType.ShortCourse,
-                LarsStandard = null,
-                Route = new Route { Name = "Route", Id = 1 },
-                VersionLatestStartDate = latestStart
-            };
+            var activeApprenticeship = fixture.Build<Standard>()
+                .With(x => x.StandardUId, "ST0001_1.0")
+                .With(x => x.LarsCode, apprenticeshipLars)
+                .With(x => x.CourseType, CourseType.Apprenticeship)
+                .With(x => x.Route, new Route { Name = "Route", Id = 1 })
+                .With(x => x.ApprovedForDelivery, new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+                .With(x => x.VersionLatestStartDate, new DateTime(2021, 2, 2, 0, 0, 0, DateTimeKind.Utc))
+                .Create();
 
-            var activeApprenticeshipFromRepo = new Standard
-            {
-                StandardUId = "ST0001_1.0",
-                LarsCode = apprenticeshipLars,
-                CourseType = CourseType.Apprenticeship,
-                LarsStandard = null,
-                Route = new Route { Name = "Route", Id = 1 }
-            };
-
-            var listFromRepo = new List<Standard> { latestActiveShortCourseFromRepo, activeApprenticeshipFromRepo };
+            var standardsFromRepo = new List<Standard> { activeShortCourse, activeApprenticeship };
 
             standardsRepository
                 .Setup(r => r.GetStandards(new List<int>(), new List<int>(), filter, false, null, null))
-                .ReturnsAsync(listFromRepo);
-
-            standardsRepository
-                .Setup(r => r.GetLatestActiveStandard(shortCourseLars, null))
-                .ReturnsAsync(latestActiveShortCourseFromRepo);
-
-            standardsRepository
-                .Setup(r => r.GetEarliestActiveStandard(shortCourseLars, null))
-                .ReturnsAsync(earliestActiveShortCourse);
+                .ReturnsAsync(standardsFromRepo);
 
             sortOrderService
-            .Setup(s => s.OrderBy(It.IsAny<IEnumerable<Standard>>(), It.IsAny<OrderBy>(), It.IsAny<string>()))
-            .Returns((IEnumerable<Standard> items, OrderBy _, string __) => items.OrderBy(x => x.StandardUId));
+                .Setup(s => s.OrderBy(It.IsAny<IEnumerable<Standard>>(), It.IsAny<OrderBy>(), It.IsAny<string>()))
+                .Returns((IEnumerable<Standard> items, OrderBy _, string __) => items.OrderBy(x => x.StandardUId));
 
             // Act
             var result = (await _sut.GetCoursesList("", new List<int>(), new List<int>(), orderBy, filter, false, null, null)).ToList();
 
             // Assert
             var shortCourse = result.Single(x => x.LarsCode == shortCourseLars);
-            shortCourse.CourseDates.Should().NotBeNull();
-            shortCourse.CourseDates.EffectiveFrom.Should().Be(earliestApproved);
-            shortCourse.CourseDates.EffectiveTo.Should().Be(latestStart);
-            shortCourse.CourseDates.LastDateStarts.Should().Be(latestStart);
+            shortCourse.CourseDates.Should().BeEquivalentTo((Domain.Courses.CourseDates)activeShortCourse.ShortCourseDates);
 
             var apprenticeship = result.Single(x => x.LarsCode == apprenticeshipLars);
-            apprenticeship.CourseDates.Should().BeNull();
-
-            // the short courses course data was calculated from versions
-            standardsRepository.Verify(r => r.GetLatestActiveStandard(shortCourseLars, null), Times.Once);
-            standardsRepository.Verify(r => r.GetEarliestActiveStandard(shortCourseLars, null), Times.Once);
-
-            // the apprenticeship courses data was known from lars standard
-            standardsRepository.Verify(r => r.GetLatestActiveStandard(apprenticeshipLars, null), Times.Never);
-            standardsRepository.Verify(r => r.GetEarliestActiveStandard(apprenticeshipLars, null), Times.Never);
+            apprenticeship.CourseDates.Should().BeEquivalentTo((Domain.Courses.CourseDates)activeApprenticeship.LarsStandard);
         }
     }
 }

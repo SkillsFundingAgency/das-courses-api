@@ -25,5 +25,20 @@ namespace SFA.DAS.Courses.Domain.Courses
                 LastDateStarts = larsStandard.LastDateStarts
             };
         }
+
+        public static explicit operator CourseDates(ShortCourseDates shortCourseDates)
+        {
+            if (shortCourseDates == null)
+            {
+                return null;
+            }
+
+            return new CourseDates
+            {
+                EffectiveFrom = shortCourseDates.EffectiveFrom,
+                EffectiveTo = shortCourseDates.EffectiveTo,
+                LastDateStarts = shortCourseDates.LastDateStarts
+            };
+        }
     }
 }

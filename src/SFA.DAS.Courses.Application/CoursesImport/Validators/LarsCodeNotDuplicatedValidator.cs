@@ -13,7 +13,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(standardImports => standardImports)
                 .Custom((standardImports, context) =>
                 {
-                    foreach (var standard in standardImports.Where(si => int.TryParse(si.LarsCode, out int larsCode) && larsCode != 0))
+                    foreach (var standard in standardImports.Where(si => 
+                        !string.IsNullOrWhiteSpace(si.LarsCode) 
+                        && (!int.TryParse(si.LarsCode, out var larsCode) || larsCode != 0)))
                     {
                         foreach (var kv in allStandardImports)
                         {

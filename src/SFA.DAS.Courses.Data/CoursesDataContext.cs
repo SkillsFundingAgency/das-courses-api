@@ -31,6 +31,7 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.Route> Routes { get; set; }
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
+        DbSet<Domain.Entities.ShortCourseDates> ShortCourseDates { get; set; }
         Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
@@ -57,6 +58,7 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier1> SectorSubjectAreaTier1 { get; set; }
+        public DbSet<Domain.Entities.ShortCourseDates> ShortCourseDates { get; set; }
 
         private readonly CoursesConfiguration _configuration;
         private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
@@ -117,6 +119,7 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2Import());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1Import());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1());
+            modelBuilder.ApplyConfiguration(new ShortCourseDates());
             modelBuilder.ApplyConfiguration(new Route());
             modelBuilder.ApplyConfiguration(new RouteImport());
 

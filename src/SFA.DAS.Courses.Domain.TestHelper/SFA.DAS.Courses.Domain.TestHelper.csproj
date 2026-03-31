@@ -21,4 +21,8 @@
     <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AutoFixture\Courses\" />
+  </ItemGroup>
+
 </Project>

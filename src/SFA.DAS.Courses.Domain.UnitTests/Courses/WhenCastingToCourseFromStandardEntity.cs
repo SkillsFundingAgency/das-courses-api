@@ -49,9 +49,18 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Courses
             response.ApprovalBody.Should().Be(source.RegulatedBody);
 
             response.CourseDates.Should().NotBeNull();
-            response.CourseDates.EffectiveFrom.Should().Be(source.LarsStandard.EffectiveFrom);
-            response.CourseDates.EffectiveTo.Should().Be(source.LarsStandard.EffectiveTo);
-            response.CourseDates.LastDateStarts.Should().Be(source.LarsStandard.LastDateStarts);
+            if (response.CourseType == Domain.Entities.CourseType.ShortCourse)
+            {
+                response.CourseDates.EffectiveFrom.Should().Be(source.ShortCourseDates.EffectiveFrom);
+                response.CourseDates.EffectiveTo.Should().Be(source.ShortCourseDates.EffectiveTo);
+                response.CourseDates.LastDateStarts.Should().Be(source.ShortCourseDates.LastDateStarts);
+            }
+            else
+            {
+                response.CourseDates.EffectiveFrom.Should().Be(source.LarsStandard.EffectiveFrom);
+                response.CourseDates.EffectiveTo.Should().Be(source.LarsStandard.EffectiveTo);
+                response.CourseDates.LastDateStarts.Should().Be(source.LarsStandard.LastDateStarts);
+            }
 
             response.VersionDetail.Should().NotBeNull();
             response.VersionDetail.EarliestStartDate.Should().Be(source.VersionEarliestStartDate);

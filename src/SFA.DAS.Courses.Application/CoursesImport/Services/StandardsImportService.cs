@@ -163,6 +163,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                     return;
                 }
 
+                await RefreshShortCourseDates();
+
                 await LoadRouteDataFromStaging();
 
                 await AuditImport(timeStarted, standardsTransfered);
@@ -278,6 +280,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             var standards = standardImports.SelectMany(s => s.Value).Select(s => (Standard)s).ToList();
             await _standardRepository.DeleteAll();
             return await _standardRepository.InsertMany(standards);
+        }
+
+        private async Task<int> RefreshShortCourseDates()
+        {
+            return await _standardRepository.RefreshShortCourseDates();
         }
 
         private async Task<int> LoadRouteDataFromStaging()

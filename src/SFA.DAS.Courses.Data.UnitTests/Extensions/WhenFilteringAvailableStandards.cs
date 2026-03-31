@@ -12,134 +12,296 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
     public class WhenFilteringAvailableStandards
     {
         [Test]
-        public void Then_Standards_With_Null_LastDateStarts_Are_Returned()
+        public void Then_Apprenticeships_With_Null_LastDateStarts_Are_Returned()
         {
-            //Arrange
+            // Arrange
             var standards = new List<Standard>
             {
-                ValidStandard(),
+                ValidApprenticeship(),
                 new Standard
                 {
-                    Title = "Not Available",
+                    Title = "Also Available",
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
-                    LarsStandard = 
-                    new LarsStandard
+                    Status = "Approved for delivery",
+                    CourseType = CourseType.Apprenticeship,
+                    LarsStandard = new LarsStandard
                     {
                         EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
-                        LastDateStarts = DateTime.UtcNow.AddMonths(-1)
+                        LastDateStarts = null
                     }
-                
                 }
             }.AsQueryable();
 
-            //Act
-            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable);
+            // Act
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable).ToList();
 
-            //Assert
-            actual.Count().Should().Be(1);
-            actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
+            // Assert
+            actual.Should().HaveCount(2);
+            actual.Select(x => x.Title).Should().BeEquivalentTo("Available", "Also Available");
         }
 
         [Test]
-        public void Then_Standards_With_A_Future_Start_Date_Are_Not_Returned()
+        public void Then_Apprenticeships_With_A_Future_Start_Date_Are_Not_Returned()
         {
-            //Arrange
+            // Arrange
             var standards = new List<Standard>
             {
-                ValidStandard(),
+                ValidApprenticeship(),
                 new Standard
                 {
                     Title = "Not Available",
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    Status = "Approved for delivery",
+                    CourseType = CourseType.Apprenticeship,
                     LarsStandard = new LarsStandard
-                                    {
-                                        EffectiveFrom = DateTime.UtcNow.AddMonths(1),
-                                        LastDateStarts = null
-                                    }
-                    
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(1),
+                        LastDateStarts = null
+                    }
                 }
             }.AsQueryable();
-            
-            //Act
-            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable);
 
-            //Assert
-            actual.Count().Should().Be(1);
-            actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
+            // Act
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable).ToList();
+
+            // Assert
+            actual.Should().ContainSingle();
+            actual.Single().Title.Should().Be("Available");
         }
 
         [Test]
-        public void Then_Standards_With_LastDateStarts_In_The_Past_Are_Not_Returned()
+        public void Then_Apprenticeships_With_LastDateStarts_In_The_Past_Are_Not_Returned()
         {
-            //Arrange
+            // Arrange
             var standards = new List<Standard>
             {
-                ValidStandard(),
+                ValidApprenticeship(),
                 new Standard
                 {
                     Title = "Not Available",
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    Status = "Approved for delivery",
+                    CourseType = CourseType.Apprenticeship,
                     LarsStandard = new LarsStandard
-                        {
-                            EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
-                            LastDateStarts = DateTime.UtcNow.AddDays(-1)
-                        }
-                    
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
+                        LastDateStarts = DateTime.UtcNow.AddDays(-1)
+                    }
                 }
             }.AsQueryable();
-            
-            //Act
-            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable);
 
-            //Assert
-            actual.Count().Should().Be(1);
-            actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
+            // Act
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable).ToList();
+
+            // Assert
+            actual.Should().ContainSingle();
+            actual.Single().Title.Should().Be("Available");
         }
 
         [Test]
-        public void Then_Standards_With_The_Same_EffectiveFrom_And_LastDateStarts_Are_Not_Returned()
+        public void Then_Apprenticeships_With_The_Same_EffectiveFrom_And_LastDateStarts_Are_Not_Returned()
         {
-            //Arrange
+            // Arrange
             var sameDate = DateTime.UtcNow;
+
             var standards = new List<Standard>
             {
-                ValidStandard(),
+                ValidApprenticeship(),
                 new Standard
                 {
                     Title = "Not Available",
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    Status = "Approved for delivery",
+                    CourseType = CourseType.Apprenticeship,
                     LarsStandard = new LarsStandard
-                        {
-                            EffectiveFrom = sameDate,
-                            LastDateStarts = sameDate
-                        }
-                    
+                    {
+                        EffectiveFrom = sameDate,
+                        LastDateStarts = sameDate
+                    }
                 }
             }.AsQueryable();
-            
-            //Act
-            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable);
 
-            //Assert
-            actual.Count().Should().Be(1);
-            actual.ToList().TrueForAll(c => c.Title.Equals("Available"));
+            // Act
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable).ToList();
+
+            // Assert
+            actual.Should().ContainSingle();
+            actual.Single().Title.Should().Be("Available");
         }
 
-        private static Standard ValidStandard()
+        [Test]
+        public void Then_ShortCourses_With_Null_VersionLatestStartDate_Are_Returned()
+        {
+            // Arrange
+            var standards = new List<Standard>
+            {
+                ValidShortCourse(),
+                new Standard
+                {
+                    Title = "Also Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    Status = "Approved for delivery",
+                    CourseType = CourseType.ShortCourse,
+                    LarsCode = "ZSC00002",
+                    LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
+                        EffectiveTo = null,
+                        LastDateStarts = null
+                    },
+                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-2),
+                    VersionLatestStartDate = null
+                }
+            }.AsQueryable();
+
+            // Act
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable).ToList();
+
+            // Assert
+            actual.Should().HaveCount(2);
+            actual.Select(x => x.Title).Should().BeEquivalentTo("Available", "Also Available");
+        }
+
+        [Test]
+        public void Then_ShortCourses_With_A_Future_EarliestStartDate_Are_Not_Returned()
+        {
+            // Arrange
+            var standards = new List<Standard>
+            {
+                ValidShortCourse(),
+                new Standard
+                {
+                    Title = "Not Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    Status = "Approved for delivery",
+                    CourseType = CourseType.ShortCourse,
+                    LarsCode = "ZSC00002",
+                    LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(1),
+                        EffectiveTo = null,
+                        LastDateStarts = null
+                    },
+                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(1),
+                    VersionLatestStartDate = null
+                }
+            }.AsQueryable();
+
+            // Act
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable).ToList();
+
+            // Assert
+            actual.Should().ContainSingle();
+            actual.Single().Title.Should().Be("Available");
+        }
+
+        [Test]
+        public void Then_ShortCourses_With_ShortCourseDates_EffectiveTo_In_The_Past_Are_Not_Returned()
+        {
+            // Arrange
+            var standards = new List<Standard>
+            {
+                ValidShortCourse(),
+                new Standard
+                {
+                    Title = "Not Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    Status = "Approved for delivery",
+                    CourseType = CourseType.ShortCourse,
+                    LarsCode = "ZSC00002",
+                    LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
+                        EffectiveTo = null,
+                        LastDateStarts = DateTime.UtcNow.AddMonths(-1)
+                    },
+                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-2),
+                    VersionLatestStartDate = DateTime.UtcNow.AddMonths(-1),
+                }
+            }.AsQueryable();
+
+            // Act
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable).ToList();
+
+            // Assert
+            actual.Should().ContainSingle();
+            actual.Single().Title.Should().Be("Available");
+        }
+
+        [Test]
+        public void Then_ShortCourses_With_The_Same_ShortCoursesDates_EffectiveFrom_And_LastDateStarts_Are_Not_Returned()
+        {
+            // Arrange
+            var sameDate = DateTime.UtcNow;
+
+            var standards = new List<Standard>
+            {
+                ValidShortCourse(),
+                new Standard
+                {
+                    Title = "Not Available",
+                    ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                    Status = "Approved for delivery",
+                    CourseType = CourseType.ShortCourse,
+                    LarsCode = "ZSC00002",
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        EffectiveFrom = sameDate,
+                        EffectiveTo = null,
+                        LastDateStarts = sameDate
+                    },
+                    VersionEarliestStartDate = sameDate,
+                    VersionLatestStartDate = sameDate,
+                }
+            }.AsQueryable();
+
+            // Act
+            var actual = standards.FilterStandards(StandardFilter.ActiveAvailable).ToList();
+
+            // Assert
+            actual.Should().ContainSingle();
+            actual.Single().Title.Should().Be("Available");
+        }
+
+        private static Standard ValidApprenticeship()
         {
             return new Standard
             {
                 Title = "Available",
                 ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                Status = "Approved for delivery",
+                CourseType = CourseType.Apprenticeship,
                 LarsStandard = new LarsStandard
-                    {
-                        EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
-                        LastDateStarts = null
-                    },
-                Status = "Approved for delivery"
-                
+                {
+                    EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
+                    EffectiveTo = null,
+                    LastDateStarts = null
+                }
+            };
+        }
+
+        private static Standard ValidShortCourse()
+        {
+            return new Standard
+            {
+                Title = "Available",
+                ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
+                Status = "Approved for delivery",
+                CourseType = CourseType.ShortCourse,
+                LarsCode = "ZSC00001",
+                LarsStandard = null,
+                ShortCourseDates = new ShortCourseDates
+                { 
+                    EffectiveFrom = DateTime.UtcNow.AddDays(-1),
+                    EffectiveTo = null,
+                    LastDateStarts = null
+                },
+                VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-1),
+                VersionLatestStartDate = null
             };
         }
     }
-    
 }

@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Courses.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SFA.DAS.Courses.Domain.Entities
 {
     public class Standard : StandardBase
     {
@@ -6,6 +8,8 @@
         
         // Computed column
         public bool EpaoMustBeApprovedByRegulatorBody { get; set; }
+
+        public virtual ShortCourseDates ShortCourseDates { get; set; }
 
         public static implicit operator Standard(StandardImport source)
         {

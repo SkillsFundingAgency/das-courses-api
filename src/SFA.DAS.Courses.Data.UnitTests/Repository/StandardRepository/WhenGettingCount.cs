@@ -1,177 +1,228 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.Customisations;
-using SFA.DAS.Courses.Data.UnitTests.DatabaseMock;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 {
-    public class WhenGettingCount
+    public class WhenGettingCount : StandardRepositoryTestBase
     {
         [Test, RecursiveMoqAutoData]
         public async Task Then_Gets_Count_From_Context_Of_Available_Standards(
-            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
-            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
-            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
-            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
             [Frozen] Mock<ICoursesDataContext> mockDataContext,
             Data.Repository.StandardRepository repository)
         {
             // Arrange
-            var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidApprenticeshipStandards);
-            allStandards.AddRange(activeInvalidApprenticeshipStandards);
-            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
-            allStandards.AddRange(withdrawnApprenticeshipStandards);
-            allStandards.AddRange(retiredApprenticeshipStandards);
-            allStandards.AddRange(shortCourseStandards);
-            mockDataContext
-                .Setup(context => context.Standards)
-                .ReturnsDbSet(allStandards);
-            
+            var expectedCount = data.ActiveValidApprenticeshipStandards.Count +
+                data.ActiveValidFoundationApprenticeshipStandards.Count;
+
+            SetupContext(mockDataContext, data);
+
             // Act
             var count = await repository.Count(StandardFilter.ActiveAvailable, CourseType.Apprenticeship);
 
             // Assert
-            count.Should().Be(activeValidApprenticeshipStandards.Count);
+            count.Should().Be(expectedCount);
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_Gets_Count_From_Context_Of_Active_Standards(
-            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
-            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
-            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
-            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
             [Frozen] Mock<ICoursesDataContext> mockDataContext,
             Data.Repository.StandardRepository repository)
         {
             // Arrange
-            var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidApprenticeshipStandards);
-            allStandards.AddRange(activeInvalidApprenticeshipStandards);
-            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
-            allStandards.AddRange(withdrawnApprenticeshipStandards);
-            allStandards.AddRange(retiredApprenticeshipStandards);
-            allStandards.AddRange(shortCourseStandards);
-            mockDataContext
-                .Setup(context => context.Standards)
-                .ReturnsDbSet(allStandards);
+            var expectedCount =
+                data.ActiveValidApprenticeshipStandards.Count +
+                data.ActiveInvalidApprenticeshipStandards.Count +
+                data.RetiredApprenticeshipStandards.Count +
+                data.ActiveValidFoundationApprenticeshipStandards.Count;
+
+            SetupContext(mockDataContext, data);
 
             // Act
             var count = await repository.Count(StandardFilter.Active, CourseType.Apprenticeship);
 
             // Assert
-            count.Should().Be(activeValidApprenticeshipStandards.Count + activeInvalidApprenticeshipStandards.Count + retiredApprenticeshipStandards.Count);
+            count.Should().Be(expectedCount);
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_Gets_Count_From_Context_Of_Active_Standards_Including_Retired_With_Distinct_LarsCode(
-            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
-            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
-            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
-            [ShortCourseStandards] List<Standard> shortCourseStandards,
+        public async Task Then_Count_Includes_A_Retired_Standard_With_A_Distinct_LarsCode_For_The_Same_IfateReferenceNumber(
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
             [Frozen] Mock<ICoursesDataContext> mockDataContext,
             Data.Repository.StandardRepository repository)
         {
             // Arrange
-            var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidApprenticeshipStandards);
-            allStandards.AddRange(activeInvalidApprenticeshipStandards);
-            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
-            allStandards.AddRange(withdrawnApprenticeshipStandards);
-            allStandards.AddRange(retiredApprenticeshipStandards);
-            allStandards.AddRange(shortCourseStandards);
+            var expectedBaseCount =
+                data.ActiveValidApprenticeshipStandards.Count +
+                data.ActiveInvalidApprenticeshipStandards.Count +
+                data.RetiredApprenticeshipStandards.Count +
+                data.ActiveValidFoundationApprenticeshipStandards.Count;
 
-            // set up active version 
-            var newActiveVersion = activeValidApprenticeshipStandards[0];
-            newActiveVersion.IfateReferenceNumber = "ST0001";
-            newActiveVersion.Version = "2";
-            newActiveVersion.LarsCode = "100002";
+            var activeStandard = data.ActiveValidApprenticeshipStandards[0];
+            var originalLarsCode = activeStandard.LarsCode;
 
-            // add a retired version to have same IfateReferenceNumber and different LarsCode
-            allStandards.Add(activeValidApprenticeshipStandards.Select(x => new Standard { IfateReferenceNumber = x.IfateReferenceNumber, Status = "Retired", LarsCode = "100001", Version = "1", LarsStandard = newActiveVersion.LarsStandard }).First());
+            data.RetiredApprenticeshipStandards.Add(new Standard
+            {
+                IfateReferenceNumber = activeStandard.IfateReferenceNumber,
+                LarsCode = originalLarsCode,
+                Version = "1.0",
+                VersionMajor = 1,
+                VersionMinor = 0,
+                LarsStandard = activeStandard.LarsStandard,
+                Status = "Retired",
+                ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                CourseType = CourseType.Apprenticeship
+            });
 
-            mockDataContext
-                .Setup(context => context.Standards)
-                .ReturnsDbSet(allStandards);
+            activeStandard.Version = "2.0";
+            activeStandard.VersionMajor = 2;
+            activeStandard.VersionMinor = 0;
+            activeStandard.LarsCode = "999";
+            activeStandard.LarsStandard = new LarsStandard
+            { 
+                LarsCode = "999",
+                EffectiveFrom = activeStandard.LarsStandard.EffectiveFrom,
+                EffectiveTo = activeStandard.LarsStandard.EffectiveTo,
+                LastDateStarts = activeStandard.LarsStandard.LastDateStarts
+            };
+
+
+            SetupContext(mockDataContext, data);
 
             // Act
             var count = await repository.Count(StandardFilter.Active, CourseType.Apprenticeship);
 
             // Assert
-            count.Should().Be(activeValidApprenticeshipStandards.Count + activeInvalidApprenticeshipStandards.Count + retiredApprenticeshipStandards.Count + 1);
+            count.Should().Be(expectedBaseCount + 1); // The additional retired standard with unique lars code
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_Gets_Count_From_Context_Of_NotYetApproved_Standards(
-            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
-            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
-            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
-            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
             [Frozen] Mock<ICoursesDataContext> mockDataContext,
             Data.Repository.StandardRepository repository)
         {
             // Arrange
-            var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidApprenticeshipStandards);
-            allStandards.AddRange(activeInvalidApprenticeshipStandards);
-            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
-            allStandards.AddRange(withdrawnApprenticeshipStandards);
-            allStandards.AddRange(retiredApprenticeshipStandards);
-            allStandards.AddRange(shortCourseStandards);
-            mockDataContext
-                .Setup(context => context.Standards)
-                .ReturnsDbSet(allStandards);
+            SetupContext(mockDataContext, data);
 
             // Act
             var count = await repository.Count(StandardFilter.NotYetApproved, CourseType.Apprenticeship);
 
             // Assert
-            count.Should().Be(notYetApprovedApprenticeshipStandards.Count);
+            count.Should().Be(data.NotYetApprovedApprenticeshipStandards.Count);
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Then_Gets_Count_From_Context_Of_All_Standards(
-            [ApprenticeshipStandardsLarsValid] List<Standard> activeValidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotLarsValid] List<Standard> activeInvalidApprenticeshipStandards,
-            [ApprenticeshipStandardsNotYetApproved] List<Standard> notYetApprovedApprenticeshipStandards,
-            [ApprenticeshipStandardsWithdrawn] List<Standard> withdrawnApprenticeshipStandards,
-            [ApprenticeshipStandardsRetired] List<Standard> retiredApprenticeshipStandards,
-            [ShortCourseStandards] List<Standard> shortCourseStandards,
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
             [Frozen] Mock<ICoursesDataContext> mockDataContext,
             Data.Repository.StandardRepository repository)
         {
-            var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidApprenticeshipStandards);
-            allStandards.AddRange(activeInvalidApprenticeshipStandards);
-            allStandards.AddRange(notYetApprovedApprenticeshipStandards);
-            allStandards.AddRange(withdrawnApprenticeshipStandards);
-            allStandards.AddRange(retiredApprenticeshipStandards);
-            allStandards.AddRange(shortCourseStandards);
-            mockDataContext
-                .Setup(context => context.Standards)
-                .ReturnsDbSet(allStandards);
+            // Arrange
+            SetupContext(mockDataContext, data);
 
+            // Act
             var count = await repository.Count(StandardFilter.None, CourseType.Apprenticeship);
 
-            var total = activeInvalidApprenticeshipStandards.Count + activeInvalidApprenticeshipStandards.Count + notYetApprovedApprenticeshipStandards.Count
-                + withdrawnApprenticeshipStandards.Count + retiredApprenticeshipStandards.Count;
+            // Assert
+            var total = data.ActiveValidApprenticeshipStandards.Count
+                + data.ActiveValidFoundationApprenticeshipStandards.Count
+                + data.ActiveInvalidApprenticeshipStandards.Count
+                + data.NotYetApprovedApprenticeshipStandards.Count
+                + data.WithdrawnApprenticeshipStandards.Count
+                + data.RetiredApprenticeshipStandards.Count;
+
             count.Should().Be(total);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Count_From_Context_Of_Available_ShortCourses(
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            var expectedCount =
+                data.ActiveValidShortCourseStandards.Count;
+
+            SetupContext(mockDataContext, data);
+
+            // Act
+            var count = await repository.Count(StandardFilter.ActiveAvailable, CourseType.ShortCourse);
+
+            // Assert
+            count.Should().Be(expectedCount);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Count_From_Context_Of_Active_ShortCourses(
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            var expectedCount =
+                data.ActiveValidShortCourseStandards.Count +
+                data.ActiveInvalidShortCourseStandards.Count +
+                data.RetiredShortCourseStandards.Count;
+
+            SetupContext(mockDataContext, data);
+
+            // Act
+            var count = await repository.Count(StandardFilter.Active, CourseType.ShortCourse);
+
+            // Assert
+            count.Should().Be(expectedCount);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Count_From_Context_Of_NotYetApproved_ShortCourses(
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            var expectedCount =
+                data.NotYetApprovedShortCourseStandards.Count;
+
+            SetupContext(mockDataContext, data);
+
+            // Act
+            var count = await repository.Count(StandardFilter.NotYetApproved, CourseType.ShortCourse);
+
+            // Assert
+            count.Should().Be(expectedCount);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_Gets_Count_From_Context_Of_All_ShortCourses(
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
+        {
+            // Arrange
+            var expectedCount =
+                data.ActiveValidShortCourseStandards.Count +
+                data.ActiveInvalidShortCourseStandards.Count +
+                data.RetiredShortCourseStandards.Count + 
+                data.WithdrawnShortCourseStandards.Count + 
+                data.NotYetApprovedShortCourseStandards.Count;
+
+            SetupContext(mockDataContext, data);
+
+            // Act
+            var count = await repository.Count(StandardFilter.None, CourseType.ShortCourse);
+
+            // Assert
+            count.Should().Be(expectedCount);
         }
     }
 }

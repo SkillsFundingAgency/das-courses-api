@@ -38,7 +38,7 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             ApprenticeshipType? apprenticeshipType)
         {
             var apprenticeshipTypes = new List<ApprenticeshipType>();
-            if(apprenticeshipType != null)
+            if (apprenticeshipType != null)
             {
                 apprenticeshipTypes.Add(apprenticeshipType.Value);
             }
@@ -58,23 +58,12 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             CourseType? courseType = null)
         {
             var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipTypes, courseType);
-            var courses = standards.Select(standard => (Course)standard).ToList();
-
-            foreach (var course in courses)
-            {
-                if (course != null && course.CourseDates == null && course.CourseType == CourseType.ShortCourse)
-                {
-                    course.CourseDates = await GetCourseDates(course.LarsCode, courseType);
-                }
-            }
-
-            return courses;
+            return standards.Select(standard => (Course)standard).ToList();
         }
 
         public async Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber, CourseType? courseType)
         {
             var standards = await _standardsRepository.GetStandards(iFateReferenceNumber, courseType);
-
             return standards.Select(standard => (Standard)standard);
         }
 
@@ -122,6 +111,12 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             }
         }
 
+        private async Task<Course> GetCourse(string standardUId, CourseType? courseType)
+        {
+            var standard = await _standardsRepository.Get(standardUId, courseType);
+            return await CourseWithRelatedOccupations(standard);
+        }
+
         private async Task<IEnumerable<Domain.Entities.Standard>> GetList(
             string keyword,
             IList<int> routeIds,
@@ -165,66 +160,14 @@ namespace SFA.DAS.Courses.Application.Courses.Services
         private async Task<Course> GetLatestActiveCourse(string larsCode, CourseType? courseType)
         {
             var latestActiveStandard = await _standardsRepository.GetLatestActiveStandard(larsCode, courseType);
-            var course = await CourseWithRelatedOccupations(latestActiveStandard);
-
-            if (course != null && course.CourseDates == null && course.CourseType == CourseType.ShortCourse)
-            {
-                course.CourseDates = await GetCourseDates(latestActiveStandard, courseType);
-            }
-
-            return course;
+            return await CourseWithRelatedOccupations(latestActiveStandard);
         }
 
         private async Task<Course> GetLatestActiveCourseByIfateReferenceNumber(string iFateReferenceNumber, CourseType? courseType)
         {
             var latestActiveStandard = await _standardsRepository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, courseType);
-            var course = await CourseWithRelatedOccupations(latestActiveStandard);
-
-            if (course != null && course.CourseDates == null && course.CourseType == CourseType.ShortCourse)
-            {
-                course.CourseDates = await GetCourseDates(latestActiveStandard, courseType);
-            }
-
-            return course;
+            return await CourseWithRelatedOccupations(latestActiveStandard);
         }
-
-        public async Task<Course> GetCourse(string standardUId, CourseType? courseType)
-        {
-            var standard = await _standardsRepository.Get(standardUId, courseType);
-            var course = await CourseWithRelatedOccupations(standard);
-
-            if (course != null && course.CourseDates == null && course.CourseType == CourseType.ShortCourse)
-            {
-                course.CourseDates = await GetCourseDates(standard.LarsCode, courseType);
-            }
-
-            return course;
-        }
-
-        private async Task<CourseDates> GetCourseDates(string larsCode, CourseType? courseType)
-        {
-            var latestActiveStandard = await _standardsRepository.GetLatestActiveStandard(larsCode, courseType);
-            return await GetCourseDates(latestActiveStandard, courseType);
-        }
-
-        private async Task<CourseDates> GetCourseDates(Domain.Entities.Standard latestActiveStandard, CourseType? courseType)
-        {
-            if (latestActiveStandard == null)
-                return null;
-
-            var earliestActiveStandard = await _standardsRepository.GetEarliestActiveStandard(latestActiveStandard.LarsCode, courseType);
-
-            if (earliestActiveStandard == null)
-                return null;
-
-            return new CourseDates
-            {
-                EffectiveFrom = earliestActiveStandard.ApprovedForDelivery.GetValueOrDefault(DateTime.MinValue),
-                EffectiveTo = latestActiveStandard.VersionLatestStartDate,
-                LastDateStarts = latestActiveStandard.VersionLatestStartDate
-            };
-        }
-
 
         private async Task<Course> CourseWithRelatedOccupations(Domain.Entities.Standard standard)
         {

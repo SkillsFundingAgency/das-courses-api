@@ -10,7 +10,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<int> Count(StandardFilter filter, CourseType? courseType);
         Task DeleteAll();
         Task<int> InsertMany(IEnumerable<Standard> standards);
-        Task<Standard> GetEarliestActiveStandard(string larsCode, CourseType? courseType);
         Task<Standard> GetLatestActiveStandard(string larsCode, CourseType? courseType);
         Task<Standard> GetLatestActiveStandardByIfateReferenceNumber(string iFateReferenceNumber, CourseType? courseType);
         Task<List<Standard>> GetActiveStandardsByIfateReferenceNumbers(List<string> ifateReferenceNumbers, CourseType? courseType);
@@ -18,5 +17,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<IEnumerable<Standard>> GetStandards(CourseType? courseType);
         Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, IList<ApprenticeshipType> apprenticeshipTypes, CourseType? courseType = null);
         Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber, CourseType? courseType);
+        Task<int> RefreshShortCourseDates();
     }
 }

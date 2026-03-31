@@ -4,7 +4,6 @@ namespace SFA.DAS.Courses.Domain.Identifiers
 {
     public static class IdentifierRegexes
     {
-        // The expected format is e.g. ZSC00001 but it can be empty and the 'SC' is not confirmed currently
         public static readonly Regex ShortCourseLarsCode =
             new("^(?:Z[A-Z0-9]{7})?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 

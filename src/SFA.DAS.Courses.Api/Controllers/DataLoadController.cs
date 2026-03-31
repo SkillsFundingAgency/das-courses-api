@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +29,23 @@ namespace SFA.DAS.Courses.Api.Controllers
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Data import request received");
+            
             var validationMessages = await _mediator.Send(new ImportDataCommand());
-            _logger.LogInformation("Data import completed successfully");
+            if (validationMessages.Count > 0)
+            {
+                var combinedValidationMessage = string.Join(Environment.NewLine, validationMessages);
+
+                _logger.LogWarning(
+                    "Data import completed with {ValidationErrorCount} validation errors:{NewLine}{ValidationMessages}",
+                    validationMessages.Count,
+                    Environment.NewLine,
+                    combinedValidationMessage);
+            }
+            else
+            {
+                _logger.LogInformation("Data import completed successfully");
+            }
+
             return Ok(validationMessages);
         }
     }

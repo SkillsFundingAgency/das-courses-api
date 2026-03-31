@@ -406,7 +406,7 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Entities
         [StandardInlineAutoData(" Option")]
         [StandardInlineAutoData("  Option")]
         [StandardInlineAutoData("Option ")]
-        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle,ImportTypes.SkillsEngland.Standard standard)
+        public void And_Option_Contains_Whitespace_Then_Option_Is_Trimmed_Correctly(string optionTitle, ImportTypes.SkillsEngland.Standard standard)
         {
             // Arrange
             standard.CoreAndOptions = true;
