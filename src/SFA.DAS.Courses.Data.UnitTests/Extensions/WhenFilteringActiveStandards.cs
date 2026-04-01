@@ -28,6 +28,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                         EffectiveFrom = sameDate,
                         LastDateStarts = sameDate
                     },
+                    ShortCourseDates = null,
                     Status = "Approved for delivery"
                 },
                 new Standard
@@ -40,6 +41,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                         EffectiveFrom = DateTime.UtcNow.AddMonths(-1),
                         LastDateStarts = DateTime.UtcNow.AddDays(-1)
                     },
+                    ShortCourseDates = null,
                     Status = "Approved for delivery"
                 },
                 new Standard
@@ -52,6 +54,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                         EffectiveFrom = DateTime.UtcNow.AddMonths(1),
                         LastDateStarts = null
                     },
+                    ShortCourseDates = null,
                     Status = "Approved for delivery"
                 },
                 new Standard
@@ -64,6 +67,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                         EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
                         LastDateStarts = DateTime.UtcNow.AddMonths(-1)
                     },
+                    ShortCourseDates = null,
                     Status = "Approved for delivery"
                 }
             }.AsQueryable();
@@ -93,6 +97,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                         EffectiveFrom = sameDate,
                         LastDateStarts = sameDate
                     },
+                    ShortCourseDates = null,
                     Status = "Approved for delivery"
                 },
                 new Standard
@@ -101,6 +106,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     ApprenticeshipFunding = new List<ApprenticeshipFunding>(),
                     CourseType = CourseType.Apprenticeship,
                     LarsStandard = null,
+                    ShortCourseDates = null,
                     Status = "Approved for delivery"
                 },
                 new Standard
@@ -113,6 +119,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                         EffectiveFrom = DateTime.UtcNow.AddMonths(-2),
                         LastDateStarts = DateTime.UtcNow.AddMonths(-1)
                     },
+                    ShortCourseDates = null,
                     Status = "Approved for delivery"
                 }
             }.AsQueryable();
@@ -129,6 +136,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         public void Then_Valid_ShortCourses_Are_Returned_Without_Lars_Records()
         {
             // Arrange
+            var now = DateTime.UtcNow;
             var standards = new List<Standard>
             {
                 new Standard
@@ -138,6 +146,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     CourseType = CourseType.ShortCourse,
                     LarsCode = "ZSC00001",
                     LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        LarsCode = "ZSC00001",
+                        EffectiveFrom = now,
+                        EffectiveTo = now,
+                        LastDateStarts = now
+                    },
                     Status = "Approved for delivery"
                 },
                 new Standard
@@ -147,6 +162,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     CourseType = CourseType.ShortCourse,
                     LarsCode = "ZSC00002",
                     LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        LarsCode = "ZSC00002",
+                        EffectiveFrom = now,
+                        EffectiveTo = now,
+                        LastDateStarts = now
+                    },
                     Status = "Retired"
                 }
             }.AsQueryable();
@@ -160,9 +182,10 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         }
 
         [Test]
-        public void Then_ShortCourses_With_Empty_LarsCode_Are_Not_Returned()
+        public void Then_ShortCourses_With_Missing_ShortCourseDates_Are_Not_Returned()
         {
             // Arrange
+            var now = DateTime.UtcNow;
             var standards = new List<Standard>
             {
                 new Standard
@@ -172,6 +195,13 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     CourseType = CourseType.ShortCourse,
                     LarsCode = "ZSC00001",
                     LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        LarsCode = "ZSC00001",
+                        EffectiveFrom = now,
+                        EffectiveTo = now,
+                        LastDateStarts = now
+                    },
                     Status = "Approved for delivery"
                 },
                 new Standard
@@ -181,6 +211,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     CourseType = CourseType.ShortCourse,
                     LarsCode = string.Empty,
                     LarsStandard = null,
+                    ShortCourseDates = null,
                     Status = "Approved for delivery"
                 }
             }.AsQueryable();

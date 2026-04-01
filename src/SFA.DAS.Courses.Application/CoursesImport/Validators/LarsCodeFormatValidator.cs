@@ -19,7 +19,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                         if (standard.ApprenticeshipType is not ApprenticeshipType.ApprenticeshipUnit)
                             continue;
                         
-                        if (standard.LarsCode.HasInvalidValue || !IdentifierRegexes.ShortCourseLarsCode.IsMatch(standard.LarsCode.Value.Trim()))
+                        if (!standard.LarsCode.HasValue || standard.LarsCode.HasInvalidValue || !IdentifierRegexes.ShortCourseLarsCode.IsMatch(standard.LarsCode.Value.Trim()))
                         {
                             context.AddFailure($"E1005: {ReferenceNumber(standard)} version {Version(standard)} of type '{standard.ApprenticeshipType}' has not got larsCode in the correct format.");
                         }

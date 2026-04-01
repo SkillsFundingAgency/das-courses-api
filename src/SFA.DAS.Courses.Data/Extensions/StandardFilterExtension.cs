@@ -117,7 +117,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         private static IQueryable<Standard> FilterActive(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards
-                .HasLarsStandardOrIsValidShortCourse()
+                .IsValid()
                 .StatusIsOneOf(Domain.Courses.Status.ApprovedForDelivery, Domain.Courses.Status.Retired);
 
             return filteredStandards;
@@ -126,7 +126,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         private static IQueryable<Standard> FilterNotYetApproved(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards
-                .Where(ls => ls.LarsCode == "0" || (ls.CourseType == CourseType.ShortCourse && ls.LarsCode == string.Empty))
+                .IsNotValid()
                 .StatusIsOneOf(Domain.Courses.Status.ProposalInDevelopment, Domain.Courses.Status.InDevelopment);
 
             return filteredStandards;
@@ -135,7 +135,7 @@ namespace SFA.DAS.Courses.Data.Extensions
         private static IQueryable<Standard> FilterClosedToNewStarts(this IQueryable<Standard> standards)
         {
             var filteredStandards = standards
-                .HasLarsStandardOrIsValidShortCourse()
+                .IsValid()
                 .IsPastLastStartDate();
 
             return filteredStandards;
@@ -171,11 +171,24 @@ namespace SFA.DAS.Courses.Data.Extensions
                     && s.LarsStandard.LastDateStarts < now));
         }
 
-        private static IQueryable<Standard> HasLarsStandardOrIsValidShortCourse(this IQueryable<Standard> standards)
+        private static IQueryable<Standard> IsNotValid(this IQueryable<Standard> standards)
         {
-            // there is no LarsStandard when larsCode = 0
-            return standards.Where(ls => ls.LarsStandard != null || 
-                (ls.CourseType == CourseType.ShortCourse && ls.LarsCode != string.Empty));
+            return standards.Where(s =>
+                (s.CourseType == CourseType.ShortCourse
+                    && s.ShortCourseDates == null)
+                ||
+                (s.CourseType != CourseType.ShortCourse
+                    && s.LarsStandard == null));
+        }
+
+        private static IQueryable<Standard> IsValid(this IQueryable<Standard> standards)
+        {
+            return standards.Where(s =>
+                (s.CourseType == CourseType.ShortCourse
+                    && s.ShortCourseDates != null)
+                ||
+                (s.CourseType != CourseType.ShortCourse
+                    && s.LarsStandard != null));
         }
 
         private static IQueryable<Standard> StatusIsOneOf(this IQueryable<Standard> standards, params string[] statuses)

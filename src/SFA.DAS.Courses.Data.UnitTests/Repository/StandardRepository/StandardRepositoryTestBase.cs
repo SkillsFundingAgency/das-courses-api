@@ -10,33 +10,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 {
     public class StandardRepositoryTestBase
     {
-        public List<ShortCourseDates> GetShortCourseDates(List<Standard> standards)
-        {
-            return standards
-               .Where(s => s.CourseType == CourseType.ShortCourse && s.LarsCode != string.Empty)
-               .GroupBy(s => s.LarsCode)
-               .Select(g => new ShortCourseDates
-               {
-                   LarsCode = g.Key,
-                   EffectiveFrom = g
-                        .OrderBy(x => x.VersionMajor)
-                        .ThenBy(x => x.VersionMinor)
-                        .Select(x => x.ApprovedForDelivery.GetValueOrDefault(DateTime.MinValue))
-                        .FirstOrDefault(),
-                   EffectiveTo = g
-                        .OrderByDescending(x => x.VersionMajor)
-                        .ThenByDescending(x => x.VersionMinor)
-                        .Select(x => x.VersionLatestStartDate)
-                        .FirstOrDefault(),
-                   LastDateStarts = g
-                        .OrderByDescending(x => x.VersionMajor)
-                        .ThenByDescending(x => x.VersionMinor)
-                    .Select(x => x.VersionLatestStartDate)
-                        .FirstOrDefault()
-               })
-               .ToList();
-        }
-
         protected void SetupContext(
             Mock<ICoursesDataContext> mockDataContext,
             StandardRepositoryTestData data)
@@ -66,6 +39,33 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             mockDataContext
                 .Setup(c => c.ApprenticeshipFunding)
                 .ReturnsDbSet(new List<ApprenticeshipFunding>());
+        }
+
+        private List<ShortCourseDates> GetShortCourseDates(List<Standard> standards)
+        {
+            return standards
+               .Where(s => s.CourseType == CourseType.ShortCourse && s.LarsCode != string.Empty)
+               .GroupBy(s => s.LarsCode)
+               .Select(g => new ShortCourseDates
+               {
+                   LarsCode = g.Key,
+                   EffectiveFrom = g
+                        .OrderBy(x => x.VersionMajor)
+                        .ThenBy(x => x.VersionMinor)
+                        .Select(x => x.ApprovedForDelivery.GetValueOrDefault(DateTime.MinValue))
+                        .FirstOrDefault(),
+                   EffectiveTo = g
+                        .OrderByDescending(x => x.VersionMajor)
+                        .ThenByDescending(x => x.VersionMinor)
+                        .Select(x => x.VersionLatestStartDate)
+                        .FirstOrDefault(),
+                   LastDateStarts = g
+                        .OrderByDescending(x => x.VersionMajor)
+                        .ThenByDescending(x => x.VersionMinor)
+                    .Select(x => x.VersionLatestStartDate)
+                        .FirstOrDefault()
+               })
+               .ToList();
         }
     }
 }
