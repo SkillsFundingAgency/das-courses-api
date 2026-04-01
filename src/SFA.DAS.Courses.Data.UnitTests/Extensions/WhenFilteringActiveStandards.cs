@@ -136,6 +136,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         public void Then_Valid_ShortCourses_Are_Returned_Without_Lars_Records()
         {
             // Arrange
+            var now = DateTime.UtcNow;
             var standards = new List<Standard>
             {
                 new Standard
@@ -148,9 +149,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     ShortCourseDates = new ShortCourseDates
                     {
                         LarsCode = "ZSC00001",
-                        EffectiveFrom = DateTime.Now,
-                        EffectiveTo = DateTime.Now,
-                        LastDateStarts = DateTime.Now
+                        EffectiveFrom = now,
+                        EffectiveTo = now,
+                        LastDateStarts = now
                     },
                     Status = "Approved for delivery"
                 },
@@ -164,9 +165,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     ShortCourseDates = new ShortCourseDates
                     {
                         LarsCode = "ZSC00002",
-                        EffectiveFrom = DateTime.Now,
-                        EffectiveTo = DateTime.Now,
-                        LastDateStarts = DateTime.Now
+                        EffectiveFrom = now,
+                        EffectiveTo = now,
+                        LastDateStarts = now
                     },
                     Status = "Retired"
                 }
@@ -184,6 +185,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         public void Then_ShortCourses_With_Missing_ShortCourseDates_Are_Not_Returned()
         {
             // Arrange
+            var now = DateTime.UtcNow;
             var standards = new List<Standard>
             {
                 new Standard
@@ -196,9 +198,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                     ShortCourseDates = new ShortCourseDates
                     {
                         LarsCode = "ZSC00001",
-                        EffectiveFrom = DateTime.Now,
-                        EffectiveTo = DateTime.Now,
-                        LastDateStarts = DateTime.Now
+                        EffectiveFrom = now,
+                        EffectiveTo = now,
+                        LastDateStarts = now
                     },
                     Status = "Approved for delivery"
                 },
