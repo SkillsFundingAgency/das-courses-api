@@ -46,6 +46,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
 
         [TestCase("12345")]
         [TestCase("AU000001")]
+        [TestCase(null)]
         public void Should_Add_Failure_When_Lars_Has_Invalid_Format(string larsCode)
         {
             // Arrange

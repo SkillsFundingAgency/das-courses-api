@@ -152,10 +152,19 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                     IfateReferenceNumber = "AU0001",
                     StandardUId = "AU0001_1.0",
                     LarsCode = shortCourseLarsCode,
+                    LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        LarsCode = shortCourseLarsCode,
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(-4),
+                        EffectiveTo = DateTime.UtcNow.AddMonths(1),
+                        LastDateStarts = DateTime.UtcNow.AddMonths(1)
+                    },
                     Status = "Approved for delivery",
                     Version = "1.0",
                     VersionMajor = 1,
                     VersionMinor = 0,
+                    ApprovedForDelivery = DateTime.UtcNow.AddMonths(-4),
                     VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-3),
                     VersionLatestStartDate = DateTime.UtcNow.AddMonths(-2)
                 },
@@ -166,17 +175,26 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                     IfateReferenceNumber = "AU0001",
                     StandardUId = expectedStandardUId,
                     LarsCode = shortCourseLarsCode,
+                    LarsStandard = null,
+                    ShortCourseDates = new ShortCourseDates
+                    {
+                        LarsCode = shortCourseLarsCode,
+                        EffectiveFrom = DateTime.UtcNow.AddMonths(-4),
+                        EffectiveTo = DateTime.UtcNow.AddMonths(1),
+                        LastDateStarts = DateTime.UtcNow.AddMonths(1)
+                    },
                     Status = "Approved for delivery",
                     Version = "1.1",
                     VersionMajor = 1,
                     VersionMinor = 1,
-                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-3),
+                    ApprovedForDelivery = DateTime.UtcNow.AddMonths(-3),
+                    VersionEarliestStartDate = DateTime.UtcNow.AddMonths(-2),
                     VersionLatestStartDate = DateTime.UtcNow.AddMonths(1)
                 }
             };
 
             _coursesDataContext.Setup(x => x.Standards).ReturnsDbSet(_standards);
-            _coursesDataContext.Setup(c => c.ShortCourseDates).ReturnsDbSet(GetShortCourseDates(_standards));
+            _coursesDataContext.Setup(c => c.ShortCourseDates).ReturnsDbSet(new List<ShortCourseDates>());
 
             // Act
             var standard = await _standardRepository.GetLatestActiveStandard(shortCourseLarsCode, CourseType.ShortCourse);

@@ -66,6 +66,31 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Validators
                 $"S1005: {referenceNumber} version 2.0 larsCode is not a number");
         }
 
+        [TestCase(Domain.Entities.ApprenticeshipType.Apprenticeship, "ST1001")]
+        [TestCase(Domain.Entities.ApprenticeshipType.FoundationApprenticeship, "FA1001")]
+        public void Should_Add_Failure_When_LarsCode_Is_Null(Domain.Entities.ApprenticeshipType apprenticeshipType, string referenceNumber)
+        {
+            // Arrange
+            var importedStandards = new List<Standard>
+            {
+                new Standard
+                {
+                    ApprenticeshipType = apprenticeshipType,
+                    ReferenceNumber = new Settable<string>(referenceNumber),
+                    Version = new Settable<string>("2.0"),
+                    LarsCode = Settable<string>.FromInvalidValue(null)
+                }
+            };
+
+            // Act
+            var result = _sut.TestValidate(importedStandards);
+
+            // Assert
+            result.Errors.Should().ContainSingle(error => error.ErrorMessage ==
+                $"S1005: {referenceNumber} version 2.0 larsCode is not a number");
+        }
+
+        [Test]
         public void Should_Not_Add_Failure_When_LarsCode_Is_Not_A_Number_For_ApprenticeshipUnit()
         {
             // Arrange
