@@ -175,10 +175,10 @@ namespace SFA.DAS.Courses.Data.Extensions
         {
             return standards.Where(s =>
                 (s.CourseType == CourseType.ShortCourse
-                    && s.LarsCode == string.Empty)
+                    && s.ShortCourseDates == null)
                 ||
                 (s.CourseType != CourseType.ShortCourse
-                    && s.LarsCode == "0"));
+                    && s.LarsStandard == null));
         }
 
         private static IQueryable<Standard> IsValid(this IQueryable<Standard> standards)

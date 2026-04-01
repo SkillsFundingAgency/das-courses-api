@@ -81,6 +81,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
                 if(standard.CourseType == CourseType.Apprenticeship)
                 {
                     standard.LarsCode = standard.LarsCode != "0" ? counter.ToString() : standard.LarsCode;
+
+                    if (standard.LarsCode == "0")
+                    {
+                        standard.LarsStandard = null;
+                    }
                     
                     if(standard.LarsStandard != null)
                     {
@@ -95,7 +100,12 @@ namespace SFA.DAS.Courses.Data.UnitTests.Customisations
                 {
                     standard.LarsCode = standard.LarsCode != string.Empty ? $"ZSC{counter:00000}" : standard.LarsCode;
 
-                    if(standard.ShortCourseDates != null)
+                    if (standard.LarsCode == string.Empty)
+                    {
+                        standard.ShortCourseDates = null;
+                    }
+
+                    if (standard.ShortCourseDates != null)
                     {
                         standard.ShortCourseDates.LarsCode = standard.LarsCode;
                     }
