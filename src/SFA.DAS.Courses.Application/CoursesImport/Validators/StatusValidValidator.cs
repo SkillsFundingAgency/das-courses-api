@@ -6,7 +6,7 @@ using SFA.DAS.Courses.Domain.Courses;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class StatusValidValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class StatusValidValidator : ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>
     {
         public StatusValidValidator()
             : base(ValidationFailureType.StandardError)
@@ -14,6 +14,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     var validStatuses = new[] { Status.ApprovedForDelivery, Status.Retired, Status.Withdrawn, Status.ProposalInDevelopment, Status.InDevelopment};
                     
                     foreach (var standard in importedStandards)

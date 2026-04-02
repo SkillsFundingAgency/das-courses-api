@@ -1,16 +1,16 @@
 ﻿Feature: Standards
-	As a Courses API consumer
+    As a Courses API consumer
     I want to retrieve standards
     So that I can use them in my own application
 
     Scenario: Get list of active and available standards
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?filter=ActiveAvailable
     Then an http status code of 200 is returned
     And all valid standards are returned
 
     Scenario: Get list of standards by keyword that are active and available
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=beer&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
@@ -19,7 +19,7 @@
     | Head Brewer | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
 
     Scenario: Get list of standards by keyword with none filter
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?filter=None&keyword=beer
     Then an http status code of 200 is returned
     And the following valid standards are returned
@@ -32,7 +32,7 @@
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.1     | Retired                |
 
     Scenario: Get list of standards by keyword
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=beer
     Then an http status code of 200 is returned
     And the following valid standards are returned
@@ -41,7 +41,7 @@
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.3     | Approved for delivery  |
     
     Scenario: Get list of standards by levels that are active and available
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?levels=1&levels=7&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
@@ -50,7 +50,7 @@
     | Dentist | 7     | Construction                  | 1.0     | Approved for delivery |
 
     Scenario: Get list of standards by routes that are active and available
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?routeIds=2&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
@@ -59,7 +59,7 @@
     | Senior / head of facilities management (degree) | 6     | Construction | 1.0     | Approved for delivery |
 
     Scenario: Get list of standards by keyword and levels that are active and available
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=beer&levels=1&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
@@ -67,7 +67,7 @@
     | Brewer      | 1     | Engineering and manufacturing | 1.0     | Approved for delivery |
 
     Scenario: Get list of standards by keyword sorted by relevance that are active and available
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=score&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
@@ -77,7 +77,7 @@
     | Camera prep technician           | 3     | Creative and design | 1.0     | Approved for delivery |
 
     Scenario: Get list of standards by keyword sorted by name that are active and available
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?keyword=sortorder&orderBy=title&filter=ActiveAvailable
     Then an http status code of 200 is returned
     And the following valid standards are returned
@@ -87,25 +87,25 @@
     | Photographic assistant SortOrder | 3     | Creative and design | 1.1     | Approved for delivery |
 
     Scenario: Get list of active standards not restricted by start date
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?filter=Active
     Then an http status code of 200 is returned
-    Then all valid and invalid standards are returned
+    And all valid and invalid standards are returned
 
     Scenario: Get list of all standards
-	Given I have an http client
-    When I GET the following url: /api/courses/standards?Filter=None
+    Given I have an http client
+    When I GET the following url: /api/courses/standards?filter=None
     Then an http status code of 200 is returned
     And all standards are returned
 
     Scenario: Get list the default list of standards
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards
     Then an http status code of 200 is returned
     And all valid standards are returned
 
     Scenario: Get list of not yet approved standards
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards?filter=NotYetApproved
     Then an http status code of 200 is returned
     And all not yet approved standards are returned
@@ -119,7 +119,7 @@
     | Head Brewer                      | 2     | Engineering and manufacturing | 1.3     | Approved for delivery |
 
     Scenario: Get latest version of a standard by IfateReferenceNumber
-	Given I have an http client
+    Given I have an http client
     When I GET the following url: /api/courses/standards/ST0001
     Then an http status code of 200 is returned
     And the following standard is returned
@@ -138,7 +138,7 @@
     Given I have an http client
     When I GET the following url: /api/courses/standards/versions/ST0001
     Then an http status code of 200 is returned
-    And the following valid standards are returned
+    And the following valid standard versions are returned
     | title                                      | level | route                        | version | status                 |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.3     | Approved for delivery  |
     | Head Brewer                                | 2     | Engineering and manufacturing | 1.2     | Retired                |
@@ -157,7 +157,7 @@
     | Behaviour | B1  | opt1_behaviour_1 |
 
     Scenario: A standard with no options
-	Given I have an http client
+    Given I have an http client
     When I get a standard with a core pseudo-option
     Then an http status code of 200 is returned
     And the returned standard has no options

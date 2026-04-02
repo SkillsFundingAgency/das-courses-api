@@ -10,44 +10,48 @@ using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries;
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
 
-public class WhenGettingKsbsForAStandard
+namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 {
-    [Test, AutoData]
-    public async Task Then_Returns_Correct_Ksbs_Type(Standard standard)
+    public class WhenGettingKsbsForAStandard
     {
-        // Arrange
-        standard.Options = new List<StandardOption>
+        [Test, AutoData]
+        public async Task Then_Returns_Correct_Ksbs_Type(Standard standard)
         {
-            new StandardOption
+            // Arrange
+            standard.Options = new List<CourseOption>
             {
-                Title = "Core",
-                Ksbs = new List<Ksb>
+                new CourseOption
                 {
-                    new Ksb { Id = Guid.NewGuid(), Key = "KSB1", Detail = "Detail 1", Type = KsbType.Knowledge },
-                    new Ksb { Id = Guid.NewGuid(), Key = "KSB2", Detail = "Detail 2", Type = KsbType.Skill },
-                    new Ksb { Id = Guid.NewGuid(), Key = "KSB3", Detail = "Detail 3", Type = KsbType.Behaviour },
-                    new Ksb { Id = Guid.NewGuid(), Key = "KSB4", Detail = "Detail 4", Type = KsbType.TechnicalKnowledge },
-                    new Ksb { Id = Guid.NewGuid(), Key = "KSB5", Detail = "Detail 5", Type = KsbType.TechnicalSkill },
-                    new Ksb { Id = Guid.NewGuid(), Key = "KSB6", Detail = "Detail 6", Type = KsbType.EmployabilitySkillsAndBehaviour }
+                    Title = "Core",
+                    Ksbs = new List<Ksb>
+                    {
+                        new Ksb { Id = Guid.NewGuid(), Key = "KSB1", Detail = "Detail 1", Type = KsbType.Knowledge },
+                        new Ksb { Id = Guid.NewGuid(), Key = "KSB2", Detail = "Detail 2", Type = KsbType.Skill },
+                        new Ksb { Id = Guid.NewGuid(), Key = "KSB3", Detail = "Detail 3", Type = KsbType.Behaviour },
+                        new Ksb { Id = Guid.NewGuid(), Key = "KSB4", Detail = "Detail 4", Type = KsbType.TechnicalKnowledge },
+                        new Ksb { Id = Guid.NewGuid(), Key = "KSB5", Detail = "Detail 5", Type = KsbType.TechnicalSkill },
+                        new Ksb { Id = Guid.NewGuid(), Key = "KSB6", Detail = "Detail 6", Type = KsbType.EmployabilitySkillsAndBehaviour }
+                    }
                 }
-            }
-        };
-        Mock<IStandardsService> standardServiceMock = new();
-        standardServiceMock.Setup(x => x.GetLatestActiveStandard(It.IsAny<int>())).ReturnsAsync(standard);
-        var query = new GetStandardOptionKsbsQuery
-        {
-            Id = "123",
-            Option = "Core"
-        };
-        var handler = new GetStandardOptionKsbsQueryHandler(standardServiceMock.Object);
+            };
 
-        // Act
-        var result = await handler.Handle(query, CancellationToken.None);
+            Mock<IStandardsService> standardServiceMock = new();
+            standardServiceMock.Setup(x => x.GetStandardByAnyId(It.IsAny<string>())).ReturnsAsync(standard);
+            var query = new GetStandardOptionKsbsQuery
+            {
+                Id = "123",
+                Option = "Core"
+            };
+            var handler = new GetStandardOptionKsbsQueryHandler(standardServiceMock.Object);
 
-        // Assert
-        result.Should().NotBeNull();
-        result.Ksbs.Should().BeEquivalentTo(standard.Options[0].Ksbs);
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Ksbs.Should().BeEquivalentTo(standard.Options[0].Ksbs);
+        }
     }
 }

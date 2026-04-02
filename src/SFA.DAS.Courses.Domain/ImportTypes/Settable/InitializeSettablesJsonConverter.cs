@@ -27,7 +27,7 @@ namespace SFA.DAS.Courses.Domain.ImportTypes.Settable
             var safeSerializer = JsonSerializer.Create(settings);
 
             var obj = safeSerializer.Deserialize(reader, objectType);
-            InitializeSettablesHelper.InitializeSettableProperties(obj);
+            InitializeSettablesHelper.InitializeIfTagged(obj);
             return obj;
         }
 

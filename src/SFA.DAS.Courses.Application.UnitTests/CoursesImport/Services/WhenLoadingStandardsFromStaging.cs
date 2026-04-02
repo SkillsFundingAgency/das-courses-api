@@ -20,17 +20,18 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
-            var importedStandards = new List<Domain.ImportTypes.Standard>
-            {
-                GetValidImportedStandard(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
-                GetValidImportedStandard(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
-            };
-
-            service.Setup(x => x.GetStandards()).ReturnsAsync(importedStandards);
+            service
+                .Setup(x => x.GetCourseImports())
+                .ReturnsAsync(new Domain.ImportTypes.SkillsEngland.SkillsEnglandStandardsResult
+                {
+                    Apprenticeships = new List<Domain.ImportTypes.SkillsEngland.Apprenticeship>(),
+                    FoundationApprenticeships = new List<Domain.ImportTypes.SkillsEngland.FoundationApprenticeship>(),
+                    ApprenticeshipUnits = new List<Domain.ImportTypes.SkillsEngland.ApprenticeshipUnit>(),
+                });
 
             // Act
             await standardsImportService.LoadDataFromStaging(importStartTime);
@@ -47,7 +48,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
@@ -58,8 +59,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var standardsImports = new List<Domain.Entities.StandardImport>
             {
-                GetValidStandardImport(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandardImport(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandardImport("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandardImport("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
             };
 
             routeImportRepository
@@ -86,7 +87,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
@@ -117,7 +118,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
-            [Frozen] Mock<IInstituteOfApprenticeshipService> service,
+            [Frozen] Mock<ISkillsEnglandService> service,
             StandardsImportService standardsImportService)
         {
             // Arrange
@@ -128,8 +129,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
 
             var standardsImports = new List<Domain.Entities.StandardImport>
             {
-                GetValidStandardImport(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
-                GetValidStandardImport(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
+                GetValidStandardImport("101", "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, 1, "Option 1"),
+                GetValidStandardImport("102", "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, 1, "Option 2"),
             };
 
             routeImportRepository
@@ -144,10 +145,10 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 .Setup(s => s.InsertMany(It.IsAny<List<Domain.Entities.Standard>>()))
                 .ReturnsAsync(2);
 
-            //Act
+            // Act
             await standardsImportService.LoadDataFromStaging(importStartTime);
 
-            //Assert
+            // Assert
             importAuditRepository.Verify(x =>
                 x.Insert(It.Is<Domain.Entities.ImportAudit>(c => c.RowsImported.Equals(2))), Times.Once);
         }

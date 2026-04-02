@@ -20,11 +20,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardImportRepository
             {
                 new StandardImport()
                 {
-                    LarsCode = 1
+                    LarsCode = "1"
                 },
                 new StandardImport
                 {
-                    LarsCode = 2
+                    LarsCode = "2"
                 }
             };
             
@@ -38,12 +38,11 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardImportRepository
         [Test]
         public async Task Then_The_StandardsImport_Items_Are_Removed()
         {
-            //Act
+            // Act
             await _standardImportRepository.DeleteAll();
-            
-            //Assert
-            _coursesDataContext.Verify(x=>x.StandardsImport.RemoveRange(_coursesDataContext.Object.StandardsImport), Times.Once);
-            _coursesDataContext.Verify(x=>x.SaveChangesAsync(default), Times.Once);
+
+            // Assert
+            _coursesDataContext.Verify(x => x.DeleteAllBatchedAsync<StandardImport>(200, default), Times.Once);
         }
     }
 }

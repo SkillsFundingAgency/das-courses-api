@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class VersionsSingleApprovedValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class VersionsSingleApprovedValidator : ValidatorBase<List<Standard>>
     {
         public VersionsSingleApprovedValidator()
             : base(ValidationFailureType.StandardError)
@@ -13,6 +14,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     var approvedVersions = importedStandards
                         .Where(s => string.Equals(s.Status.Value, Domain.Courses.Status.ApprovedForDelivery, StringComparison.OrdinalIgnoreCase))
                         .Select(s => s.Version.Value)

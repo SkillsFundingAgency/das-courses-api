@@ -13,18 +13,16 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             _coursesDataContext = coursesDataContext;
         }
+
         public async Task InsertMany(IEnumerable<LarsStandard> larsStandardImports)
         {
             await _coursesDataContext.LarsStandards.AddRangeAsync(larsStandardImports);
-            
-            
             await _coursesDataContext.SaveChangesAsync();
         }
         
         public async Task DeleteAll()
         {
-            _coursesDataContext.LarsStandards.RemoveRange(_coursesDataContext.LarsStandards);
-            await _coursesDataContext.SaveChangesAsync();
+            await _coursesDataContext.DeleteAllBatchedAsync<LarsStandard>();
         }
     }
 }

@@ -6,20 +6,25 @@ namespace SFA.DAS.Courses.Domain.Entities
 {
     public class LarsStandardImport : LarsStandardBase
     {
-        public static implicit operator LarsStandardImport(StandardCsv standardCsv)
+        public int LarsCode { get; set; }
+
+        public static implicit operator LarsStandardImport(StandardCsv source)
         {
+            if (source == null)
+                return null;
+
             return new LarsStandardImport
             {
-                Version = standardCsv.Version,
-                EffectiveFrom = standardCsv.EffectiveFrom,
-                EffectiveTo = standardCsv.EffectiveTo,
-                LastDateStarts = standardCsv.LastDateStarts,
-                LarsCode = standardCsv.StandardCode,
-                SectorSubjectAreaTier2 = standardCsv.SectorSubjectAreaTier2,
-                OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(standardCsv.OtherBodyApprovalRequired),
-                SectorCode = standardCsv.StandardSectorCode,
-                SectorSubjectAreaTier1 = int.TryParse(standardCsv.SectorSubjectAreaTier1, NumberStyles.AllowDecimalPoint, null, out int code) ? code : default,
-                ApprenticeshipStandardTypeCode = standardCsv.ApprenticeshipStandardTypeCode
+                Version = source.Version,
+                EffectiveFrom = source.EffectiveFrom,
+                EffectiveTo = source.EffectiveTo,
+                LastDateStarts = source.LastDateStarts,
+                LarsCode = source.StandardCode,
+                SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,
+                OtherBodyApprovalRequired = MapOtherBodyApprovalRequired(source.OtherBodyApprovalRequired),
+                SectorCode = source.StandardSectorCode,
+                SectorSubjectAreaTier1 = int.TryParse(source.SectorSubjectAreaTier1, NumberStyles.AllowDecimalPoint, null, out int code) ? code : default,
+                ApprenticeshipStandardTypeCode = source.ApprenticeshipStandardTypeCode
             };
         }
 

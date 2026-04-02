@@ -21,8 +21,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
         [Test]
         public void Then_ReturnOneVersionOfEachStandard()
         {
-            var filteredStandards = _standards.InMemoryFilterIsLatestVersion(StandardFilter.Active);
-
+            var filteredStandards = _standards.InMemoryFilterIsLatestVersion(StandardFilter.Active, DistinctInMemoryFilterType.ByIfateReferenceNumberAndLarsCode);
             filteredStandards.Count().Should().Be(2);
         }
 
@@ -35,9 +34,9 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
             AddVersion1_11(includeVersion1_11);
             AddVersion2_0(includeVersion2_0);
 
-            var filteredStandards = _standards.InMemoryFilterIsLatestVersion(StandardFilter.Active);
+            var filteredStandards = _standards.InMemoryFilterIsLatestVersion(StandardFilter.Active, DistinctInMemoryFilterType.ByIfateReferenceNumberAndLarsCode);
 
-            var resultStandard = filteredStandards.FirstOrDefault(standard => standard.LarsCode == 1);
+            var resultStandard = filteredStandards.FirstOrDefault(standard => standard.LarsCode == "1");
 
             Assert.That(resultStandard.Version, Is.EqualTo(expectedResultVersion));
         }
@@ -49,7 +48,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 new Standard
                 {
                     Title = "Apprenticeship One v1.0",
-                    LarsCode = 1,
+                    LarsCode = "1",
                     Status = "Retired",
                     Version = "1.0",
                     VersionMajor = 1,
@@ -58,7 +57,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 new Standard
                 {
                     Title = "Apprenticeship One v1.1",
-                    LarsCode = 1,
+                    LarsCode = "1",
                     Status = "Active",
                     Version = "1.1",
                     VersionMajor = 1,
@@ -67,7 +66,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 new Standard
                 {
                     Title = "Apprenticeship Two v1.0",
-                    LarsCode = 2,
+                    LarsCode = "2",
                     Status = "Active",
                     Version = "1.0",
                     VersionMajor = 1,
@@ -83,7 +82,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 _standards.Add(new Standard
                 {
                     Title = "Apprenticeship v1.11",
-                    LarsCode = 1,
+                    LarsCode = "1",
                     Status = "Active",
                     Version = "1.11",
                     VersionMajor = 1,
@@ -99,7 +98,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Extensions
                 _standards.Add(new Standard
                 {
                     Title = "Apprenticeship v2.0",
-                    LarsCode = 1,
+                    LarsCode = "1",
                     Status = "Active",
                     Version = "2.0",
                     VersionMajor = 2,

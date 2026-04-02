@@ -6,13 +6,16 @@
         public string Name { get; set; }
         public bool Active { get; set; }
 
-        public static implicit operator Route(Domain.Entities.Route route)
+        public static implicit operator Route(Entities.Route source)
         {
+            if (source == null)
+                return null;
+
             return new Route
             {
-                Id = route.Id,
-                Name = route.Name,
-                Active = route.Active
+                Id = source.Id,
+                Name = source.Name,
+                Active = source.Active
             };
         }
     }

@@ -7,5 +7,6 @@
         public const string HttpUri = nameof(HttpUri);
         public const string HttpResponse = nameof(HttpResponse);
         public const string HttpContent = nameof(HttpContent);
+        public const string WebAppFactory = nameof(WebAppFactory);
     }
 }

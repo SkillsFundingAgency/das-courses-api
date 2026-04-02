@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -18,22 +19,26 @@ namespace SFA.DAS.Courses.Data.Repository
             _coursesDataContext = coursesDataContext;
         }
 
-        public async Task<int> Count(StandardFilter filter)
+        public async Task<int> Count(StandardFilter filter, 
+            CourseType? courseType)
         {
             // Tweak to the count query to perform a count rather than query actual fields.
             // The in memory filter causes this query to become more resource intensive
             // To get around that for the Active and Active Available filters
             // We perform the normal filter that we can, then select distinct lars code to get latest version count
             int count;
-            var standards = _coursesDataContext.Standards.FilterStandards(filter);
+            var query = _coursesDataContext.Standards
+                .FilterStandards(filter)
+                .FilterCourseType(courseType);
+
             switch (filter)
             {
                 case StandardFilter.Active:
                 case StandardFilter.ActiveAvailable:
-                    count = await standards.Select(c => c.LarsCode).Distinct().CountAsync();
+                    count = await query.Select(c => c.LarsCode).Distinct().CountAsync();
                     break;
                 default:
-                    count = await standards.Select(c => c.StandardUId).CountAsync();
+                    count = await query.Select(c => c.StandardUId).CountAsync();
                     break;
             }
 
@@ -42,8 +47,7 @@ namespace SFA.DAS.Courses.Data.Repository
 
         public async Task DeleteAll()
         {
-            _coursesDataContext.Standards.RemoveRange(_coursesDataContext.Standards);
-            await _coursesDataContext.SaveChangesAsync();
+            await _coursesDataContext.DeleteAllBatchedAsync<Standard>();
         }
 
         public async Task<int> InsertMany(IEnumerable<Standard> standards)
@@ -52,127 +56,203 @@ namespace SFA.DAS.Courses.Data.Repository
             return await _coursesDataContext.SaveChangesAsync();
         }
 
-        public async Task<List<Standard>> GetActiveStandardsByIfateReferenceNumber(List<string> ifateReferenceNumbers)
+        public async Task<List<Standard>> GetActiveStandardsByIfateReferenceNumbers(List<string> ifateReferenceNumbers,
+            CourseType? courseType)
         {
-            var query = GetBaseStandardQuery()
+            var query = GetBaseStandardQuery(courseType)
                 .FilterStandards(StandardFilter.ActiveAvailable)
                 .Where(s => ifateReferenceNumbers.Contains(s.IfateReferenceNumber));
+
             var standards = await query.ToListAsync();
 
-            var filteredStandards = standards.InMemoryFilterIsLatestVersion(StandardFilter.ActiveAvailable);
-            return filteredStandards.ToList();
+            // Secondary filter performed in memory due to limitations in 
+            // EF Core query translation on Group By selecting top row of each.
+            var standardsActiveLatestVersion = standards
+                .InMemoryFilterIsLatestVersion(StandardFilter.ActiveAvailable, DistinctInMemoryFilterType.ByIfateReferenceNumberAndLarsCode);
+
+            return (await IncludeApprenticeshipFunding(standardsActiveLatestVersion)).ToList();
         }
 
-        public async Task<Standard> GetLatestActiveStandard(string iFateReferenceNumber)
+        public async Task<Standard> GetLatestActiveStandardByIfateReferenceNumber(string iFateReferenceNumber,
+            CourseType? courseType)
         {
-            var standards = await GetFullBaseStandardQuery()
+            var query = GetFullBaseStandardQuery(courseType)
                 .FilterStandards(StandardFilter.Active)
-                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber)).ToListAsync();
+                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber));
 
-            // In Memory Filter for get latest version due to limitations in EF query translation
-            // into expression tree
-            var standard = standards.InMemoryFilterIsLatestVersion(StandardFilter.Active).SingleOrDefault();
+            var standards = await query.ToListAsync();
 
-            return standard;
+            // Secondary filter performed in memory due to limitations in 
+            // EF Core query translation on Group By selecting top row of each.
+            var standard = standards
+                .InMemoryFilterIsLatestVersion(StandardFilter.Active, DistinctInMemoryFilterType.ByIfateReferenceNumber)
+                .SingleOrDefault();
+
+            if (standard is null) 
+                return null;
+
+            return (await IncludeApprenticeshipFunding(new List<Standard> { standard })).First();
         }
 
-        public async Task<Standard> GetLatestActiveStandard(int larsCode)
+        public async Task<int> RefreshShortCourseDates()
         {
-            var standards = await GetFullBaseStandardQuery()
+            var shortCourses = await _coursesDataContext
+                .Standards
                 .FilterStandards(StandardFilter.Active)
-                .Where(c => c.LarsCode.Equals(larsCode)).ToListAsync();
+                .Where(s => s.CourseType == CourseType.ShortCourse && s.LarsCode != string.Empty)
+                .ToListAsync();
 
-            // In Memory Filter for get latest version due to limitations in EF query translation
-            // into expression tree
-            var standard = standards.InMemoryFilterIsLatestVersion(StandardFilter.Active).SingleOrDefault();
+            var shortCouresDates = shortCourses
+                .GroupBy(s => s.LarsCode)
+                .Select(g => new ShortCourseDates
+                {
+                    LarsCode = g.Key,
+                    EffectiveFrom = g
+                        .OrderBy(x => x.VersionMajor)
+                        .ThenBy(x => x.VersionMinor)
+                        .Select(x => x.ApprovedForDelivery.GetValueOrDefault(DateTime.MinValue))
+                        .FirstOrDefault(),
+                    EffectiveTo = g
+                        .OrderByDescending(x => x.VersionMajor)
+                        .ThenByDescending(x => x.VersionMinor)
+                        .Select(x => x.VersionLatestStartDate)
+                        .FirstOrDefault(),
+                    LastDateStarts = g
+                        .OrderByDescending(x => x.VersionMajor)
+                        .ThenByDescending(x => x.VersionMinor)
+                        .Select(x => x.VersionLatestStartDate)
+                        .FirstOrDefault()
+                })
+                .ToList();
 
-            return standard;
+            await _coursesDataContext.DeleteAllBatchedAsync<ShortCourseDates>();
+            await _coursesDataContext.ShortCourseDates.AddRangeAsync(shortCouresDates);
+            return await _coursesDataContext.SaveChangesAsync();
         }
 
-        public async Task<Standard> Get(string standardUId)
+        public async Task<Standard> GetLatestActiveStandard(string larsCode,
+            CourseType? courseType)
         {
-            var standard = await GetFullBaseStandardQuery()
-                .SingleOrDefaultAsync(c => c.StandardUId.Equals(standardUId));
+            var query = GetFullBaseStandardQuery(courseType)
+                .FilterStandards(StandardFilter.Active)
+                .Where(c => c.LarsCode == larsCode);
 
-            return standard;
+            var standards = await query
+                .ToListAsync();
+
+            // Secondary filter performed in memory due to limitations in 
+            // EF Core query translation on Group By selecting top row of each.
+            var standard = standards
+                .InMemoryFilterIsLatestVersion(StandardFilter.Active, DistinctInMemoryFilterType.ByLarsCode)
+                .SingleOrDefault();
+
+            if (standard is null) 
+                return null;
+
+            return (await IncludeApprenticeshipFunding(new List<Standard> { standard })).First();
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards()
+        public async Task<Standard> Get(string standardUId,
+            CourseType? courseType)
         {
-            return await GetStandards(new List<int>(), new List<int>(), StandardFilter.None, true);
+            var query = GetFullBaseStandardQuery(courseType);
+
+            var standard = await query.SingleOrDefaultAsync(c => c.StandardUId.Equals(standardUId));
+
+            if (standard is null) return null;
+
+            return (await IncludeApprenticeshipFunding(new List<Standard> { standard })).First();
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, IList<int> levels, StandardFilter filter, bool includeAllProperties, string apprenticeshipType = null)
+        public async Task<IEnumerable<Standard>> GetStandards(CourseType? courseType)
         {
-            IQueryable<Standard> standards = (includeAllProperties
-                ? GetFullBaseStandardQuery()
-                : GetBaseStandardQuery())
+            return await GetStandards(new List<int>(), new List<int>(), StandardFilter.None, true, new List<ApprenticeshipType>(), courseType);
+        }
+
+        public async Task<IEnumerable<Standard>> GetStandards(IList<int> routeIds, 
+            IList<int> levels, 
+            StandardFilter filter, 
+            bool includeAllProperties, 
+            IList<ApprenticeshipType> apprenticeshipTypes,
+            CourseType? courseType = null)
+        {
+            IQueryable<Standard> query = (includeAllProperties
+                    ? GetFullBaseStandardQuery(courseType)
+                    : GetBaseStandardQuery(courseType))
                 .FilterStandards(filter);
 
             if (routeIds.Count > 0)
             {
-                standards = standards.Where(standard => routeIds.Contains(standard.RouteCode));
+                query = query.Where(standard => routeIds.Contains(standard.RouteCode));
             }
             if (levels.Count > 0)
             {
-                standards = standards.Where(standard => levels.Contains(standard.Level));
+                query = query.Where(standard => levels.Contains(standard.Level));
             }
-            if (!string.IsNullOrEmpty(apprenticeshipType))
+            if (apprenticeshipTypes.Count > 0)
             {
-                standards = standards.Where(standard => standard.ApprenticeshipType.Equals(apprenticeshipType));
+                query = query.Where(standard => apprenticeshipTypes.Contains(standard.ApprenticeshipType));
             }
 
-            var standardResults = await standards.ToListAsync();
+            var standards = await query.ToListAsync();
 
             // Secondary filter performed in memory due to limitations in 
             // EF Core query translation on Group By selecting top row of each.
-            return standardResults.InMemoryFilterIsLatestVersion(filter);
+            var standardsFilteredLatestVersion = standards
+                .InMemoryFilterIsLatestVersion(filter, DistinctInMemoryFilterType.ByIfateReferenceNumberAndLarsCode);
+
+            return (await IncludeApprenticeshipFunding(standardsFilteredLatestVersion)).ToList();
         }
 
-        public async Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber)
+        public async Task<IEnumerable<Standard>> GetStandards(string iFateReferenceNumber,
+            CourseType? courseType)
         {
-            var standards = await GetBaseStandardQuery()
-                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber))
-                .ToListAsync();
+            var query = GetBaseStandardQuery(courseType)
+                .Where(c => c.IfateReferenceNumber.Equals(iFateReferenceNumber));
 
-            return standards;
+            var standards = await query.ToListAsync();
+
+            return (await IncludeApprenticeshipFunding(standards));
         }
 
-        private IQueryable<Standard> GetFullBaseStandardQuery()
-        {
-            var query = _coursesDataContext
-                .Standards
-                .Include(c => c.Route)
-                .Include(c => c.ApprenticeshipFunding)
-                .Include(c => c.LarsStandard)
-                .ThenInclude(l => l.SectorSubjectArea2)
-                .Include(c => c.LarsStandard)
-                .ThenInclude(l => l.SectorSubjectArea1);
-            return query;
-        }
-
-        private IQueryable<Standard> GetBaseStandardQuery()
+        private IQueryable<Standard> GetFullBaseStandardQuery(CourseType? courseType)
         {
             var query = _coursesDataContext
                 .Standards
                 .Include(c => c.Route)
-                .Include(c => c.ApprenticeshipFunding)
                 .Include(c => c.LarsStandard)
-                .ThenInclude(c => c.SectorSubjectArea2)
+                    .ThenInclude(l => l.SectorSubjectArea2)
                 .Include(c => c.LarsStandard)
-                .ThenInclude(c => c.SectorSubjectArea1)
+                    .ThenInclude(l => l.SectorSubjectArea1)
+                .Include(c => c.ShortCourseDates)
+                .FilterCourseType(courseType);
+            
+                return query;
+        }
+
+        private IQueryable<Standard> GetBaseStandardQuery(CourseType? courseType)
+        {
+            var query = _coursesDataContext
+                .Standards
+                .Include(c => c.Route)
+                .Include(c => c.LarsStandard)
+                    .ThenInclude(c => c.SectorSubjectArea2)
+                .Include(c => c.LarsStandard)
+                    .ThenInclude(c => c.SectorSubjectArea1)
+                .Include(c => c.ShortCourseDates)
+                .FilterCourseType(courseType)
                 .Select(c => new Standard
                 {
                     Status = c.Status,
                     StandardUId = c.StandardUId,
                     LarsStandard = c.LarsStandard,
+                    ShortCourseDates = c.ShortCourseDates,
                     Keywords = c.Keywords,
                     Level = c.Level,
                     CoronationEmblem = c.CoronationEmblem,
                     Route = c.Route,
                     Title = c.Title,
                     Version = c.Version,
-                    ApprenticeshipFunding = c.ApprenticeshipFunding,
                     IntegratedApprenticeship = c.IntegratedApprenticeship,
                     IntegratedDegree = c.IntegratedDegree,
                     LarsCode = c.LarsCode,
@@ -190,11 +270,62 @@ namespace SFA.DAS.Courses.Data.Repository
                     RegulatedBody = c.RegulatedBody,
                     EpaoMustBeApprovedByRegulatorBody = c.EpaoMustBeApprovedByRegulatorBody,
                     ApprenticeshipType = c.ApprenticeshipType,
+                    CourseType = c.CourseType,
+                    IsLatestVersion = c.IsLatestVersion,
                     IsRegulatedForProvider = c.IsRegulatedForProvider,
                     IsRegulatedForEPAO = c.IsRegulatedForEPAO
                 });
 
             return query;
+        }
+
+        private async Task<IEnumerable<Standard>> IncludeApprenticeshipFunding(IEnumerable<Standard> standards)
+        {
+            if (standards is null || !standards.Any())
+            {
+                return standards;
+            }
+
+            var larsCodes = standards
+                .Select(s => s.LarsCode)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct()
+                .ToList();
+
+            if (larsCodes.Count == 0)
+            {
+                foreach (var s in standards)
+                {
+                    s.ApprenticeshipFunding = new List<ApprenticeshipFunding>();
+                }
+
+                return standards;
+            }
+
+            var funding = await _coursesDataContext.ApprenticeshipFunding
+                .Where(f => larsCodes.Contains(f.LarsCode))
+                .ToListAsync();
+
+            var fundingByLarsCode = funding
+                .GroupBy(f => f.LarsCode)
+                .ToDictionary(
+                    g => g.Key,
+                    g => (ICollection<ApprenticeshipFunding>)g.ToList());
+
+            foreach (var standard in standards)
+            {
+                if (!string.IsNullOrWhiteSpace(standard.LarsCode) &&
+                    fundingByLarsCode.TryGetValue(standard.LarsCode, out var list))
+                {
+                    standard.ApprenticeshipFunding = list;
+                }
+                else
+                {
+                    standard.ApprenticeshipFunding = new List<ApprenticeshipFunding>();
+                }
+            }
+
+            return standards;
         }
     }
 }

@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Courses.Domain.Courses;
+using SFA.DAS.Courses.Domain.Identifiers;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Courses.Domain.Search;
+
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
+using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
 
 namespace SFA.DAS.Courses.Application.Courses.Services
 {
@@ -30,9 +35,99 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             OrderBy orderBy,
             StandardFilter filter,
             bool includeAllProperties,
-            string apprenticeshipType)
+            ApprenticeshipType? apprenticeshipType)
         {
-            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties, apprenticeshipType);
+            var apprenticeshipTypes = new List<ApprenticeshipType>();
+            if (apprenticeshipType != null)
+            {
+                apprenticeshipTypes.Add(apprenticeshipType.Value);
+            }
+
+            var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipTypes, CourseType.Apprenticeship);
+            return standards.Select(standard => (Standard)standard);
+        }
+
+        public async Task<IEnumerable<Course>> GetCoursesList(
+            string keyword,
+            IList<int> routeIds,
+            IList<int> levels,
+            OrderBy orderBy,
+            StandardFilter filter,
+            bool includeAllProperties,
+            IList<ApprenticeshipType> apprenticeshipTypes,
+            CourseType? courseType = null)
+        {
+            var standards = await GetList(keyword, routeIds, levels, orderBy, filter, includeAllProperties, apprenticeshipTypes, courseType);
+            return standards.Select(standard => (Course)standard).ToList();
+        }
+
+        public async Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber, CourseType? courseType)
+        {
+            var standards = await _standardsRepository.GetStandards(iFateReferenceNumber, courseType);
+            return standards.Select(standard => (Standard)standard);
+        }
+
+        public async Task<int> CountStandards(StandardFilter filter = StandardFilter.None)
+        {
+            var count = await _standardsRepository.Count(filter, CourseType.Apprenticeship);
+            return count;
+        }
+
+        public async Task<int> CountCourses(StandardFilter filter = StandardFilter.None, CourseType? courseType = null)
+        {
+            var count = await _standardsRepository.Count(filter, courseType);
+            return count;
+        }
+
+        public async Task<Standard> GetStandardByAnyId(string id)
+        {
+            if (IsLarsCode(id))
+            {
+                return await GetLatestActiveStandard(id);
+            }
+            else if (IsStandardReference(id))
+            {
+                return await GetLatestActiveStandardByIfateReferenceNumber(id);
+            }
+            else
+            {
+                return await GetStandard(id);
+            }
+        }
+
+        public async Task<Course> GetCourseByAnyId(string id)
+        {
+            if (IsLarsCode(id))
+            {
+                return await GetLatestActiveCourse(id, null);
+            }
+            else if (IsStandardReference(id))
+            {
+                return await GetLatestActiveCourseByIfateReferenceNumber(id, null);
+            }
+            else
+            {
+                return await GetCourse(id, null);
+            }
+        }
+
+        private async Task<Course> GetCourse(string standardUId, CourseType? courseType)
+        {
+            var standard = await _standardsRepository.Get(standardUId, courseType);
+            return await CourseWithRelatedOccupations(standard);
+        }
+
+        private async Task<IEnumerable<Domain.Entities.Standard>> GetList(
+            string keyword,
+            IList<int> routeIds,
+            IList<int> levels,
+            OrderBy orderBy,
+            StandardFilter filter,
+            bool includeAllProperties,
+            IList<ApprenticeshipType> apprenticeshipTypes,
+            CourseType? courseType = null)
+        {
+            var standards = await _standardsRepository.GetStandards(routeIds, levels, filter, includeAllProperties, apprenticeshipTypes, courseType);
 
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -41,67 +136,79 @@ namespace SFA.DAS.Courses.Application.Courses.Services
 
             standards = _sortOrderService.OrderBy(standards, orderBy, keyword);
 
-            return standards.Select(standard => (Standard)standard);
+            return standards;
         }
 
-        public async Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber)
+        private async Task<Standard> GetLatestActiveStandard(string larsCode)
         {
-            var standards = await _standardsRepository.GetStandards(iFateReferenceNumber);
-
-            return standards.Select(standard => (Standard)standard);
+            var standard = await _standardsRepository.GetLatestActiveStandard(larsCode, CourseType.Apprenticeship);
+            return await StandardWithRelatedOccupations(standard);
         }
 
-        public async Task<int> Count(StandardFilter filter = StandardFilter.None)
+        private async Task<Standard> GetLatestActiveStandardByIfateReferenceNumber(string iFateReferenceNumber)
         {
-            var count = await _standardsRepository.Count(filter);
-            return count;
+            var standard = await _standardsRepository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, CourseType.Apprenticeship);
+            return await StandardWithRelatedOccupations(standard);
         }
 
-        public async Task<Standard> GetLatestActiveStandard(int larsCode)
+        private async Task<Standard> GetStandard(string standardUId)
         {
-            var standard = await _standardsRepository.GetLatestActiveStandard(larsCode);
+            var standard = await _standardsRepository.Get(standardUId, CourseType.Apprenticeship);
+            return await StandardWithRelatedOccupations(standard);
+        }
 
-            var result = (Standard)standard;
-            if (result != null)
+        private async Task<Course> GetLatestActiveCourse(string larsCode, CourseType? courseType)
+        {
+            var latestActiveStandard = await _standardsRepository.GetLatestActiveStandard(larsCode, courseType);
+            return await CourseWithRelatedOccupations(latestActiveStandard);
+        }
+
+        private async Task<Course> GetLatestActiveCourseByIfateReferenceNumber(string iFateReferenceNumber, CourseType? courseType)
+        {
+            var latestActiveStandard = await _standardsRepository.GetLatestActiveStandardByIfateReferenceNumber(iFateReferenceNumber, courseType);
+            return await CourseWithRelatedOccupations(latestActiveStandard);
+        }
+
+        private async Task<Course> CourseWithRelatedOccupations(Domain.Entities.Standard standard)
+        {
+            var course = (Course)standard;
+            if (course != null)
             {
-                result.RelatedOccupations = await GetRelatedOccupations(standard);
+                course.RelatedOccupations = await GetRelatedOccupations(standard, null);
             }
-            return result;
+
+            return course;
         }
 
-        public async Task<Standard> GetLatestActiveStandard(string ifateReferenceNumber)
+        private async Task<Standard> StandardWithRelatedOccupations(Domain.Entities.Standard standardEntity)
         {
-            var standard = await _standardsRepository.GetLatestActiveStandard(ifateReferenceNumber);
-
-            var result = (Standard)standard;
-            if (result != null)
+            var standard = (Standard)standardEntity;
+            if (standard != null)
             {
-                result.RelatedOccupations = await GetRelatedOccupations(standard);
+                standard.RelatedOccupations = await GetRelatedOccupations(standardEntity, CourseType.Apprenticeship);
             }
-            return result;
+
+            return standard;
         }
 
-        public async Task<Standard> GetStandard(string standardUId)
+        private async Task<List<RelatedOccupation>> GetRelatedOccupations(Domain.Entities.Standard standard, CourseType? courseType)
         {
-            var standard = await _standardsRepository.Get(standardUId);
-
-            var result = (Standard)standard;
-            if (result != null)
+            if (standard != null && standard.ApprenticeshipType == ApprenticeshipType.FoundationApprenticeship)
             {
-                result.RelatedOccupations = await GetRelatedOccupations(standard);
-            }
-            return result;
-        }
-
-        private async Task<List<RelatedOccupation>> GetRelatedOccupations(Domain.Entities.Standard standard)
-        {
-            if (standard != null && standard.ApprenticeshipType == Domain.Entities.ApprenticeshipType.FoundationApprenticeship.ToString())
-            {
-                var standards = await _standardsRepository.GetActiveStandardsByIfateReferenceNumber(standard.RelatedOccupations);
+                var standards = await _standardsRepository.GetActiveStandardsByIfateReferenceNumbers(standard.RelatedOccupations, courseType);
                 return standards.ConvertAll(s => (RelatedOccupation)s);
             }
             return [];
         }
+
+        private static bool IsStandardReference(string id)
+            => IdentifierRegexes.StandardReferenceNumber.IsMatch(id) ||
+               IdentifierRegexes.FoundationReferenceNumber.IsMatch(id) ||
+               IdentifierRegexes.ShortCourseReferenceNumber.IsMatch(id);
+
+        private static bool IsLarsCode(string id)
+            => int.TryParse(id, out _)
+            || IdentifierRegexes.ShortCourseLarsCode.IsMatch(id);
 
         private IEnumerable<Domain.Entities.Standard> FindByKeyword(IEnumerable<Domain.Entities.Standard> standards, string keyword)
         {

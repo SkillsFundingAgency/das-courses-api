@@ -10,10 +10,17 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
         public LarsCodeNotDuplicatedValidator(Dictionary<string, List<StandardImport>> allStandardImports)
             : base(ValidationFailureType.Error)
         {
-            RuleFor(standardImports => standardImports)
-                .Custom((standardImports, context) =>
+            RuleFor(importedStandards => importedStandards)
+                .Custom((importedStandards, context) =>
                 {
-                    foreach (var standard in standardImports.Where(si => si.LarsCode != 0))
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
+                    foreach (var standard in importedStandards.Where(si => 
+                        !string.IsNullOrWhiteSpace(si.LarsCode) 
+                        && (!int.TryParse(si.LarsCode, out var larsCode) || larsCode != 0)))
                     {
                         foreach (var kv in allStandardImports)
                         {

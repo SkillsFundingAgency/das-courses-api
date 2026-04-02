@@ -7,7 +7,7 @@ using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
 {
-    public class ImportDataCommandHandler : IRequestHandler<ImportDataCommand, Unit>
+    public class ImportDataCommandHandler : IRequestHandler<ImportDataCommand, List<string>>
     {
         private readonly IStandardsImportService _standardsImportService;
         private readonly ILarsImportService _larsImportService;
@@ -21,7 +21,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             _frameworksImportService = frameworksImportService;
             _indexBuilder = indexBuilder;
         }
-        public async Task<Unit> Handle(ImportDataCommand request, CancellationToken cancellationToken)
+        public async Task<List<string>> Handle(ImportDataCommand request, CancellationToken cancellationToken)
         {
             var importStartTime = DateTime.Now;
 
@@ -37,7 +37,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             if (frameworkImportResponse.Success) loadTasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkImportResponse.LatestFile));
 
             var standardsImportResponse = standardsImportTask.Result;
-            if (standardsImportResponse) loadTasks.Add(_standardsImportService.LoadDataFromStaging(importStartTime));
+            if (standardsImportResponse.Success) loadTasks.Add(_standardsImportService.LoadDataFromStaging(importStartTime));
 
             if (loadTasks.Count > 0)
             {
@@ -45,11 +45,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             }
             
             var larsImportResponse = larsImportTask.Result;
-            if (larsImportResponse.Success)  await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);
+            if (larsImportResponse.Success) await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);
 
             _indexBuilder.Build();
 
-            return Unit.Value;
+            return standardsImportResponse.ValidationMessages ?? new List<string>();
         }
     }
 }

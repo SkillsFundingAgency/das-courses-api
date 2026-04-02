@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -23,8 +24,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
             // Act
             await handler.Handle(command, new CancellationToken());
 
-            //Assert
-
+            // Assert
             larsImportService.Verify(x=>x.ImportDataIntoStaging(), Times.Once);
             frameworksImportService.Verify(x=>x.ImportDataIntoStaging(), Times.Once);
             standardsImportService.Verify(x=>x.ImportDataIntoStaging(), Times.Once);
@@ -39,15 +39,17 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
             [Frozen] Mock<ILarsImportService> larsImportService,
             [Frozen] Mock<IFrameworksImportService> frameworksImportService,
             [Frozen] Mock<IIndexBuilder> indexBuilder,
-            ImportDataCommandHandler handler
-            )
+            ImportDataCommandHandler handler)
         {
+            // Arrange
             frameworksImportService.Setup(s => s.ImportDataIntoStaging()).ReturnsAsync((true, frameworkFile));
             larsImportService.Setup(s => s.ImportDataIntoStaging()).ReturnsAsync((true, larsFile));
+            standardsImportService.Setup(s => s.ImportDataIntoStaging()).ReturnsAsync((true, new List<string>()));
+            
             // Act
             await handler.Handle(command, new CancellationToken());
 
-            //Assert
+            // Assert
             larsImportService.Verify(x => x.LoadDataFromStaging(It.IsAny<DateTime>(), larsFile), Times.Once);
             frameworksImportService.Verify(x => x.LoadDataFromStaging(It.IsAny<DateTime>(), frameworkFile), Times.Once);
             standardsImportService.Verify(x => x.LoadDataFromStaging(It.IsAny<DateTime>()), Times.Once);
@@ -64,7 +66,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
             // Act
             await handler.Handle(command, new CancellationToken());
 
-            //Assert
+            // Assert
             indexBuilder.Verify(x => x.Build(), Times.Once);
         }
 
@@ -72,16 +74,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
         public async Task Then_If_Frameworks_Are_Not_Imported_Then_Frameworks_Are_Not_Loaded(
             ImportDataCommand command,
             [Frozen] Mock<IFrameworksImportService> frameworksImportService,
-            ImportDataCommandHandler handler
-            )
+            ImportDataCommandHandler handler)
         {
-            //Arrange
+            // Arrange
             frameworksImportService.Setup(s => s.ImportDataIntoStaging()).ReturnsAsync((false, null));
 
             // Act
             await handler.Handle(command, new CancellationToken());
 
-            //Assert
+            // Assert
             frameworksImportService.Verify(x => x.LoadDataFromStaging(It.IsAny<DateTime>(), It.IsAny<string>()), Times.Never);
         }
 
@@ -89,16 +90,15 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Handlers
         public async Task Then_If_LarsData_Is_Not_Imported_Then_LarsData_Is_Not_Loaded(
             ImportDataCommand command,
             [Frozen] Mock<ILarsImportService> larsImportService,
-            ImportDataCommandHandler handler
-            )
+            ImportDataCommandHandler handler)
         {
-            //Arrange
+            // Arrange
             larsImportService.Setup(s => s.ImportDataIntoStaging()).ReturnsAsync((false, null));
 
             // Act
             await handler.Handle(command, new CancellationToken());
 
-            //Assert
+            // Assert
             larsImportService.Verify(x => x.LoadDataFromStaging(It.IsAny<DateTime>(), It.IsAny<string>()), Times.Never);
         }
 

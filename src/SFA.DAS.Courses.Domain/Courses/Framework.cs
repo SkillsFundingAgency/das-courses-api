@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,36 +28,39 @@ namespace SFA.DAS.Courses.Domain.Courses
         public bool HasSubGroups { get; set; }
         public string ExtendedTitle { get; set; }
 
-        public static implicit operator Framework(Domain.Entities.Framework framework)
+        public static implicit operator Framework(Entities.Framework source)
         {
+            if (source == null)
+                return null;
+
             return new Framework
             {
-                Id = framework.Id,
-                Duration = framework.Duration,
-                Level = framework.Level,
-                Ssa1 = framework.Ssa1,
-                Ssa2 = framework.Ssa2,
-                Title = framework.Title,
-                EffectiveFrom = framework.EffectiveFrom,
-                EffectiveTo = framework.EffectiveTo,
+                Id = source.Id,
+                Duration = source.Duration,
+                Level = source.Level,
+                Ssa1 = source.Ssa1,
+                Ssa2 = source.Ssa2,
+                Title = source.Title,
+                EffectiveFrom = source.EffectiveFrom,
+                EffectiveTo = source.EffectiveTo,
                 TypicalLength = new TypicalLength
                 {
-                    From=framework.TypicalLengthFrom,
-                    To = framework.TypicalLengthTo,
-                    Unit = framework.TypicalLengthUnit
+                    From=source.TypicalLengthFrom,
+                    To = source.TypicalLengthTo,
+                    Unit = source.TypicalLengthUnit
                 },
-                ExtendedTitle = framework.ExtendedTitle,
-                FrameworkCode = framework.FrameworkCode,
-                FrameworkName = framework.FrameworkName,
-                MaxFunding = framework.MaxFunding,
-                PathwayCode = framework.PathwayCode,
-                PathwayName = framework.PathwayName,
-                ProgrammeType = framework.ProgrammeType,
-                ProgType = framework.ProgType,
-                CurrentFundingCap = framework.CurrentFundingCap,
-                HasSubGroups = framework.HasSubGroups,
-                IsActiveFramework = framework.IsActiveFramework,
-                FundingPeriods = framework.FundingPeriods.Select(c=>(FrameworkFunding)c).ToList()
+                ExtendedTitle = source.ExtendedTitle,
+                FrameworkCode = source.FrameworkCode,
+                FrameworkName = source.FrameworkName,
+                MaxFunding = source.MaxFunding,
+                PathwayCode = source.PathwayCode,
+                PathwayName = source.PathwayName,
+                ProgrammeType = source.ProgrammeType,
+                ProgType = source.ProgType,
+                CurrentFundingCap = source.CurrentFundingCap,
+                HasSubGroups = source.HasSubGroups,
+                IsActiveFramework = source.IsActiveFramework,
+                FundingPeriods = source.FundingPeriods.Select(c=>(FrameworkFunding)c).ToList()
             };
         }
     }
@@ -68,13 +71,16 @@ namespace SFA.DAS.Courses.Domain.Courses
         public DateTime? EffectiveTo { get; set; }
         public int FundingCap { get; set; }
 
-        public static implicit operator FrameworkFunding(Domain.Entities.FrameworkFunding frameworkFunding)
+        public static implicit operator FrameworkFunding(Entities.FrameworkFunding source)
         {
+            if (source == null)
+                return null;
+
             return new FrameworkFunding
             {
-                EffectiveFrom = frameworkFunding.EffectiveFrom,
-                EffectiveTo = frameworkFunding.EffectiveTo,
-                FundingCap = frameworkFunding.FundingCap
+                EffectiveFrom = source.EffectiveFrom,
+                EffectiveTo = source.EffectiveTo,
+                FundingCap = source.FundingCap
             }; 
                 
         }

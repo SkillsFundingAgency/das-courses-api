@@ -5,6 +5,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface IRoutesImportService
     {
-        List<RouteImport> GetDistinctRoutesFromStandards(List<ImportTypes.Standard> standards);
+        List<RouteImport> GetDistinctRoutesFromStandards(List<ImportTypes.SkillsEngland.Standard> standards);
     }
 }

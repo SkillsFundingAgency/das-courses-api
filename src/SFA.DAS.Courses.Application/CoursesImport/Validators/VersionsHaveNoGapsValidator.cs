@@ -2,10 +2,11 @@
 using System.Linq;
 using FluentValidation;
 using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class VersionsHaveNoGapsValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class VersionsHaveNoGapsValidator : ValidatorBase<List<Standard>>
     {
         public VersionsHaveNoGapsValidator()
             : base(ValidationFailureType.StandardError)
@@ -13,6 +14,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     var referenceNumber = importedStandards[0].ReferenceNumber.Value;
                     var versions = importedStandards
                         .Select(s => s.Version.Value.ParseVersion())

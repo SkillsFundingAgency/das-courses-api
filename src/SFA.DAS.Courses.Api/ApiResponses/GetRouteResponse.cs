@@ -10,6 +10,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public static implicit operator GetRouteResponse(Route source)
         {
+            if(source == null) 
+                return null;
+
             return new GetRouteResponse
             {
                 Id = source.Id,

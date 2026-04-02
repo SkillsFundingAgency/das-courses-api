@@ -1,20 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
-using SFA.DAS.Courses.Domain.Entities;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
 
-    public class CourseOptionsPreservedValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class CourseOptionsPreservedValidator : ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>
     {
-        public CourseOptionsPreservedValidator(List<Standard> currentStandards)
+        public CourseOptionsPreservedValidator(List<Domain.Entities.Standard> currentStandards)
             : base(ValidationFailureType.StandardError)
         {
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     foreach (var standard in importedStandards)
                     {
                         var parsedVersion = standard.Version.Value.ParseVersion();
@@ -23,15 +29,20 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
                             c.VersionMajor == parsedVersion.Major &&
                             c.VersionMinor == parsedVersion.Minor);
 
+                        if(parsedVersion.Major < 1)
+                        {
+                            continue;
+                        }
+                        
                         if (currentStandard == null || !currentStandard.Options.Any())
                         {
                             continue;
                         }
 
-                        var importedOptions = standard.Options.Value ?? new List<Domain.ImportTypes.Option>();
+                        var importedOptions = standard.Options.Value ?? new List<Option>();
                         var currentTitles = currentStandard.Options
                             .Select(cso => cso.Title)
-                            .Where(title => title != Domain.Courses.StandardOption.CoreTitle)
+                            .Where(title => title != Domain.Courses.CourseOption.CoreTitle)
                             .ToList();
                         var importedTitles = importedOptions
                             .Select(io => io.Title.Value.Trim())

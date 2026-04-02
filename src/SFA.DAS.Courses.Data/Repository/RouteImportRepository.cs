@@ -25,10 +25,9 @@ namespace SFA.DAS.Courses.Data.Repository
             return await _coursesDataContext.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteAll()
+        public async Task DeleteAll()
         {
-            _coursesDataContext.RoutesImport.RemoveRange(_coursesDataContext.RoutesImport);
-            return await _coursesDataContext.SaveChangesAsync();
+            await _coursesDataContext.DeleteAllBatchedAsync<RouteImport>();
         }
 
         public async Task<IEnumerable<RouteImport>> GetAll()

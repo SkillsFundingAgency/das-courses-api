@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using FluentValidation;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class TitleValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class TitleValidator : ValidatorBase<List<Standard>>
     {
         public TitleValidator()
             : base(ValidationFailureType.StandardError)
@@ -11,7 +12,12 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
-                    foreach(var standard in importedStandards)
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
+                    foreach (var standard in importedStandards)
                     {
                         if (standard.Title.Value.Length < 1 || standard.Title.Value.StartsWith(' '))
                         {

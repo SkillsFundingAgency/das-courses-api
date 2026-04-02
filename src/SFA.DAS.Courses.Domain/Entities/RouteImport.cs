@@ -10,13 +10,16 @@
             };
         }
 
-        public static implicit operator RouteImport(Route route)
+        public static implicit operator RouteImport(Route source)
         {
+            if (source == null)
+                return null;
+
             return new RouteImport
             {
-                Id = route.Id,
-                Name = route.Name,
-                Active = route.Active
+                Id = source.Id,
+                Name = source.Name,
+                Active = source.Active
             };
         }
     }

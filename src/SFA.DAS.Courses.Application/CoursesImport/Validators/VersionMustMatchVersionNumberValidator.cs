@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
+using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
+using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Validators
 {
-    public class VersionMustMatchVersionNumberValidator : ValidatorBase<List<Domain.ImportTypes.Standard>>
+    public class VersionMustMatchVersionNumberValidator : ValidatorBase<List<Standard>>
     {
         public VersionMustMatchVersionNumberValidator()
             : base(ValidationFailureType.StandardError)
@@ -14,8 +16,16 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     foreach (var standard in importedStandards)
                     {
+                        if (standard.ApprenticeshipType is not (ApprenticeshipType.Apprenticeship or ApprenticeshipType.FoundationApprenticeship))
+                            continue;
+
                         if (activeStatuses.Contains(standard.Status.Value) && standard.Version.Value != standard.VersionNumber.Value)
                         {
                             context.AddFailure($"S1007: {standard.ReferenceNumber.Value} version {standard.Version.Value} should have matching versionNumber");

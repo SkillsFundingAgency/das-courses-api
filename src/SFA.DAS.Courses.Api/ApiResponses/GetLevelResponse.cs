@@ -9,6 +9,9 @@ namespace SFA.DAS.Courses.Api.ApiResponses
 
         public static implicit operator GetLevelResponse(Level source)
         {
+            if(source == null) 
+                return null;
+
             return new GetLevelResponse
             {
                 Code = source.Code,

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -6,6 +6,9 @@ namespace SFA.DAS.Courses.Domain.Entities
     {
         public static implicit operator SectorSubjectAreaTier2(SectorSubjectAreaTier2Import source)
         {
+            if (source == null)
+                return null;
+
             return new SectorSubjectAreaTier2
             {
                 SectorSubjectAreaTier2 = source.SectorSubjectAreaTier2,

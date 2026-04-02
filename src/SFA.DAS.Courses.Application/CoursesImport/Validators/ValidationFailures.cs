@@ -24,6 +24,15 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             }
         }
 
+        public void AddValidationFailures(ValidationFailureType validationFailureType, IEnumerable<string> failures)
+        {
+            foreach (var failure in failures)
+            {
+                AddValidationFailure(validationFailureType, failure);
+            }
+        }
+
+
         public List<string> Warnings => _warnings;
         public List<string> StandardErrors => _standardErrors;
         public List<string> Errors => _errors;

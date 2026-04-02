@@ -21,7 +21,6 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
-        [Route("")]
         public async Task<IActionResult> Index()
         {
             var queryResult = await _mediator.Send(new GetStandardsListQuery

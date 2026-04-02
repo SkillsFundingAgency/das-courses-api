@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
@@ -23,12 +24,15 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.FrameworkImport> FrameworksImport { get; set; }
         DbSet<Domain.Entities.FrameworkFunding> FrameworkFunding { get; set; }
         DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
+        DbSet<Domain.Entities.FundingImport> FundingImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1> SectorSubjectAreaTier1 { get; set; }
         DbSet<Domain.Entities.Route> Routes { get; set; }
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
+        DbSet<Domain.Entities.ShortCourseDates> ShortCourseDates { get; set; }
+        Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
@@ -47,12 +51,14 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.FrameworkImport> FrameworksImport { get; set; }
         public DbSet<Domain.Entities.FrameworkFunding> FrameworkFunding { get; set; }
         public DbSet<Domain.Entities.FrameworkFundingImport> FrameworkFundingImport { get; set; }
+        public DbSet<Domain.Entities.FundingImport> FundingImport { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2> SectorSubjectAreaTier2 { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier2Import> SectorSubjectAreaTier2Import { get; set; }
         public DbSet<Domain.Entities.Route> Routes { get; set; }
         public DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
         public DbSet<Domain.Entities.SectorSubjectAreaTier1> SectorSubjectAreaTier1 { get; set; }
+        public DbSet<Domain.Entities.ShortCourseDates> ShortCourseDates { get; set; }
 
         private readonly CoursesConfiguration _configuration;
         private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
@@ -93,7 +99,6 @@ namespace SFA.DAS.Courses.Data
                     TimeSpan.FromSeconds(20),
                     null
                 )).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -109,13 +114,31 @@ namespace SFA.DAS.Courses.Data
             modelBuilder.ApplyConfiguration(new FrameworkImport());
             modelBuilder.ApplyConfiguration(new FrameworkFunding());
             modelBuilder.ApplyConfiguration(new FrameworkFundingImport());
+            modelBuilder.ApplyConfiguration(new FundingImport());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier2Import());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1Import());
             modelBuilder.ApplyConfiguration(new SectorSubjectAreaTier1());
+            modelBuilder.ApplyConfiguration(new ShortCourseDates());
             modelBuilder.ApplyConfiguration(new Route());
             modelBuilder.ApplyConfiguration(new RouteImport());
+
             base.OnModelCreating(modelBuilder);
+        }
+
+        public async Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var set = Set<TEntity>();
+
+            while (true)
+            {
+                var deleted = await set
+                    .Take(batchSize)
+                    .ExecuteDeleteAsync(cancellationToken);
+
+                if (deleted < batchSize)
+                    break;
+            }
         }
     }
 }

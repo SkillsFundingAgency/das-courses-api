@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using FluentAssertions.Equivalency;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Data.UnitTests.Customisations;
@@ -13,69 +11,62 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 {
-    public class WhenGettingStandardsByIFateReferenceNumber
+    public class WhenGettingStandardsByIFateReferenceNumber : StandardRepositoryTestBase
     {
         [Test, RecursiveMoqAutoData]
         public async Task Then_All_Versions_Of_That_Standard_Are_Returned(
-            [StandardsAreLarsValid] List<Standard> activeValidStandards,
-            [StandardsNotLarsValid] List<Standard> activeInvalidStandards,
-            [StandardsNotYetApproved] List<Standard> notYetApprovedStandards,
-            [StandardsWithdrawn] List<Standard> withdrawnStandards,
-            [StandardsRetired] List<Standard> retiredStandards,
-            [Frozen] Mock<ICoursesDataContext> mockDbContext,
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
             Data.Repository.StandardRepository repository)
         {
-            var iFateReferenceNumber = "ST001";
-            var active = activeValidStandards[0];
+            // Arrange
+            var iFateReferenceNumber = "ST0099";
+            var active = data.ActiveValidApprenticeshipStandards[0];
             active.IfateReferenceNumber = iFateReferenceNumber;
             active.Version = "1.1";
-            active.StandardUId = "ST001_1.1";
+            active.StandardUId = $"{iFateReferenceNumber}_1.1";
 
-            var retired = retiredStandards[0];
+            var retired = data.RetiredApprenticeshipStandards[0];
             retired.IfateReferenceNumber = iFateReferenceNumber;
             retired.Version = "1.0";
-            retired.StandardUId = "ST001_1.0";
+            retired.StandardUId = $"{iFateReferenceNumber}_1.0";
 
+            SetupContext(mockDataContext, data);
 
-            var allStandards = new List<Standard>();
-            allStandards.AddRange(activeValidStandards);
-            allStandards.AddRange(activeInvalidStandards);
-            allStandards.AddRange(notYetApprovedStandards);
-            allStandards.AddRange(withdrawnStandards);
-            allStandards.AddRange(retiredStandards);
-            mockDbContext
-                .Setup(context => context.Standards)
-                .ReturnsDbSet(allStandards);
+            // Act
+            var actualStandards = await repository.GetStandards(iFateReferenceNumber, CourseType.Apprenticeship);
 
-            var actualStandards = await repository.GetStandards(iFateReferenceNumber);
-
+            // Assert
             Assert.That(actualStandards, Is.Not.Null);
-            actualStandards.Should().BeEquivalentTo(new List<Standard> { active, retired }, EquivalentCheckExcludes());
+            actualStandards.Should().BeEquivalentTo(new List<Standard> { active, retired }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
-        private static Func<EquivalencyAssertionOptions<Standard>, EquivalencyAssertionOptions<Standard>> EquivalentCheckExcludes()
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_All_Versions_Of_That_ShortCourse_Are_Returned(
+            [StandardRepositoryTestData] StandardRepositoryTestData data,
+            [Frozen] Mock<ICoursesDataContext> mockDataContext,
+            Data.Repository.StandardRepository repository)
         {
-            return options => options
-                .Excluding(c => c.SearchScore)
-                .Excluding(c => c.ProposedTypicalDuration)
-                .Excluding(c => c.ProposedMaxFunding)
-                .Excluding(c => c.OverviewOfRole)
-                .Excluding(c => c.AssessmentPlanUrl)
-                .Excluding(c => c.TrailBlazerContact)
-                .Excluding(c => c.EqaProviderName)
-                .Excluding(c => c.EqaProviderContactEmail)
-                .Excluding(c => c.EqaProviderContactName)
-                .Excluding(c => c.EqaProviderWebLink)
-                .Excluding(c => c.Duties)
-                .Excluding(c => c.CoreDuties)
-                .Excluding(c => c.Options)
-                .Excluding(c => c.CoreAndOptions)
-                .Excluding(c => c.EPAChanged)
-                .Excluding(c => c.CreatedDate)
-                .Excluding(c => c.PublishDate)
-                .Excluding(c => c.IsRegulatedForProvider)
-                .Excluding(c => c.IsRegulatedForEPAO)
-                .Excluding(c => c.ApprenticeshipType)
-                .Excluding(c => c.RelatedOccupations);
+            // Arrange
+            var iFateReferenceNumber = "AU0099";
+            var active = data.ActiveValidShortCourseStandards[0];
+            active.IfateReferenceNumber = iFateReferenceNumber;
+            active.Version = "1.1";
+            active.StandardUId = $"{iFateReferenceNumber}_1.1";
+
+            var retired = data.RetiredShortCourseStandards[0];
+            retired.IfateReferenceNumber = iFateReferenceNumber;
+            retired.Version = "1.0";
+            active.StandardUId = $"{iFateReferenceNumber}_1.0";
+
+            SetupContext(mockDataContext, data);
+
+            // Act
+            var actualStandards = await repository.GetStandards(iFateReferenceNumber, CourseType.ShortCourse);
+
+            // Assert
+            Assert.That(actualStandards, Is.Not.Null);
+            actualStandards.Should().BeEquivalentTo(new List<Standard> { active, retired }, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
     }
 }

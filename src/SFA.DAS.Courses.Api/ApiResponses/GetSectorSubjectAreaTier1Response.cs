@@ -11,11 +11,16 @@ public class GetSectorSubjectAreaTier1Response
     public DateTime? EffectiveTo { get; set; }
 
     public static implicit operator GetSectorSubjectAreaTier1Response(SectorSubjectAreaTier1 source)
-        => new()
+    {
+        if (source == null)
+            return null;
+
+        return new GetSectorSubjectAreaTier1Response
         {
             SectorSubjectAreaTier1 = source.SectorSubjectAreaTier1,
             SectorSubjectAreaTier1Desc = source.SectorSubjectAreaTier1Desc,
             EffectiveFrom = source.EffectiveFrom,
             EffectiveTo = source.EffectiveTo
         };
+    }
 }
