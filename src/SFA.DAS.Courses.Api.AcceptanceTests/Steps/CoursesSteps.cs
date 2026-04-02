@@ -22,7 +22,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
             _context = context;
         }
 
-
         [Then("all valid courses are returned")]
         public async Task ThenAllValidCoursesReturned()
         {

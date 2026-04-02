@@ -11,6 +11,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
         {
             RuleFor(x => x).Custom((importedStandards, context) =>
             {
+                if (importedStandards == null)
+                {
+                    return;
+                }
+
                 foreach (var apprenticeship in importedStandards)
                 {
                     var undefinedFields = new Dictionary<string, bool>();

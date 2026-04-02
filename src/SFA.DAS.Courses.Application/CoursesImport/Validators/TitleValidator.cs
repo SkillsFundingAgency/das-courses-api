@@ -12,7 +12,12 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
-                    foreach(var standard in importedStandards)
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
+                    foreach (var standard in importedStandards)
                     {
                         if (standard.Title.Value.Length < 1 || standard.Title.Value.StartsWith(' '))
                         {

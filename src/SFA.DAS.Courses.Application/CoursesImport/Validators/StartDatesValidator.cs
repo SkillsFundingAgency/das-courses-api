@@ -13,6 +13,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     var hasAddedFailures = false;
 
                     foreach (var standard in importedStandards)

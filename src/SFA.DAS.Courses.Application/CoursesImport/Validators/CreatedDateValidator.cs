@@ -12,6 +12,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     foreach (var standard in importedStandards)
                     {
                         if(standard.CreatedDate.HasInvalidValue)

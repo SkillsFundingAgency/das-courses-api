@@ -14,6 +14,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     var referenceNumber = importedStandards[0].ReferenceNumber.Value;
                     var versions = importedStandards
                         .Select(s => s.Version.Value.ParseVersion())

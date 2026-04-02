@@ -13,10 +13,15 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
         public LarsCodeNotZeroTwoWeeksAfterPublishValidator()
             : base(ValidationFailureType.Warning)
         {
-            RuleFor(standardImports => standardImports)
-                .Custom((standardImports, context) =>
+            RuleFor(importedStandards => importedStandards)
+                .Custom((importedStandards, context) =>
                 {
-                    foreach (var standard in standardImports)
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
+                    foreach (var standard in importedStandards)
                     {
                         if (standard.ApprenticeshipType is not (ApprenticeshipType.Apprenticeship or ApprenticeshipType.FoundationApprenticeship))
                             continue;

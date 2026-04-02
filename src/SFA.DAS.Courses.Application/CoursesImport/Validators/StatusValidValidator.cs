@@ -14,6 +14,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     var validStatuses = new[] { Status.ApprovedForDelivery, Status.Retired, Status.Withdrawn, Status.ProposalInDevelopment, Status.InDevelopment};
                     
                     foreach (var standard in importedStandards)

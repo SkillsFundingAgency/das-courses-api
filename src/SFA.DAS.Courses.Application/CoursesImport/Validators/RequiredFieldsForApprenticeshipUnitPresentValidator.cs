@@ -10,9 +10,13 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
         public RequiredFieldsForApprenticeshipUnitPresentValidator() : base(ValidationFailureType.Error)
         {
             RuleFor(importedStandards => importedStandards)
-
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     foreach (var apprenticeshipUnit in importedStandards)
                     {
                         var undefinedFields = new Dictionary<string, bool>();

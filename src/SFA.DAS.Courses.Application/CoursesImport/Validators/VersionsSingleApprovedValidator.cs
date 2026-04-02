@@ -14,6 +14,11 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Validators
             RuleFor(importedStandards => importedStandards)
                 .Custom((importedStandards, context) =>
                 {
+                    if (importedStandards == null)
+                    {
+                        return;
+                    }
+
                     var approvedVersions = importedStandards
                         .Where(s => string.Equals(s.Status.Value, Domain.Courses.Status.ApprovedForDelivery, StringComparison.OrdinalIgnoreCase))
                         .Select(s => s.Version.Value)
