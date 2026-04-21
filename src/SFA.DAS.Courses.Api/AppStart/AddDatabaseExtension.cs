@@ -1,4 +1,6 @@
 ﻿using System;
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Courses.Data;
@@ -20,14 +22,13 @@ namespace SFA.DAS.Courses.Api.AppStart
             }
             else
             {
-                services.AddDbContext<CoursesDataContext>(ServiceLifetime.Transient);    
-            }
-            
-            
+                services.AddSingleton<TokenCredential, DefaultAzureCredential>();
 
-            services.AddTransient<ICoursesDataContext, CoursesDataContext>(provider => provider.GetService<CoursesDataContext>());
-            services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetService<CoursesDataContext>()));
-            
+                services.AddDbContext<CoursesDataContext>(ServiceLifetime.Transient, ServiceLifetime.Transient);
+            }
+
+            services.AddTransient<ICoursesDataContext>(provider => provider.GetRequiredService<CoursesDataContext>());
+            services.AddTransient(provider => new Lazy<CoursesDataContext>(provider.GetRequiredService<CoursesDataContext>()));
         }
     }
 }
