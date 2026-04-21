@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Courses.Data;
@@ -21,7 +20,6 @@ namespace SFA.DAS.Courses.Api.AppStart
             }
             else
             {
-                services.AddSingleton(new AzureServiceTokenProvider());
                 services.AddDbContext<CoursesDataContext>(ServiceLifetime.Transient);    
             }
             

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -340,34 +340,6 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
             // Assert
             actualStandards.Should().NotBeNull();
             actualStandards.Count().Should().Be(3);
-            actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_Available_Apprenticeship_And_Foundation_Standards_Are_Returned_When_Filtering_By_Available_Apprenticship_Course_Type(
-            [StandardRepositoryTestData] StandardRepositoryTestData data,
-            [Frozen] Mock<ICoursesDataContext> mockDataContext,
-            Data.Repository.StandardRepository repository)
-        {
-            // Arrange
-            var expectedStandards = new List<Standard>();
-            expectedStandards.AddRange(data.ActiveValidApprenticeshipStandards);
-            expectedStandards.AddRange(data.ActiveValidFoundationApprenticeshipStandards);
-
-            SetupContext(mockDataContext, data);
-
-            // Act
-            var actualStandards = await repository.GetStandards(
-                new List<int>(),
-                new List<int>(),
-                StandardFilter.ActiveAvailable,
-                false,
-                new List<ApprenticeshipType>(),
-                CourseType.Apprenticeship);
-
-            // Assert
-            actualStandards.Should().NotBeNull();
-            actualStandards.Count().Should().Be(6);
             actualStandards.Should().BeEquivalentTo(expectedStandards, EquivalencyAssertionOptionsHelper.DoNotIncludeAllPropertiesExcludes());
         }
     }

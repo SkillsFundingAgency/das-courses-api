@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.Services.AppAuthentication;
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -32,13 +33,16 @@ namespace SFA.DAS.Courses.Data
         DbSet<Domain.Entities.RouteImport> RoutesImport { get; set; }
         DbSet<Domain.Entities.SectorSubjectAreaTier1Import> SectorSubjectAreaTier1Import { get; set; }
         DbSet<Domain.Entities.ShortCourseDates> ShortCourseDates { get; set; }
-        Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class;
+
+        Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default)
+            where TEntity : class;
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
     public partial class CoursesDataContext : DbContext, ICoursesDataContext
     {
-        private const string AzureResource = "https://database.windows.net/";
+        private const string AzureResource = "https://database.windows.net//.default";
 
         public DbSet<Domain.Entities.Standard> Standards { get; set; }
         public DbSet<Domain.Entities.StandardImport> StandardsImport { get; set; }
@@ -61,44 +65,59 @@ namespace SFA.DAS.Courses.Data
         public DbSet<Domain.Entities.ShortCourseDates> ShortCourseDates { get; set; }
 
         private readonly CoursesConfiguration _configuration;
-        private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
+        private readonly TokenCredential _credential;
 
-        public CoursesDataContext()
+        public CoursesDataContext(DbContextOptions<CoursesDataContext> options)
+            : base(options)
         {
         }
 
-        public CoursesDataContext(DbContextOptions options) : base(options)
-        {
-
-        }
-        public CoursesDataContext(IOptions<CoursesConfiguration> config, DbContextOptions options, AzureServiceTokenProvider azureServiceTokenProvider) : base(options)
+        public CoursesDataContext(
+            IOptions<CoursesConfiguration> config,
+            DbContextOptions<CoursesDataContext> options,
+            TokenCredential credential)
+            : base(options)
         {
             _configuration = config.Value;
-            _azureServiceTokenProvider = azureServiceTokenProvider;
+            _credential = credential;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies();
-
-            if (_configuration == null || _azureServiceTokenProvider == null)
+            if (optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer().UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 return;
             }
 
-            var connection = new SqlConnection
+            if (_configuration == null)
             {
-                ConnectionString = _configuration.ConnectionString,
-                AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result,
-            };
+                optionsBuilder.UseSqlServer();
+                return;
+            }
 
-            optionsBuilder.UseSqlServer(connection, options =>
-                options.EnableRetryOnFailure(
-                    5,
-                    TimeSpan.FromSeconds(20),
-                    null
-                )).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            var connection = new SqlConnection(_configuration.ConnectionString);
+
+            if (_credential != null)
+            {
+                connection.AccessTokenCallback = async (_, cancellationToken) =>
+                {
+                    var token = await _credential.GetTokenAsync(
+                        new TokenRequestContext(new[] { AzureResource }),
+                        cancellationToken);
+
+                    return new SqlAuthenticationToken(token.Token, token.ExpiresOn);
+                };
+            }
+
+            optionsBuilder.UseSqlServer(connection, sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(20),
+                    errorNumbersToAdd: null);
+            });
+
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -126,7 +145,10 @@ namespace SFA.DAS.Courses.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public async Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default) where TEntity : class
+        public async Task DeleteAllBatchedAsync<TEntity>(
+            int batchSize = 200,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
         {
             var set = Set<TEntity>();
 
@@ -137,7 +159,9 @@ namespace SFA.DAS.Courses.Data
                     .ExecuteDeleteAsync(cancellationToken);
 
                 if (deleted < batchSize)
+                {
                     break;
+                }
             }
         }
     }

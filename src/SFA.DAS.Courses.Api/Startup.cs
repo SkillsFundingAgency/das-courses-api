@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
-using MediatR;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -137,8 +136,17 @@ namespace SFA.DAS.Courses.Api
 
             services.AddApiBehaviourOptions();
 
-            services.AddApiVersioning(opt => {
-                opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+            })
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = false;
             });
 
             services.AddLogging();
@@ -163,14 +171,14 @@ namespace SFA.DAS.Courses.Api
 
             app.ConfigureExceptionHandler(logger);
 
-            app.UseAuthentication();
-
             if (!ConfigurationIsLocalOrDev())
             {
                 app.UseHealthChecks();
             }
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(builder =>
             {
                 builder.MapControllerRoute(
