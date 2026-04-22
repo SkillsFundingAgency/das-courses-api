@@ -52,7 +52,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                    EffectiveFrom = g
                         .OrderBy(x => x.VersionMajor)
                         .ThenBy(x => x.VersionMinor)
-                        .Select(x => x.ApprovedForDelivery.GetValueOrDefault(DateTime.MinValue))
+                        .Select(x => x.VersionEarliestStartDate.GetValueOrDefault(DateTime.MinValue))
                         .FirstOrDefault(),
                    EffectiveTo = g
                         .OrderByDescending(x => x.VersionMajor)
@@ -62,7 +62,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
                    LastDateStarts = g
                         .OrderByDescending(x => x.VersionMajor)
                         .ThenByDescending(x => x.VersionMinor)
-                    .Select(x => x.VersionLatestStartDate)
+                        .Select(x => x.VersionLatestStartDate)
                         .FirstOrDefault()
                })
                .ToList();
