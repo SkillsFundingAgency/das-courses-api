@@ -98,7 +98,7 @@ namespace SFA.DAS.Courses.Data.Repository
         {
             var shortCourses = await _coursesDataContext
                 .Standards
-                .FilterStandards(StandardFilter.Active)
+                .FilterStandards(StandardFilter.Active, includeInvalid: true)
                 .Where(s => s.CourseType == CourseType.ShortCourse && s.LarsCode != string.Empty)
                 .ToListAsync();
 
@@ -110,7 +110,7 @@ namespace SFA.DAS.Courses.Data.Repository
                     EffectiveFrom = g
                         .OrderBy(x => x.VersionMajor)
                         .ThenBy(x => x.VersionMinor)
-                        .Select(x => x.ApprovedForDelivery.GetValueOrDefault(DateTime.MinValue))
+                        .Select(x => x.VersionEarliestStartDate.GetValueOrDefault(DateTime.MinValue))
                         .FirstOrDefault(),
                     EffectiveTo = g
                         .OrderByDescending(x => x.VersionMajor)
