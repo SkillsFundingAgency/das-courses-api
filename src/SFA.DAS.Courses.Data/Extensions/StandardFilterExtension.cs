@@ -25,12 +25,12 @@ namespace SFA.DAS.Courses.Data.Extensions
             return standards;
         }
 
-        public static IQueryable<Standard> FilterStandards(this IQueryable<Standard> standards, StandardFilter filter)
+        public static IQueryable<Standard> FilterStandards(this IQueryable<Standard> standards, StandardFilter filter, bool includeInvalid = false)
         {
             switch (filter)
             {
                 case StandardFilter.Active:
-                    standards = standards.FilterActive();
+                    standards = standards.FilterActive(includeInvalid);
                     break;
                 case StandardFilter.ActiveAvailable:
                     standards = standards.FilterActiveAvailableToStart();
@@ -114,13 +114,17 @@ namespace SFA.DAS.Courses.Data.Extensions
             return filteredStandards;
         }
 
-        private static IQueryable<Standard> FilterActive(this IQueryable<Standard> standards)
+        private static IQueryable<Standard> FilterActive(this IQueryable<Standard> standards, bool includeInvalid = false)
         {
-            var filteredStandards = standards
-                .IsValid()
+            var query = standards
                 .StatusIsOneOf(Domain.Courses.Status.ApprovedForDelivery, Domain.Courses.Status.Retired);
 
-            return filteredStandards;
+            if (!includeInvalid)
+            {
+                query = query.IsValid();
+            }
+
+            return query;
         }
 
         private static IQueryable<Standard> FilterNotYetApproved(this IQueryable<Standard> standards)
