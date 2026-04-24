@@ -1,7 +1,6 @@
-﻿using System;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.AutoMoq;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 
 namespace SFA.DAS.Courses.Domain.TestHelper.AutoFixture
 {

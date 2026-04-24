@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
+using Reqnroll;
 using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Domain.Entities;
-using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 {
@@ -133,13 +133,13 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         /// </summary>
         /// <param name="config"></param>
         /// <returns>Exluded properties which should be configured for the EquivalencyAssertion</returns>
-        private static EquivalencyAssertionOptions<GetCourseResponse> BaseStandardQueryExludes(EquivalencyAssertionOptions<GetCourseResponse> config) =>
+        private static EquivalencyOptions<GetCourseResponse> BaseStandardQueryExludes(EquivalencyOptions<GetCourseResponse> config) =>
             config
                 .Excluding(c => c.Skills)
                 .Excluding(c => c.CourseDates)
                 .Excluding(c => c.SearchScore);
 
-        private static EquivalencyAssertionOptions<GetCourseResponse> FullBaseStandardQueryExludes(EquivalencyAssertionOptions<GetCourseResponse> config) =>
+        private static EquivalencyOptions<GetCourseResponse> FullBaseStandardQueryExludes(EquivalencyOptions<GetCourseResponse> config) =>
             config
                 .Excluding(c => c.SearchScore);
     }

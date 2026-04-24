@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
+using Reqnroll;
 using SFA.DAS.Courses.Api.AcceptanceTests.Infrastructure;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Domain.Entities;
-using TechTalk.SpecFlow;
-using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
 {
@@ -202,7 +201,7 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         /// </summary>
         /// <param name="config"></param>
         /// <returns>Exluded properties which should be configured for the EquivalencyAssertion</returns>
-        private static EquivalencyAssertionOptions<GetStandardDetailResponse> BaseStandardQueryExcludes(EquivalencyAssertionOptions<GetStandardDetailResponse> config) =>
+        private static EquivalencyOptions<GetStandardDetailResponse> BaseStandardQueryExcludes(EquivalencyOptions<GetStandardDetailResponse> config) =>
             config
                 .Excluding(c => c.Ksbs)
                 .Excluding(c => c.Options)
@@ -216,16 +215,16 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         /// </summary>
         /// <param name="config"></param>
         /// <returns>Exluded properties which should be configured for the EquivalencyAssertion</returns>
-        private static EquivalencyAssertionOptions<GetStandardResponse> BaseStandardQueryExludes(EquivalencyAssertionOptions<GetStandardResponse> config) =>
+        private static EquivalencyOptions<GetStandardResponse> BaseStandardQueryExludes(EquivalencyOptions<GetStandardResponse> config) =>
             config
                 .Excluding(c => c.SearchScore)
                 .Excluding(c => c.Skills);
 
-        private static EquivalencyAssertionOptions<GetStandardDetailResponse> FullBaseStandardQueryExludes(EquivalencyAssertionOptions<GetStandardDetailResponse> config) =>
+        private static EquivalencyOptions<GetStandardDetailResponse> FullBaseStandardQueryExludes(EquivalencyOptions<GetStandardDetailResponse> config) =>
             config
                 .Excluding(c => c.SearchScore);
 
-        private static EquivalencyAssertionOptions<GetStandardResponse> FullBaseStandardQueryExludes(EquivalencyAssertionOptions<GetStandardResponse> config) =>
+        private static EquivalencyOptions<GetStandardResponse> FullBaseStandardQueryExludes(EquivalencyOptions<GetStandardResponse> config) =>
             config
                 .Excluding(c => c.SearchScore);
     }

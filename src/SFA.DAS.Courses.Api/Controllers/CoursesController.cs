@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using SFA.DAS.Courses.Api.ApiResponses;
+using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCourse;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCoursesSearch;
 using SFA.DAS.Courses.Domain.Entities;
@@ -24,6 +27,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet("search")]
+        [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> Search(
             [FromQuery] string keyword,
             [FromQuery] IList<int> routeIds,
@@ -56,6 +60,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet("lookup/{id}")]
+        [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> Lookup(string id)
         {
             var result = await _mediator.Send(new GetCourseByIdQuery { Id = id });

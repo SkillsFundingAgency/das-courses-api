@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
-using MediatR;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -38,10 +37,8 @@ namespace SFA.DAS.Courses.Api
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddEnvironmentVariables();
 
-
             if (!configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase))
             {
-
 #if DEBUG
                 config
                     .AddJsonFile("appsettings.json", true)
@@ -49,12 +46,12 @@ namespace SFA.DAS.Courses.Api
 #endif
 
                 config.AddAzureTableStorage(options =>
-                    {
-                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["Environment"];
-                        options.PreFixConfigurationKeys = false;
-                    }
+                {
+                    options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+                    options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                    options.EnvironmentName = configuration["Environment"];
+                    options.PreFixConfigurationKeys = false;
+                }
                 );
             }
 
@@ -63,7 +60,6 @@ namespace SFA.DAS.Courses.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddOptions();
             services.Configure<CoursesConfiguration>(_configuration.GetSection("Courses"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<CoursesConfiguration>>().Value);
@@ -84,8 +80,8 @@ namespace SFA.DAS.Courses.Api
 
                 var policies = new Dictionary<string, string>
                 {
-                    {PolicyNames.Default, RoleNames.Default},
-                    {PolicyNames.DataLoad, RoleNames.DataLoad}
+                    { PolicyNames.Default, RoleNames.Default },
+                    { PolicyNames.DataLoad, RoleNames.DataLoad }
                 };
 
                 services.AddAuthentication(azureAdConfiguration, policies);
@@ -97,20 +93,35 @@ namespace SFA.DAS.Courses.Api
                     .AddDbContextCheck<CoursesDataContext>()
                     .AddCheck<LarsHealthCheck>("Lars Data Health Check",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] {"ready"})
+                        tags: new[] { "ready" })
                     .AddCheck<SkillsEnglandServiceHealthCheck>("Skills England Health Check",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] {"ready"})
+                        tags: new[] { "ready" })
                     .AddCheck<FrameworksHealthCheck>("Frameworks Health Check",
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] {"ready"});
+                        tags: new[] { "ready" });
             }
 
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(ImportDataCommand).Assembly));
 
             services.AddServiceRegistration();
-
             services.AddDatabaseRegistration(coursesConfiguration, _configuration["Environment"]);
+
+            services.AddOutputCache(options =>
+            {
+                options.AddPolicy(CoursesOutputCachePolicy.CoursesDataLoad, policy =>
+                {
+                    policy.AddPolicy<CoursesOutputCachePolicy>()
+                        .Expire(TimeSpan.FromHours(24))
+                        .Tag(CoursesOutputCachePolicy.CoursesTag);
+                }, excludeDefaultPolicy: true);
+            });
+
+            services.AddStackExchangeRedisOutputCache(options =>
+            {
+                options.Configuration = _configuration["Courses:RedisConnectionString"];
+                options.InstanceName = "SFA.DAS.Courses.Api";
+            });
 
             services
                 .AddMvc(o =>
@@ -119,6 +130,7 @@ namespace SFA.DAS.Courses.Api
                     {
                         o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string> { PolicyNames.DataLoad }));
                     }
+
                     o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
                 })
                 .AddJsonOptions(options =>
@@ -137,8 +149,17 @@ namespace SFA.DAS.Courses.Api
 
             services.AddApiBehaviourOptions();
 
-            services.AddApiVersioning(opt => {
-                opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+            })
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = false;
             });
 
             services.AddLogging();
@@ -163,14 +184,17 @@ namespace SFA.DAS.Courses.Api
 
             app.ConfigureExceptionHandler(logger);
 
+            app.UseRouting();
+
             app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseOutputCache();
 
             if (!ConfigurationIsLocalOrDev())
             {
                 app.UseHealthChecks();
             }
 
-            app.UseRouting();
             app.UseEndpoints(builder =>
             {
                 builder.MapControllerRoute(

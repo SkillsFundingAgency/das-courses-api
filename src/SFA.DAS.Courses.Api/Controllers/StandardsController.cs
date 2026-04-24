@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using SFA.DAS.Courses.Api.ApiResponses;
+using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
 using SFA.DAS.Courses.Application.Courses.Queries.GetStandardsByIFateReference;
@@ -26,6 +29,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
+        [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> GetList(
             [FromQuery] string keyword,
             [FromQuery] IList<int> routeIds,
@@ -56,6 +60,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> Get(string id)
         {
             var result = await _mediator.Send(new GetStandardByIdQuery { Id = id });
@@ -67,6 +72,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet("{id}/options/{option}/ksbs")]
+        [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> GetOptionKsbs(string id, string option)
         {
             var queryResult = await _mediator.Send(new GetStandardOptionKsbsQuery
@@ -79,6 +85,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet("versions/{iFateReferenceNumber}")]
+        [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> GetStandardsByIFateReferenceNumber(string iFateReferenceNumber)
         {
             var queryResult = await _mediator.Send(new GetStandardsByIFateReferenceQuery
