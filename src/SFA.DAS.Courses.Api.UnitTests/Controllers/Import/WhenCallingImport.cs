@@ -25,10 +25,10 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
             // Arrange
             mockMediator
                 .Setup(p => p.Send(It.IsAny<ImportDataCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<string>());
+                .ReturnsAsync(new ImportDataCommandResult { ValidationMessages = new List<string>() });
 
             // Act
-            var controllerResult = await controller.Index() as OkObjectResult;
+            var controllerResult = await controller.Index(CancellationToken.None) as OkObjectResult;
 
             // Assert
             mockMediator.Verify(x=>x.Send(It.IsAny<ImportDataCommand>(), It.IsAny<CancellationToken>()), Times.Once);

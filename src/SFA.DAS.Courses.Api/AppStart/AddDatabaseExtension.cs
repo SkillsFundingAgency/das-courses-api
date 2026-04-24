@@ -18,7 +18,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             }
             else if (environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
-                services.AddDbContext<CoursesDataContext>(options=>options.UseSqlServer(config.ConnectionString),ServiceLifetime.Transient);
+                services.AddDbContext<CoursesDataContext>(options=>options.UseSqlServer(config.ConnectionString), ServiceLifetime.Transient);
             }
             else
             {

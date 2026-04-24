@@ -84,6 +84,8 @@ namespace SFA.DAS.Courses.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+
             if (optionsBuilder.IsConfigured)
             {
                 return;
@@ -116,8 +118,6 @@ namespace SFA.DAS.Courses.Data
                     maxRetryDelay: TimeSpan.FromSeconds(20),
                     errorNumbersToAdd: null);
             });
-
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

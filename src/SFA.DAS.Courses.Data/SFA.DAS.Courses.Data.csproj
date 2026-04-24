@@ -9,9 +9,6 @@
     <PackageReference Include="Lucene.Net.Analysis.Phonetic" Version="4.8.0-beta00016" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.6" />
-    <PackageReference Include="Reqnroll" Version="3.3.4" />
-    <PackageReference Include="Reqnroll.NUnit" Version="3.3.4" />
-    <PackageReference Include="Reqnroll.Tools.MsBuild.Generation" Version="3.3.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Courses.Domain\SFA.DAS.Courses.Domain.csproj" />
