@@ -67,6 +67,12 @@ namespace SFA.DAS.Courses.Application.Courses.Services
             return standards.Select(standard => (Standard)standard);
         }
 
+        public async Task<IEnumerable<Course>> GetAllVersionsOfACourse(string iFateReferenceNumber)
+        {
+            var standards = await _standardsRepository.GetStandards(iFateReferenceNumber, null);
+            return standards.Select(standard => (Course)standard);
+        }
+
         public async Task<int> CountStandards(StandardFilter filter = StandardFilter.None)
         {
             var count = await _standardsRepository.Count(filter, CourseType.Apprenticeship);

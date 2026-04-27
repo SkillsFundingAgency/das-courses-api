@@ -246,15 +246,26 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsList(ImportTypes.SkillsEngland.Standard standard)
         {
-            var standardOptions = standard.CoreAndOptions.Value
-                ? CreateStructuredOptionsListWithDutyMapping(standard)
-                : CreateStructuredOptionsListWithoutDutyMapping(standard);
+            List<StandardOption> standardOptions = null;
 
-            if (standardOptions.Any())
+            if (standard.CoreAndOptions.Value && standard.Duties.Value.EmptyEnumerableIfNull().Any())
+            {
+                standardOptions = CreateStructuredOptionsListWithDutyMapping(standard);
+            }
+            else if (standard.CoreAndOptions.Value && !standard.Duties.Value.EmptyEnumerableIfNull().Any())
+            {
+                standardOptions = CreateStructuredOptionsListWithoutDutyMapping(standard);
+            }
+            else if (!standard.CoreAndOptions.Value)
+            {
+                standardOptions = CreateStructuredOptionsListWithCorePseduoOption(standard);
+            }
+
+            if (standardOptions.EmptyEnumerableIfNull().Any())
             {
                 return standardOptions;
             }
-            else if (standard.OptionsUnstructuredTemplate?.Value?.Any() ?? false)
+            else if (standard.OptionsUnstructuredTemplate.Value.EmptyEnumerableIfNull().Any())
             {
                 return standard.OptionsUnstructuredTemplate.Value.Select(StandardOption.Create).ToList();
             }
@@ -277,10 +288,10 @@ namespace SFA.DAS.Courses.Domain.Entities
             StandardOption MapOption(Option option)
                 => StandardOption.Create(
                     option.OptionId.Value,
-                    option.Title?.Value?.Trim(),
-                    MapKsbs(option));
+                    option.Title.Value?.Trim(),
+                    MapKsbsFromDuties(option));
 
-            List<Ksb> MapKsbs(Option option)
+            List<Ksb> MapKsbsFromDuties(Option option)
             {
                 var knowledge = MapDuties(option, standard.Knowledges.Value, x => x.MappedKnowledge?.Value, x => x.KnowledgeId.Value, x => x.Detail.Value, Ksb.Knowledge);
                 var skills = MapDuties(option, standard.Skills.Value, x => x.MappedSkills?.Value, x => x.SkillId.Value, x => x.Detail.Value, Ksb.Skill);
@@ -338,6 +349,28 @@ namespace SFA.DAS.Courses.Domain.Entities
 
         private static List<StandardOption> CreateStructuredOptionsListWithoutDutyMapping(ImportTypes.SkillsEngland.Standard standard)
         {
+            var options = (standard.Options?.Value)
+                .EmptyEnumerableIfNull();
+
+            return options.Select(MapOption).ToList();
+
+            StandardOption MapOption(Option option)
+               => StandardOption.Create(
+                   option.OptionId.Value,
+                   option.Title.Value?.Trim(),
+                   GetAllKsbs(standard));
+        }
+
+        private static List<StandardOption> CreateStructuredOptionsListWithCorePseduoOption(ImportTypes.SkillsEngland.Standard standard)
+        {
+            return new List<StandardOption>
+            {
+                StandardOption.CreateCorePseudoOption(GetAllKsbs(standard)?.DistinctBy(x => x.Key).ToList())
+            };
+        }
+
+        private static List<Ksb> GetAllKsbs(ImportTypes.SkillsEngland.Standard standard)
+        {
             var ksbs = standard.ApprenticeshipType switch
             {
                 ApprenticeshipType.Apprenticeship => GetApprenticeshipKsbs(standard),
@@ -346,10 +379,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 _ => Enumerable.Empty<Ksb>()
             };
 
-            return new List<StandardOption>
-            {
-                StandardOption.CreateCorePseudoOption(ksbs.DistinctBy(x => x.Key).ToList())
-            };
+            return ksbs?.ToList();
         }
 
         private static IEnumerable<Ksb> GetApprenticeshipKsbs(ImportTypes.SkillsEngland.Standard standard)

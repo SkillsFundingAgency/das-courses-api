@@ -2,7 +2,6 @@
 using System.Linq;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Entities;
-using SFA.DAS.Courses.Domain.Extensions;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
@@ -38,18 +37,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 AssessmentPlanUrl = source.AssessmentPlanUrl,
                 TrailBlazerContact = source.TrailBlazerContact,
                 TypicalJobTitles = source.TypicalJobTitles,
-                Skills = source.Options
-                            .SelectManyOrEmptyList(x => x.Skills)
-                            .Select(x => x.Detail)
-                            .Distinct().ToList(),
-                Ksbs = source.Options
-                            .SelectManyOrEmptyList(x => x.Skills.EmptyEnumerableIfNull()
-                            .Union(x.Knowledge.EmptyEnumerableIfNull())
-                            .Union(x.Behaviours.EmptyEnumerableIfNull())
-                            .Union(x.TechnicalSkills.EmptyEnumerableIfNull())
-                            .Union(x.TechnicalKnowledges.EmptyEnumerableIfNull())
-                            .Union(x.EmployabilitySkillsAndBehaviours.EmptyEnumerableIfNull()))
-                            .Select(x => (KsbResponse)x).ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding?.Select(c => (CourseApprenticeshipFundingResponse)c).ToList() ?? [],

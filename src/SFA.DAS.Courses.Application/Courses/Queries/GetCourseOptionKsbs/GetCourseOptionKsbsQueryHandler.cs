@@ -8,38 +8,38 @@ using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
+namespace SFA.DAS.Courses.Application.Courses.Queries.GetCourseOptionKsbs
 {
-    public class GetStandardOptionKsbsQueryHandler : IRequestHandler<GetStandardOptionKsbsQuery, GetStandardOptionKsbsResult>
+    public class GetCourseOptionKsbsQueryHandler : IRequestHandler<GetCourseOptionKsbsQuery, GetCourseOptionKsbsResult>
     {
         private readonly IStandardsService _standardsService;
 
-        public GetStandardOptionKsbsQueryHandler(IStandardsService standardsService)
+        public GetCourseOptionKsbsQueryHandler(IStandardsService standardsService)
         {
             ArgumentNullException.ThrowIfNull(standardsService);
 
             _standardsService = standardsService;
         }
 
-        public async Task<GetStandardOptionKsbsResult> Handle(GetStandardOptionKsbsQuery request, CancellationToken cancellationToken)
+        public async Task<GetCourseOptionKsbsResult> Handle(GetCourseOptionKsbsQuery request, CancellationToken cancellationToken)
         {
             List<Ksb> ksbs = null;
 
-            var standard = await _standardsService.GetStandardByAnyId(request.Id);
+            var course = await _standardsService.GetCourseByAnyId(request.Id);
 
-            if (standard != null)
+            if (course != null)
             {
                 if (request.Option == "all")
                 {
-                    ksbs = standard.Options.SelectMany(o => o.Ksbs).Distinct().ToList();
+                    ksbs = course.Options.SelectMany(o => o.Ksbs).Distinct().ToList();
                 }
                 else
                 {
-                    ksbs = standard.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
+                    ksbs = course.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
                 }
             }
 
-            return new GetStandardOptionKsbsResult
+            return new GetCourseOptionKsbsResult
             {
                 Ksbs = ksbs.EmptyEnumerableIfNull().ToArray()
             };

@@ -36,7 +36,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                 Route = source.Route,
                 RouteCode = source.RouteCode,
                 TypicalJobTitles = source.TypicalJobTitles,
-                Skills = source.Options.SelectManyOrEmptyList(x => x.Skills).Select(x => x.Detail).Distinct().ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding?.Select(c => (CourseApprenticeshipFundingResponse)c).ToList() ?? [],
