@@ -135,7 +135,6 @@ namespace SFA.DAS.Courses.Api.AcceptanceTests.Steps
         /// <returns>Exluded properties which should be configured for the EquivalencyAssertion</returns>
         private static EquivalencyOptions<GetCourseResponse> BaseStandardQueryExludes(EquivalencyOptions<GetCourseResponse> config) =>
             config
-                .Excluding(c => c.Skills)
                 .Excluding(c => c.CourseDates)
                 .Excluding(c => c.SearchScore);
 

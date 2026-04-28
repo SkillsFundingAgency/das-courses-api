@@ -7,7 +7,7 @@ using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
-    public class GetCourseResponse : SingleResponse
+    public class GetCourseResponse : SummaryResponse
     {
         public List<CourseApprenticeshipFundingResponse> ApprenticeshipFunding { get; set; }
         public ApprenticeshipType LearningType { get; set; }
