@@ -31,7 +31,10 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetCourseOptionKsbs
             {
                 if (request.Option == "all")
                 {
-                    ksbs = course.Options.SelectMany(o => o.Ksbs).Distinct().ToList();
+                    ksbs = course.Options
+                        .SelectMany(o => o.Ksbs)
+                        .DistinctBy(k => k.Id)
+                        .ToList();
                 }
                 else
                 {
