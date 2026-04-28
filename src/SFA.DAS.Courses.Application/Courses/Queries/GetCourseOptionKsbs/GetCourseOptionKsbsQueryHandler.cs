@@ -32,13 +32,18 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetCourseOptionKsbs
                 if (request.Option == "all")
                 {
                     ksbs = course.Options
-                        .SelectMany(o => o.Ksbs)
+                        .EmptyEnumerableIfNull()
+                        .SelectMany(o => o.Ksbs.EmptyEnumerableIfNull())
                         .DistinctBy(k => k.Id)
                         .ToList();
                 }
                 else
                 {
-                    ksbs = course.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
+                    ksbs = course.Options
+                        .EmptyEnumerableIfNull()
+                        .FirstOrDefault(option =>
+                            option.Title.Equals(request.Option, StringComparison.OrdinalIgnoreCase))
+                        ?.Ksbs;
                 }
             }
 
