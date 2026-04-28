@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using HtmlAgilityPack;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
@@ -51,7 +54,7 @@ namespace SFA.DAS.Courses.Domain.Entities
                 LastUpdated = source.LastUpdated,
                 Level = source.Level.Value,
                 Options = CreateStructuredOptionsList(source),
-                OverviewOfRole = RemoveMarkup(source.OverviewOfRole.Value),
+                OverviewOfRole = ToPlainText(source.OverviewOfRole.Value),
                 ProposedMaxFunding = source.ProposedMaxFunding.Value,
                 ProposedTypicalDuration = source.ProposedTypicalDuration.Value,
                 PublishDate = source.PublishDate.Value,
@@ -73,12 +76,29 @@ namespace SFA.DAS.Courses.Domain.Entities
             };
         }
 
-        private static string RemoveMarkup(string input)
+        public static string ToPlainText(string? html)
         {
-            if (input == null)
-                return null;
+            if (string.IsNullOrWhiteSpace(html))
+            {
+                return string.Empty;
+            }
 
-            return input.Replace("<p>", string.Empty).Replace("</p>", string.Empty);
+            html = Regex.Replace(html, @"<\s*br\s*/?>", "\n", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"</\s*p\s*>", "\n", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"</\s*div\s*>", "\n", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"</\s*li\s*>", "\n", RegexOptions.IgnoreCase);
+
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            var text = WebUtility.HtmlDecode(doc.DocumentNode.InnerText);
+
+            text = Regex.Replace(text, @"[ \t]+", " ");
+            text = Regex.Replace(text, @"\n{3,}", "\n\n");
+
+            return text
+                .Replace("\r", "")
+                .Trim();
         }
 
         private static string GetCombinedGreenAndTypicalJobTitles(ImportTypes.SkillsEngland.Standard standard)
