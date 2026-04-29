@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS ##Standard_Import_Master;
+
 CREATE TABLE ##Standard_Import_Master
 (
     StandardUId VARCHAR(20) PRIMARY KEY,
@@ -43,9 +45,53 @@ CREATE TABLE ##Standard_Import_Master
 	RelatedOccupations NVARCHAR(1000) NULL
 );
 
---DROP TABLE ##Standard_Import_Master
---INSERT INTO ##Standard_Import_Master SELECT * FROM Standard_Import
 
+INSERT INTO ##Standard_Import_Master 
+SELECT
+    StandardUId,
+    IfateReferenceNumber,
+    LarsCode,
+    Status,
+    VersionEarliestStartDate,
+    VersionLatestStartDate,
+    VersionLatestEndDate,
+    Title,
+    Level,
+    ProposedTypicalDuration,
+    ProposedMaxFunding,
+    IntegratedDegree,
+    OverviewOfRole,
+    RouteCode,
+    AssessmentPlanUrl,
+    ApprovedForDelivery,
+    TrailBlazerContact,
+    EqaProviderName,
+    EqaProviderContactName,
+    EqaProviderContactEmail,
+    EqaProviderWebLink,
+    Keywords,
+    TypicalJobTitles,
+    StandardPageUrl,
+    Version,
+    RegulatedBody,
+    Duties,
+    CoreDuties,
+    CoreAndOptions,
+    IntegratedApprenticeship,
+    CreatedDate,
+    EPAChanged,
+    VersionMajor,
+    VersionMinor,
+    Options,
+    CoronationEmblem,
+    IsRegulatedForProvider,
+    IsRegulatedForEPAO,
+    PublishDate,
+    ApprenticeshipType,
+    RelatedOccupations
+FROM Standard_Import
+
+/*
 SET NOCOUNT ON;
 
 SELECT 
@@ -95,4 +141,4 @@ SELECT
 	CAST(RelatedOccupations AS VARCHAR) +
     ');'
 FROM dbo.Standard_Import;
-
+*/

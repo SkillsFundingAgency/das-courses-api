@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS ##Standard_Master;
+
 CREATE TABLE ##Standard_Master
 (
     StandardUId VARCHAR(20) PRIMARY KEY,
@@ -43,9 +45,52 @@ CREATE TABLE ##Standard_Master
 	RelatedOccupations NVARCHAR(1000) NULL
 );
 
---DROP TABLE ##Standard_Master
---INSERT INTO ##Standard_Master SELECT * FROM Standard
+INSERT INTO ##Standard_Master 
+SELECT
+    StandardUId,
+    IfateReferenceNumber,
+    LarsCode,
+    Status,
+    VersionEarliestStartDate,
+    VersionLatestStartDate,
+    VersionLatestEndDate,
+    Title,
+    Level,
+    ProposedTypicalDuration,
+    ProposedMaxFunding,
+    IntegratedDegree,
+    OverviewOfRole,
+    RouteCode,
+    AssessmentPlanUrl,
+    ApprovedForDelivery,
+    TrailBlazerContact,
+    EqaProviderName,
+    EqaProviderContactName,
+    EqaProviderContactEmail,
+    EqaProviderWebLink,
+    Keywords,
+    TypicalJobTitles,
+    StandardPageUrl,
+    Version,
+    RegulatedBody,
+    Duties,
+    CoreDuties,
+    CoreAndOptions,
+    IntegratedApprenticeship,
+    CreatedDate,
+    EPAChanged,
+    VersionMajor,
+    VersionMinor,
+    Options,
+    CoronationEmblem,
+    IsRegulatedForProvider,
+    IsRegulatedForEPAO,
+    PublishDate,
+    ApprenticeshipType,
+    RelatedOccupations
+FROM Standard
 
+/*
 -- Set NOCOUNT to prevent extra messages
 SET NOCOUNT ON;
 
@@ -95,4 +140,4 @@ SELECT
     ISNULL('''' + CONVERT(VARCHAR, PublishDate, 120) + '''', 'NULL') +
     ');'
 FROM dbo.Standard;
-
+*/

@@ -1590,5 +1590,3 @@ FROM
 	#Temp_Standard_Changes [Changes] ON Lines.StandardUId = [Changes].StandardUId
 ORDER BY
 	[Changes].StandardUId, [Changes].DifferenceType
-
-ROLLBACK
