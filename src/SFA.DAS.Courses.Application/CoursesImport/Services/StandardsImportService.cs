@@ -211,12 +211,13 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 Domain.Courses.Status.ProposalInDevelopment
             };
 
+            // allowing development versions upto 2.0 as EPA reform standards start at 2.0
             return items
                 .Where(p =>
                 {
                     var (major, minor) = version(p).ParseVersion();
-                    return major < 1
-                           || (major == 1 && minor == 0)
+                    return major < 2
+                           || (major == 2 && minor == 0)
                            || !inDevelopmentStatuses.Contains(status(p));
                 })
                 .ToList();
