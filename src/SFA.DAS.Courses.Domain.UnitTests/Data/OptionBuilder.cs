@@ -30,6 +30,6 @@ namespace SFA.DAS.Courses.Domain.UnitTests.Data
         internal OptionBuilder WithBehaviours(IEnumerable<Behaviour> behaviours)
             => new OptionBuilder(Knowledge, Skills, behaviours.ToArray());
 
-        internal Option Build() => new Option { OptionId = OptionId };
+        internal Option Build() => new Option { OptionId = OptionId, Title = $"Title_{OptionId}" };
     }
 }

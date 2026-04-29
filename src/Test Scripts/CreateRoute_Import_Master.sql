@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS ##Route_Import_Master;
+
 CREATE TABLE ##Route_Import_Master
 (
     Id INT PRIMARY KEY,
@@ -5,9 +7,9 @@ CREATE TABLE ##Route_Import_Master
     Active BIT NOT NULL DEFAULT 1
 );
 
--- DROP TABLE ##Route_Import_Master
---INSERT INTO ##Route_Import_Master SELECT * FROM Route_Import
+INSERT INTO ##Route_Import_Master SELECT * FROM Route_Import
 
+/*
 SET NOCOUNT ON;
 
 SELECT 
@@ -17,4 +19,4 @@ SELECT
     CAST(Active AS VARCHAR) +
     ');'
 FROM dbo.Route_Import;
-
+*/

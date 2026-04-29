@@ -6,11 +6,12 @@ using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
-    public class GetStandardResponse : SingleResponse
+    public class GetStandardResponse : SummaryResponse
     {
         public List<StandardApprenticeshipFundingResponse> ApprenticeshipFunding { get; set; }
         public ApprenticeshipType ApprenticeshipType { get; set; }
         public int LarsCode { get; set; }
+        public List<string> Skills { get; set; }
         public CourseDatesResponse StandardDates { get; set; }
 
         public static implicit operator GetStandardResponse(Standard source)

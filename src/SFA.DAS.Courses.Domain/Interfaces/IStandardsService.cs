@@ -17,5 +17,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
         Task<Standard> GetStandardByAnyId(string id);
         Task<Course> GetCourseByAnyId(string id);
         Task<IEnumerable<Standard>> GetAllVersionsOfAStandard(string iFateReferenceNumber, CourseType? courseType);
+        Task<IEnumerable<Course>> GetAllVersionsOfACourse(string iFateReferenceNumber);
     }
 }

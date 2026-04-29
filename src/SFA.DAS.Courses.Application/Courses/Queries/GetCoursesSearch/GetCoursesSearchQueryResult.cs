@@ -7,5 +7,5 @@ public class GetCoursesSearchQueryResult
 {
     public int Total { get; set; }
     public int TotalFiltered { get; set; }
-    public IEnumerable<Course> Standards { get; set; }
+    public IEnumerable<Course> Courses { get; set; }
 }

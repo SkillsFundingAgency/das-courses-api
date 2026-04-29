@@ -107,21 +107,35 @@ namespace SFA.DAS.Courses.Api
             services.AddServiceRegistration();
             services.AddDatabaseRegistration(coursesConfiguration, _configuration["Environment"]);
 
+            var redisConnectionString = _configuration["Courses:RedisConnectionString"];
             services.AddOutputCache(options =>
             {
-                options.AddPolicy(CoursesOutputCachePolicy.CoursesDataLoad, policy =>
+                if (!string.IsNullOrWhiteSpace(redisConnectionString))
                 {
-                    policy.AddPolicy<CoursesOutputCachePolicy>()
-                        .Expire(TimeSpan.FromHours(24))
-                        .Tag(CoursesOutputCachePolicy.CoursesTag);
-                }, excludeDefaultPolicy: true);
+                    options.AddPolicy(CoursesOutputCachePolicy.CoursesDataLoad, policy =>
+                    {
+                        policy.AddPolicy<CoursesOutputCachePolicy>()
+                            .Expire(TimeSpan.FromHours(24))
+                            .Tag(CoursesOutputCachePolicy.CoursesTag);
+                    }, excludeDefaultPolicy: true);
+                }
+                else
+                {
+                    options.AddPolicy(CoursesOutputCachePolicy.CoursesDataLoad, policy =>
+                    {
+                        policy.NoCache();
+                    }, excludeDefaultPolicy: true);
+                }
             });
 
-            services.AddStackExchangeRedisOutputCache(options =>
+            if (!string.IsNullOrWhiteSpace(redisConnectionString))
             {
-                options.Configuration = _configuration["Courses:RedisConnectionString"];
-                options.InstanceName = "SFA.DAS.Courses.Api";
-            });
+                services.AddStackExchangeRedisOutputCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                    options.InstanceName = "SFA.DAS.Courses.Api";
+                });
+            }
 
             services
                 .AddMvc(o =>
