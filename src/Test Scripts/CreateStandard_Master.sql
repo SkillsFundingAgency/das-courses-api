@@ -26,9 +26,6 @@ CREATE TABLE ##Standard_Master
     StandardPageUrl VARCHAR(500) NOT NULL,
     Version VARCHAR(20) NULL,
     RegulatedBody VARCHAR(1000) NULL,
-    Skills NVARCHAR(MAX) NULL, -- Included per your request
-    Knowledge NVARCHAR(MAX) NULL, -- Included per your request
-    Behaviours NVARCHAR(MAX) NULL, -- Included per your request
     Duties NVARCHAR(MAX) NULL,
     CoreDuties NVARCHAR(MAX) NULL,
     CoreAndOptions BIT NOT NULL DEFAULT 0,
@@ -41,7 +38,6 @@ CREATE TABLE ##Standard_Master
     CoronationEmblem BIT NOT NULL DEFAULT 0,
     IsRegulatedForProvider BIT NOT NULL DEFAULT 0,
     IsRegulatedForEPAO BIT NOT NULL DEFAULT 0,
-    EpaoMustBeApprovedByRegulatorBody BIT NOT NULL DEFAULT 0,
     PublishDate DATETIME NULL,
 	ApprenticeshipType VARCHAR(50) NULL,
 	RelatedOccupations NVARCHAR(1000) NULL
@@ -96,7 +92,6 @@ SELECT
     CAST(CoronationEmblem AS VARCHAR) + ',' +
     CAST(IsRegulatedForProvider AS VARCHAR) + ',' +
     CAST(IsRegulatedForEPAO AS VARCHAR) + ',' +
-    CAST(EpaoMustBeApprovedByRegulatorBody AS VARCHAR) + ',' +
     ISNULL('''' + CONVERT(VARCHAR, PublishDate, 120) + '''', 'NULL') +
     ');'
 FROM dbo.Standard;
