@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
@@ -66,13 +68,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
         }
 
         [Test, RecursiveMoqAutoData]
-        public async Task Then_In_Developement_Standards_Above_1_0_Are_Not_loaded(
+        public async Task Then_In_Development_Standards_Above_2_0_Are_Not_Loaded(
             [Frozen] Mock<IRouteRepository> routeRepository,
             [Frozen] Mock<IRouteImportRepository> routeImportRepository,
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
-            StandardsImportService standardsImportService)
+            StandardsImportService _sut)
         {
             // Arrange
             var apprenticeships = new List<Apprenticeship>
@@ -80,16 +82,19 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
                 CreateValidImportedApprenticeship(102, "ST0102", "1.0", "Title 2", Status.ApprovedForDelivery, "Route 1", "Option 2"),
                 CreateValidImportedApprenticeship(103, "ST0103", "1.0", "Title 3", Status.ApprovedForDelivery, "Route 2", "Option 3"),
-                CreateValidImportedApprenticeship(104, "ST0104", "1.0", "Title 4", Status.ApprovedForDelivery, "Route 2", "Option 4"),
-                CreateValidImportedApprenticeship(104, "ST0104", "1.1", "Title 4", Status.InDevelopment, "Route 3", "Option 4") // Route and standard not loaded
+                CreateValidImportedApprenticeship(104, "ST0104", "2.0", "Title 4", Status.InDevelopment, "Route 3", "Option 4"),  // route not imported for in-development standard
+                CreateValidImportedApprenticeship(105, "ST0105", "2.1", "Title 5", Status.InDevelopment, "Route 4", "Option 5")   // standard not imported for in-development above 2.0
             };
 
+            IEnumerable<RouteImport> actualRouteImports = null;
+            IEnumerable<StandardImport> actualStandardImports = null;
+
             routeRepository
-                .Setup(s => s.GetAll())
+                .Setup(x => x.GetAll())
                 .ReturnsAsync(new List<Domain.Entities.Route>());
 
             standardRepository
-                .Setup(s => s.GetStandards(null))
+                .Setup(x => x.GetStandards(null))
                 .ReturnsAsync(new List<Domain.Entities.Standard>());
 
             service
@@ -101,17 +106,40 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     ApprenticeshipUnits = new List<ApprenticeshipUnit>()
                 });
 
+            routeImportRepository
+                .Setup(x => x.InsertMany(It.IsAny<IEnumerable<RouteImport>>()))
+                .Callback<IEnumerable<RouteImport>>(x => actualRouteImports = x.ToList())
+                .ReturnsAsync((IEnumerable<RouteImport> x) => x.Count());
+
+            standardImportRepository
+                .Setup(x => x.InsertMany(It.IsAny<IEnumerable<StandardImport>>()))
+                .Callback<IEnumerable<StandardImport>>(x => actualStandardImports = x.ToList())
+                .Returns(Task.CompletedTask);
+
             // Act
-            await standardsImportService.ImportDataIntoStaging();
+            await _sut.ImportDataIntoStaging();
 
             // Assert
-            routeImportRepository.Verify(x => x.InsertMany(It.Is<List<RouteImport>>(c => c.Count.Equals(2))), Times.Once);
+            actualRouteImports.Should().NotBeNull();
+            actualRouteImports.Should().HaveCount(2);
+            actualRouteImports.Select(x => x.Name).Should().BeEquivalentTo("Route 1", "Route 2");
 
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0101" && p.RouteCode == 1))));
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0102" && p.RouteCode == 1))));
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0103" && p.RouteCode == 2))));
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => s.Exists(p => p.IfateReferenceNumber == "ST0104" && p.RouteCode == 2))));
-            standardImportRepository.Verify(x => x.InsertMany(It.Is<List<StandardImport>>(s => !s.Exists(p => p.IfateReferenceNumber == "ST0104" && p.RouteCode == 3))));
+            actualStandardImports.Should().NotBeNull();
+            actualStandardImports.Select(x => x.IfateReferenceNumber).Should().BeEquivalentTo(
+                "ST0101",
+                "ST0102",
+                "ST0103",
+                "ST0104");
+
+            actualStandardImports.Should().Contain(x =>
+                x.IfateReferenceNumber == "ST0104" &&
+                x.Version == "2.0");
+
+            actualStandardImports.Should().NotContain(x =>
+                x.IfateReferenceNumber == "ST0105");
+
+            routeImportRepository.Verify(x => x.InsertMany(It.IsAny<List<RouteImport>>()), Times.Once);
+            standardImportRepository.Verify(x => x.InsertMany(It.IsAny<List<StandardImport>>()), Times.Once);
         }
 
         [Test, RecursiveMoqAutoData]
