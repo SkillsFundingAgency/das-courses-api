@@ -42,7 +42,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
                     ksbs = standard.Options
                         .EmptyEnumerableIfNull()
                         .FirstOrDefault(option =>
-                            option.Title.Equals(request.Option, StringComparison.OrdinalIgnoreCase))
+                            string.Equals(option.Title, request.Option, StringComparison.OrdinalIgnoreCase))
                         ?.Ksbs;
                 }
             }
