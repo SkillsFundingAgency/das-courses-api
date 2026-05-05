@@ -23,7 +23,6 @@ namespace SFA.DAS.Courses.Api.AppStart
             else
             {
                 services.AddSingleton<TokenCredential, DefaultAzureCredential>();
-
                 services.AddDbContext<CoursesDataContext>(ServiceLifetime.Transient, ServiceLifetime.Transient);
             }
 

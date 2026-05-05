@@ -115,7 +115,8 @@ namespace SFA.DAS.Courses.Api
                     options.AddPolicy(CoursesOutputCachePolicy.CoursesDataLoad, policy =>
                     {
                         policy.AddPolicy<CoursesOutputCachePolicy>()
-                            .Expire(TimeSpan.FromHours(24))
+                            .Expire(TimeSpan.MaxValue)
+                            .SetVaryByQuery("*")
                             .Tag(CoursesOutputCachePolicy.CoursesTag);
                     }, excludeDefaultPolicy: true);
                 }
