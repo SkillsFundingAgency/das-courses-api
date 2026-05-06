@@ -390,7 +390,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             var otherValidators = new List<ValidatorBase<List<Domain.ImportTypes.SkillsEngland.Standard>>>
             {
                 new LarsCodeNotZeroTwoWeeksAfterPublishValidator(),
-                new LarsCodeNotZeroForNewVersionValidator(),
+                new LarsCodeNotResetToZeroValidator(currentStandards.ToList()),
                 new LarsCodeNotZeroForRetiredVersionValidator(),
                 new StatusValidValidator(),
                 new StatusRecommendedValidator(),
