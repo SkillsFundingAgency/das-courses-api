@@ -5,9 +5,9 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Services
 {
     public static class StandardEquivalencyAssertionOptions
     {
-        public static EquivalencyAssertionOptions<Standard> ExcludingFieldsWithStrictOrdering(EquivalencyAssertionOptions<Standard> config) => ExcludingFields(config).WithStrictOrdering();
+        public static EquivalencyOptions<Standard> ExcludingFieldsWithStrictOrdering(EquivalencyOptions<Standard> config) => ExcludingFields(config).WithStrictOrdering();
 
-        public static EquivalencyAssertionOptions<Standard> ExcludingFields(EquivalencyAssertionOptions<Standard> config) =>
+        public static EquivalencyOptions<Standard> ExcludingFields(EquivalencyOptions<Standard> config) =>
             config
                 .Excluding(c => c.LarsStandard)
                 .Excluding(c => c.ApprenticeshipFunding)

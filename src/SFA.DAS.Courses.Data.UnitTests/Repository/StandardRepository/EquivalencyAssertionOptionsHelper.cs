@@ -6,7 +6,7 @@ namespace SFA.DAS.Courses.Data.UnitTests.Repository.StandardRepository
 {
     public static class EquivalencyAssertionOptionsHelper
     {
-        public static Func<EquivalencyAssertionOptions<Standard>, EquivalencyAssertionOptions<Standard>> DoNotIncludeAllPropertiesExcludes()
+        public static Func<EquivalencyOptions<Standard>, EquivalencyOptions<Standard>> DoNotIncludeAllPropertiesExcludes()
         {
             // these are the Standard properties which are not returned when the respository is
             // not querying all entity properties in a search i.e. includeAllProperties = false

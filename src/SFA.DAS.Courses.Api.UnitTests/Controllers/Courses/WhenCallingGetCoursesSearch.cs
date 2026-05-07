@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +61,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Courses
 
             // Assert all properties except LarsCode
             model.Courses.Should().BeEquivalentTo(
-                queryResult.Standards,
+                queryResult.Courses,
                 options => CoursesEquivalencyAssertionOptions
                     .GetCourseResponseExclusions(options));
         }

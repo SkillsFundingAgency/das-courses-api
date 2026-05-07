@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using AutoFixture;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using SFA.DAS.Courses.Domain.Entities;
 
 namespace SFA.DAS.Courses.Data.UnitTests.Customisations

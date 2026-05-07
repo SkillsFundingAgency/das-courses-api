@@ -10,7 +10,7 @@ namespace SFA.DAS.Courses.Domain.TestHelper.Extensions
         public static void ShouldBeEquivalentToWithSettableHandling<T>(
             this IEnumerable<T> actual,
             IEnumerable<T> expected,
-            Func<EquivalencyAssertionOptions<T>, EquivalencyAssertionOptions<T>> optionsConfigurator)
+            Func<EquivalencyOptions<T>, EquivalencyOptions<T>> optionsConfigurator)
         {
             actual.Should().BeEquivalentTo(expected, options =>
             {
@@ -31,14 +31,14 @@ namespace SFA.DAS.Courses.Domain.TestHelper.Extensions
                                 object? expectationValue = expectationType.GetProperty("Value")?.GetValue(ctx.Expectation);
 
                                 subjectValue.Should().BeEquivalentTo(expectationValue,
-                                    options => options.RespectingRuntimeTypes(),
-                                    $"Mismatch in {ctx.SelectedNode.Name}");
+                                    options => options.PreferringRuntimeMemberTypes(),
+                                    $"Mismatch in {ctx.SelectedNode}");
                             }
                             else
                             {
                                 ctx.Subject.Should().BeEquivalentTo(ctx.Expectation,
-                                    options => options.RespectingRuntimeTypes(),
-                                    $"Mismatch in {ctx.SelectedNode.Name}");
+                                    options => options.PreferringRuntimeMemberTypes(),
+                                    $"Mismatch in {ctx.SelectedNode}");
                             }
                         }
                     })

@@ -1,11 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCourse;
-using SFA.DAS.Courses.Application.Courses.Queries.GetStandard;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;

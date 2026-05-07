@@ -20,8 +20,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string AssessmentPlanUrl { get; set; }
         public string TrailBlazerContact { get; set; }
         public string TypicalJobTitles { get; set; }
-        public List<string> Skills { get; set; }
-        public List<KsbResponse> Ksbs { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
         public decimal SectorSubjectAreaTier2 { get; set; }

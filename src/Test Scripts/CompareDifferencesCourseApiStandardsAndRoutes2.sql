@@ -222,9 +222,6 @@ SELECT
     s.[StandardPageUrl],
     s.[Version],
     s.[RegulatedBody],
-    s.[Skills],
-    s.[Knowledge],
-    s.[Behaviours],
     s.[Duties],
     s.[CoreDuties],
     s.[CoreAndOptions],
@@ -235,7 +232,6 @@ SELECT
     s.[VersionMinor],
     s.[Options],
     s.[CoronationEmblem],
-    s.[EpaoMustBeApprovedByRegulatorBody],
 	s.[PublishDate],
 	s.[ApprenticeshipType],
 	s.[RelatedOccupations]
@@ -280,9 +276,6 @@ SELECT
     sm.[StandardPageUrl],
     sm.[Version],
     sm.[RegulatedBody],
-    sm.[Skills],
-    sm.[Knowledge],
-    sm.[Behaviours],
     sm.[Duties],
     sm.[CoreDuties],
     sm.[CoreAndOptions],
@@ -293,7 +286,6 @@ SELECT
     sm.[VersionMinor],
     sm.[Options],
     sm.[CoronationEmblem],
-	sm.[EpaoMustBeApprovedByRegulatorBody],
 	sm.[PublishDate],
 	sm.[ApprenticeshipType],
 	sm.[RelatedOccupations]
@@ -337,9 +329,6 @@ SELECT
     s.[StandardPageUrl],
     s.[Version],
     s.[RegulatedBody],
-    s.[Skills],
-    s.[Knowledge],
-    s.[Behaviours],
     s.[Duties],
     s.[CoreDuties],
     s.[CoreAndOptions],
@@ -350,7 +339,6 @@ SELECT
     s.[VersionMinor],
     s.[Options],
     s.[CoronationEmblem],
-    s.[EpaoMustBeApprovedByRegulatorBody],
 	s.[PublishDate],
 	s.[ApprenticeshipType],
 	s.[RelatedOccupations]
@@ -528,27 +516,6 @@ CROSS APPLY
                + '|'
                + ISNULL(s.[RegulatedBody], 'NULL')
      END),
-    (CASE WHEN ISNULL(s.[Skills], '<<NULL>>')
-               <> ISNULL(sm.[Skills], '<<NULL>>')
-          THEN 'Skills|'
-               + ISNULL(sm.[Skills], 'NULL')
-               + '|'
-               + ISNULL(s.[Skills], 'NULL')
-     END),
-    (CASE WHEN ISNULL(s.[Knowledge], '<<NULL>>')
-               <> ISNULL(sm.[Knowledge], '<<NULL>>')
-          THEN 'Knowledge|'
-               + ISNULL(sm.[Knowledge], 'NULL')
-               + '|'
-               + ISNULL(s.[Knowledge], 'NULL')
-     END),
-    (CASE WHEN ISNULL(s.[Behaviours], '<<NULL>>')
-               <> ISNULL(sm.[Behaviours], '<<NULL>>')
-          THEN 'Behaviours|'
-               + ISNULL(sm.[Behaviours], 'NULL')
-               + '|'
-               + ISNULL(s.[Behaviours], 'NULL')
-     END),
     (CASE WHEN ISNULL(s.[Duties], '<<NULL>>')
                <> ISNULL(sm.[Duties], '<<NULL>>')
           THEN 'Duties|'
@@ -618,13 +585,6 @@ CROSS APPLY
                + ISNULL(CAST(sm.[CoronationEmblem] AS VARCHAR), 'NULL')
                + '|'
                + ISNULL(CAST(s.[CoronationEmblem] AS VARCHAR), 'NULL')
-     END),
-	 (CASE WHEN ISNULL(CAST(s.[EpaoMustBeApprovedByRegulatorBody] AS VARCHAR), '<<NULL>>')
-               <> ISNULL(CAST(sm.[EpaoMustBeApprovedByRegulatorBody] AS VARCHAR), '<<NULL>>')
-          THEN 'EpaoMustBeApprovedByRegulatorBody|'
-               + ISNULL(CAST(sm.[EpaoMustBeApprovedByRegulatorBody] AS VARCHAR), 'NULL')
-               + '|'
-               + ISNULL(CAST(s.[EpaoMustBeApprovedByRegulatorBody] AS VARCHAR), 'NULL')
      END),
 	 (CASE WHEN ISNULL(CAST(s.[PublishDate] AS VARCHAR), '<<NULL>>')
                <> ISNULL(CAST(sm.[PublishDate] AS VARCHAR), '<<NULL>>')
@@ -702,12 +662,6 @@ WHERE
             <> ISNULL(sm.[Version], '<<NULL>>')
         OR ISNULL(s.[RegulatedBody], '<<NULL>>') 
             <> ISNULL(sm.[RegulatedBody], '<<NULL>>')
-        OR ISNULL(s.[Skills], '<<NULL>>') 
-            <> ISNULL(sm.[Skills], '<<NULL>>')
-        OR ISNULL(s.[Knowledge], '<<NULL>>') 
-            <> ISNULL(sm.[Knowledge], '<<NULL>>')
-        OR ISNULL(s.[Behaviours], '<<NULL>>') 
-            <> ISNULL(sm.[Behaviours], '<<NULL>>')
         OR ISNULL(s.[Duties], '<<NULL>>') 
             <> ISNULL(sm.[Duties], '<<NULL>>')
         OR ISNULL(s.[CoreDuties], '<<NULL>>') 
@@ -728,8 +682,6 @@ WHERE
             <> ISNULL(sm.[Options], '<<NULL>>')
         OR ISNULL(s.[CoronationEmblem], 0) 
             <> ISNULL(sm.[CoronationEmblem], 0)
-        OR ISNULL(s.EpaoMustBeApprovedByRegulatorBody, 0) 
-            <> ISNULL(s.EpaoMustBeApprovedByRegulatorBody, 0)
 		OR ISNULL(s.[PublishDate], '19000101') 
             <> ISNULL(sm.[PublishDate], '19000101')
 		OR ISNULL(s.[ApprenticeshipType], '<<NULL>>') 
@@ -764,9 +716,6 @@ GROUP BY
     s.[StandardPageUrl],
     s.[Version],
     s.[RegulatedBody],
-    s.[Skills],
-    s.[Knowledge],
-    s.[Behaviours],
     s.[Duties],
     s.[CoreDuties],
     s.[CoreAndOptions],
@@ -777,7 +726,6 @@ GROUP BY
     s.[VersionMinor],
     s.[Options],
     s.[CoronationEmblem],
-    s.[EpaoMustBeApprovedByRegulatorBody],
 	s.[PublishDate],
 	s.[ApprenticeshipType],
 	s.[RelatedOccupations]
@@ -844,9 +792,6 @@ SELECT
     [Changes].[StandardPageUrl],
     [Changes].[Version],
     [Changes].[RegulatedBody],
-    [Changes].[Skills],
-    [Changes].[Knowledge],
-    [Changes].[Behaviours],
     [Changes].[Duties],
     [Changes].[CoreDuties],
     [Changes].[CoreAndOptions],
@@ -857,7 +802,6 @@ SELECT
     [Changes].[VersionMinor],
     [Changes].[Options],
     [Changes].[CoronationEmblem],
-    [Changes].[EpaoMustBeApprovedByRegulatorBody],
 	[Changes].[PublishDate],
 	[Changes].[ApprenticeshipType],
 	[Changes].[RelatedOccupations]
@@ -908,9 +852,6 @@ SELECT
     s.[StandardPageUrl],
     s.[Version],
     s.[RegulatedBody],
-    s.[Skills],
-    s.[Knowledge],
-    s.[Behaviours],
     s.[Duties],
     s.[CoreDuties],
     s.[CoreAndOptions],
@@ -921,7 +862,6 @@ SELECT
     s.[VersionMinor],
     s.[Options],
     s.[CoronationEmblem],
-    s.[EpaoMustBeApprovedByRegulatorBody],
 	s.[PublishDate],
 	s.[ApprenticeshipType],
 	s.[RelatedOccupations]
@@ -963,9 +903,6 @@ SELECT
     sm.[StandardPageUrl],
     sm.[Version],
     sm.[RegulatedBody],
-    sm.[Skills],
-    sm.[Knowledge],
-    sm.[Behaviours],
     sm.[Duties],
     sm.[CoreDuties],
     sm.[CoreAndOptions],
@@ -976,7 +913,6 @@ SELECT
     sm.[VersionMinor],
     sm.[Options],
     sm.[CoronationEmblem],
-    sm.[EpaoMustBeApprovedByRegulatorBody],
 	sm.[PublishDate],
 	sm.[ApprenticeshipType],
 	sm.[RelatedOccupations]
@@ -1021,9 +957,6 @@ SELECT
     s.[StandardPageUrl],
     s.[Version],
     s.[RegulatedBody],
-    s.[Skills],
-    s.[Knowledge],
-    s.[Behaviours],
     s.[Duties],
     s.[CoreDuties],
     s.[CoreAndOptions],
@@ -1034,7 +967,6 @@ SELECT
     s.[VersionMinor],
     s.[Options],
     s.[CoronationEmblem],
-    s.[EpaoMustBeApprovedByRegulatorBody],
 	s.[PublishDate],
 	s.[ApprenticeshipType],
 	s.[RelatedOccupations]
@@ -1309,39 +1241,6 @@ CROSS APPLY
        END
     ),
 
-    -- 26. Skills
-    (
-       CASE WHEN ISNULL(s.[Skills], '<<NULL>>')
-                 <> ISNULL(sm.[Skills], '<<NULL>>')
-         THEN 'Skills|'
-              + ISNULL(sm.[Skills], 'NULL')
-              + '|'
-              + ISNULL(s.[Skills], 'NULL')
-       END
-    ),
-
-    -- 27. Knowledge
-    (
-       CASE WHEN ISNULL(s.[Knowledge], '<<NULL>>')
-                 <> ISNULL(sm.[Knowledge], '<<NULL>>')
-         THEN 'Knowledge|'
-              + ISNULL(sm.[Knowledge], 'NULL')
-              + '|'
-              + ISNULL(s.[Knowledge], 'NULL')
-       END
-    ),
-
-    -- 28. Behaviours
-    (
-       CASE WHEN ISNULL(s.[Behaviours], '<<NULL>>')
-                 <> ISNULL(sm.[Behaviours], '<<NULL>>')
-         THEN 'Behaviours|'
-              + ISNULL(sm.[Behaviours], 'NULL')
-              + '|'
-              + ISNULL(s.[Behaviours], 'NULL')
-       END
-    ),
-
     -- 29. Duties
     (
 	   CASE WHEN ISNULL(REPLACE(s.[Duties], CHAR(160), ' '), '<<NULL>>')
@@ -1453,17 +1352,6 @@ CROSS APPLY
        END
     ),
 
-    -- 39. EpaoMustBeApprovedByRegulatorBody
-    (
-       CASE WHEN ISNULL(CAST(s.[EpaoMustBeApprovedByRegulatorBody] AS VARCHAR), '<<NULL>>')
-                 <> ISNULL(CAST(sm.[EpaoMustBeApprovedByRegulatorBody] AS VARCHAR), '<<NULL>>')
-         THEN 'EpaoMustBeApprovedByRegulatorBody|'
-              + ISNULL(CAST(sm.[EpaoMustBeApprovedByRegulatorBody] AS VARCHAR), 'NULL')
-              + '|'
-              + ISNULL(CAST(s.[EpaoMustBeApprovedByRegulatorBody] AS VARCHAR), 'NULL')
-       END
-	),
-
 	-- 40. PublishDate
     (
        CASE WHEN ISNULL(CAST(s.[PublishDate] AS VARCHAR), '<<NULL>>')
@@ -1554,12 +1442,6 @@ WHERE
             <> ISNULL(sm.[Version], '<<NULL>>')
         OR ISNULL(s.[RegulatedBody], '<<NULL>>')
             <> ISNULL(sm.[RegulatedBody], '<<NULL>>')
-        OR ISNULL(s.[Skills], '<<NULL>>')
-            <> ISNULL(sm.[Skills], '<<NULL>>')
-        OR ISNULL(s.[Knowledge], '<<NULL>>')
-            <> ISNULL(sm.[Knowledge], '<<NULL>>')
-        OR ISNULL(s.[Behaviours], '<<NULL>>')
-            <> ISNULL(sm.[Behaviours], '<<NULL>>')
         OR ISNULL(s.[Duties], '<<NULL>>')
             <> ISNULL(sm.[Duties], '<<NULL>>')
         OR ISNULL(s.[CoreDuties], '<<NULL>>')
@@ -1580,8 +1462,6 @@ WHERE
             <> ISNULL(sm.[Options], '<<NULL>>')
         OR ISNULL(s.[CoronationEmblem], 0)
             <> ISNULL(sm.[CoronationEmblem], 0)
-        OR ISNULL(s.[EpaoMustBeApprovedByRegulatorBody], 0)
-            <> ISNULL(sm.[EpaoMustBeApprovedByRegulatorBody], 0)
 		OR ISNULL(s.[PublishDate], 0)
             <> ISNULL(sm.[PublishDate], 0)
 		OR ISNULL(s.[ApprenticeshipType], '<<NULL>>')
@@ -1616,9 +1496,6 @@ GROUP BY
     s.[StandardPageUrl],
     s.[Version],
     s.[RegulatedBody],
-    s.[Skills],
-    s.[Knowledge],
-    s.[Behaviours],
     s.[Duties],
     s.[CoreDuties],
     s.[CoreAndOptions],
@@ -1629,7 +1506,6 @@ GROUP BY
     s.[VersionMinor],
     s.[Options],
     s.[CoronationEmblem],
-    s.[EpaoMustBeApprovedByRegulatorBody],
 	s.[PublishDate],
 	s.[ApprenticeshipType],
 	s.[RelatedOccupations]
@@ -1696,9 +1572,6 @@ SELECT
     [Changes].[StandardPageUrl],
     [Changes].[Version],
     [Changes].[RegulatedBody],
-    [Changes].[Skills],
-    [Changes].[Knowledge],
-    [Changes].[Behaviours],
     [Changes].[Duties],
     [Changes].[CoreDuties],
     [Changes].[CoreAndOptions],
@@ -1709,7 +1582,6 @@ SELECT
     [Changes].[VersionMinor],
     [Changes].[Options],
     [Changes].[CoronationEmblem],
-    [Changes].[EpaoMustBeApprovedByRegulatorBody],
 	[Changes].[PublishDate],
 	[Changes].[ApprenticeshipType],
 	[Changes].[RelatedOccupations]
@@ -1718,5 +1590,3 @@ FROM
 	#Temp_Standard_Changes [Changes] ON Lines.StandardUId = [Changes].StandardUId
 ORDER BY
 	[Changes].StandardUId, [Changes].DifferenceType
-
-ROLLBACK

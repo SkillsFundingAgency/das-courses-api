@@ -4,7 +4,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Courses
 {
     public static class CoursesEquivalencyAssertionOptions
     {
-        public static EquivalencyAssertionOptions<Domain.Courses.Course> GetCourseResponseExclusions(EquivalencyAssertionOptions<Domain.Courses.Course> config) => config
+        public static EquivalencyOptions<Domain.Courses.Course> GetCourseResponseExclusions(EquivalencyOptions<Domain.Courses.Course> config) => config
             .Excluding(s => s.AssessmentPlanUrl)
             .Excluding(s => s.EqaProvider)
             .Excluding(s => s.EPAChanged)

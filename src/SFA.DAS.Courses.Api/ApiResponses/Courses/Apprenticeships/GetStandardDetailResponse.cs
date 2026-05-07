@@ -11,6 +11,8 @@ namespace SFA.DAS.Courses.Api.ApiResponses
     {
         public ApprenticeshipType ApprenticeshipType { get; set; }
         public List<StandardApprenticeshipFundingResponse> ApprenticeshipFunding { get; set; }
+        public List<KsbResponse> Ksbs { get; set; } = new List<KsbResponse>();
+        public List<string> Skills { get; set; }
         public CourseDatesResponse StandardDates { get; set; }
         public StandardVersionDetailResponse VersionDetail { get; set; }
         public int LarsCode { get; set; }
@@ -42,14 +44,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
                             .SelectManyOrEmptyList(x => x.Skills)
                             .Select(x => x.Detail)
                             .Distinct().ToList(),
-                Ksbs = source.Options
-                            .SelectManyOrEmptyList(x => x.Skills.EmptyEnumerableIfNull()
-                            .Union(x.Knowledge.EmptyEnumerableIfNull())
-                            .Union(x.Behaviours.EmptyEnumerableIfNull())
-                            .Union(x.TechnicalSkills.EmptyEnumerableIfNull())
-                            .Union(x.TechnicalKnowledges.EmptyEnumerableIfNull())
-                            .Union(x.EmployabilitySkillsAndBehaviours.EmptyEnumerableIfNull()))
-                            .Select(x => (KsbResponse)x).ToList(),
                 StandardPageUrl = source.StandardPageUrl,
                 IntegratedDegree = source.IntegratedDegree,
                 ApprenticeshipFunding = source.ApprenticeshipFunding.Select(c => (StandardApprenticeshipFundingResponse)c).ToList(),

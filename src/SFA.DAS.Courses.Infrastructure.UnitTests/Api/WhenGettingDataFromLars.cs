@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -36,7 +36,7 @@ namespace SFA.DAS.Courses.Infrastructure.UnitTests.Api
 
             //Assert
             var reader = new StreamReader(actual);
-            var actualContent = reader.ReadToEnd();
+            var actualContent = await reader.ReadToEndAsync();
             actualContent.Should().Be(content);
         }
 

@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS ##Standard_Import_Master;
+
 CREATE TABLE ##Standard_Import_Master
 (
     StandardUId VARCHAR(20) PRIMARY KEY,
@@ -26,9 +28,6 @@ CREATE TABLE ##Standard_Import_Master
     StandardPageUrl VARCHAR(500) NOT NULL,
     Version VARCHAR(20) NULL,
     RegulatedBody VARCHAR(1000) NULL,
-    Skills NVARCHAR(MAX) NULL,
-    Knowledge NVARCHAR(MAX) NULL,
-    Behaviours NVARCHAR(MAX) NULL,
     Duties NVARCHAR(MAX) NULL,
     CoreDuties NVARCHAR(MAX) NULL,
     CoreAndOptions BIT NOT NULL DEFAULT 0,
@@ -41,15 +40,58 @@ CREATE TABLE ##Standard_Import_Master
     CoronationEmblem BIT NOT NULL DEFAULT 0,
     IsRegulatedForProvider BIT NOT NULL DEFAULT 0,
     IsRegulatedForEPAO BIT NOT NULL DEFAULT 0,
-    EpaoMustBeApprovedByRegulatorBody BIT NOT NULL DEFAULT 0,
     PublishDate DATETIME NULL,
 	ApprenticeshipType VARCHAR(50) NULL,
 	RelatedOccupations NVARCHAR(1000) NULL
 );
 
---DROP TABLE ##Standard_Import_Master
---INSERT INTO ##Standard_Import_Master SELECT * FROM Standard_Import
 
+INSERT INTO ##Standard_Import_Master 
+SELECT
+    StandardUId,
+    IfateReferenceNumber,
+    LarsCode,
+    Status,
+    VersionEarliestStartDate,
+    VersionLatestStartDate,
+    VersionLatestEndDate,
+    Title,
+    Level,
+    ProposedTypicalDuration,
+    ProposedMaxFunding,
+    IntegratedDegree,
+    OverviewOfRole,
+    RouteCode,
+    AssessmentPlanUrl,
+    ApprovedForDelivery,
+    TrailBlazerContact,
+    EqaProviderName,
+    EqaProviderContactName,
+    EqaProviderContactEmail,
+    EqaProviderWebLink,
+    Keywords,
+    TypicalJobTitles,
+    StandardPageUrl,
+    Version,
+    RegulatedBody,
+    Duties,
+    CoreDuties,
+    CoreAndOptions,
+    IntegratedApprenticeship,
+    CreatedDate,
+    EPAChanged,
+    VersionMajor,
+    VersionMinor,
+    Options,
+    CoronationEmblem,
+    IsRegulatedForProvider,
+    IsRegulatedForEPAO,
+    PublishDate,
+    ApprenticeshipType,
+    RelatedOccupations
+FROM Standard_Import
+
+/*
 SET NOCOUNT ON;
 
 SELECT 
@@ -82,9 +124,6 @@ SELECT
     '''' + REPLACE(REPLACE(StandardPageUrl, '''', ''''''), '’', '’’’’') + ''',' +
     ISNULL('''' + REPLACE(REPLACE(Version, '''', ''''''), '’', '’’’’') + '''', 'NULL') + ',' +
     ISNULL('''' + REPLACE(REPLACE(RegulatedBody, '''', ''''''), '’', '’’’’') + '''', 'NULL') + ',' +
-    ISNULL('''' + REPLACE(REPLACE(Skills, '''', ''''''), '’', '’’’’') + '''', 'NULL') + ',' +
-    ISNULL('''' + REPLACE(REPLACE(Knowledge, '''', ''''''), '’', '’’’’') + '''', 'NULL') + ',' +
-    ISNULL('''' + REPLACE(REPLACE(Behaviours, '''', ''''''), '’', '’’’’') + '''', 'NULL') + ',' +
     ISNULL('''' + REPLACE(REPLACE(Duties, '''', ''''''), '’', '’’’’') + '''', 'NULL') + ',' +
     ISNULL('''' + REPLACE(REPLACE(CoreDuties, '''', ''''''), '’', '’’’’') + '''', 'NULL') + ',' +
     CAST(CoreAndOptions AS VARCHAR) + ',' +
@@ -97,10 +136,9 @@ SELECT
     CAST(CoronationEmblem AS VARCHAR) + ',' +
     CAST(IsRegulatedForProvider AS VARCHAR) + ',' +
     CAST(IsRegulatedForEPAO AS VARCHAR) + ',' +
-    CAST(EpaoMustBeApprovedByRegulatorBody AS VARCHAR) + ',' +
     ISNULL('''' + CONVERT(VARCHAR, PublishDate, 120) + '''', 'NULL') + ',' +
 	CAST(ApprenticeshipType AS VARCHAR) + ',' +
 	CAST(RelatedOccupations AS VARCHAR) +
     ');'
 FROM dbo.Standard_Import;
-
+*/

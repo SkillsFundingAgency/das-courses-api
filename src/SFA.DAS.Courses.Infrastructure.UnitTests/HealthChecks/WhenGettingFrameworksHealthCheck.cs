@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Moq;

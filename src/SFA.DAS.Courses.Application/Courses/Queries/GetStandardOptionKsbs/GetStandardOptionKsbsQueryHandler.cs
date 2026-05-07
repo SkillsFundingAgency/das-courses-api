@@ -8,8 +8,6 @@ using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Extensions;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-using CourseType = SFA.DAS.Courses.Domain.Entities.CourseType;
-
 namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 {
     public class GetStandardOptionKsbsQueryHandler : IRequestHandler<GetStandardOptionKsbsQuery, GetStandardOptionKsbsResult>
@@ -31,7 +29,22 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 
             if (standard != null)
             {
-                ksbs = standard.Options.FirstOrDefault(x => x.Title == request.Option)?.Ksbs;
+                if (string.Equals(request.Option, "all", StringComparison.OrdinalIgnoreCase))
+                {
+                    ksbs = standard.Options
+                        .EmptyEnumerableIfNull()
+                        .SelectMany(o => o.Ksbs.EmptyEnumerableIfNull())
+                        .DistinctBy(k => k.Id)
+                        .ToList();
+                }
+                else
+                {
+                    ksbs = standard.Options
+                        .EmptyEnumerableIfNull()
+                        .FirstOrDefault(option =>
+                            string.Equals(option.Title, request.Option, StringComparison.OrdinalIgnoreCase))
+                        ?.Ksbs;
+                }
             }
 
             return new GetStandardOptionKsbsResult

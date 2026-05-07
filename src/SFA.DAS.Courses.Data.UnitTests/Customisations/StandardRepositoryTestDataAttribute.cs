@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AutoFixture;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
