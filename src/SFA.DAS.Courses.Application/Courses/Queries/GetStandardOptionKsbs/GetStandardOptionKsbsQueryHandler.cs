@@ -29,7 +29,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs
 
             if (standard != null)
             {
-                if (request.Option == "all")
+                if (string.Equals(request.Option, "all", StringComparison.OrdinalIgnoreCase))
                 {
                     ksbs = standard.Options
                         .EmptyEnumerableIfNull()
