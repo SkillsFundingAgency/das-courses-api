@@ -7,19 +7,19 @@ using AutoFixture.NUnit4;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Courses.Application.Courses.Queries.GetStandardOptionKsbs;
+using SFA.DAS.Courses.Application.Courses.Queries.GetCourseOptionKsbs;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
 {
-    public class WhenGettingKsbsForAStandard
+    public class WhenGettingKsbsForACourse
     {
         [Test, AutoData]
-        public async Task Then_Returns_Ksbs_For_Requested_Option(Standard standard)
+        public async Task Then_Returns_Ksbs_For_Requested_Option(Course course)
         {
             // Arrange
-            standard.Options = new List<CourseOption>
+            course.Options = new List<CourseOption>
             {
                 new CourseOption
                 {
@@ -44,34 +44,34 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                 }
             };
 
-            var standardServiceMock = new Mock<IStandardsService>();
+            var standardsServiceMock = new Mock<IStandardsService>();
 
-            standardServiceMock
-                .Setup(service => service.GetStandardByAnyId("123"))
-                .ReturnsAsync(standard);
+            standardsServiceMock
+                .Setup(service => service.GetCourseByAnyId("123"))
+                .ReturnsAsync(course);
 
-            var query = new GetStandardOptionKsbsQuery
+            var query = new GetCourseOptionKsbsQuery
             {
                 Id = "123",
                 Option = "Core"
             };
 
-            var _sut = new GetStandardOptionKsbsQueryHandler(standardServiceMock.Object);
+            var _sut = new GetCourseOptionKsbsQueryHandler(standardsServiceMock.Object);
 
             // Act
             var result = await _sut.Handle(query, CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
-            result.Ksbs.Should().BeEquivalentTo(standard.Options[0].Ksbs);
+            result.Ksbs.Should().BeEquivalentTo(course.Options[0].Ksbs);
 
-            standardServiceMock.Verify(
-                service => service.GetStandardByAnyId("123"),
+            standardsServiceMock.Verify(
+                service => service.GetCourseByAnyId("123"),
                 Times.Once);
         }
 
         [Test, AutoData]
-        public async Task Then_Returns_All_Distinct_Ksbs_When_Option_Is_All(Standard standard)
+        public async Task Then_Returns_All_Distinct_Ksbs_When_Option_Is_All(Course course)
         {
             // Arrange
             var sharedKsbId = Guid.NewGuid();
@@ -108,7 +108,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                 Type = KsbType.Behaviour
             };
 
-            standard.Options = new List<CourseOption>
+            course.Options = new List<CourseOption>
             {
                 new CourseOption
                 {
@@ -130,19 +130,19 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                 }
             };
 
-            var standardServiceMock = new Mock<IStandardsService>();
+            var standardsServiceMock = new Mock<IStandardsService>();
 
-            standardServiceMock
-                .Setup(service => service.GetStandardByAnyId("123"))
-                .ReturnsAsync(standard);
+            standardsServiceMock
+                .Setup(service => service.GetCourseByAnyId("123"))
+                .ReturnsAsync(course);
 
-            var query = new GetStandardOptionKsbsQuery
+            var query = new GetCourseOptionKsbsQuery
             {
                 Id = "123",
                 Option = "all"
             };
 
-            var _sut = new GetStandardOptionKsbsQueryHandler(standardServiceMock.Object);
+            var _sut = new GetCourseOptionKsbsQueryHandler(standardsServiceMock.Object);
 
             // Act
             var result = await _sut.Handle(query, CancellationToken.None);
@@ -162,30 +162,30 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                 .Should()
                 .ContainSingle();
 
-            standardServiceMock.Verify(
-                service => service.GetStandardByAnyId("123"),
+            standardsServiceMock.Verify(
+                service => service.GetCourseByAnyId("123"),
                 Times.Once);
         }
 
         [Test, AutoData]
-        public async Task Then_Returns_Empty_Array_When_Standard_Does_Not_Exist(
+        public async Task Then_Returns_Empty_Array_When_Course_Does_Not_Exist(
             string id,
             string option)
         {
             // Arrange
-            var standardServiceMock = new Mock<IStandardsService>();
+            var standardsServiceMock = new Mock<IStandardsService>();
 
-            standardServiceMock
-                .Setup(service => service.GetStandardByAnyId(id))
-                .ReturnsAsync((Standard)null);
+            standardsServiceMock
+                .Setup(service => service.GetCourseByAnyId(id))
+                .ReturnsAsync((Course)null);
 
-            var query = new GetStandardOptionKsbsQuery
+            var query = new GetCourseOptionKsbsQuery
             {
                 Id = id,
                 Option = option
             };
 
-            var _sut = new GetStandardOptionKsbsQueryHandler(standardServiceMock.Object);
+            var _sut = new GetCourseOptionKsbsQueryHandler(standardsServiceMock.Object);
 
             // Act
             var result = await _sut.Handle(query, CancellationToken.None);
@@ -194,16 +194,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             result.Should().NotBeNull();
             result.Ksbs.Should().BeEmpty();
 
-            standardServiceMock.Verify(
-                service => service.GetStandardByAnyId(id),
+            standardsServiceMock.Verify(
+                service => service.GetCourseByAnyId(id),
                 Times.Once);
         }
 
         [Test, AutoData]
-        public async Task Then_Returns_Empty_Array_When_Option_Does_Not_Exist(Standard standard)
+        public async Task Then_Returns_Empty_Array_When_Option_Does_Not_Exist(Course course)
         {
             // Arrange
-            standard.Options = new List<CourseOption>
+            course.Options = new List<CourseOption>
             {
                 new CourseOption
                 {
@@ -221,19 +221,19 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
                 }
             };
 
-            var standardServiceMock = new Mock<IStandardsService>();
+            var standardsServiceMock = new Mock<IStandardsService>();
 
-            standardServiceMock
-                .Setup(service => service.GetStandardByAnyId("123"))
-                .ReturnsAsync(standard);
+            standardsServiceMock
+                .Setup(service => service.GetCourseByAnyId("123"))
+                .ReturnsAsync(course);
 
-            var query = new GetStandardOptionKsbsQuery
+            var query = new GetCourseOptionKsbsQuery
             {
                 Id = "123",
                 Option = "Not an option"
             };
 
-            var _sut = new GetStandardOptionKsbsQueryHandler(standardServiceMock.Object);
+            var _sut = new GetCourseOptionKsbsQueryHandler(standardsServiceMock.Object);
 
             // Act
             var result = await _sut.Handle(query, CancellationToken.None);
@@ -242,8 +242,8 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             result.Should().NotBeNull();
             result.Ksbs.Should().BeEmpty();
 
-            standardServiceMock.Verify(
-                service => service.GetStandardByAnyId("123"),
+            standardsServiceMock.Verify(
+                service => service.GetCourseByAnyId("123"),
                 Times.Once);
         }
     }

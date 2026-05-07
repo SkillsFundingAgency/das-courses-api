@@ -45,7 +45,7 @@ namespace SFA.DAS.Courses.Application.UnitTests.Courses.Queries
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            result.Standards.Should().BeEquivalentTo(standards);
+            result.Courses.Should().BeEquivalentTo(standards);
             result.Total.Should().Be(count);
             result.TotalFiltered.Should().Be(standards.Count);
         }

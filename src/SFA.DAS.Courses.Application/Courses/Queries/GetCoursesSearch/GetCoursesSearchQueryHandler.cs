@@ -49,7 +49,7 @@ namespace SFA.DAS.Courses.Application.Courses.Queries.GetCoursesSearch
 
             return new GetCoursesSearchQueryResult
             {
-                Standards = courses,
+                Courses = courses,
                 Total = total,
                 TotalFiltered = courses.Count
             };

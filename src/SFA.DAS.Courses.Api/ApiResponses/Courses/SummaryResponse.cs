@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Courses.Api.ApiResponses
 {
-    public class SingleResponse
+    public class SummaryResponse
     {
         public string StandardUId { get; set; }
         public string IfateReferenceNumber { get; set; }
@@ -17,7 +17,6 @@ namespace SFA.DAS.Courses.Api.ApiResponses
         public string Route { get; set; }
         public int RouteCode { get; set; }
         public string TypicalJobTitles { get; set; }
-        public List<string> Skills { get; set; }
         public string StandardPageUrl { get; set; }
         public string IntegratedDegree { get; set; }
         public decimal SectorSubjectAreaTier2 { get; set; }

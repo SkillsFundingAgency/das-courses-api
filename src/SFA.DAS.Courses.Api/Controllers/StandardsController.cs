@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Asp.Versioning;
@@ -29,6 +30,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
+        [Obsolete("This endpoint is deprecated. Use GET /api/courses/search?learningType=Apprenticeship&learningType=FoundationApprenticeship instead.")]
         [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> GetList(
             [FromQuery] string keyword,
@@ -60,6 +62,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Obsolete("This endpoint is deprecated. Use GET /api/courses/lookup/{id} instead.")]
         [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> Get(string id)
         {
@@ -72,6 +75,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet("{id}/options/{option}/ksbs")]
+        [Obsolete("This endpoint is deprecated. Use GET /api/courses/lookup/{id}/options/{option}/ksbs instead.")]
         [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> GetOptionKsbs(string id, string option)
         {
@@ -85,6 +89,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet("versions/{iFateReferenceNumber}")]
+        [Obsolete("This endpoint is deprecated. Use GET /api/courses/lookup/versions/{iFateReferenceNumber}.")]
         [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
         public async Task<IActionResult> GetStandardsByIFateReferenceNumber(string iFateReferenceNumber)
         {
