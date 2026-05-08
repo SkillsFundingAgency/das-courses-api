@@ -83,22 +83,19 @@ namespace SFA.DAS.Courses.Domain.Entities
                 return string.Empty;
             }
 
-            html = Regex.Replace(html, @"<\s*br\s*/?>", "\n", RegexOptions.IgnoreCase);
-            html = Regex.Replace(html, @"</\s*p\s*>", "\n", RegexOptions.IgnoreCase);
-            html = Regex.Replace(html, @"</\s*div\s*>", "\n", RegexOptions.IgnoreCase);
-            html = Regex.Replace(html, @"</\s*li\s*>", "\n", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"<\s*br\s*/?>", " ", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"</\s*p\s*>", " ", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"</\s*div\s*>", " ", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"</\s*li\s*>", " ", RegexOptions.IgnoreCase);
 
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
 
             var text = WebUtility.HtmlDecode(doc.DocumentNode.InnerText);
 
-            text = Regex.Replace(text, @"[ \t]+", " ");
-            text = Regex.Replace(text, @"\n{3,}", "\n\n");
+            text = Regex.Replace(text, @"\s+", " ");
 
-            return text
-                .Replace("\r", "")
-                .Trim();
+            return text.Trim();
         }
 
         private static string GetCombinedGreenAndTypicalJobTitles(ImportTypes.SkillsEngland.Standard standard)
