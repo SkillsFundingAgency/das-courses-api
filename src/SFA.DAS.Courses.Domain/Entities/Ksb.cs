@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
@@ -14,6 +15,7 @@ namespace SFA.DAS.Courses.Domain.Entities
 
     public class Ksb
     {
+        [JsonConstructor]
         private Ksb()
         {
             /* Entity Framework */

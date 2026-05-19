@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SFA.DAS.Courses.Domain.Entities
 {
     public class StandardOption
     {
-        [JsonProperty] public Guid OptionId { get; private set; }
-        [JsonProperty] public string Title { get; private set; }
+        [JsonInclude] public Guid OptionId { get; private set; }
+        [JsonInclude] public string Title { get; private set; }
         public List<Ksb> Knowledge => KsbDetail(KsbType.Knowledge);
         public List<Ksb> Skills => KsbDetail(KsbType.Skill);
         public List<Ksb> Behaviours => KsbDetail(KsbType.Behaviour);
@@ -16,9 +16,10 @@ namespace SFA.DAS.Courses.Domain.Entities
         public List<Ksb> TechnicalSkills => KsbDetail(KsbType.TechnicalSkill);
         public List<Ksb> EmployabilitySkillsAndBehaviours => KsbDetail(KsbType.EmployabilitySkillsAndBehaviour);
 
-        [JsonProperty]
+        [JsonInclude]
         public List<Ksb> Ksbs { get; private set; }
 
+        [JsonConstructor]
         private StandardOption() { }
 
         public static StandardOption Create(string title)
