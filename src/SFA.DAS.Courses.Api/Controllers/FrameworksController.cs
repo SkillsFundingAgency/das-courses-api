@@ -23,6 +23,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             
         [HttpGet]
         [Route("{id}")]
+        [ProducesResponseType(typeof(GetFrameworkResponse), 200)]
         public async Task<IActionResult> Get(string id)
         {
             var result = await _mediator.Send(new GetFrameworkQuery {FrameworkId = id});
@@ -35,6 +36,7 @@ namespace SFA.DAS.Courses.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(GetFrameworksResponse), 200)]
         public async Task<IActionResult> GetList()
         {
             var queryResult = await _mediator.Send(new GetFrameworksQuery());

@@ -22,6 +22,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpGet]
         [Route("")]
+        [ProducesResponseType(typeof(GetRoutesListResponse), 200)]
         public async Task<IActionResult> GetList()
         {
             var queryResult = await _mediator.Send(new GetRoutesQuery());
