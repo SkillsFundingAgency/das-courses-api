@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
+using SFA.DAS.Courses.Application.CoursesImport.Extensions;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
 using SFA.DAS.Courses.Application.Exceptions;
 using SFA.DAS.Courses.Domain.Entities;

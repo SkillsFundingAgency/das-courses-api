@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using SFA.DAS.Courses.Api.ApiResponses;
 using SFA.DAS.Courses.Api.ApiResponses.Courses.All;
-using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCourse;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCourseOptionKsbs;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCoursesByIFateReference;
 using SFA.DAS.Courses.Application.Courses.Queries.GetCoursesSearch;
+using SFA.DAS.Courses.Application.Infrastructure;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Search;
 

@@ -13,17 +13,20 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
         private readonly ILarsImportService _larsImportService;
         private readonly IFrameworksImportService _frameworksImportService;
         private readonly IIndexBuilder _indexBuilder;
+        private readonly ICoursesCacheService _coursesCacheService;
 
         public ImportDataCommandHandler(
             IStandardsImportService standardsImportService,
             ILarsImportService larsImportService,
             IFrameworksImportService frameworksImportService,
-            IIndexBuilder indexBuilder)
+            IIndexBuilder indexBuilder,
+            ICoursesCacheService coursesCacheService)
         {
             _standardsImportService = standardsImportService;
             _larsImportService = larsImportService;
             _frameworksImportService = frameworksImportService;
             _indexBuilder = indexBuilder;
+            _coursesCacheService = coursesCacheService;
         }
 
         public async Task<ImportDataCommandResult> Handle(ImportDataCommand request, CancellationToken cancellationToken)
@@ -65,6 +68,13 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             }
 
             _indexBuilder.Build();
+
+            if (standardsLoadedSuccessfully)
+            {
+                await _coursesCacheService.ClearCoursesCache(
+                    cancellationToken,
+                    "after successful standards load");
+            }
 
             return new ImportDataCommandResult
             {

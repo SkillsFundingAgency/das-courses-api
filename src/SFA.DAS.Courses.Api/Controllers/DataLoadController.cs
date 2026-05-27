@@ -3,11 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Api.Common.Infrastructure;
-using SFA.DAS.Courses.Api.Infrastructure;
+using SFA.DAS.Courses.Api.TaskQueue;
+using SFA.DAS.Courses.Application.CoursesImport.Extensions;
+using SFA.DAS.Courses.Application.CoursesImport.Handlers.ClearCoursesCache;
 using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 
 namespace SFA.DAS.Courses.Api.Controllers
@@ -18,65 +19,83 @@ namespace SFA.DAS.Courses.Api.Controllers
     public class DataLoadController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IBackgroundTaskQueue _taskQueue;
         private readonly ILogger<DataLoadController> _logger;
-        private readonly IOutputCacheStore _outputCacheStore;
 
         public DataLoadController(
             IMediator mediator,
-            ILogger<DataLoadController> logger,
-            IOutputCacheStore outputCacheStore)
+            IBackgroundTaskQueue taskQueue,
+            ILogger<DataLoadController> logger)
         {
             _mediator = mediator;
+            _taskQueue = taskQueue;
             _logger = logger;
-            _outputCacheStore = outputCacheStore;
         }
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> Index(CancellationToken cancellationToken)
+        public IActionResult Index()
         {
-            _logger.LogInformation("Data import request received");
+            const string requestName = "data load";
 
-            var result = await _mediator.Send(new ImportDataCommand(), cancellationToken);
+            return QueueBackgroundRequest(new ImportDataCommand(), requestName,
+                (result, duration, log) =>
+                {
+                    if (result.ValidationMessages.Count > 0)
+                    {
+                        var combinedValidationMessage = string.Join(
+                            Environment.NewLine,
+                            result.ValidationMessages);
 
-            if (result.ValidationMessages.Count > 0)
-            {
-                var combinedValidationMessage = string.Join(Environment.NewLine, result.ValidationMessages);
-
-                _logger.LogWarning(
-                    "Data import completed with {ValidationErrorCount} validation messages:{NewLine}{ValidationMessages}",
-                    result.ValidationMessages.Count,
-                    Environment.NewLine,
-                    combinedValidationMessage);
-            }
-            else
-            {
-                _logger.LogInformation("Data import completed with no validation messages");
-            }
-
-            if (result.StandardsLoadedSuccessfully)
-            {
-                await ClearCacheInternal(cancellationToken, "after successful standards load");
-            }
-            else
-            {
-                _logger.LogInformation("Courses cache not cleared because standards were not loaded");
-            }
-
-            return Ok(result.ValidationMessages);
+                        log.LogWarning(
+                            "Completed request to {RequestName} in {Duration} with {ValidationErrorCount} validation messages:{NewLine}{ValidationMessages}",
+                            requestName,
+                            duration.ToReadableString(),
+                            result.ValidationMessages.Count,
+                            Environment.NewLine,
+                            combinedValidationMessage);
+                    }
+                    else
+                    {
+                        log.LogInformation(
+                            "Completed request to {RequestName} in {Duration} with no validation messages",
+                            requestName,
+                            duration.ToReadableString());
+                    }
+                });
         }
 
         [HttpPost("clear-cache")]
         public async Task<IActionResult> ClearCache(CancellationToken cancellationToken)
         {
-            await ClearCacheInternal(cancellationToken, "manually");
+            await _mediator.Send(new ClearCoursesCacheCommand(), cancellationToken);
+
             return NoContent();
         }
 
-        private async Task ClearCacheInternal(CancellationToken cancellationToken, string message)
+        protected IActionResult QueueBackgroundRequest<TResponse>(
+            IRequest<TResponse> request,
+            string requestName,
+            Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>> result)
         {
-            await _outputCacheStore.EvictByTagAsync(CoursesOutputCachePolicy.CoursesTag, cancellationToken);
-            _logger.LogInformation("Courses cache cleared {Message}", message);
+            try
+            {
+                _logger.LogInformation("Received request to {RequestName}", requestName);
+
+                _taskQueue.QueueBackgroundRequest(request, requestName, result);
+
+                _logger.LogInformation("Queued request to {RequestName}", requestName);
+
+                return StatusCode(
+                    StatusCodes.Status202Accepted,
+                    $"Queued request to {requestName} which will be completed asynchronously");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Request to {RequestName} failed", requestName);
+
+                return StatusCode(500);
+            }
         }
     }
 }

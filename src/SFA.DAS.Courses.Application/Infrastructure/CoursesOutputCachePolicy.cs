@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Primitives;
 
-namespace SFA.DAS.Courses.Api.Infrastructure
+namespace SFA.DAS.Courses.Application.Infrastructure
 {
     /// <summary>
     /// A policy which allows authorized endpoints to be cached, by default authorized endpoints

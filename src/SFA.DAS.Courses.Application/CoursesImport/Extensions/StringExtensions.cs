@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions
+﻿namespace SFA.DAS.Courses.Application.CoursesImport.Extensions
 {
     public static class StringExtensions
     {
