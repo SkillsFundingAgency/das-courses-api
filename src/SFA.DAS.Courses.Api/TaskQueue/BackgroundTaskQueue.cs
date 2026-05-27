@@ -17,6 +17,7 @@ namespace SFA.DAS.Courses.Api.TaskQueue
             string requestName,
             Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>> response)
         {
+            ArgumentNullException.ThrowIfNull(request);
             ArgumentNullException.ThrowIfNull(response);
 
             _requests.Enqueue(new BackgroundRequest<TResponse>(
@@ -31,7 +32,10 @@ namespace SFA.DAS.Courses.Api.TaskQueue
         {
             await _signal.WaitAsync(cancellationToken);
 
-            _requests.TryDequeue(out var request);
+            if (!_requests.TryDequeue(out var request))
+            {
+                throw new InvalidOperationException("No background request was available after the queue signal was received.");
+            }
 
             return request;
         }

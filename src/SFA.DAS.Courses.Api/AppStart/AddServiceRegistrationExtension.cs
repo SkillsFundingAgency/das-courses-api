@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.Courses.Services;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
 using SFA.DAS.Courses.Data.Repository;

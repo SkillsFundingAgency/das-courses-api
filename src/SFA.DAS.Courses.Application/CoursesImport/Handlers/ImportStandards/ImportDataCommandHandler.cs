@@ -71,8 +71,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
 
             if (standardsLoadedSuccessfully)
             {
+                // the cache will be cleared if data load was successfull ignoring any cancellation
                 await _coursesCacheService.ClearCoursesCache(
-                    "after successful standards load", cancellationToken);
+                    "after successful standards load", CancellationToken.None);
             }
 
             return new ImportDataCommandResult

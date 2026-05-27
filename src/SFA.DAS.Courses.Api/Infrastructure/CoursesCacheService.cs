@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Courses.Application.Infrastructure;
 using SFA.DAS.Courses.Domain.Interfaces;
 
-namespace SFA.DAS.Courses.Application.CoursesImport.Services
+namespace SFA.DAS.Courses.Api.Infrastructure
 {
     public class CoursesCacheService : ICoursesCacheService
     {

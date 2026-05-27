@@ -86,9 +86,11 @@ namespace SFA.DAS.Courses.Api.Controllers
 
                 _logger.LogInformation("Queued request to {RequestName}", requestName);
 
-                return StatusCode(
-                    StatusCodes.Status202Accepted,
-                    $"Queued request to {requestName} which will be completed asynchronously");
+                return StatusCode(StatusCodes.Status202Accepted, new
+                {
+                    Message = $"Request to {requestName} has been accepted for asynchronous processing",
+                    QueuedAt = DateTime.UtcNow
+                });
             }
             catch (Exception ex)
             {

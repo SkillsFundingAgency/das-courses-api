@@ -19,7 +19,6 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Courses.Api.AppStart;
 using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
-using SFA.DAS.Courses.Application.Infrastructure;
 using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Configuration;
 using SFA.DAS.Courses.Domain.Interfaces;
