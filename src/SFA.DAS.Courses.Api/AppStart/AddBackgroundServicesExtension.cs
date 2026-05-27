@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Courses.Api.TaskQueue;
-using SFA.DAS.Courses.Domain.Configuration;
 
 namespace SFA.DAS.Courses.Api.AppStart
 {

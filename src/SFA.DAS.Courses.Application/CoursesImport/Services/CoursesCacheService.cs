@@ -20,7 +20,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _logger = logger;
         }
 
-        public async Task ClearCoursesCache(CancellationToken cancellationToken, string reason)
+        public async Task ClearCoursesCache(string reason, CancellationToken cancellationToken)
         {
             await _outputCacheStore.EvictByTagAsync(
                 CoursesOutputCachePolicy.CoursesTag,

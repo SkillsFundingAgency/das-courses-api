@@ -17,8 +17,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ClearCoursesCache
         public async Task Handle(ClearCoursesCacheCommand request, CancellationToken cancellationToken)
         {
             await _coursesCacheService.ClearCoursesCache(
-                cancellationToken,
-                "manually");
+                "manually", cancellationToken);
         }
     }
 }

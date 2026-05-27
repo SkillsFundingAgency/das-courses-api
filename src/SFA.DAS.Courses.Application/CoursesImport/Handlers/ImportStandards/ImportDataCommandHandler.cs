@@ -72,8 +72,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             if (standardsLoadedSuccessfully)
             {
                 await _coursesCacheService.ClearCoursesCache(
-                    cancellationToken,
-                    "after successful standards load");
+                    "after successful standards load", cancellationToken);
             }
 
             return new ImportDataCommandResult

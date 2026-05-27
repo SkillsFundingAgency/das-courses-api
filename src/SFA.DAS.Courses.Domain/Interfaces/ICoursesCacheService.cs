@@ -5,6 +5,6 @@ namespace SFA.DAS.Courses.Domain.Interfaces
 {
     public interface ICoursesCacheService
     {
-        Task ClearCoursesCache(CancellationToken cancellationToken, string reason);
+        Task ClearCoursesCache(string reason, CancellationToken cancellationToken);
     }
 }
