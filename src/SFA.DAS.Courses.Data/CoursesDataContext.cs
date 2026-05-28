@@ -37,6 +37,15 @@ namespace SFA.DAS.Courses.Data
         Task DeleteAllBatchedAsync<TEntity>(int batchSize = 200, CancellationToken cancellationToken = default)
             where TEntity : class;
 
+        Task<T> ExecuteWithApplicationLockAsync<T>(
+            string applicationLockName,
+            Func<Task<T>> operation,
+            CancellationToken cancellationToken = default);
+
+        Task ExecuteInTransactionAsync(
+            Func<Task> operation,
+            CancellationToken cancellationToken = default);
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
@@ -163,6 +172,87 @@ namespace SFA.DAS.Courses.Data
                     break;
                 }
             }
+        }
+
+        public async Task<T> ExecuteWithApplicationLockAsync<T>(
+            string applicationLockName,
+            Func<Task<T>> operation,
+            CancellationToken cancellationToken = default)
+        {
+            await Database.OpenConnectionAsync(cancellationToken);
+
+            try
+            {
+                await AcquireApplicationLockAsync(applicationLockName);
+
+                return await operation();
+            }
+            finally
+            {
+                await ReleaseApplicationLockAsync(applicationLockName);
+                await Database.CloseConnectionAsync();
+            }
+        }
+
+        public async Task ExecuteInTransactionAsync(
+            Func<Task> operation,
+            CancellationToken cancellationToken = default)
+        {
+            var strategy = Database.CreateExecutionStrategy();
+
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using var transaction = await Database.BeginTransactionAsync(cancellationToken);
+
+                try
+                {
+                    await operation();
+
+                    await transaction.CommitAsync(cancellationToken);
+                }
+                catch
+                {
+                    await transaction.RollbackAsync(CancellationToken.None);
+                    throw;
+                }
+            });
+        }
+
+        private async Task AcquireApplicationLockAsync(
+            string applicationLockName)
+        {
+            const string sql = """
+                DECLARE @Result int;
+
+                EXEC @Result = sp_getapplock
+                    @Resource = @ApplicationLockName,
+                    @LockMode = 'Exclusive',
+                    @LockOwner = 'Session',
+                    @LockTimeout = 0;
+
+                IF @Result < 0
+                BEGIN
+                    THROW 51000, 'The application lock is already allocated.', 1;
+                END
+                """;
+
+            await Database.ExecuteSqlRawAsync(
+                sql,
+                new SqlParameter("@ApplicationLockName", applicationLockName));
+        }
+
+        private async Task ReleaseApplicationLockAsync(
+            string applicationLockName)
+        {
+            const string sql = """
+                EXEC sp_releaseapplock
+                    @Resource = @ApplicationLockName,
+                    @LockOwner = 'Session';
+                """;
+
+            await Database.ExecuteSqlRawAsync(
+                sql,
+                new SqlParameter("@ApplicationLockName", applicationLockName));
         }
     }
 }

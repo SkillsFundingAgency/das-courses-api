@@ -27,8 +27,7 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ILarsPageParser, LarsPageParser>();
             services.AddTransient<ILevelsService, LevelsService>();
             services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
-            services.AddTransient<ILarsImportService, LarsImportService>();
-            services.AddTransient<ILarsImportStagingService, LarsImportStagingService>();
+            services.AddTransient<ILarsDataImportService, LarsDataImportService>();
             services.AddTransient<IFrameworksImportService, FrameworksImportService>();
             services.AddTransient<IJsonFileHelper, JsonFileHelper>();
             services.AddTransient<IFrameworksService, FrameworksService>();

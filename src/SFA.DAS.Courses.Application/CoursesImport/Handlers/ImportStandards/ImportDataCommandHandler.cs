@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Interfaces;
 
 namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
@@ -10,26 +11,39 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
     public class ImportDataCommandHandler : IRequestHandler<ImportDataCommand, ImportDataCommandResult>
     {
         private readonly IStandardsImportService _standardsImportService;
-        private readonly ILarsImportService _larsImportService;
+        private readonly ILarsDataImportService _larsImportService;
         private readonly IFrameworksImportService _frameworksImportService;
         private readonly IIndexBuilder _indexBuilder;
         private readonly ICoursesCacheService _coursesCacheService;
+        private readonly ICoursesDataContext _coursesDataContext;
 
         public ImportDataCommandHandler(
             IStandardsImportService standardsImportService,
-            ILarsImportService larsImportService,
+            ILarsDataImportService larsImportService,
             IFrameworksImportService frameworksImportService,
             IIndexBuilder indexBuilder,
-            ICoursesCacheService coursesCacheService)
+            ICoursesCacheService coursesCacheService,
+            ICoursesDataContext coursesDataContext)
         {
             _standardsImportService = standardsImportService;
             _larsImportService = larsImportService;
             _frameworksImportService = frameworksImportService;
             _indexBuilder = indexBuilder;
             _coursesCacheService = coursesCacheService;
+            _coursesDataContext = coursesDataContext;
         }
 
-        public async Task<ImportDataCommandResult> Handle(ImportDataCommand request, CancellationToken cancellationToken)
+        public async Task<ImportDataCommandResult> Handle(
+            ImportDataCommand request,
+            CancellationToken cancellationToken)
+        {
+            return await _coursesDataContext.ExecuteWithApplicationLockAsync(
+                "ImportData",
+                async () => await HandleImport(),
+                cancellationToken);
+        }
+
+        private async Task<ImportDataCommandResult> HandleImport()
         {
             var importStartTime = DateTime.Now;
 
@@ -44,7 +58,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             var frameworkImportResponse = frameworksImportTask.Result;
             if (frameworkImportResponse.Success)
             {
-                loadTasks.Add(_frameworksImportService.LoadDataFromStaging(importStartTime, frameworkImportResponse.LatestFile));
+                loadTasks.Add(_frameworksImportService.LoadDataFromStaging(
+                    importStartTime,
+                    frameworkImportResponse.LatestFile));
             }
 
             var standardsImportResponse = standardsImportTask.Result;
@@ -64,7 +80,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             var larsImportResponse = larsImportTask.Result;
             if (larsImportResponse.Success)
             {
-                await _larsImportService.LoadDataFromStaging(importStartTime, larsImportResponse.FileName);
+                await _larsImportService.LoadDataFromStaging(
+                    importStartTime,
+                    larsImportResponse.FileName);
             }
 
             _indexBuilder.Build();
@@ -73,7 +91,8 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards
             {
                 // the cache is cleared after a successful standards load, even if the original request has been cancelled.
                 await _coursesCacheService.ClearCoursesCache(
-                    "after successful standards load", CancellationToken.None);
+                    "after successful standards load",
+                    CancellationToken.None);
             }
 
             return new ImportDataCommandResult
