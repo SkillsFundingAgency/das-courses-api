@@ -180,16 +180,22 @@ namespace SFA.DAS.Courses.Data
             CancellationToken cancellationToken = default)
         {
             await Database.OpenConnectionAsync(cancellationToken);
+            var lockAcquired = false;
 
             try
             {
                 await AcquireApplicationLockAsync(applicationLockName);
+                lockAcquired = true;
 
                 return await operation();
             }
             finally
             {
-                await ReleaseApplicationLockAsync(applicationLockName);
+                if (lockAcquired)
+                {
+                    await ReleaseApplicationLockAsync(applicationLockName);
+                }
+
                 await Database.CloseConnectionAsync();
             }
         }

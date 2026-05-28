@@ -148,14 +148,14 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             _logger.LogInformation("LARS Import - starting extract from ZIP");
 
+            var standardsCsv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<StandardCsv>(content, Constants.LarsStandardsFileName);
+            var apprenticeshipFundingCsv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(content, Constants.LarsApprenticeshipFundingFileName);
+            var fundingCsv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<FundingCsv>(content, Constants.LarsFundingFileName);
+            var sectorSubjectAreaTier2Csv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(content, Constants.LarsSectorSubjectAreaTier2FileName);
+            var sectorSubjectAreaTier1Csv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier1Csv>(content, Constants.LarsSectorSubjectAreaTier1FileName);
+
             await _coursesDataContext.ExecuteInTransactionAsync(async () =>
             {
-                var standardsCsv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<StandardCsv>(content, Constants.LarsStandardsFileName);
-                var apprenticeshipFundingCsv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(content, Constants.LarsApprenticeshipFundingFileName);
-                var fundingCsv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<FundingCsv>(content, Constants.LarsFundingFileName);
-                var sectorSubjectAreaTier2Csv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(content, Constants.LarsSectorSubjectAreaTier2FileName);
-                var sectorSubjectAreaTier1Csv = _zipArchiveHelper.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier1Csv>(content, Constants.LarsSectorSubjectAreaTier1FileName);
-
                 await _larsStandardImportRepository.DeleteAll();
                 await _apprenticeshipFundingImportRepository.DeleteAll();
                 await _fundingImportRepository.DeleteAll();
