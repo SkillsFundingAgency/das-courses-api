@@ -10,17 +10,21 @@ namespace SFA.DAS.Courses.Api.TaskQueue
     public class BackgroundRequest<TResponse> : IBackgroundRequest
     {
         private readonly IRequest<TResponse> _request;
-        private readonly Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>> _response;
+        private readonly Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>, Guid> _response;
 
         public BackgroundRequest(
+            Guid requestId,
             IRequest<TResponse> request,
             string requestName,
-            Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>> response)
+            Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>, Guid> response)
         {
+            RequestId = requestId;
             _request = request;
             RequestName = requestName;
             _response = response;
         }
+
+        public Guid RequestId { get; }
 
         public string RequestName { get; }
 
@@ -31,11 +35,16 @@ namespace SFA.DAS.Courses.Api.TaskQueue
 
             var started = DateTime.UtcNow;
 
+            logger.LogInformation(
+                "Started background request {RequestName} with request id {RequestId}",
+                RequestName,
+                RequestId);
+
             var result = await mediator.Send(_request, cancellationToken);
 
             var duration = DateTime.UtcNow - started;
 
-            _response?.Invoke(result, duration, logger);
+            _response?.Invoke(result, duration, logger, RequestId);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace SFA.DAS.Courses.Api.Controllers
             const string requestName = "data load";
 
             return QueueBackgroundRequest(new ImportDataCommand(), requestName,
-                (result, duration, log) =>
+                (result, duration, log, requestId) =>
                 {
                     if (result.ValidationMessages.Count > 0)
                     {
@@ -48,8 +48,9 @@ namespace SFA.DAS.Courses.Api.Controllers
                             result.ValidationMessages);
 
                         log.LogWarning(
-                            "Completed request to {RequestName} in {Duration} with {ValidationErrorCount} validation messages:{NewLine}{ValidationMessages}",
+                            "Completed request to {RequestName} with request id {RequestId} in {Duration} with {ValidationErrorCount} validation messages:{NewLine}{ValidationMessages}",
                             requestName,
+                            requestId,
                             duration.ToReadableString(),
                             result.ValidationMessages.Count,
                             Environment.NewLine,
@@ -58,8 +59,9 @@ namespace SFA.DAS.Courses.Api.Controllers
                     else
                     {
                         log.LogInformation(
-                            "Completed request to {RequestName} in {Duration} with no validation messages",
+                            "Completed request to {RequestName} with request id {RequestId} in {Duration} with no validation messages",
                             requestName,
+                            requestId,
                             duration.ToReadableString());
                     }
                 });
@@ -76,19 +78,35 @@ namespace SFA.DAS.Courses.Api.Controllers
         protected IActionResult QueueBackgroundRequest<TResponse>(
             IRequest<TResponse> request,
             string requestName,
-            Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>> result)
+            Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>, Guid> result)
         {
             try
             {
                 _logger.LogInformation("Received request to {RequestName}", requestName);
 
-                _taskQueue.QueueBackgroundRequest(request, requestName, result);
+                var queueResult = _taskQueue.QueueBackgroundRequest(request, requestName, result);
 
-                _logger.LogInformation("Queued request to {RequestName}", requestName);
+                if (!queueResult.Queued)
+                {
+                    _logger.LogWarning(
+                        "Request to {RequestName} was rejected because another request is already queued or running",
+                        requestName);
+
+                    return Conflict(new
+                    {
+                        Message = queueResult.Reason
+                    });
+                }
+
+                _logger.LogInformation(
+                    "Queued request to {RequestName} with request id {RequestId}",
+                    requestName,
+                    queueResult.RequestId);
 
                 return StatusCode(StatusCodes.Status202Accepted, new
                 {
-                    Message = $"Request to {requestName} has been accepted for asynchronous processing",
+                    Message = $"Request to {requestName} has been queued on this API instance for asynchronous processing",
+                    RequestId = queueResult.RequestId,
                     QueuedAt = DateTime.UtcNow
                 });
             }

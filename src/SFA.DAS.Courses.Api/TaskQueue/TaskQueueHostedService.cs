@@ -50,8 +50,13 @@ namespace SFA.DAS.Courses.Api.TaskQueue
                 {
                     _logger.LogError(
                         ex,
-                        "Error occurred executing {RequestName}.",
-                        backgroundRequest.RequestName);
+                        "Error occurred executing {RequestName} with request id {RequestId}.",
+                        backgroundRequest.RequestName,
+                        backgroundRequest.RequestId);
+                }
+                finally
+                {
+                    _taskQueue.Complete(backgroundRequest.RequestName);
                 }
             }
 

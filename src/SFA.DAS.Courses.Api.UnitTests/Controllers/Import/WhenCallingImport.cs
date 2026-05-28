@@ -24,12 +24,23 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
             [Frozen] Mock<IBackgroundTaskQueue> mockTaskQueue,
             [Greedy] DataLoadController _sut)
         {
+            mockTaskQueue
+                .Setup(x => x.QueueBackgroundRequest(
+                    It.IsAny<IRequest<ImportDataCommandResult>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>, Guid>>()))
+                .Returns(new QueueBackgroundRequestResult
+                {
+                    Queued = true,
+                    RequestId = Guid.NewGuid()
+                });
+
             var result = _sut.Index();
 
             mockTaskQueue.Verify(x => x.QueueBackgroundRequest(
                     It.Is<IRequest<ImportDataCommandResult>>(request => request is ImportDataCommand),
                     "data load",
-                    It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>>>()),
+                    It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>, Guid>>()),
                 Times.Once);
 
             result.Should().BeOfType<ObjectResult>();
@@ -39,7 +50,7 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
         }
 
         [Test, MoqAutoData]
-        public void Then_When_Queueing_Fails_Returns_InternalServerError(
+        public void Then_When_DataLoad_Is_Already_Queued_Or_Running_Returns_Conflict(
             [Frozen] Mock<IBackgroundTaskQueue> mockTaskQueue,
             [Greedy] DataLoadController _sut)
         {
@@ -47,7 +58,31 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
                 .Setup(x => x.QueueBackgroundRequest(
                     It.IsAny<IRequest<ImportDataCommandResult>>(),
                     It.IsAny<string>(),
-                    It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>>>()))
+                    It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>, Guid>>()))
+                .Returns(new QueueBackgroundRequestResult
+                {
+                    Queued = false,
+                    Reason = "A data load request is already queued or running"
+                });
+
+            var result = _sut.Index();
+
+            result.Should().BeOfType<ConflictObjectResult>();
+
+            var conflictResult = result as ConflictObjectResult;
+            conflictResult!.StatusCode.Should().Be((int)HttpStatusCode.Conflict);
+        }
+
+        [Test, MoqAutoData]
+        public void Then_When_Queueing_Fails_Returns_InternalServerError(
+            [Frozen] Mock<IBackgroundTaskQueue> mockTaskQueue,
+            [Greedy] DataLoadController _sut)
+        {
+            mockTaskQueue
+                .Setup(x => x.QueueBackgroundRequest(
+                It.IsAny<IRequest<ImportDataCommandResult>>(),
+                It.IsAny<string>(),
+                It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>, Guid>>()))
                 .Throws(new Exception("Queue failed"));
 
             var result = _sut.Index();

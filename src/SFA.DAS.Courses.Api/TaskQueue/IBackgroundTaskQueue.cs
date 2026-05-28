@@ -8,11 +8,13 @@ namespace SFA.DAS.Courses.Api.TaskQueue
 {
     public interface IBackgroundTaskQueue
     {
-        void QueueBackgroundRequest<TResponse>(
+        QueueBackgroundRequestResult QueueBackgroundRequest<TResponse>(
             IRequest<TResponse> request,
             string requestName,
-            Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>> response);
+            Action<TResponse, TimeSpan, ILogger<TaskQueueHostedService>, Guid> response);
 
         Task<IBackgroundRequest> DequeueAsync(CancellationToken cancellationToken);
+
+        void Complete(string requestName);
     }
 }
