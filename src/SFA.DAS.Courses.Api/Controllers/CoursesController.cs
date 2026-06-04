@@ -31,6 +31,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpGet("search")]
         [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
+        [ProducesResponseType(typeof(GetCoursesSearchResponse), 200)]
         public async Task<IActionResult> Search(
             [FromQuery] string keyword,
             [FromQuery] IList<int> routeIds,
@@ -64,6 +65,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpGet("lookup/{id}")]
         [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
+        [ProducesResponseType(typeof(GetCourseDetailResponse), 200)]
         public async Task<IActionResult> Lookup(string id)
         {
             var result = await _mediator.Send(new GetCourseByIdQuery { Id = id });
@@ -76,6 +78,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpGet("lookup/{id}/options/{option}/ksbs")]
         [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
+        [ProducesResponseType(typeof(GetCourseOptionKsbsResult), 200)]
         public async Task<IActionResult> GetOptionKsbs(string id, string option)
         {
             var queryResult = await _mediator.Send(new GetCourseOptionKsbsQuery
@@ -89,6 +92,7 @@ namespace SFA.DAS.Courses.Api.Controllers
 
         [HttpGet("lookup/versions/{iFateReferenceNumber}")]
         [OutputCache(PolicyName = CoursesOutputCachePolicy.CoursesDataLoad)]
+        [ProducesResponseType(typeof(GetCourseVersionsListResponse), 200)]
         public async Task<IActionResult> GetCoursesByIFateReferenceNumber(string iFateReferenceNumber)
         {
             var queryResult = await _mediator.Send(new GetCoursesByIFateReferenceQuery

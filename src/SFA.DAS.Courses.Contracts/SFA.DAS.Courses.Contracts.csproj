@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>SFA.DAS.Courses.Contracts</RootNamespace>
+        <AssemblyName>SFA.DAS.Courses.Contracts</AssemblyName>
+        <Nullable>enable</Nullable>
+        <ApiContractsSwaggerJsonPath>$(MSBuildThisFileDirectory)..\SFA.DAS.Courses.Api\swagger.json</ApiContractsSwaggerJsonPath>
+        <ApiContractsNamespace>SFA.DAS.Courses.Contracts</ApiContractsNamespace>
+        <ApiContractsOutputDirectory>$(MSBuildThisFileDirectory)Generated</ApiContractsOutputDirectory>
+        <ApiContractsClientName>CoursesApi</ApiContractsClientName>
+        <IsPackable>true</IsPackable>
+        <Authors>GOV.UK Education and Skills Funding Agency (ESFA) Digital Apprenticeship Service (DAS)</Authors>
+        <Description>Courses API request and response for use with APIM.</Description>
+        <License>https://github.com/SkillsFundingAgency/das-shared-packages/blob/master/LICENSE</License>
+        <PackageProjectUrl>https://github.com/SkillsFundingAgency/das-courses-api</PackageProjectUrl>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.192" />
+        <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.189" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Generated\" />
+    </ItemGroup>
+
+</Project>

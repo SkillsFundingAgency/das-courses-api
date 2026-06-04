@@ -10,7 +10,7 @@
 
 ### Pre-Requisites
 * A clone of this repository(https://github.com/SkillsFundingAgency/das-courses-api)
-* A code editor that supports .NetCore 8 and above
+* A code editor that supports .NetCore 10 and above
 * A storage emulator like Azurite (https://learn.microsoft.com/en-us/azure/storage/common/storage-use-emulator)
 * An Azure Active Directory account with the appropriate roles as per the [das-employer-config repository](https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-courses-api/SFA.DAS.Courses.Api.json)
 * SQL Server database.
@@ -101,6 +101,16 @@ GetStandardsByIFateReferenceNumber
 Endpoint: GET /api/courses/standards/versions/{iFateReferenceNumber}
 Description: Retrieves a list of standards by their iFate reference number.
 
+## Contract generation
+
+To generate the contract for the API, the following global nuget package is required:
+
+```bash
+dotnet tool install -g swashbuckle.aspnetcore.cli --version 8.1.4
+```
+
+When you then build the courses API project, it will generate swagger.json, this is then used by the SFA.DAS.Courses.Contracts project
+and will generate the request, response and client files. A nuget package is then created for use with APIM endpoints.
 
 ## License
 
