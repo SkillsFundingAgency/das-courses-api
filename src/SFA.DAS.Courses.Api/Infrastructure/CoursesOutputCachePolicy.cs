@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Primitives;
@@ -20,20 +21,34 @@ namespace SFA.DAS.Courses.Api.Infrastructure
         {
         }
 
-        public ValueTask CacheRequestAsync(OutputCacheContext context, CancellationToken cancellation)
+        public async ValueTask CacheRequestAsync(OutputCacheContext context, CancellationToken cancellation)
         {
             var request = context.HttpContext.Request;
 
-            var canCache =
+            var isGetOrHead =
                 HttpMethods.IsGet(request.Method) ||
                 HttpMethods.IsHead(request.Method);
 
-            context.EnableOutputCaching = true;
-            context.AllowCacheLookup = canCache;
-            context.AllowCacheStorage = canCache;
-            context.AllowLocking = true;
+            if (!isGetOrHead)
+            {
+                context.EnableOutputCaching = true;
+                context.AllowCacheLookup = false;
+                context.AllowCacheStorage = false;
+                context.AllowLocking = false;
 
-            return ValueTask.CompletedTask;
+                return;
+            }
+
+            var authenticateResult = await context.HttpContext.AuthenticateAsync();
+
+            var isAuthenticated =
+                authenticateResult.Succeeded &&
+                authenticateResult.Principal?.Identity?.IsAuthenticated == true;
+
+            context.EnableOutputCaching = true;
+            context.AllowCacheLookup = isAuthenticated;
+            context.AllowCacheStorage = isAuthenticated;
+            context.AllowLocking = isAuthenticated;
         }
 
         public ValueTask ServeFromCacheAsync(OutputCacheContext context, CancellationToken cancellation)
