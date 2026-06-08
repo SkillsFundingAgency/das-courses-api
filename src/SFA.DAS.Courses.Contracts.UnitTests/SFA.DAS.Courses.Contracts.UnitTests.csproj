@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.18.1" />
+        <PackageReference Include="AutoFixture.NUnit4" Version="4.19.0" />
+        <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.189" />
+        <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="17.1.165" />
+        <PackageReference Include="FluentAssertions" Version="8.9.0" />
+        <PackageReference Include="coverlet.msbuild" Version="10.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\SFA.DAS.Courses.Contracts\SFA.DAS.Courses.Contracts.csproj" />
+    </ItemGroup>
+</Project>
