@@ -41,4 +41,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+    <Target Name="GenerateSwaggerJson" AfterTargets="Build">
+        <Exec Command="dotnet &quot;$([System.IO.Path]::Combine($(NuGetPackageRoot), 'swashbuckle.aspnetcore.cli', '8.1.4', 'tools', 'net8.0', 'any', 'dotnet-swagger.dll'))&quot; tofile --output &quot;$(MSBuildThisFileDirectory)swagger.json&quot; &quot;$(OutputPath)$(AssemblyName).dll&quot; v1"
+              WorkingDirectory="$(MSBuildThisFileDirectory)"
+              ContinueOnError="true" />
+    </Target>
 </Project>

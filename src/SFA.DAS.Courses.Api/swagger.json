@@ -1,0 +1,1547 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "CoursesAPI",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Courses/search": {
+      "get": {
+        "tags": [
+          "Courses"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
+            "name": "levels",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
+            "name": "learningTypes",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ApprenticeshipType"
+              }
+            }
+          },
+          {
+            "name": "courseType",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/CourseType"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderBy"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/StandardFilter"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCoursesSearchResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCoursesSearchResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCoursesSearchResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Courses/lookup/{id}": {
+      "get": {
+        "tags": [
+          "Courses"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseDetailResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseDetailResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Courses/lookup/{id}/options/{option}/ksbs": {
+      "get": {
+        "tags": [
+          "Courses"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "option",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseOptionKsbsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseOptionKsbsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseOptionKsbsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Courses/lookup/versions/{iFateReferenceNumber}": {
+      "get": {
+        "tags": [
+          "Courses"
+        ],
+        "parameters": [
+          {
+            "name": "iFateReferenceNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseVersionsListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseVersionsListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseVersionsListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/Frameworks/{id}": {
+      "get": {
+        "tags": [
+          "Frameworks"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFrameworkResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFrameworkResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFrameworkResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/Frameworks": {
+      "get": {
+        "tags": [
+          "Frameworks"
+        ],
+        "parameters": [
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFrameworksResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFrameworksResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFrameworksResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/Levels": {
+      "get": {
+        "tags": [
+          "Levels"
+        ],
+        "parameters": [
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLevelsListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLevelsListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLevelsListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/Routes": {
+      "get": {
+        "tags": [
+          "Routes"
+        ],
+        "parameters": [
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRoutesListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRoutesListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRoutesListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SectorSubjectAreaTier1": {
+      "get": {
+        "tags": [
+          "SectorSubjectAreaTier"
+        ],
+        "parameters": [
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSectorSubjectAreaTier1ListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSectorSubjectAreaTier1ListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSectorSubjectAreaTier1ListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/Standards": {
+      "get": {
+        "tags": [
+          "Standards"
+        ],
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
+            "name": "levels",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
+            "name": "apprenticeshipType",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ApprenticeshipType"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderBy"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/StandardFilter"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/api/courses/Standards/{id}": {
+      "get": {
+        "tags": [
+          "Standards"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/api/courses/Standards/{id}/options/{option}/ksbs": {
+      "get": {
+        "tags": [
+          "Standards"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "option",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/api/courses/Standards/versions/{iFateReferenceNumber}": {
+      "get": {
+        "tags": [
+          "Standards"
+        ],
+        "parameters": [
+          {
+            "name": "iFateReferenceNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": true
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApprenticeshipType": {
+        "enum": [
+          "Apprenticeship",
+          "FoundationApprenticeship",
+          "ApprenticeshipUnit"
+        ],
+        "type": "string"
+      },
+      "CourseApprenticeshipFundingResponse": {
+        "type": "object",
+        "properties": {
+          "maxEmployerLevyCap": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "incentive1618": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "providerAdditionalPayment1618": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "employerAdditionalPayment1618": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "careLeaverAdditionalPayment": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "foundationAppFirstEmpPayment": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "foundationAppSecondEmpPayment": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "foundationAppThirdEmpPayment": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "durationUnits": {
+            "$ref": "#/components/schemas/DurationUnits"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CourseDatesResponse": {
+        "type": "object",
+        "properties": {
+          "lastDateStarts": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CourseType": {
+        "enum": [
+          "Apprenticeship",
+          "ShortCourse"
+        ],
+        "type": "string"
+      },
+      "CourseVersionDetailResponse": {
+        "type": "object",
+        "properties": {
+          "earliestStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "latestStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "latestEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "approvedForDelivery": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "proposedTypicalDuration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proposedMaxFunding": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proposedDurationUnits": {
+            "$ref": "#/components/schemas/DurationUnits"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DurationUnits": {
+        "enum": [
+          "Months",
+          "Hours"
+        ],
+        "type": "string"
+      },
+      "EqaProviderResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactName": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "webLink": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FrameworkFundingResponse": {
+        "type": "object",
+        "properties": {
+          "fundingCap": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCourseDetailResponse": {
+        "type": "object",
+        "properties": {
+          "standardUId": {
+            "type": "string",
+            "nullable": true
+          },
+          "ifateReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "searchScore": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "coronationEmblem": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "overviewOfRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "keywords": {
+            "type": "string",
+            "nullable": true
+          },
+          "route": {
+            "type": "string",
+            "nullable": true
+          },
+          "routeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "assessmentPlanUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "trailBlazerContact": {
+            "type": "string",
+            "nullable": true
+          },
+          "typicalJobTitles": {
+            "type": "string",
+            "nullable": true
+          },
+          "standardPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "integratedDegree": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectorSubjectAreaTier2": {
+            "type": "number",
+            "format": "double"
+          },
+          "sectorSubjectAreaTier2Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectorSubjectAreaTier1": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sectorSubjectAreaTier1Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "eqaProvider": {
+            "$ref": "#/components/schemas/EqaProviderResponse"
+          },
+          "otherBodyApprovalRequired": {
+            "type": "boolean"
+          },
+          "approvalBody": {
+            "type": "string",
+            "nullable": true
+          },
+          "duties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "coreAndOptions": {
+            "type": "boolean"
+          },
+          "coreDuties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "integratedApprenticeship": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "sectorCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "epaChanged": {
+            "type": "boolean"
+          },
+          "versionMajor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "versionMinor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "epaoMustBeApprovedByRegulatorBody": {
+            "type": "boolean"
+          },
+          "isLatestVersion": {
+            "type": "boolean"
+          },
+          "isRegulatedForProvider": {
+            "type": "boolean"
+          },
+          "isRegulatedForEPAO": {
+            "type": "boolean"
+          },
+          "apprenticeshipStandardTypeCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "relatedOccupations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelatedOccupation"
+            },
+            "nullable": true
+          },
+          "learningType": {
+            "$ref": "#/components/schemas/ApprenticeshipType"
+          },
+          "apprenticeshipFunding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CourseApprenticeshipFundingResponse"
+            },
+            "nullable": true
+          },
+          "courseDates": {
+            "$ref": "#/components/schemas/CourseDatesResponse"
+          },
+          "versionDetail": {
+            "$ref": "#/components/schemas/CourseVersionDetailResponse"
+          },
+          "courseType": {
+            "$ref": "#/components/schemas/CourseType"
+          },
+          "larsCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCourseOptionKsbsResult": {
+        "type": "object",
+        "properties": {
+          "ksbs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ksb"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCourseResponse": {
+        "type": "object",
+        "properties": {
+          "standardUId": {
+            "type": "string",
+            "nullable": true
+          },
+          "ifateReferenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "searchScore": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "coronationEmblem": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "overviewOfRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "keywords": {
+            "type": "string",
+            "nullable": true
+          },
+          "route": {
+            "type": "string",
+            "nullable": true
+          },
+          "routeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "typicalJobTitles": {
+            "type": "string",
+            "nullable": true
+          },
+          "standardPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "integratedDegree": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectorSubjectAreaTier2": {
+            "type": "number",
+            "format": "double"
+          },
+          "sectorSubjectAreaTier2Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectorSubjectAreaTier1": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sectorSubjectAreaTier1Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "otherBodyApprovalRequired": {
+            "type": "boolean"
+          },
+          "approvalBody": {
+            "type": "string",
+            "nullable": true
+          },
+          "duties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "coreAndOptions": {
+            "type": "boolean"
+          },
+          "coreDuties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "integratedApprenticeship": {
+            "type": "boolean"
+          },
+          "sectorCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "epaoMustBeApprovedByRegulatorBody": {
+            "type": "boolean"
+          },
+          "apprenticeshipStandardTypeCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "isLatestVersion": {
+            "type": "boolean"
+          },
+          "isRegulatedForProvider": {
+            "type": "boolean"
+          },
+          "isRegulatedForEPAO": {
+            "type": "boolean"
+          },
+          "apprenticeshipFunding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CourseApprenticeshipFundingResponse"
+            },
+            "nullable": true
+          },
+          "learningType": {
+            "$ref": "#/components/schemas/ApprenticeshipType"
+          },
+          "courseType": {
+            "$ref": "#/components/schemas/CourseType"
+          },
+          "larsCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "courseDates": {
+            "$ref": "#/components/schemas/CourseDatesResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCourseVersionsListResponse": {
+        "type": "object",
+        "properties": {
+          "courses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCourseDetailResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCoursesSearchResponse": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalFiltered": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "courses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCourseResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetFrameworkResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "frameworkName": {
+            "type": "string",
+            "nullable": true
+          },
+          "pathwayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "progType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "frameworkCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pathwayCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "typicalLength": {
+            "$ref": "#/components/schemas/TypicalLengthResponse"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentFundingCap": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxFunding": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ssa1": {
+            "type": "number",
+            "format": "double"
+          },
+          "ssa2": {
+            "type": "number",
+            "format": "double"
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isActiveFramework": {
+            "type": "boolean"
+          },
+          "fundingPeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FrameworkFundingResponse"
+            },
+            "nullable": true
+          },
+          "programmeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasSubGroups": {
+            "type": "boolean"
+          },
+          "extendedTitle": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetFrameworksResponse": {
+        "type": "object",
+        "properties": {
+          "frameworks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetFrameworkResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetLevelResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetLevelsListResponse": {
+        "type": "object",
+        "properties": {
+          "levels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetLevelResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetRouteResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetRoutesListResponse": {
+        "type": "object",
+        "properties": {
+          "routes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetRouteResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetSectorSubjectAreaTier1ListResponse": {
+        "type": "object",
+        "properties": {
+          "sectorSubjectAreaTier1s": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetSectorSubjectAreaTier1Response"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetSectorSubjectAreaTier1Response": {
+        "type": "object",
+        "properties": {
+          "sectorSubjectAreaTier1": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sectorSubjectAreaTier1Desc": {
+            "type": "string",
+            "nullable": true
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Ksb": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/KsbType"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KsbType": {
+        "enum": [
+          "Knowledge",
+          "Skill",
+          "Behaviour",
+          "TechnicalKnowledge",
+          "TechnicalSkill",
+          "EmployabilitySkillsAndBehaviour"
+        ],
+        "type": "string"
+      },
+      "OrderBy": {
+        "enum": [
+          "Score",
+          "Title"
+        ],
+        "type": "string"
+      },
+      "RelatedOccupation": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StandardFilter": {
+        "enum": [
+          "None",
+          "Active",
+          "ActiveAvailable",
+          "NotYetApproved",
+          "ClosedToNewStarts"
+        ],
+        "type": "string"
+      },
+      "TypicalLengthResponse": {
+        "type": "object",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "to": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
