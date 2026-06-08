@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Courses.Api.Infrastructure;
 using SFA.DAS.Courses.Application.Courses.Services;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
 using SFA.DAS.Courses.Data.Repository;
@@ -26,12 +27,12 @@ namespace SFA.DAS.Courses.Api.AppStart
             services.AddTransient<ILarsPageParser, LarsPageParser>();
             services.AddTransient<ILevelsService, LevelsService>();
             services.AddTransient<IZipArchiveHelper, ZipArchiveHelper>();
-            services.AddTransient<ILarsImportService, LarsImportService>();
-            services.AddTransient<ILarsImportStagingService, LarsImportStagingService>();
+            services.AddTransient<ILarsDataImportService, LarsDataImportService>();
             services.AddTransient<IFrameworksImportService, FrameworksImportService>();
             services.AddTransient<IJsonFileHelper, JsonFileHelper>();
             services.AddTransient<IFrameworksService, FrameworksService>();
             services.AddTransient<IRouteService, RouteService>();
+            services.AddTransient<ICoursesCacheService, CoursesCacheService>();
             services.AddHttpClient<IQualificationSectorSubjectAreaService, QualificationSectorSubjectAreaService>();
 
             services.AddHttpClient<IDataDownloadService, DataDownloadService>();

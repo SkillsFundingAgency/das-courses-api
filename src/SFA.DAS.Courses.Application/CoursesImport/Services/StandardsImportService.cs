@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
+using SFA.DAS.Courses.Application.CoursesImport.Extensions;
 using SFA.DAS.Courses.Application.CoursesImport.Validators;
 using SFA.DAS.Courses.Application.Exceptions;
+using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 using SFA.DAS.Courses.Domain.Interfaces;
@@ -22,11 +22,9 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         private readonly IImportAuditRepository _auditRepository;
         private readonly IRouteRepository _routeRepository;
         private readonly IRouteImportRepository _routeImportRepository;
-
+        private readonly ICoursesDataContext _coursesDataContext;
         private readonly ISlackNotificationService _slackNotificationService;
         private readonly ILogger<StandardsImportService> _logger;
-
-        private static readonly SemaphoreSlim _semaphoreImport = new SemaphoreSlim(1, 1);
 
         public StandardsImportService(
             ISkillsEnglandService skillsEnglandService,
@@ -35,6 +33,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             IImportAuditRepository auditRepository,
             IRouteRepository routeRepository,
             IRouteImportRepository routeImportRepository,
+            ICoursesDataContext coursesDataContext,
             ISlackNotificationService slackNotificationService,
             ILogger<StandardsImportService> logger)
         {
@@ -44,6 +43,7 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             _auditRepository = auditRepository;
             _routeRepository = routeRepository;
             _routeImportRepository = routeImportRepository;
+            _coursesDataContext = coursesDataContext;
             _slackNotificationService = slackNotificationService;
             _logger = logger;
         }
@@ -52,74 +52,63 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
         {
             var result = (Success: false, ValidationMessages: new List<string>());
 
-            if (await _semaphoreImport.WaitAsync(0))
+            try
             {
-                try
+
+                _logger.LogInformation("{MethodName} - starting", nameof(ImportDataIntoStaging));
+
+                var validationFailures = new Dictionary<string, ValidationFailures>();
+                var importedStandards = await GetAndValidateStandards(validationFailures);
+
+                ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.SkillsEngland.Standard>> { { "All", importedStandards } },
+                    validationFailures, [new ReferenceNumberFormatValidator(), new VersionFormatValidator()]);
+
+                if (!HasValidationErrors(validationFailures))
                 {
-                    _logger.LogInformation("{MethodName} - starting", nameof(ImportDataIntoStaging));
+                    var currentRoutes = await _routeRepository.GetAll();
+                    var currentStandards = await _standardRepository.GetStandards(null);
 
-                    var validationFailures = new Dictionary<string, ValidationFailures>();
-                    var importedStandards = await GetAndValidateStandards(validationFailures);
+                    var routeImports = await PrepareRouteImports(GetDistinctRoutes(importedStandards));
+                    var groupedImportedStandards = GroupImportedStandards(importedStandards, routeImports);
 
-                    ValidateStandards(new Dictionary<string, List<Domain.ImportTypes.SkillsEngland.Standard>> { { "All", importedStandards } },
-                        validationFailures, [new ReferenceNumberFormatValidator(), new VersionFormatValidator()]);
+                    // first the standard groups are validated between versions, invalid standard groups are replaced by retaining those previously imported
+                    Dictionary<string, List<StandardImport>> validStandardImports = IndividuallyValidateStandardGroups(groupedImportedStandards, currentStandards, currentRoutes, validationFailures);
+                    validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
+
+                    // then the standard groups are cross validated with eachother, invalid standard groups are again replaced by retaining those previously imported
+                    validStandardImports = CrossValidateStandardGroups(validStandardImports, validationFailures);
+                    validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
+
+                    // finally the standard groups are assessed to determine which version is the latest
+                    validStandardImports = PopulateIsLatestVersions(validStandardImports);
 
                     if (!HasValidationErrors(validationFailures))
                     {
-                        var currentRoutes = await _routeRepository.GetAll();
-                        var currentStandards = await _standardRepository.GetStandards(null);
-
-                        var routeImports = await PrepareRouteImports(GetDistinctRoutes(importedStandards));
-                        var groupedImportedStandards = GroupImportedStandards(importedStandards, routeImports);
-
-                        // first the standard groups are validated between versions, invalid standard groups are replaced by retaining those previously imported
-                        Dictionary<string, List<StandardImport>> validStandardImports = IndividuallyValidateStandardGroups(groupedImportedStandards, currentStandards, currentRoutes, validationFailures);
-                        validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
-
-                        // then the standard groups are cross validated with eachother, invalid standard groups are again replaced by retaining those previously imported
-                        validStandardImports = CrossValidateStandardGroups(validStandardImports, validationFailures);
-                        validStandardImports = ConcatRetainedStandards(validStandardImports, currentStandards);
-
-                        // finally the standard groups are assessed to determine which version is the latest
-                        validStandardImports = PopulateIsLatestVersions(validStandardImports);
-
-                        if (!HasValidationErrors(validationFailures))
-                        {
-                            await ImportRouteDataIntoStaging(routeImports, validStandardImports);
-                            await ImportStandardDataIntoStaging(validStandardImports);
-                            result.Success = true;
-                        }
+                        await ImportDataIntoStaging(routeImports, validStandardImports);
+                        result.Success = true;
                     }
+                }
 
-                    result.ValidationMessages = await ReportValidationFailures(validationFailures);
+                result.ValidationMessages = await ReportValidationFailures(validationFailures);
 
-                    _logger.LogInformation("{MethodName} - finished", nameof(ImportDataIntoStaging));
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, "{MethodName} - error whilst importing data into staging", nameof(ImportDataIntoStaging));
-                    result.Success = false;
-                }
-                finally
-                {
-                    _semaphoreImport.Release();
-                }
+                _logger.LogInformation("{MethodName} - finished", nameof(ImportDataIntoStaging));
             }
-            else
+            catch (Exception e)
             {
-                _logger.LogInformation("{MethodName} - importing data into staging is already running", nameof(ImportDataIntoStaging));
+                _logger.LogError(e, "{MethodName} - error whilst importing data into staging", nameof(ImportDataIntoStaging));
+                result.Success = false;
             }
 
             return result;
         }
 
-        public async Task ImportStandardDataIntoStaging(Dictionary<string, List<StandardImport>> standardImports)
+        public async Task ImportDataIntoStaging(List<RouteImport> routeImports, Dictionary<string, List<StandardImport>> standardImports)
         {
-            await _standardImportRepository.DeleteAll();
-            if (standardImports.Any())
+            await _coursesDataContext.ExecuteInTransactionAsync(async () =>
             {
-                await _standardImportRepository.InsertMany(standardImports.SelectMany(s => s.Value).ToList());
-            }
+                await ImportRouteDataIntoStaging(routeImports, standardImports);
+                await ImportStandardDataIntoStaging(standardImports);
+            });
         }
 
         public async Task<List<RouteImport>> PrepareRouteImports(List<Domain.ImportTypes.Route> importedRoutes)
@@ -136,7 +125,52 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
             return updatedRoutes;
         }
 
-        public async Task ImportRouteDataIntoStaging(List<RouteImport> routeImports, Dictionary<string, List<StandardImport>> standardImports)
+        public async Task LoadDataFromStaging(DateTime timeStarted)
+        {
+            try
+            {
+                await _coursesDataContext.ExecuteInTransactionAsync(async () =>
+                {
+                    int standardsTransfered = await LoadStandardDataFromStaging();
+
+                    if (standardsTransfered == 0)
+                    {
+                        await AuditImport(timeStarted, standardsTransfered);
+
+                        _logger.LogInformation(
+                            "{MethodName} - No standards transfered. No standards retrieved from API",
+                            nameof(LoadDataFromStaging));
+
+                        return;
+                    }
+
+                    await RefreshShortCourseDates();
+
+                    await LoadRouteDataFromStaging();
+
+                    await AuditImport(timeStarted, standardsTransfered);
+                });
+
+                _logger.LogInformation("{MethodName} - finished", nameof(LoadDataFromStaging));
+            }
+            catch (Exception e)
+            {
+                throw new ImportStandardsException(
+                    $"{nameof(LoadDataFromStaging)} - error whilst loading data from staging.",
+                    e);
+            }
+        }
+
+        private async Task ImportStandardDataIntoStaging(Dictionary<string, List<StandardImport>> standardImports)
+        {
+            await _standardImportRepository.DeleteAll();
+            if (standardImports.Any())
+            {
+                await _standardImportRepository.InsertMany(standardImports.SelectMany(s => s.Value).ToList());
+            }
+        }
+
+        private async Task ImportRouteDataIntoStaging(List<RouteImport> routeImports, Dictionary<string, List<StandardImport>> standardImports)
         {
             await _routeImportRepository.DeleteAll();
 
@@ -148,32 +182,6 @@ namespace SFA.DAS.Courses.Application.CoursesImport.Services
                 }
 
                 await _routeImportRepository.InsertMany(routeImports);
-            }
-        }
-
-        public async Task LoadDataFromStaging(DateTime timeStarted)
-        {
-            try
-            {
-                int standardsTransfered = await LoadStandardDataFromStaging();
-                if (standardsTransfered == 0)
-                {
-                    await AuditImport(timeStarted, standardsTransfered);
-                    _logger.LogInformation("{MethodName} - No standards transfered. No standards retrieved from API", nameof(LoadDataFromStaging));
-                    return;
-                }
-
-                await RefreshShortCourseDates();
-
-                await LoadRouteDataFromStaging();
-
-                await AuditImport(timeStarted, standardsTransfered);
-
-                _logger.LogInformation("{MethodName} - finished", nameof(LoadDataFromStaging));
-            }
-            catch (Exception e)
-            {
-                throw new ImportStandardsException($"{nameof(LoadDataFromStaging)} - error whilst loading data from staging.", e);
             }
         }
 
