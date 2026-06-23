@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
+using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Courses;
 using SFA.DAS.Courses.Domain.Entities;
 using SFA.DAS.Courses.Domain.Extensions;
@@ -27,9 +29,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
@@ -74,9 +79,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             StandardsImportService _sut)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
@@ -149,9 +157,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
@@ -196,9 +207,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
@@ -256,9 +270,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>();
 
             var currentRoutes = new List<Domain.Entities.Route>
@@ -314,9 +331,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
@@ -362,9 +382,12 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
@@ -580,10 +603,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
@@ -640,10 +666,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"),
@@ -826,10 +855,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(103, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1"), // lars code swapped with ST0103
@@ -888,10 +920,13 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
             [Frozen] Mock<IStandardRepository> standardRepository,
             [Frozen] Mock<IStandardImportRepository> standardImportRepository,
             [Frozen] Mock<ISkillsEnglandService> service,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             [Frozen] Mock<ISlackNotificationService> slackNotificationService,
             StandardsImportService standardsImportService)
         {
             // Arrange
+            SetupTransaction(mockCoursesDataContext);
+
             var apprenticeships = new List<Apprenticeship>
             {
                 CreateValidImportedApprenticeship(101, "ST0101", "1.0", "Title 1", Status.ApprovedForDelivery, "Route 1", "Option 1")
@@ -955,6 +990,16 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
                     && p.ApprenticeshipType == ApprenticeshipType.ApprenticeshipUnit
                     && p.CourseType == CourseType.ShortCourse
                     && p.DurationUnits == DurationUnits.Hours))));
+        }
+
+        private static void SetupTransaction(Mock<ICoursesDataContext> mockCoursesDataContext)
+        {
+            mockCoursesDataContext
+                .Setup(x => x.ExecuteInTransactionAsync(
+                    It.IsAny<Func<Task>>(),
+                    It.IsAny<CancellationToken>()))
+                .Returns<Func<Task>, CancellationToken>(
+                    async (operation, _) => await operation());
         }
     }
 }

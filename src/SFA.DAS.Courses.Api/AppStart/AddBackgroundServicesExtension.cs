@@ -1,0 +1,14 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Courses.Api.TaskQueue;
+
+namespace SFA.DAS.Courses.Api.AppStart
+{
+    public static class AddBackgroundServicesExtension
+    {
+        public static void AddBackgroundServices(this IServiceCollection services)
+        {
+            services.AddHostedService<TaskQueueHostedService>();
+            services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+        }
+    }
+}

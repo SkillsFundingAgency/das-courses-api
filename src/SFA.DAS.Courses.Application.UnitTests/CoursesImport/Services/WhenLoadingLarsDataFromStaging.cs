@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Application.CoursesImport.Services;
-using SFA.DAS.Courses.Domain.Configuration;
+using SFA.DAS.Courses.Data;
 using SFA.DAS.Courses.Domain.Entities;
-using SFA.DAS.Courses.Domain.ImportTypes;
 using SFA.DAS.Courses.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -22,204 +18,218 @@ namespace SFA.DAS.Courses.Application.UnitTests.CoursesImport.Services
     public class WhenLoadingLarsDataFromStaging
     {
         [Test, RecursiveMoqAutoData]
-        public async Task Then_it_deletes_existing_import_rows_before_loading_new_data_for_all_5_sources(
+        public async Task Then_LoadDataFromStaging_Is_Executed_Inside_A_Transaction(
+            DateTime importAuditStartTime,
             string filePath,
-            string content,
-            [Frozen] Mock<IDataDownloadService> dataDownloadService,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
             [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
-            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
-            [Frozen] Mock<IFundingImportRepository> fundingImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier1ImportRepository> sectorSubjectAreaTier1ImportRepository,
-            LarsImportStagingService _sut)
-        {
-            // Arrange
-            dataDownloadService.Setup(x => x.GetFileStream(filePath))
-                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
-
-            // Act
-            await _sut.Import(filePath);
-
-            // Assert
-            larsStandardImportRepository.Verify(x => x.DeleteAll(), Times.Once);
-            apprenticeshipFundingImportRepository.Verify(x => x.DeleteAll(), Times.Once);
-            fundingImportRepository.Verify(x => x.DeleteAll(), Times.Once);
-            sectorSubjectAreaTier2ImportRepository.Verify(x => x.DeleteAll(), Times.Once);
-            sectorSubjectAreaTier1ImportRepository.Verify(x => x.DeleteAll(), Times.Once);
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_it_downloads_the_zip_stream_from_the_data_download_service(
-            string filePath,
-            string content,
-            [Frozen] Mock<IDataDownloadService> dataDownloadService,
-            LarsImportStagingService _sut)
-        {
-            // Arrange
-            dataDownloadService.Setup(x => x.GetFileStream(filePath))
-                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
-
-            // Act
-            await _sut.Import(filePath);
-
-            // Assert
-            dataDownloadService.Verify(x => x.GetFileStream(filePath), Times.Once);
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_it_extracts_the_expected_csv_files_from_the_archive_including_Funding_csv(
-            string filePath,
-            string content,
-            [Frozen] Mock<IDataDownloadService> dataDownloadService,
-            [Frozen] Mock<IZipArchiveHelper> zipHelper,
-            LarsImportStagingService _sut)
-        {
-            // Arrange
-            dataDownloadService.Setup(x => x.GetFileStream(filePath))
-                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
-
-            // Act
-            await _sut.Import(filePath);
-
-            // Assert
-            zipHelper.Verify(x =>
-                x.ExtractModelFromCsvFileZipStream<StandardCsv>(It.IsAny<Stream>(), Constants.LarsStandardsFileName),
-                Times.Once);
-
-            zipHelper.Verify(x =>
-                x.ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(It.IsAny<Stream>(), Constants.LarsApprenticeshipFundingFileName),
-                Times.Once);
-
-            zipHelper.Verify(x =>
-                x.ExtractModelFromCsvFileZipStream<FundingCsv>(It.IsAny<Stream>(), Constants.LarsFundingFileName),
-                Times.Once);
-
-            zipHelper.Verify(x =>
-                x.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(It.IsAny<Stream>(), Constants.LarsSectorSubjectAreaTier2FileName),
-                Times.Once);
-
-            zipHelper.Verify(x =>
-                x.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier1Csv>(It.IsAny<Stream>(), Constants.LarsSectorSubjectAreaTier1FileName),
-                Times.Once);
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public async Task Then_it_inserts_imported_rows_for_all_5_sources_and_applies_all_filters_including_configured_funding_category(
-            string filePath,
-            string content,
-            List<StandardCsv> standardCsv,
-            List<ApprenticeshipFundingCsv> apprenticeshipFundingCsv,
-            List<FundingCsv> fundingCsv,
-            List<SectorSubjectAreaTier2Csv> sectorSubjectAreaTier2Csv,
-            List<SectorSubjectAreaTier1Csv> sectorSubjectAreaTier1Csv,
-            [Frozen] Mock<IDataDownloadService> dataDownloadService,
-            [Frozen] Mock<IZipArchiveHelper> zipHelper,
-            [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
-            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
             [Frozen] Mock<IFundingImportRepository> fundingImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            LarsDataImportService _sut)
+        {
+            SetupTransaction(mockCoursesDataContext);
+
+            larsStandardImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(new List<LarsStandardImport>());
+
+            sectorSubjectAreaTier2ImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(new List<SectorSubjectAreaTier2Import>());
+
+            sectorSubjectAreaTier1ImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(new List<SectorSubjectAreaTier1Import>());
+
+            fundingImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(new List<FundingImport>());
+
+            apprenticeshipFundingImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(new List<ApprenticeshipFundingImport>());
+
+            await _sut.LoadDataFromStaging(importAuditStartTime, filePath);
+
+            mockCoursesDataContext.Verify(x => x.ExecuteInTransactionAsync(
+                    It.IsAny<Func<Task>>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public async Task Then_it_loads_from_import_repositories_deletes_live_tables_inserts_live_data_writes_audit_and_merges_funding_sources(
+            DateTime importAuditStartTime,
+            string filePath,
+            List<LarsStandardImport> larsStandardImports,
+            List<SectorSubjectAreaTier2Import> sectorSubjectAreaTier2Imports,
+            List<SectorSubjectAreaTier1Import> sectorSubjectAreaTier1Imports,
+            List<FundingImport> fundingImports,
+            List<ApprenticeshipFundingImport> apprenticeshipFundingImports,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
+            [Frozen] Mock<ILarsStandardImportRepository> larsStandardImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier2ImportRepository> sectorSubjectAreaTier2ImportRepository,
             [Frozen] Mock<ISectorSubjectAreaTier1ImportRepository> sectorSubjectAreaTier1ImportRepository,
-            [Frozen] Mock<ILogger<LarsImportService>> logger)
+            [Frozen] Mock<IFundingImportRepository> fundingImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingImportRepository> apprenticeshipFundingImportRepository,
+            [Frozen] Mock<IApprenticeshipFundingRepository> apprenticeshipFundingRepository,
+            [Frozen] Mock<ILarsStandardRepository> larsStandardRepository,
+            [Frozen] Mock<ISectorSubjectAreaTier2Repository> sectorSubjectAreaTier2Repository,
+            [Frozen] Mock<ISectorSubjectAreaTier1Repository> sectorSubjectAreaTier1Repository,
+            [Frozen] Mock<IImportAuditRepository> importAuditRepository,
+            LarsDataImportService _sut)
         {
-            // Arrange
-            dataDownloadService.Setup(x => x.GetFileStream(filePath))
-                .ReturnsAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)));
+            SetupTransaction(mockCoursesDataContext);
 
-            var allowedFundingCategory = "ALLOWED_CATEGORY";
+            larsStandardImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(larsStandardImports);
 
-            // IMPORTANT: options must be created before sut construction because ctor reads config.Value
-            var options = Options.Create(new CoursesConfiguration
-            {
-                LarsImportConfiguration = new LarsImportConfiguration(allowedFundingCategory)
-            });
+            sectorSubjectAreaTier2ImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(sectorSubjectAreaTier2Imports);
 
-            var sut = new LarsImportStagingService(
-                dataDownloadService.Object,
-                zipHelper.Object,
-                apprenticeshipFundingImportRepository.Object,
-                fundingImportRepository.Object,
-                larsStandardImportRepository.Object,
-                sectorSubjectAreaTier2ImportRepository.Object,
-                sectorSubjectAreaTier1ImportRepository.Object,
-                options,
-                logger.Object);
+            sectorSubjectAreaTier1ImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(sectorSubjectAreaTier1Imports);
 
-            // Apprenticeship funding filter: keep STD*, drop others
-            apprenticeshipFundingCsv.ForEach(x => x.ApprenticeshipType = "STD");
-            if (apprenticeshipFundingCsv.Count > 0)
-            {
-                apprenticeshipFundingCsv[0].ApprenticeshipType = "FRMK";
-            }
+            fundingImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(fundingImports);
 
-            // Funding category filter: keep only matching category
-            fundingCsv.ForEach(x => x.FundingCategory = allowedFundingCategory);
-            if (fundingCsv.Count > 0)
-            {
-                fundingCsv[0].FundingCategory = "NOT_ALLOWED";
-            }
+            apprenticeshipFundingImportRepository
+                .Setup(x => x.GetAll())
+                .ReturnsAsync(apprenticeshipFundingImports);
 
-            // SSA Tier1 filter: remove those containing '-'
-            sectorSubjectAreaTier1Csv.ForEach(x => x.SectorSubjectAreaTier1 = "1.00");
-            if (sectorSubjectAreaTier1Csv.Count > 0)
-            {
-                sectorSubjectAreaTier1Csv[0].SectorSubjectAreaTier1 = "1.00-2.00";
-            }
+            larsStandardRepository
+                .Setup(x => x.DeleteAll())
+                .Returns(Task.CompletedTask);
 
-            zipHelper.Setup(x =>
-                    x.ExtractModelFromCsvFileZipStream<StandardCsv>(It.IsAny<Stream>(), Constants.LarsStandardsFileName))
-                .Returns(standardCsv);
+            sectorSubjectAreaTier2Repository
+                .Setup(x => x.DeleteAll())
+                .Returns(Task.CompletedTask);
 
-            zipHelper.Setup(x =>
-                    x.ExtractModelFromCsvFileZipStream<ApprenticeshipFundingCsv>(It.IsAny<Stream>(), Constants.LarsApprenticeshipFundingFileName))
-                .Returns(apprenticeshipFundingCsv);
+            sectorSubjectAreaTier1Repository
+                .Setup(x => x.DeleteAll())
+                .Returns(Task.CompletedTask);
 
-            zipHelper.Setup(x =>
-                    x.ExtractModelFromCsvFileZipStream<FundingCsv>(It.IsAny<Stream>(), Constants.LarsFundingFileName))
-                .Returns(fundingCsv);
+            larsStandardRepository
+                .Setup(x => x.InsertMany(It.IsAny<IEnumerable<LarsStandard>>()))
+                .Returns(Task.CompletedTask);
 
-            zipHelper.Setup(x =>
-                    x.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier2Csv>(It.IsAny<Stream>(), Constants.LarsSectorSubjectAreaTier2FileName))
-                .Returns(sectorSubjectAreaTier2Csv);
+            sectorSubjectAreaTier2Repository
+                .Setup(x => x.InsertMany(It.IsAny<IEnumerable<SectorSubjectAreaTier2>>()))
+                .Returns(Task.CompletedTask);
 
-            zipHelper.Setup(x =>
-                    x.ExtractModelFromCsvFileZipStream<SectorSubjectAreaTier1Csv>(It.IsAny<Stream>(), Constants.LarsSectorSubjectAreaTier1FileName))
-                .Returns(sectorSubjectAreaTier1Csv);
+            sectorSubjectAreaTier1Repository
+                .Setup(x => x.InsertMany(It.IsAny<IEnumerable<SectorSubjectAreaTier1>>()))
+                .Returns(Task.CompletedTask);
 
-            var expectedApprenticeshipFundingInserted = apprenticeshipFundingCsv.Count(x =>
-                x.ApprenticeshipType.StartsWith("STD", StringComparison.CurrentCultureIgnoreCase));
+            ImportAudit capturedAudit = null;
 
-            var expectedFundingInserted = fundingCsv.Count(x => x.FundingCategory == allowedFundingCategory);
+            importAuditRepository
+                .Setup(x => x.Insert(It.IsAny<ImportAudit>()))
+                .Callback<ImportAudit>(a => capturedAudit = a)
+                .Returns(Task.CompletedTask);
 
-            var expectedTier1Inserted = sectorSubjectAreaTier1Csv.Count(x =>
-                x.SectorSubjectAreaTier1 != null && !x.SectorSubjectAreaTier1.Contains('-'));
+            var insertedBatches = new List<List<ApprenticeshipFunding>>();
 
-            // Act
-            await sut.Import(filePath);
+            var seq = new MockSequence();
 
-            // Assert - standards (no filter)
-            larsStandardImportRepository.Verify(x =>
-                x.InsertMany(It.Is<List<LarsStandardImport>>(list => list.Count == standardCsv.Count)),
+            apprenticeshipFundingRepository.InSequence(seq)
+                .Setup(x => x.DeleteAll())
+                .Returns(Task.CompletedTask);
+
+            apprenticeshipFundingRepository.InSequence(seq)
+                .Setup(x => x.InsertMany(It.IsAny<IEnumerable<ApprenticeshipFunding>>()))
+                .Callback<IEnumerable<ApprenticeshipFunding>>(batch => insertedBatches.Add(batch.ToList()))
+                .Returns(Task.CompletedTask);
+
+            apprenticeshipFundingRepository.InSequence(seq)
+                .Setup(x => x.InsertMany(It.IsAny<IEnumerable<ApprenticeshipFunding>>()))
+                .Callback<IEnumerable<ApprenticeshipFunding>>(batch => insertedBatches.Add(batch.ToList()))
+                .Returns(Task.CompletedTask);
+
+            await _sut.LoadDataFromStaging(importAuditStartTime, filePath);
+
+            mockCoursesDataContext.Verify(x => x.ExecuteInTransactionAsync(
+                    It.IsAny<Func<Task>>(),
+                    It.IsAny<CancellationToken>()),
                 Times.Once);
 
-            // Assert - apprenticeship funding filtered to STD*
-            apprenticeshipFundingImportRepository.Verify(x =>
-                x.InsertMany(It.Is<List<ApprenticeshipFundingImport>>(list => list.Count == expectedApprenticeshipFundingInserted)),
+            larsStandardRepository.Verify(x => x.DeleteAll(), Times.Once);
+            apprenticeshipFundingRepository.Verify(x => x.DeleteAll(), Times.Once);
+            sectorSubjectAreaTier2Repository.Verify(x => x.DeleteAll(), Times.Once);
+            sectorSubjectAreaTier1Repository.Verify(x => x.DeleteAll(), Times.Once);
+
+            larsStandardRepository.Verify(x =>
+                    x.InsertMany(It.Is<IEnumerable<LarsStandard>>(c => c.Count() == larsStandardImports.Count)),
                 Times.Once);
 
-            // Assert - funding filtered by configured category
-            fundingImportRepository.Verify(x =>
-                x.InsertMany(It.Is<List<FundingImport>>(list => list.Count == expectedFundingInserted)),
+            sectorSubjectAreaTier2Repository.Verify(x =>
+                    x.InsertMany(It.Is<IEnumerable<SectorSubjectAreaTier2>>(c => c.Count() == sectorSubjectAreaTier2Imports.Count)),
                 Times.Once);
 
-            // Assert - tier2 (no filter)
-            sectorSubjectAreaTier2ImportRepository.Verify(x =>
-                x.InsertMany(It.Is<List<SectorSubjectAreaTier2Import>>(list => list.Count == sectorSubjectAreaTier2Csv.Count)),
+            sectorSubjectAreaTier1Repository.Verify(x =>
+                    x.InsertMany(It.Is<IEnumerable<SectorSubjectAreaTier1>>(c => c.Count() == sectorSubjectAreaTier1Imports.Count)),
                 Times.Once);
 
-            // Assert - tier1 filtered to remove those with '-'
-            sectorSubjectAreaTier1ImportRepository.Verify(x =>
-                x.InsertMany(It.Is<List<SectorSubjectAreaTier1Import>>(list => list.Count == expectedTier1Inserted)),
-                Times.Once);
+            apprenticeshipFundingRepository.Verify(x =>
+                    x.InsertMany(It.IsAny<IEnumerable<ApprenticeshipFunding>>()),
+                Times.Exactly(2));
+
+            Assert.That(insertedBatches.Count, Is.EqualTo(2));
+
+            var firstBatch = insertedBatches[0];
+            var secondBatch = insertedBatches[1];
+
+            Assert.That(firstBatch, Is.Not.Empty);
+            Assert.That(firstBatch.All(x => x.DurationUnits == DurationUnits.Hours), Is.True);
+
+            Assert.That(secondBatch, Is.Not.Empty);
+            Assert.That(secondBatch.All(x => x.DurationUnits == DurationUnits.Months), Is.True);
+            Assert.That(secondBatch.All(x => x.FundingStream == ApprenticeshipType.Apprenticeship.ToString()), Is.True);
+
+            Assert.That(capturedAudit, Is.Not.Null);
+            Assert.That(capturedAudit.ImportType, Is.EqualTo(ImportType.LarsImport));
+            Assert.That(capturedAudit.FileName, Is.EqualTo(filePath));
+
+            var expectedRowsImported =
+                larsStandardImports.Count +
+                fundingImports.Count +
+                apprenticeshipFundingImports.Count +
+                sectorSubjectAreaTier2Imports.Count;
+
+            Assert.That(capturedAudit.RowsImported, Is.EqualTo(expectedRowsImported));
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public void Then_it_rethrows_if_load_from_staging_fails(
+            DateTime importAuditStartTime,
+            string filePath,
+            [Frozen] Mock<ICoursesDataContext> mockCoursesDataContext,
+            LarsDataImportService _sut)
+        {
+            mockCoursesDataContext
+                .Setup(x => x.ExecuteInTransactionAsync(
+                    It.IsAny<Func<Task>>(),
+                    It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new InvalidOperationException("transaction failed"));
+
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
+                _sut.LoadDataFromStaging(importAuditStartTime, filePath));
+        }
+
+        private static void SetupTransaction(Mock<ICoursesDataContext> mockCoursesDataContext)
+        {
+            mockCoursesDataContext
+                .Setup(x => x.ExecuteInTransactionAsync(
+                    It.IsAny<Func<Task>>(),
+                    It.IsAny<CancellationToken>()))
+                .Returns<Func<Task>, CancellationToken>(
+                    async (operation, _) => await operation());
         }
     }
 }

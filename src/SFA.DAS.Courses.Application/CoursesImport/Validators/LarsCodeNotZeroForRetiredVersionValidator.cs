@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentValidation;
-using SFA.DAS.Courses.Application.CoursesImport.Extensions.StringExtensions;
+using SFA.DAS.Courses.Application.CoursesImport.Extensions;
 using SFA.DAS.Courses.Domain.ImportTypes.SkillsEngland;
 using ApprenticeshipType = SFA.DAS.Courses.Domain.Entities.ApprenticeshipType;
 

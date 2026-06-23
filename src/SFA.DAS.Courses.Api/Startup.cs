@@ -106,6 +106,7 @@ namespace SFA.DAS.Courses.Api
 
             services.AddServiceRegistration();
             services.AddDatabaseRegistration(coursesConfiguration, _configuration["Environment"]);
+            services.AddBackgroundServices();
 
             var redisConnectionString = _configuration["Courses:RedisConnectionString"];
             services.AddOutputCache(options =>

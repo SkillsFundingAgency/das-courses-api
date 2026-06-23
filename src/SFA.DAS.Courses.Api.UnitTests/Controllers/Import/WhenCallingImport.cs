@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,9 +6,12 @@ using AutoFixture.NUnit4;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Courses.Api.Controllers;
+using SFA.DAS.Courses.Api.TaskQueue;
+using SFA.DAS.Courses.Application.CoursesImport.Handlers.ClearCoursesCache;
 using SFA.DAS.Courses.Application.CoursesImport.Handlers.ImportStandards;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -18,22 +20,95 @@ namespace SFA.DAS.Courses.Api.UnitTests.Controllers.Import
     public class WhenCallingImport
     {
         [Test, MoqAutoData]
-        public async Task Then_Sends_ImportStandardsCommand_And_Returns_OkResult(
-            [Frozen] Mock<IMediator> mockMediator,
-            [Greedy] DataLoadController controller)
+        public void Then_Queues_ImportDataCommand_And_Returns_AcceptedResult(
+            [Frozen] Mock<IBackgroundTaskQueue> mockTaskQueue,
+            [Greedy] DataLoadController _sut)
         {
-            // Arrange
-            mockMediator
-                .Setup(p => p.Send(It.IsAny<ImportDataCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new ImportDataCommandResult { ValidationMessages = new List<string>() });
+            mockTaskQueue
+                .Setup(x => x.QueueBackgroundRequest(
+                    It.IsAny<IRequest<ImportDataCommandResult>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>, Guid>>()))
+                .Returns(new QueueBackgroundRequestResult
+                {
+                    Queued = true,
+                    RequestId = Guid.NewGuid()
+                });
 
-            // Act
-            var controllerResult = await controller.Index(CancellationToken.None) as OkObjectResult;
+            var result = _sut.Index();
 
-            // Assert
-            mockMediator.Verify(x=>x.Send(It.IsAny<ImportDataCommand>(), It.IsAny<CancellationToken>()), Times.Once);
-            Assert.That(controllerResult, Is.Not.Null);
-            controllerResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
+            mockTaskQueue.Verify(x => x.QueueBackgroundRequest(
+                    It.Is<IRequest<ImportDataCommandResult>>(request => request is ImportDataCommand),
+                    "data load",
+                    It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>, Guid>>()),
+                Times.Once);
+
+            result.Should().BeOfType<ObjectResult>();
+
+            var acceptedResult = result as ObjectResult;
+            acceptedResult!.StatusCode.Should().Be((int)HttpStatusCode.Accepted);
+        }
+
+        [Test, MoqAutoData]
+        public void Then_When_DataLoad_Is_Already_Queued_Or_Running_Returns_Conflict(
+            [Frozen] Mock<IBackgroundTaskQueue> mockTaskQueue,
+            [Greedy] DataLoadController _sut)
+        {
+            mockTaskQueue
+                .Setup(x => x.QueueBackgroundRequest(
+                    It.IsAny<IRequest<ImportDataCommandResult>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>, Guid>>()))
+                .Returns(new QueueBackgroundRequestResult
+                {
+                    Queued = false,
+                    Reason = "A data load request is already queued or running"
+                });
+
+            var result = _sut.Index();
+
+            result.Should().BeOfType<ConflictObjectResult>();
+
+            var conflictResult = result as ConflictObjectResult;
+            conflictResult!.StatusCode.Should().Be((int)HttpStatusCode.Conflict);
+        }
+
+        [Test, MoqAutoData]
+        public void Then_When_Queueing_Fails_Returns_InternalServerError(
+            [Frozen] Mock<IBackgroundTaskQueue> mockTaskQueue,
+            [Greedy] DataLoadController _sut)
+        {
+            mockTaskQueue
+                .Setup(x => x.QueueBackgroundRequest(
+                It.IsAny<IRequest<ImportDataCommandResult>>(),
+                It.IsAny<string>(),
+                It.IsAny<Action<ImportDataCommandResult, TimeSpan, ILogger<TaskQueueHostedService>, Guid>>()))
+                .Throws(new Exception("Queue failed"));
+
+            var result = _sut.Index();
+
+            result.Should().BeOfType<StatusCodeResult>();
+
+            var objectResult = result as StatusCodeResult;
+            objectResult!.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Then_ClearCache_Sends_ClearCoursesCacheCommand_And_Returns_NoContent(
+            [Frozen] Mock<IMediator> mockMediator,
+            [Greedy] DataLoadController _sut)
+        {
+            var result = await _sut.ClearCache(CancellationToken.None);
+
+            mockMediator.Verify(x => x.Send(
+                    It.IsAny<ClearCoursesCacheCommand>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+
+            result.Should().BeOfType<NoContentResult>();
+
+            var noContentResult = result as NoContentResult;
+            noContentResult!.StatusCode.Should().Be((int)HttpStatusCode.NoContent);
         }
     }
 }
