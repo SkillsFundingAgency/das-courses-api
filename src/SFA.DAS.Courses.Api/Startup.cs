@@ -60,6 +60,10 @@ namespace SFA.DAS.Courses.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHsts(options =>
+            {
+                options.MaxAge = TimeSpan.FromDays(90);
+            });
             services.AddOptions();
             services.Configure<CoursesConfiguration>(_configuration.GetSection("Courses"));
             services.AddSingleton(cfg => cfg.GetService<IOptions<CoursesConfiguration>>().Value);
@@ -196,6 +200,11 @@ namespace SFA.DAS.Courses.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // HSTS configured to 90 days in ConfigureServices.
+                app.UseHsts();
             }
 
             app.ConfigureExceptionHandler(logger);
