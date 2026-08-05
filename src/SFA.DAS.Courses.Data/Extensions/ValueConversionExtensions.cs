@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Newtonsoft.Json;
 
 namespace SFA.DAS.Courses.Data.Extensions
 {
@@ -20,13 +20,13 @@ namespace SFA.DAS.Courses.Data.Extensions
             var comparer = new ValueComparer<T>
             (
                 equalsExpression: (l, r) =>
-                    JsonConvert.SerializeObject(l) == JsonConvert.SerializeObject(r),
+                    JsonSerializer.Serialize(l, (JsonSerializerOptions)null) == JsonSerializer.Serialize(r, (JsonSerializerOptions)null),
 
                 hashCodeExpression: v =>
-                    v == null ? 0 : JsonConvert.SerializeObject(v).GetHashCode(),
+                    v == null ? 0 : JsonSerializer.Serialize(v, (JsonSerializerOptions)null).GetHashCode(),
 
                 snapshotExpression: v =>
-                    JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(v))
+                    JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(v, (JsonSerializerOptions)null), (JsonSerializerOptions)null)
             );
 
             propertyBuilder.HasConversion(converter);
@@ -37,9 +37,9 @@ namespace SFA.DAS.Courses.Data.Extensions
             return propertyBuilder;
         }
 
-        public static string Serialise(object value) => JsonConvert.SerializeObject(value);
+        public static string Serialise(object value) => JsonSerializer.Serialize(value);
 
         public static T Deserialise<T>(string json) where T : class, new()
-            => JsonConvert.DeserializeObject<T>(json) ?? new T();
+            => JsonSerializer.Deserialize<T>(json) ?? new T();
     }
 }
